@@ -4,13 +4,8 @@ import { routes } from './routes.js'
 
 Vue.use(Router)
 
-// const base = location.href.split('/')[3]
-const base = process.env.BASE_URL
-console.log(routes, 8888)
-
 const router = new Router({
   mode: 'history',
-  base,
   routes,
   scrollBehavior(to, from, savedPosition) {
     return savedPosition ? savedPosition : { x: 0, y: 0 }
@@ -18,7 +13,6 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  console.log('----',process.env.BASE_URL)
   if (from.name !== to.name) {
     window.scrollTo(0, 0)
   }

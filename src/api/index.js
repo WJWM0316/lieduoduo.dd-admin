@@ -3,12 +3,11 @@ import { Loading } from 'element-ui'
 import router from '@/router/index'
 let loadingInstance = null
 
-const company = location.href.split('/')[3] || 'tiger'
 import { getAccessToken, removeAccessToken } from './cacheService'
 
 //开发状态
 let isTest = false
-const API_ROOT = isTest?`http://admin-api.xplus.ziwork.com`: `https://admin-api.xplus.xiaodengta.com`
+const API_ROOT = process.env.VUE_APP_API
 
 // 请求的跟地址
 export const upload_api = `${API_ROOT}/attaches`
