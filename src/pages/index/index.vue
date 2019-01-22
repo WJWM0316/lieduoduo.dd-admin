@@ -9,12 +9,8 @@
 <script>
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import AsiderBar from './asider.vue'
-//import MainContent from './content.vue'
 @Component({
-  components: {
-    AsiderBar
-  }
+  components: {}
 })
 export default class indexPage extends Vue {}
 </script>

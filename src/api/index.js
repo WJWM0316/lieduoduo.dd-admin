@@ -15,7 +15,7 @@ axios.defaults.baseURL = API_ROOT
 // 请求拦截器
 axios.interceptors.request.use(
   config => {
-    config.headers.common['Authorization-Admin'] = getAccessToken()
+    config.headers.common['Authorization-Admin'] = '4c79d71bb30dccef5ed6fdee16e78f20'
     return config
   },
   error => {
@@ -40,13 +40,13 @@ axios.interceptors.response.use(
   }
 )
 
-
-export const request = (url, method, params = {}) => {
+export const request = ({type = 'post', url, data = {}, config = {}} = {}) => {
 
   console.log('API_ROOT===>',API_ROOT)
-  if (params.globalLoading) {
+  console.log(data, 888)
+  if (data.globalLoading) {
     loadingInstance = Loading.service({})
     delete params.globalLoading
   }
-  return axios[method](url, method === 'get' ? { params } : params)
+  return axios[type](url, type === 'get' ? { params: data } : data)
 }

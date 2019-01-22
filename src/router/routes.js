@@ -18,6 +18,11 @@ export const routes = [
     name: 'companyCheck',
     component: resolve => require(['@/pages/companyCheck/index.vue'], resolve),
   },
+  {
+    path: '/verify',
+    name: 'verify',
+    component: resolve => require(['@/pages/companyCheck/verify.vue'], resolve),
+  },
   /* 招聘官管理 */
   {
     path: '/recruitmentOfficer',
