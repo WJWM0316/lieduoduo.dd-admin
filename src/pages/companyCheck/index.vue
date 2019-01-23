@@ -67,6 +67,9 @@
             <!--认证状态-->
             <div class="btn-container" v-else-if="props.scope.column.property === 'status' || props.scope.column.property === 'authStatus'" style="height: 48px;">
               <div>
+                <span :class="{'row-delete': props.scope.row.status !== 1}" v-show="!props.scope.row[props.scope.column.property] && props.scope.row[props.scope.column.property] !== 0">
+                  未提交 <i class="el-icon-warning" style="color: #E6A23C;"></i>
+                </span>
                 <span :class="{'row-delete': props.scope.row.status !== 1}" v-show="props.scope.row[props.scope.column.property] === 0">
                   审核中 <i class="el-icon-warning" style="color: #E6A23C;"></i>
                 </span>

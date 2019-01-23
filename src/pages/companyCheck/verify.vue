@@ -12,7 +12,7 @@
           <span class="status" v-show="companyInfo.status === 2"><i class="el-icon-error" style="color: #F56C6C;"></i> 未通过</span>
         </div>
         <div class="editBox">
-          <el-button type="primary" @click="Review(companyInfo.id)" v-show="companyInfo.status === 0">审核</el-button>
+          <el-button type="primary" @click.stop="Review(companyInfo.id, 'company')" v-show="companyInfo.status === 0">审核</el-button>
           <el-button type="primary" disabled v-show="companyInfo.status !== 0">审核</el-button>
         </div>
       </div>
@@ -51,7 +51,7 @@
           <span class="status" v-show="personalInfo.status === 2"><i class="el-icon-error" style="color: #F56C6C;"></i> 未通过</span>
         </div>
         <div class="editBox">
-          <el-button type="primary" @click="Review(personalInfo.id)" v-show="personalInfo.status === 0">审核</el-button>
+          <el-button type="primary" @click.stop="Review(personalInfo.uid, 'identity')" v-show="personalInfo.status === 0">审核</el-button>
           <el-button type="primary" disabled v-show="personalInfo.status !== 0">审核</el-button>
         </div>
       </div>
@@ -93,7 +93,7 @@
     <!--审核蒙层-->
     <el-dialog title="审核" :visible.sync="isCheck">
       <el-form :model="form">
-        <el-form-item label="审核结果" label-width="100px">
+        <el-form-item label="审核结果" label-width="100px" style="text-align: left;">
           <el-select v-model="form.result" placeholder="请选择审核结果">
             <el-option label="通过" value="true"></el-option>
             <el-option label="退回" value="false"></el-option>
@@ -115,7 +115,7 @@
 <script>
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { getCompanyInfo, temppassApi, tempfailApi } from 'API/company'
+import { getCompanyInfo, temppassApi, tempfailApi, identityPassApi, identityFailApi } from 'API/company'
 @Component({
   name: 'checkPage'
 })
@@ -123,6 +123,7 @@ export default class checkPage extends Vue {
   companyInfo = ''
   personalInfo = ''
   nowImg = ''
+  type = '' // 当前审核的信息类别 company 或 identity
   isCheck = false // 审核蒙层
   checkId = ''
   form = {
@@ -130,7 +131,8 @@ export default class checkPage extends Vue {
     reason: ''
   }
   /* 点击审核按钮 */
-  Review (id) {
+  Review (id, type) {
+    this.type = type
     this.isCheck = true
     this.checkId = id
 //  this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -157,7 +159,33 @@ export default class checkPage extends Vue {
   }
   /*设置审核结果 */
   setResult () {
-    console.log(this.form)
+    if (this.type === 'company') {
+      //审核公司信息
+      if (this.form.result) {
+        temppassApi(this.checkId).then(res => {
+          this.companyInfo.status = 1
+          this.isCheck = false
+        })
+      } else {
+        tempfailApi(this.checkId).then(res => {
+          this.companyInfo.status = 2
+          this.isCheck = false
+        })
+      }
+    } else {
+      //审核人员信息
+      if (this.form.result) {
+        identityPassApi(this.checkId).then(res => {
+          this.personalInfo.status = 1
+          this.isCheck = false
+        })
+      } else {
+        identityFailApi(this.checkId).then(res => {
+          this.personalInfo.status = 2
+          this.isCheck = false
+        })
+      }
+    }
   }
   created () {
     const { id } = this.$route.query
@@ -181,6 +209,7 @@ export default class checkPage extends Vue {
   position: fixed;
   top: 0;
   left: 0;
+  z-index: 999;
   width: 100%;
   height: 100%;
   background-color: rgba(0,0,0,0.5);
@@ -190,6 +219,9 @@ export default class checkPage extends Vue {
   img{
     height: 90%;
   }
+}
+.el-form-item__content{
+  text-align: left;
 }
 .commont{
   width: 100%;
