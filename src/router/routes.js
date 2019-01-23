@@ -35,4 +35,10 @@ export const routes = [
     name: 'positionManage',
     component: resolve => require(['@/pages/positionManage/index.vue'], resolve),
   },
+  /* 创建公司 */
+  {
+    path: '/createCompany',
+    name: 'createCompany',
+    component: resolve => require(['@/pages/createCompany/index.vue'], resolve),
+  },
 ]

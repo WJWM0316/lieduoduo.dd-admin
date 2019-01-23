@@ -47,7 +47,9 @@
           :fields="fields"
           :list="list"
           :total="total"
-          :page="form.page">
+          :page="form.page"
+          :page-count="pageCount"
+          @page-change="handlePageChange">
           <template slot-scope="props" slot="columns">
             <!-- 操作列 -->
             <div class="btn-container" v-if="props.scope.column.property === 'id'" style="height: 48px;">
@@ -97,6 +99,7 @@ import { login, templistApi } from 'API/company'
 })
 export default class companyCheck extends Vue {
   total = 0 // 筛查结果数量
+  pageCount = 0 // 请求回的数据共几页
   form =  {
           keyword: '',
           status: '',
@@ -140,12 +143,12 @@ export default class companyCheck extends Vue {
   list = []
   onSubmit (e) {
 //  console.log(this.form)
-    templistApi(this.form).then(res => {
-      this.list = res.data.data
-      this.total = res.data.meta.total
-    })
+    this.getTemplist()
   }
   addCompany () {
+    this.$router.push({
+      path: '/createCompany'
+    })
     console.log('添加公司')
   }
   check (id) {
@@ -154,12 +157,21 @@ export default class companyCheck extends Vue {
       query: {id: id}
     })
   }
-  created () {
-//  login({email: 18520287895, password: 123456})
-    templistApi().then(res => {
+  handlePageChange (nowPage) {
+    this.form.page = nowPage
+    this.getTemplist()
+  }
+  /* 请求审核列表 */
+  getTemplist () {
+    templistApi(this.form).then(res => {
       this.list = res.data.data
       this.total = res.data.meta.total
+      this.pageCount = res.data.meta.lastPage
     })
+  }
+  created () {
+//  login({email: 18520287895, password: 123456})
+    this.getTemplist()
   }
 }
 </script>

@@ -178,7 +178,7 @@ export default class checkPage extends Vue {
   position: relative;
 }
 .mask{
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
