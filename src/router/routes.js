@@ -35,6 +35,18 @@ export const routes = [
     name: 'positionManage',
     component: resolve => require(['@/pages/positionManage/index.vue'], resolve),
   },
+  /* 职位审核详情 */
+  {
+    path: '/positionAuditDetail',
+    name: 'positionAuditDetail',
+    component: resolve => require(['@/pages/positionAuditDetail/index.vue'], resolve),
+  },
+  /* 职位发布编辑 */
+  {
+    path: '/positionPost',
+    name: 'positionPost',
+    component: resolve => require(['@/pages/positionPost/index.vue'], resolve),
+  },
   /* 创建公司 */
   {
     path: '/createCompany',
