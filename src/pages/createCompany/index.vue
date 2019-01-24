@@ -142,6 +142,10 @@
         </el-form-item>
       </el-form>
     </div>
+    <!--新建通过-->
+    <div class="personalInfo" v-if="active === 2">
+      创建成功
+    </div>
   </div>
 </template>
 

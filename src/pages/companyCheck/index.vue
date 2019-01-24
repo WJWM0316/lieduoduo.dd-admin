@@ -10,10 +10,10 @@
         <!--筛选-->
         <div class="selectionBox">
           <el-form ref="form" :model="form" label-width="80px" validate="validate">
-            <el-form-item label="关键词">
+            <el-form-item label="关键词" prop="keyword">
               <el-input v-model="form.keyword"></el-input>
             </el-form-item>
-            <el-form-item label="申请时间">
+            <el-form-item label="申请时间" prop="start">
               <el-col :span="11">
                 <el-date-picker type="date" placeholder="选择日期" v-model="form.start" style="width: 100%;"></el-date-picker>
               </el-col>
@@ -22,23 +22,30 @@
                 <el-date-picker type="date" placeholder="选择日期" v-model="form.end" style="width: 100%;"></el-date-picker>
               </el-col>
             </el-form-item>
-            <el-form-item label-width="100px" label="公司认证状态">
+            <!--用于代替清除结束时间-->
+            <el-form-item label-width="1px" label="" prop="end">
+            </el-form-item>
+            
+            <el-form-item label-width="100px" label="公司认证状态" prop="status">
               <el-select v-model="form.status" placeholder="全部状态">
-                <el-option label="已提交" value="shanghai"></el-option>
-                <el-option label="未通过" value="beijing"></el-option>
-                <el-option label="通过" value="beijing"></el-option>
+                <el-option label="审核中" value="0"></el-option>
+                <el-option label="通过" value="1"></el-option>
+                <el-option label="未通过" value="2"></el-option>
+                <el-option label="未提交" value="3"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label-width="100px" label="身份认证状态">
+            <el-form-item label-width="100px" label="身份认证状态" prop="auth_status">
               <el-select v-model="form.auth_status" placeholder="全部状态">
-                <el-option label="已提交" value="shanghai"></el-option>
-                <el-option label="未通过" value="beijing"></el-option>
-                <el-option label="通过" value="beijing"></el-option>
+                <el-option label="审核中" value="0"></el-option>
+                <el-option label="通过" value="1"></el-option>
+                <el-option label="未通过" value="2"></el-option>
+                <el-option label="未提交" value="3"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item>
+            <el-form-item class="btn">
               <el-button type="primary" @click="onSubmit">查询</el-button>
-              <!--<el-button>清除条件</el-button>-->
+              <span @click.stop="resetForm('form')">重置</span>
+              <!--<el-button @click.stop="resetForm('form')">清除条件</el-button>-->
             </el-form-item>
           </el-form>
         </div>
@@ -172,6 +179,10 @@ export default class companyCheck extends Vue {
       this.pageCount = res.data.meta.lastPage
     })
   }
+  /* 清除列表选项 */
+  resetForm (name) {
+    this.$refs[name].resetFields()
+  }
   created () {
 //  login({email: 18520287895, password: 123456})
     this.getTemplist()
@@ -221,6 +232,15 @@ export default class companyCheck extends Vue {
     }
     .el-form-item{
       display: inline-block;
+    }
+    .btn{
+      span{
+        white-space: nowrap;
+        user-select:none;
+        cursor: pointer;
+        line-height: 12px;
+        color: #409EFF;
+      }
     }
   }
 }

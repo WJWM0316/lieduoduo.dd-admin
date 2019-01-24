@@ -15,7 +15,7 @@ axios.defaults.baseURL = API_ROOT
 // 请求拦截器
 axios.interceptors.request.use(
   config => {
-    config.headers.common['Authorization-Admin'] = '4c79d71bb30dccef5ed6fdee16e78f20'
+    config.headers.common['Authorization-Admin'] = getAccessToken()
     return config
   },
   error => {

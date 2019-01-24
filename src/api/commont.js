@@ -14,3 +14,10 @@ export const uploadApi = data => request({
   type: 'post',
   data
 })
+
+/* 登录 */
+export const loginApi = data => request({
+  url: '/auth/login',
+  type: 'post',
+  data
+})
