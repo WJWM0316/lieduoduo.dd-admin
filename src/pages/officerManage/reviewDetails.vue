@@ -63,15 +63,20 @@
     </div>
     <!--审核蒙层-->
     <el-dialog title="审核" :visible.sync="isCheck">
-      <el-form :model="form">
+      <el-form :model="form" label-position="left">
         <el-form-item label="审核结果" label-width="100px" style="text-align: left;">
           <el-select v-model="form.result" placeholder="请选择审核结果">
             <el-option label="通过" value="true"></el-option>
             <el-option label="退回" value="false"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="原因" label-width="100px">
-          <el-input v-model="form.reason" autocomplete="off"></el-input>
+        <el-form-item label="原因" label-width="100px" style="text-align: left;">
+          <el-select v-model="form.reason" placeholder="请选择审核结果">
+            <el-option label="您提供的身份信息与身份证上登记的信息不符" value="您提供的身份信息与身份证上登记的信息不符"></el-option>
+            <el-option label="身份证件信息模糊 / 遮挡 / 与身份认证需持【本人证件】的规定不符" value="身份证件信息模糊 / 遮挡 / 与身份认证需持【本人证件】的规定不符"></el-option>
+            <el-option label="系统判定为存在安全问题的其他情况" value="系统判定为存在安全问题的其他情况"></el-option>
+          </el-select>
+          <!--<el-input v-model="form.reason" autocomplete="off"></el-input>-->
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -121,6 +126,9 @@ export default class reviewDetails extends Vue {
   }
   /*设置审核结果 */
   setResult () {
+    let param = {
+      review_note: this.form.reason
+    }
     //审核人员信息
     if (this.form.result === 'true') {
       identityPassApi(this.checkId).then(res => {
@@ -128,8 +136,7 @@ export default class reviewDetails extends Vue {
         this.isCheck = false
       })
     } else {
-    console.log()
-      identityFailApi(this.checkId).then(res => {
+      identityFailApi(this.checkId, param).then(res => {
         this.identityInfo.status = 2
         this.isCheck = false
       })

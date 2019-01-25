@@ -99,8 +99,19 @@
             <el-option label="退回" value="false"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="不通过原因" label-width="100px">
-          <el-input v-model="form.reason" autocomplete="off"></el-input>
+        <el-form-item label="不通过原因" label-width="100px" style="text-align: left;">
+          <el-select v-model="form.reason" placeholder="请选择审核结果" v-if="type === 'company'">
+            <el-option label="您提供的公司名称与营业执照上登记的主体名称不符" value="您提供的公司名称与营业执照上登记的主体名称不符"></el-option>
+            <el-option label="认证信息不能包含联系方式，包括但不限于：微博、微信、邮箱、QQ、网站链接；不能出现营销推广信息，内容健康、积极，不能包含敏感、色情等信息" value="认证信息不能包含联系方式，包括但不限于：微博、微信、邮箱、QQ、网站链接；不能出现营销推广信息，内容健康、积极，不能包含敏感、色情等信息"></el-option>
+            <el-option label="资质不支持认证信息 / 认证信息非企业面貌 / 认证信息包含营销信息" value="资质不支持认证信息 / 认证信息非企业面貌 / 认证信息包含营销信息"></el-option>
+            <el-option label="营业执照信息不全 / 与工商局登记信息不符 / 伪造证件" value="营业执照信息不全 / 与工商局登记信息不符 / 伪造证件"></el-option>
+            <el-option label="资质信息与公司信息不符 / 伪造公章 / 未盖章 / 运营人信息不实" value="资质信息与公司信息不符 / 伪造公章 / 未盖章 / 运营人信息不实"></el-option>
+          </el-select>
+          <el-select v-model="form.reason" placeholder="请选择审核结果" v-else>
+            <el-option label="您提供的身份信息与身份证上登记的信息不符" value="您提供的身份信息与身份证上登记的信息不符"></el-option>
+            <el-option label="身份证件信息模糊 / 遮挡 / 与身份认证需持【本人证件】的规定不符" value="身份证件信息模糊 / 遮挡 / 与身份认证需持【本人证件】的规定不符"></el-option>
+            <el-option label="系统判定为存在安全问题的其他情况" value="系统判定为存在安全问题的其他情况"></el-option>
+          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -144,6 +155,9 @@ export default class checkPage extends Vue {
   }
   /*设置审核结果 */
   setResult () {
+    let param = {
+      review_note: this.form.reason
+    }
     if (this.type === 'company') {
       //审核公司信息
       if (this.form.result === 'true') {
@@ -152,13 +166,12 @@ export default class checkPage extends Vue {
           this.isCheck = false
         })
       } else {
-        tempfailApi(this.checkId).then(res => {
+        tempfailApi(this.checkId, param).then(res => {
           this.companyInfo.status = 2
           this.isCheck = false
         })
       }
     } else {
-      
       //审核人员信息
       if (this.form.result === 'true') {
         identityPassApi(this.checkId).then(res => {

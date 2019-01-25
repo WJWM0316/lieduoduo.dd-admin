@@ -28,9 +28,10 @@ export const temppassApi = data => request({
 })
 
 /* 审核公司信息不通过 */
-export const tempfailApi = data => request({
-  url: `/company/tempfail/${data}`,
-  type: 'put'
+export const tempfailApi = (id, data) => request({
+  url: `/company/tempfail/${id}`,
+  type: 'put',
+  data
 })
 
 /* 审核人员信息通过 */
@@ -40,9 +41,10 @@ export const identityPassApi = data => request({
 })
 
 /* 审核人员信息不通过 */
-export const identityFailApi = data => request({
-  url: `/identity/fail/${data}`,
-  type: 'put'
+export const identityFailApi = (id, data) => request({
+  url: `/identity/fail/${id}`,
+  type: 'put',
+  data
 })
 
 /* 填写公司信息 */

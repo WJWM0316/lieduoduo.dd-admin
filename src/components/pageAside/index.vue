@@ -6,8 +6,8 @@
           <!--<img src="~IMAGES/logo.png" class="avatar">-->
         </div>
         <ul>
-          <li><router-link to="/index">公司管理</router-link></li>
-          <li><router-link to="/companyCheck">审核管理</router-link></li>
+          <li><router-link to="/index">公司库</router-link></li>
+          <li><router-link to="/companyCheck">公司审核管理</router-link></li>
           <li><router-link to="/recruitmentOfficer">招聘官管理</router-link></li>
           <li><router-link to="/positionManage">职位管理</router-link></li>
           <!--<li
