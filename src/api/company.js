@@ -79,3 +79,10 @@ export const deleteCompanyApi = data => request({
   url: `/company/${data}`,
   type: 'delete'
 })
+
+/* 编辑公司 */
+export const editCompanyApi = (id, data) => request({
+  url: `/company/${id}`,
+  type: 'put',
+  data
+})

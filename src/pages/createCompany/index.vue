@@ -57,7 +57,7 @@
             type="textarea"
             :rows="4"
             placeholder="请输入内容"
-            v-model="companyInfo.Introduction">
+            v-model="companyInfo.intro">
           </el-input>
         </el-form-item>
         <h3>资质信息</h3>
@@ -170,7 +170,7 @@ export default class createCompany extends Vue{
     industry_id: '', // 所属行业
     financing: '', // 融资
     employees: '', // 规模
-    Introduction: '', // 公司简介
+    intro: '', // 公司简介
     business_license: '', // 营业执照
     on_job: '', // 在职证明
     logo: ''

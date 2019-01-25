@@ -4,7 +4,7 @@
     <!--公司认证信息-->
     <div class="commont companyInfo">
       <!--头部-->
-      <!--<div class="header" :class="{edit : isEdit}">
+      <div class="header" :class="{edit : isEdit}">
         <div class="left" v-if="!isEdit">
           <span class="title">公司认证信息</span>
           <span class="status" v-show="companyInfo.status === 0"><i class="el-icon-warning" style="color: #E6A23C;"></i> 已提交</span>
@@ -18,7 +18,7 @@
         <div class="editBox" v-else>
           <el-button type="primary" @click.stop="edit('editCompany')">编辑</el-button>
         </div>
-      </div>-->
+      </div>
       <!--内容-->
       <div class="content">
         <div class="title">基本信息</div>
@@ -67,7 +67,7 @@
         <div class="item"><span class="lable">姓名：</span> {{personalInfo.realName}}</div>
         <div class="item"><span class="lable">公司职务：</span> {{companyInfo.userPosition}}</div>
         <div class="item"><span class="lable">公司邮箱：</span> {{companyInfo.userEmail}}</div>
-        <div class="item"><span class="lable">手机号码：</span> 12345123456</div>
+        <div class="item"><span class="lable">手机号码：</span> {{personalInfo.mobile}}</div>
         <div class="title">身份信息</div>
         <div class="item"><span class="lable">真实姓名：</span> {{personalInfo.realName}}</div>
         <div class="item"><span class="lable">身份证号码：</span> {{personalInfo.identityNum}}</div>
