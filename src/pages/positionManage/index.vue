@@ -8,6 +8,8 @@
       <el-main>
         <!--筛选-->
         <div class="selectionBox">
+          <el-button type="primary" @click="addPosition" style="margin-bottom: 20px;margin-left: 20px;float: right;">发布职位</el-button>
+
           <el-form ref="form" :model="form" label-width="80px" validate="validate">
             <el-form-item label="职位名称">
               <el-input v-model="form.name"></el-input>
@@ -215,6 +217,12 @@ export default class companyCheck extends Vue {
     this.$router.push({
       path: '/positionAuditDetail',
       query: {id: id}
+    })
+  }
+
+  addPosition() {
+    this.$router.push({
+      path: '/positionPost'
     })
   }
   handlePageChange (nowPage) {

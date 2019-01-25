@@ -15,7 +15,6 @@
           <el-button type="primary" disabled v-if="positionData.status ===3">审核</el-button>
           <el-button type="primary" @click="Review(positionData.id)" v-else>审核</el-button>
           <el-button type="primary" @click='toPostPosition("edit")'>编辑</el-button>
-          <el-button type="primary" @click='toPostPosition("add")'>添加</el-button>
         </div>
       </div>
       <!--内容-->
