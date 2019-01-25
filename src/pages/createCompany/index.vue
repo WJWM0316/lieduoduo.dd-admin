@@ -143,7 +143,7 @@
       </el-form>
     </div>
     <!--新建通过-->
-    <div class="personalInfo" v-if="active === 2">
+    <div class="personalInfo" v-if="active === 3">
       创建成功
     </div>
   </div>
@@ -250,10 +250,6 @@ export default class createCompany extends Vue{
       })
     }
   }
-//last () {
-//  if (this.active === 0 ) return
-//  this.active--
-//}
   handleIconLoaded (e) {
     console.log(e, 999)
     let formData = new FormData()

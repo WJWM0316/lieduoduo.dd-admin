@@ -28,9 +28,10 @@ export const temppassApi = data => request({
 })
 
 /* 审核公司信息不通过 */
-export const tempfailApi = data => request({
-  url: `/company/tempfail/${data}`,
-  type: 'put'
+export const tempfailApi = (id, data) => request({
+  url: `/company/tempfail/${id}`,
+  type: 'put',
+  data
 })
 
 /* 审核人员信息通过 */
@@ -40,9 +41,10 @@ export const identityPassApi = data => request({
 })
 
 /* 审核人员信息不通过 */
-export const identityFailApi = data => request({
-  url: `/identity/fail/${data}`,
-  type: 'put'
+export const identityFailApi = (id, data) => request({
+  url: `/identity/fail/${id}`,
+  type: 'put',
+  data
 })
 
 /* 填写公司信息 */
@@ -59,6 +61,7 @@ export const setIdentityInfoApi = data => request({
   data
 })
 
+<<<<<<< HEAD
 /* 获取地址 */
 export const getCompanyAdressApi = data => request({
   url: `/company/position/address/${data.id}`,
@@ -91,4 +94,22 @@ export const getAdressListApi = data => request({
   url: `/company/position/simplepage/addresses`,
   type: 'get',
   data
+})
+/* 获取录入公司列表 */
+export const getCompanyListApi = data => request({
+  url: `/company/list`,
+  type: 'get',
+  data
+})
+
+/* 获取录入公司详情 */
+export const getCompanyInfoApi = data => request({
+  url: `/company/${data}`,
+  type: 'get'
+})
+
+/* 删除公司 */
+export const deleteCompanyApi = data => request({
+  url: `/company/${data}`,
+  type: 'delete'
 })

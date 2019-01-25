@@ -15,7 +15,7 @@ export const routes = [
   {
     path: '/index',
     name: 'index',
-    meta: {title: '公司管理'},
+    meta: {title: '公司库'},
     component: resolve => require(['@/pages/index/index.vue'], resolve),
   },
   /* 公司审核管理 */
@@ -69,7 +69,14 @@ export const routes = [
   {
     path: '/createCompany',
     name: 'createCompany',
-    meta: {title: '创建公司', haveParent: true, parentPath: '/companyCheck', parentName: '公司审核管理'},
+    meta: {title: '创建公司', haveParent: true, parentPath: '/index', parentName: '公司库'},
     component: resolve => require(['@/pages/createCompany/index.vue'], resolve),
+  },
+  /* 编辑公司信息 */
+  {
+    path: '/editCompany',
+    name: 'editCompany',
+    meta: {title: '编辑公司信息', haveParent: true, parentPath: '/index', parentName: '公司库'},
+    component: resolve => require(['@/pages/editCompany/editCompanyInfo.vue'], resolve),
   }
 ]
