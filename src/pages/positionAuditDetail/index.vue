@@ -12,10 +12,10 @@
           <span class="status" v-show="positionData.status === 3"><i class="el-icon-error" style="color: #F56C6C;"></i> 未通过</span>
         </div>
         <div class="editBox">
-          <el-button type="primary" @click="Review(positionData.id)" v-if="positionData.status === 0">审核</el-button>
-          <el-button type="primary" disabled v-else>审核</el-button>
-
-          <el-button type="primary" @click='toPostPosition'>编辑</el-button>
+          <el-button type="primary" disabled v-if="positionData.status ===3">审核</el-button>
+          <el-button type="primary" @click="Review(positionData.id)" v-else>审核</el-button>
+          <el-button type="primary" @click='toPostPosition("edit")'>编辑</el-button>
+          <el-button type="primary" @click='toPostPosition("add")'>添加</el-button>
         </div>
       </div>
       <!--内容-->
@@ -48,8 +48,8 @@
       <el-form :model="form">
         <el-form-item label="审核结果" label-width="100px">
           <el-select v-model="form.result" placeholder="请选择审核结果">
-            <el-option label="通过" value="true"></el-option>
-            <el-option label="退回" value="false"></el-option>
+            <el-option label="通过" value="pass"></el-option>
+            <el-option label="退回" value="unpass"></el-option>
           </el-select>
         </el-form-item>
       </el-form>
@@ -92,21 +92,35 @@ export default class checkPage extends Vue {
   hiddenMask () {
     this.nowImg = ''
   }
-  toPostPosition () {
-    let id = this.$route.query.id
+  toPostPosition (type) {
+    let query = {}
+    if (type === 'add') {
+
+    } else {
+      let id = this.$route.query.id
+      query.id = id
+    }
     this.$router.push({
       path: '/positionPost',
-      query: {id: id}
+      query: query
     })
   }
   /*设置审核结果 */
   setResult () {
     console.log(this.checkId)
     auditPositionApi({id: this.checkId, action: this.form.result}).then(res => {
-      
+      this.$message.success('成功')
+      this.getPosition()
+    }).catch(err => {
+      this.$message.success(err.msg)
     })
   }
   created () {
+    this.getPosition()
+    
+  }
+
+  getPosition(){
     const { id } = this.$route.query
     getPositionApi({
       id: id
