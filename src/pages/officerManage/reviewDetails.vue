@@ -22,8 +22,8 @@
           <span class="status" v-show="identityInfo.status === 2"><i class="el-icon-error" style="color: #F56C6C;"></i> 未通过</span>
         </div>
         <div class="editBox">
-          <el-button type="primary" @click.stop="Review(personalInfo.uid)" v-show="identityInfo.status === 0">审核</el-button>
-          <el-button type="primary" disabled v-show="identityInfo.status !== 0">审核</el-button>
+          <el-button type="primary" @click.stop="Review(personalInfo.uid)" v-show="personalInfo.status === 0">审核</el-button>
+          <el-button type="primary" disabled v-show="personalInfo.status !== 0">审核</el-button>
         </div>
       </div>
       <!--内容-->

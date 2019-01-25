@@ -155,7 +155,7 @@ export default class companyCheck extends Vue {
   pageCount = 0 // 请求回的数据共几页
   form =  {
     type: '',
-    is_online: '2', // 状态（1 上线，2 下线)
+    is_online: '', // 状态（1 上线，2 下线)
     status: '',  // 状态（0关闭，1开启，审核通过，2审核中，3审核失败）查询多种状态用，号分隔（1,2,3）
     recruiter: '',
     page: 1,
