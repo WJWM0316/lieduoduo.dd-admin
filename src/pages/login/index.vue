@@ -42,6 +42,9 @@ export default class login extends Vue{
       })
     })
   }
+  resetForm(formName) {
+    this.$refs[formName].resetFields();
+  }
 }
 </script>
 

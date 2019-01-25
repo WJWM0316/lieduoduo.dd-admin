@@ -3,8 +3,13 @@ export const routes = [
     path: '/',
     // 默认进入控制台
     redirect: {
-      name: 'index'
+      name: 'login'
     }
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: resolve => require(['@/pages/login/index.vue'], resolve),
   },
   /* 公司管理 */
   {
@@ -48,16 +53,23 @@ export const routes = [
     meta: {title: '职位管理'},
     component: resolve => require(['@/pages/positionManage/index.vue'], resolve),
   },
+  /* 职位审核详情 */
+  {
+    path: '/positionAuditDetail',
+    name: 'positionAuditDetail',
+    component: resolve => require(['@/pages/positionAuditDetail/index.vue'], resolve),
+  },
+  /* 职位发布编辑 */
+  {
+    path: '/positionPost',
+    name: 'positionPost',
+    component: resolve => require(['@/pages/positionPost/index.vue'], resolve),
+  },
   /* 创建公司 */
   {
     path: '/createCompany',
     name: 'createCompany',
     meta: {title: '创建公司', haveParent: true, parentPath: '/companyCheck', parentName: '公司审核管理'},
     component: resolve => require(['@/pages/createCompany/index.vue'], resolve),
-  },
-  {
-    path: '/login',
-    name: 'login',
-    component: resolve => require(['@/pages/login/index.vue'], resolve),
   }
 ]
