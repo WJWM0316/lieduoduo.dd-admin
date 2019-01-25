@@ -61,7 +61,6 @@ export const setIdentityInfoApi = data => request({
   data
 })
 
-<<<<<<< HEAD
 /* 获取地址 */
 export const getCompanyAdressApi = data => request({
   url: `/company/position/address/${data.id}`,
