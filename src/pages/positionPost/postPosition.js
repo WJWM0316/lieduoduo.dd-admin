@@ -496,7 +496,7 @@ export default class CommunityEdit extends Vue {
     professionalSkillsApi({
       type: 'skills'
     }).then(res => {
-      //that.professionalSkillsList = res.data.data.labelProfessionalSkills
+      that.professionalSkillsList = res.data.data.labelProfessionalSkills
 
       let options = []
       res.data.data.labelProfessionalSkills.map((item,index) => {
@@ -576,16 +576,18 @@ export default class CommunityEdit extends Vue {
     this.pop.isShow = false
     this.selectPositionItem = {
       name: item.name,
-      typeId: item.labelId
+      typeId: item.labelId,
+      topPid: item.topPid,
     }
     this.form.type = item.labelId
 
-    // this.professionalSkillsList.map(item2 => {
-    //    if ( item2.labelId === item.labelId ) {
-    //       let children = item2.children
-    //       //children.
-    //    }
-    // })
+    this.professionalSkillsList.map(item2 => {
+       if ( item2.labelId === item.topPid ) {
+          this.options = item2.children
+       }
+
+       console.log(this.options)
+    })
   }
 
   changePosition () {

@@ -7,7 +7,7 @@
         <el-input v-model="form.mobile" placeholder="填写招聘官手机号" :maxlength="11"></el-input>
       </el-form-item>
 
-      
+
       <h3 class="title">职位基本信息</h3>
       <p class="hint">加“*”内容，在确认发布成功后，将无法修改</p>
       <el-form-item label="职位名称" prop="position_name" style="width: 380px;">
@@ -94,9 +94,9 @@
           placeholder="请选择技能要求">
           <el-option
             v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
+            :key="item.labelId"
+            :label="item.name"
+            :value="item.labelId">
           </el-option>
         </el-select>
       </el-form-item>
