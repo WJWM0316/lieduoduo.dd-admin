@@ -60,3 +60,22 @@ export const setIdentityInfoApi = data => request({
   type: 'post',
   data
 })
+
+/* 获取录入公司列表 */
+export const getCompanyListApi = data => request({
+  url: `/company/list`,
+  type: 'get',
+  data
+})
+
+/* 获取录入公司详情 */
+export const getCompanyInfoApi = data => request({
+  url: `/company/${data}`,
+  type: 'get'
+})
+
+/* 删除公司 */
+export const deleteCompanyApi = data => request({
+  url: `/company/${data}`,
+  type: 'delete'
+})

@@ -4,7 +4,7 @@
   	<el-container class="container" style="border: 1px solid #eee">
   	  <el-header class="header" style="text-align: right; font-size: 15px">
   	    <div class="title">审核管理({{total}})</div>
-  	    <el-button @click="addCompany" class="btn-limit-width">+ 新建公司</el-button>
+  	    <!--<el-button @click="addCompany" class="btn-limit-width">+ 新建公司</el-button>-->
   	  </el-header>
       <el-main>
         <!--筛选-->
@@ -15,11 +15,11 @@
             </el-form-item>
             <el-form-item label="申请时间" prop="start">
               <el-col :span="11">
-                <el-date-picker type="date" placeholder="选择日期" v-model="form.start" style="width: 100%;"></el-date-picker>
+                <el-date-picker type="date" placeholder="选择日期" value-format="yyyy-MM-dd" v-model="form.start" style="width: 100%;"></el-date-picker>
               </el-col>
               <el-col class="line" :span="2">-</el-col>
               <el-col :span="11">
-                <el-date-picker type="date" placeholder="选择日期" v-model="form.end" style="width: 100%;"></el-date-picker>
+                <el-date-picker type="date" placeholder="选择日期" value-format="yyyy-MM-dd" v-model="form.end" style="width: 100%;"></el-date-picker>
               </el-col>
             </el-form-item>
             <!--用于代替清除结束时间-->
@@ -100,7 +100,7 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import List from '@/components/list'
-import { login, templistApi } from 'API/company'
+import { templistApi } from 'API/company'
 @Component({
   name: 'course-list',
   components: {
@@ -184,7 +184,6 @@ export default class companyCheck extends Vue {
     this.$refs[name].resetFields()
   }
   created () {
-//  login({email: 18520287895, password: 123456})
     this.getTemplist()
   }
 }

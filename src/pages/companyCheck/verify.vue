@@ -4,18 +4,21 @@
     <!--公司认证信息-->
     <div class="commont companyInfo">
       <!--头部-->
-      <div class="header">
-        <div class="left">
+      <!--<div class="header" :class="{edit : isEdit}">
+        <div class="left" v-if="!isEdit">
           <span class="title">公司认证信息</span>
           <span class="status" v-show="companyInfo.status === 0"><i class="el-icon-warning" style="color: #E6A23C;"></i> 已提交</span>
           <span class="status" v-show="companyInfo.status === 1"><i class="el-icon-success" style="color: #67C23A;"></i> 已通过</span>
           <span class="status" v-show="companyInfo.status === 2"><i class="el-icon-error" style="color: #F56C6C;"></i> 未通过</span>
         </div>
-        <div class="editBox">
+        <div class="editBox" v-if="!isEdit">
           <el-button type="primary" @click.stop="Review(companyInfo.id, 'company')" v-show="companyInfo.status === 0">审核</el-button>
           <el-button type="primary" disabled v-show="companyInfo.status !== 0">审核</el-button>
         </div>
-      </div>
+        <div class="editBox" v-else>
+          <el-button type="primary" @click.stop="edit('editCompany')">编辑</el-button>
+        </div>
+      </div>-->
       <!--内容-->
       <div class="content">
         <div class="title">基本信息</div>
@@ -43,16 +46,19 @@
     <!--人员认证信息-->
     <div class="commont companyInfo">
       <!--头部-->
-      <div class="header">
-        <div class="left">
+      <div class="header" :class="{edit : isEdit}">
+        <div class="left" v-if="!isEdit">
           <span class="title">身份认证信息</span>
           <span class="status" v-show="personalInfo.status === 0"><i class="el-icon-warning" style="color: #E6A23C;"></i> 已提交</span>
           <span class="status" v-show="personalInfo.status === 1"><i class="el-icon-success" style="color: #67C23A;"></i> 已通过</span>
           <span class="status" v-show="personalInfo.status === 2"><i class="el-icon-error" style="color: #F56C6C;"></i> 未通过</span>
         </div>
-        <div class="editBox">
+        <div class="editBox" v-if="!isEdit">
           <el-button type="primary" @click.stop="Review(personalInfo.uid, 'identity')" v-show="personalInfo.status === 0">审核</el-button>
           <el-button type="primary" disabled v-show="personalInfo.status !== 0">审核</el-button>
+        </div>
+        <div class="editBox" v-else>
+          <el-button type="primary" disabled>编辑</el-button>
         </div>
       </div>
       <!--内容-->
@@ -84,6 +90,12 @@
             <i class="el-icon-zoom-in" @click.stop="showImg(personalInfo.handheldPassportInfo.url)"></i>
           </div>
         </div>
+      </div>
+    </div>
+    <!--底部删除-->
+    <div class="header del" v-if="isEdit">
+      <div class="editBox">
+        <el-button type="danger" @click.stop="del">删除</el-button>
       </div>
     </div>
     <!--大图蒙层-->
@@ -126,7 +138,12 @@
 <script>
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { getCompanyInfo, temppassApi, tempfailApi, identityPassApi, identityFailApi } from 'API/company'
+import { getCompanyInfo, temppassApi, tempfailApi, identityPassApi, identityFailApi, getCompanyInfoApi, deleteCompanyApi } from 'API/company'
+Component.registerHooks([
+  'beforeRouteEnter',
+  'beforeRouteLeave',
+  'beforeRouteUpdate' // for vue-router 2.2+
+])
 @Component({
   name: 'checkPage'
 })
@@ -137,9 +154,51 @@ export default class checkPage extends Vue {
   type = '' // 当前审核的信息类别 company 或 identity
   isCheck = false // 审核蒙层
   checkId = ''
+  isEdit = false // 是否编辑公司库信息
+  editCompanyID = '' // 当前编辑的公司id
   form = {
     result: '',
     reason: ''
+  }
+  beforeRouteEnter (from, to, next) {
+    if (from.query.isEdit) {
+      from.meta.parentName = "公司库"
+      from.meta.title = "公司编辑"
+      from.meta.parentPath = "/index"
+    } else {
+      from.meta.parentName = "公司审核管理"
+      from.meta.title = "公司审核详情"
+      from.meta.parentPath = "/companyCheck"
+    }
+    next()
+  }
+  /* 删除 */
+  del () {
+    this.$confirm('删除公司将清除已关联的招聘官和职位, 您确定删除吗?', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    }).then(() => {
+      deleteCompanyApi(this.editCompanyID).then(res => {
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+        this.$router.go(-1)
+      })
+    }).catch(() => {
+      this.$message({
+        type: 'info',
+        message: '已取消删除'
+      })        
+    })
+  }
+  /* 编辑 */
+  edit (name) {
+    this.$router.push({
+      path: `/${name}`,
+      query: {id: this.companyInfo.id}
+    })
   }
   /* 点击审核按钮 */
   Review (id, type) {
@@ -187,13 +246,22 @@ export default class checkPage extends Vue {
     }
   }
   created () {
-    const { id } = this.$route.query
-    console.log(id)
-    getCompanyInfo(id).then(res => {
-      console.log(res.data.data)
-      this.companyInfo = res.data.data.companyInfo
-      this.personalInfo = res.data.data.identityInfo
-    })
+    const { id, isEdit } = this.$route.query
+    if (isEdit) {
+      this.editCompanyID = id
+      this.isEdit = isEdit
+      getCompanyInfoApi(id).then(res => {
+        console.log(res.data.data)
+        this.companyInfo = res.data.data.companyInfo
+        this.personalInfo = res.data.data.identityInfo
+      })
+    } else {
+      getCompanyInfo(id).then(res => {
+        console.log(res.data.data)
+        this.companyInfo = res.data.data.companyInfo
+        this.personalInfo = res.data.data.identityInfo
+      })
+    }
   }
 }
 </script>
@@ -203,6 +271,12 @@ export default class checkPage extends Vue {
   margin-left: 200px;
   padding: 22px;
   position: relative;
+  .del{
+    padding: 10px;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: flex-end;
+  }
 }
 .mask{
   position: fixed;
@@ -237,6 +311,9 @@ export default class checkPage extends Vue {
         margin-left: 10px;
       }
     }
+  }
+  .edit{
+    justify-content: flex-end;
   }
   .content{
     padding: 10px;

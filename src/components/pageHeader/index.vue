@@ -11,8 +11,8 @@
 				<!--	<li>
 					<i class="el-icon-bell"></i>
 				</li> -->
-				<li @click="toLogin">
-				  登录
+				<!--<li @click="toLogin">-->
+				  <!--登录-->
 					<!--<el-dropdown trigger="hover" @command="todoAction" placement="bottom">
 					  <div class="el-dropdown-link" style="color:#354048">
 					  	<img :src="userInfos.avatarInfo.middleUrl" alt="" v-if="userInfos.avatarInfo">
@@ -25,6 +25,9 @@
 					    <el-dropdown-item command="out">退出登录</el-dropdown-item>
 					  </el-dropdown-menu>
 					</el-dropdown>-->
+				<!--</li>-->
+				<li @click="toLogin">
+				  退出登录
 				</li>
 			</ul>
 	</header>
@@ -82,7 +85,7 @@
 <script>
 import Vue from 'vue'
 import Component from 'vue-class-component'
-//import Cookies from 'js-cookie'
+import { getAccessToken, removeAccessToken } from 'API/cacheService'
 
 @Component({
   watch: {
@@ -116,6 +119,7 @@ export default class ComponentHeader extends Vue {
   parentPath = ''
   parentName = ''
   toLogin () {
+    removeAccessToken()
     this.$router.push({
       path: '/login'
     })
