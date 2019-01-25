@@ -22,7 +22,6 @@ axios.interceptors.request.use(
     return Promise.error(error)
   }
 )
-
 axios.interceptors.response.use(
   res => {
     if (loadingInstance) loadingInstance.close()

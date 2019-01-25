@@ -63,6 +63,7 @@ export const routes = [
   {
     path: '/positionPost',
     name: 'positionPost',
+    meta: {title: '职位发布', haveParent: true, parentPath: '/positionManage', parentName: '职位管理'},
     component: resolve => require(['@/pages/positionPost/index.vue'], resolve),
   },
   /* 创建公司 */
