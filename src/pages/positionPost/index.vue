@@ -33,7 +33,7 @@
             :value="item.value">
 
             <span style="float: left;color: #999;" v-if="item.value!=='0'">{{ item.label }}</span>
-            <span style="float: left; color: #652791;" v-else>++++={{ item.label }}</span>
+            <span style="float: left; color: #652791;" v-else>{{ item.label }}</span>
           </el-option>
         </el-select>
       </el-form-item>

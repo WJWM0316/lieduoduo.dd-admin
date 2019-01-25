@@ -8,6 +8,8 @@ import {TMap} from '../../util/js/TMap.js'
 //P63BZ-4RM35-BIJIV-QOL7E-XNCZZ-WIF4L
 
 var geocoder = {}
+var searchService = {}
+var citylocation = {}
 @Component({
   name: 'community-edit',
   components: {
@@ -237,7 +239,6 @@ export default class CommunityEdit extends Vue {
     }
 
     this.emolumentMinList = list
-
   }
 
   changeEmolumentMin(e){
@@ -298,15 +299,8 @@ export default class CommunityEdit extends Vue {
   querySearch(queryString, cb){
     console.log(queryString)
     if(queryString.length>0){
-      console.log(geocoder)
       geocoder.getLocation(queryString)
-
     }
-    /*let url = `https://apis.map.qq.com/ws/place/v1/suggestion/?keyword=${queryString}&key=P63BZ-4RM35-BIJIV-QOL7E-XNCZZ-WIF4L`
-    console.log(url)
-    this.ajax(url,'jsonp',function(res){
-      console.log(res)
-    })*/
   }
 
   handleSelect(e){
@@ -323,7 +317,7 @@ export default class CommunityEdit extends Vue {
         geocoder = new qq.maps.Geocoder({
           complete : function(result){
             console.log(result)
-            let data = {
+            /*let data = {
               mobile: that.form.mobile,
               areaId: '',
               address: result.detail.address,
@@ -334,16 +328,23 @@ export default class CommunityEdit extends Vue {
 
             addCompanyAdressApi(data).then(res => {
               console.log(res)
-            })
+            })*/
           }
         })
 
-        geocoder.setError(function() {
-          that.$message.error("出错了，请输入正确的地址！！！")
-        });
+        geocoder.getAddress(new qq.maps.LatLng(23, 113));
+        geocoder.getLocation('广州塔');
+
+        searchService = new qq.maps.SearchService({
+          complete : function(result){
+            console.log('searchService',result)
+          },//若服务请求失败，则运行以下函数
+          error: function() {
+            that.$message.error("出错了。")
+          }
+        })
+
     });
-
-
   }
 
   created () {
@@ -353,8 +354,6 @@ export default class CommunityEdit extends Vue {
     this.getProfessionalSkills()
     this.getAdressList()
     this.getLabelPositionList()
-
-    
   }
   //获取地址列表
   getAdressList(){
@@ -531,7 +530,13 @@ export default class CommunityEdit extends Vue {
       this.addressData.address = this.adressInput
       this.addressData.doorplate = this.adress_id_Input
       console.log(adress)
-      geocoder.getLocation(adress)
+      //geocoder.getLocation(adress)
+
+      searchService.search(adress);
+      /*citylocation.searchCityByLatLng({
+        lat: 23.106345,
+        lng: 113.323434
+      })*/
     }
   }
 
