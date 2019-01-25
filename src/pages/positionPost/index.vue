@@ -1,19 +1,21 @@
 <template>
   <div class="post-job">
     <h2 class="u-title-1" v-text="editTitle"></h2>
-    <el-form class="edit-form" ref="form" :model="form" :rules="rules" label-width="100px" label-suffix="：">
+    <el-form class="edit-form" ref="form" :model="form" :rules="rules" label-width="120px" label-suffix="：">
 
+      <el-form-item label="招聘官手机" prop="mobile" style="width: 380px;">
+        <el-input v-model="form.mobile" placeholder="填写招聘官手机号" :maxlength="11"></el-input>
+      </el-form-item>
+
+      
       <h3 class="title">职位基本信息</h3>
       <p class="hint">加“*”内容，在确认发布成功后，将无法修改</p>
       <el-form-item label="职位名称" prop="position_name" style="width: 380px;">
-        
-
         <el-input v-model="form.position_name" placeholder="限制50个字以内" :maxlength="30"></el-input>
-
       </el-form-item>
 
       <el-form-item label="职位类别" prop="type" style="width: 380px;">
-        <el-select v-model="form.type" placeholder="点击选择职位类别" @change="changePosition" style="width: 100%;">
+        <el-select v-model="selectPositionItem.name" placeholder="点击选择职位类别" @change="changePosition" style="width: 100%;">
           <el-option
             v-for="item in typeList"
             :key="item.value"
@@ -40,7 +42,6 @@
       <p class="hint">我们将通过以下条件，为您精确推荐合适的求职者，请尽量详细填写</p>
 
       <el-form-item label="经验要求" prop="work_experience" style="width: 380px;">
-
         <el-select v-model="form.work_experience" placeholder="请输入名称"  style="width: 100%;">
           <el-option
             v-for="item in experienceList"
@@ -63,18 +64,18 @@
       </el-form-item>
 
       <el-form-item label="薪酬范围" prop="emolument_min" style="width: 380px;">
-        <el-select v-model="form.emolument_min" placeholder="选择薪资范围"  style="width: 130px;">
+        <el-select v-model="form.emolument_min" placeholder="选择薪资范围" @change="changeEmolumentMin"  style="width: 100px;">
           <el-option
-            v-for="item in options"
+            v-for="item in emolumentMinList"
             :key="item.value"
             :label="item.label"
             :value="item.value">
           </el-option>
         </el-select>
         ----
-        <el-select v-model="form.emolument_max" placeholder="选择薪资范围"  style="width: 130px;">
+        <el-select v-model="form.emolument_max" placeholder="选择薪资范围"  style="width: 100px;">
           <el-option
-            v-for="item in options"
+            v-for="item in emolumentMaxList"
             :key="item.value"
             :label="item.label"
             :value="item.value">
@@ -135,7 +136,15 @@
           <img class="clo" @click="popCancel" />
           <h3 class="">添加新的公司地址</h3>
           <p>添加新的公司地址</p>
-          <el-input style="width: 368px;box-sizing: border-box;" v-model="adressInput" placeholder="请输入工作地址"></el-input>
+
+          <el-input style="width: 368px;margin: 13px 0 26px 0;box-sizing: border-box;" v-model="adressInput" placeholder="请输入工作地址）"></el-input>
+
+          <!-- <el-autocomplete style="width: 368px;box-sizing: border-box;" v-model="adressInput" 
+          placeholder="请输入工作地址" 
+          :fetch-suggestions="querySearch"
+          @select="handleSelect"
+          ></el-autocomplete> -->
+
           <el-input style="width: 368px;margin: 13px 0 26px 0;box-sizing: border-box;" v-model="adress_id_Input" placeholder="请输入门牌号（选填）"></el-input>
 
           <div class="btn-add">
@@ -148,7 +157,6 @@
     </el-form>
   </div>
 </template>
-<script charset="utf-8" src="https://map.qq.com/api/js?v=2.exp&key=P63BZ-4RM35-BIJIV-QOL7E-XNCZZ-WIF4L"></script>
 <script>
 import PostPosition from './postPosition'
 export default PostPosition

@@ -74,3 +74,31 @@ export const auditPositionApi = data => request({
 })
 
 
+// 职业标签列表
+export const getLabelPositionListApi = data => request({
+	url: `/label/position`,
+	type: 'get',
+	data
+})
+
+// 职业类型列表 
+export const getPositionTypeListApi = data => request({
+	url: `/label/positionType`,
+	type: 'get',
+	data
+})
+
+// 搜索-职业标签
+export const searchPositionApi = data => request({
+	url: `/search/position`,
+	type: 'get',
+	data
+})
+
+// 职位技能列表
+export const professionalSkillsApi = data => request({
+	url: `/label/professionalSkills`,
+	type: 'get',
+	data
+})
+

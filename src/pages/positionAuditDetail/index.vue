@@ -135,7 +135,7 @@ export default class checkPage extends Vue {
 <style lang="less" scoped="scoped">
 .checkPage{
   margin-left: 200px;
-  padding: 22px;
+  padding: 22px 22px 22px 22px;
   position: relative;
 }
 .mask{

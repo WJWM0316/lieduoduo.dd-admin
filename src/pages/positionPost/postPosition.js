@@ -1,9 +1,13 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 // import config from '@/configs'
-import { getTutorDetailApi, getPositionListApi, searchPositionApi, getPositionApi, editPositionApi, addPositionApi } from 'API/position'
+import { professionalSkillsApi, getLabelPositionListApi, searchPositionApi, getPositionApi, editPositionApi, addPositionApi } from 'API/position'
+import { getAdressListApi, addCompanyAdressApi, deleteCompanyAdressApi, editCompanyAdressApi } from 'API/company'
 import SearchBar from '@/components/searchBar'
+import {TMap} from '../../util/js/TMap.js'
+//P63BZ-4RM35-BIJIV-QOL7E-XNCZZ-WIF4L
 
+var geocoder = {}
 @Component({
   name: 'community-edit',
   components: {
@@ -52,66 +56,71 @@ export default class CommunityEdit extends Vue {
 	   }
   ]
   //职位类别
-  typeList = []
+  typeList = [
+    {
+      value: '选项1',
+      label: '选择职位'
+    }
+  ]
   // 学历
   educationList = [
   	{
-  		value: '选项1',
+  		value: 5,
   		label: '初中及以下'
   	},
   	{
-  		value: '选项2',
+  		value: 10,
   		label: '中专/中技'
   	},
   	{
-  		value: '选项3',
+  		value: 15,
   		label: '高中'
   	},
   	{
-  		value: '选项4',
+  		value: 20,
   		label: '大专'
   	},
   	{
-  		value: '选项5',
+  		value: 25,
   		label: '本科'
   	},
   	{
-  		value: '选项6',
+  		value: 30,
   		label: '硕士'
   	},
   	{
-  		value: '选项7',
+  		value: 35,
   		label: '博士'
   	}
   ]
   // 经验要求
   experienceList = [
   	{
-  		value: '选项1',
+  		value: '1',
   		label: '不限'
   	},
   	{
-  		value: '选项2',
+  		value: '2',
   		label: '中专/应届生'
   	},
   	{
-  		value: '选项3',
+  		value: '3',
   		label: '1年以内'
   	},
   	{
-  		value: '选项4',
+  		value: '4',
   		label: '1-3年'
   	},
   	{
-  		value: '选项5',
+  		value: '5',
   		label: '3-5年'
   	},
   	{
-  		value: '选项6',
+  		value: '6',
   		label: '5-10年'
   	},
   	{
-  		value: '选项7',
+  		value: '7',
   		label: '10年以上'
   	}
   ]
@@ -122,8 +131,8 @@ export default class CommunityEdit extends Vue {
 			label: '添加新的公司地址',
 		},
 		{
-			value: '1',
-			label: '222',
+			value: '广州市天河区',
+			label: '广州市天河区',
 		}
   ]
 
@@ -132,6 +141,7 @@ export default class CommunityEdit extends Vue {
 
   // 表单数据
   form = {
+    mobile: '',
     position_name: '', // 职位名称
     company_id: '', // 公司ID
     type: '', // 职位类型
@@ -152,6 +162,15 @@ export default class CommunityEdit extends Vue {
 
   	// 表单验证规则
   rules = {
+    mobile: [
+        { required: true, message: '手机号必须填写，最多11个字，纯数字',trigger: 'blur' }, 
+        {
+          max: 11,
+          min: 11,
+          trigger: 'blur',
+          message: '手机号必须填写，最多11个字，纯数字'
+        }
+    ],
     position_name: [
       { required: true, message: '请填写职位名称', trigger: 'blur' },
       { min: 2, message: '职位名称不得少于2个字', trigger: 'blur' },
@@ -180,14 +199,85 @@ export default class CommunityEdit extends Vue {
   	isShow: false,
   	type: 'position'
   }
+  // 职位类别
+  selectPositionItem = {
+    name: '',
+    typeId: ''
+  }
+  emolumentMaxList = [] //选择薪资范围
+  emolumentMinList = [] //选择薪资范围
+  addressData = {
+    area_id: '',
+    address: '',
+    doorplate: '',
+    Ing: '',
+    lat: ''
+  }
 
-  ajax(url,fnSucc){
+  professionalSkillsList = []
+  setEmolumentMin () {
+    let max = 260
+    let i = 0
+    let list = []
+
+    while (i<max)
+    {
+      if(i<30){
+        i++
+      } else if(i<100){
+        i+=5
+      } else if(i<260){
+        i+=10
+      }
+
+      list.push({
+        label : `${i}k`,
+        value : i
+      })
+    }
+
+    this.emolumentMinList = list
+
+  }
+
+  changeEmolumentMin(e){
+    this.setEmolumentMax(e)
+  }
+
+  setEmolumentMax (num) {
+    let max = 260
+    let i = num
+    let list = []
+
+    while (i<max)
+    {
+      if(i<30){
+        i++
+      } else if(i<100){
+        i+=5
+      } else if(i<260){
+        i+=10
+      }
+
+      list.push({
+        label : `${i}k`,
+        value : i
+      })
+    }
+
+    this.emolumentMaxList = list
+  }
+
+  ajax(url,type,fnSucc){
+    let getType = type || 'get'
     if(window.XMLHttpRequest){
       var oAjax = new XMLHttpRequest();
     }else{
       var oAjax = new ActiveXObject("Microsoft.XMLHTTP");//IE6浏览器创建ajax对象
     }
-    oAjax.open("GET",url,true);//把要读取的参数的传过来。
+
+
+    oAjax.open(getType,url,true);//把要读取的参数的传过来。
     oAjax.send();
     oAjax.onreadystatechange = function(){
       if(oAjax.readyState==4)
@@ -195,12 +285,31 @@ export default class CommunityEdit extends Vue {
         if(oAjax.status==200){
             nSucc(oAjax.responseText);//成功的时候调用这个方法
         }else{
-          if(fnfiled){
-            fnField(oAjax.status);
-          }
+
+          console.log(oAjax)
+          // if(fnfiled){
+          //   fnField(oAjax.status);
+          // }
         }
       }
     }
+  }
+
+  querySearch(queryString, cb){
+    console.log(queryString)
+    if(queryString.length>0){
+      console.log(geocoder)
+      geocoder.getLocation(queryString)
+
+    }
+    /*let url = `https://apis.map.qq.com/ws/place/v1/suggestion/?keyword=${queryString}&key=P63BZ-4RM35-BIJIV-QOL7E-XNCZZ-WIF4L`
+    console.log(url)
+    this.ajax(url,'jsonp',function(res){
+      console.log(res)
+    })*/
+  }
+
+  handleSelect(e){
   }
 
   // 编辑标题
@@ -208,105 +317,64 @@ export default class CommunityEdit extends Vue {
     return this.$route.query.type !== 'add' ? '编辑职位' : '添加职位'
   }
 
+  mounted() {
+    let that = this
+    TMap('P63BZ-4RM35-BIJIV-QOL7E-XNCZZ-WIF4L').then(qq => {
+        geocoder = new qq.maps.Geocoder({
+          complete : function(result){
+            console.log(result)
+            let data = {
+              mobile: that.form.mobile,
+              areaId: '',
+              address: result.detail.address,
+              doorplate: that.addressData.doorplate,
+              Ing: result.detail.location.Ing,
+              lat: result.detail.location.lat
+            }
+
+            addCompanyAdressApi(data).then(res => {
+              console.log(res)
+            })
+          }
+        })
+
+        geocoder.setError(function() {
+          that.$message.error("出错了，请输入正确的地址！！！")
+        });
+    });
+
+
+  }
+
   created () {
     // this.getTagList()
     this.init()
+    this.setEmolumentMin()
+    this.getProfessionalSkills()
+    this.getAdressList()
+    this.getLabelPositionList()
+
+    
   }
+  //获取地址列表
+  getAdressList(){
+    let data = {
+      mobile: this.form.mobile,
+      page: 1,
+      count: 20,
+      sort: 'asc'
+    }
+    getAdressListApi(data).then(res=>{
+      if(res.data.data.length>0){
 
-  // 搜索职位
-  handleSearch (e) {
-  	console.log(e)
-  	searchPositionApi({
-  		name: e,
-  		page: 1,
-  		count: 20
-  	}).then(res => {
-  		this.secondPositionList = []
-  		this.thirdPositionList = res.data.data
-  	})
-  }
-
-  addAdress () {
-
-  }
-
-  selectPosition (index) {
-		console.log(this.secondPositionList)
-  	if (!this.positionList[index].active) {
-  		this.positionList.map((item,index2)=>{
-  			if(index2===index){
-  				item.active = true
-  				item.children.map((item2)=>{
-			  			item2.active = false
-			  			this.thirdPositionList = item2.children
-		  		})
-					this.secondPositionList = item.children
-  			}else {
-	  			item.active = false
-  			}
-  		})
-  	}
-  	this.thirdPositionList = []
-  }
-
-  selectSecondPosition (index) {
-
-  	if (!this.secondPositionList[index].active) {
-  		this.secondPositionList.map((item,index2)=>{
-  			if(index2===index){
-  				item.active = true
-  				this.thirdPositionList = item.children
-  			}else {
-	  			item.active = false
-  			}
-  		})
-  	}else {
-  		this.secondPositionList[index].active = false
-  		this.thirdPositionList = []
-  	}
-  }
-
-  thirdSecondPosition (item) {
-  	this.pop.isShow = false
-  	console.log(item)
-  }
-
-  changePosition () {
-  	this.pop = {
-  		isShow: true,
-  		type: 'position'
-  	}
-  }
-
-  // 工作地点选择 
-  changeAdress (e) {
-  	if(e==='0'){
-  		this.pop = {
-  			isShow: true,
-  			type: 'addAdress'
-  		}
-  	}
-  }
-
-  getPositionList () {
-  	getPositionListApi().then(res => {
-  		res.data.data.map((item,index)=>{
-  			if(index===0){
-  				item.active = true
-  				this.secondPositionList = item.children
-  				console.log(item.children)
-  			}else {
-	  			item.active = false
-  			}
-  		})
-  		this.positionList = res.data.data
-  	})
+      }
+      console.log('==>',res.data)
+    })
   }
   /**
    * 初始化数据
    */
   async init () {
-  	console.log('1111',this.$route.query)
     try {
       // 如果有id，则为编辑
       if (this.$route.query.id) {
@@ -315,27 +383,45 @@ export default class CommunityEdit extends Vue {
         	id:id
         })
 
-        console.log(data)
+        console.log('====',data.data)
         // // 创建编辑表单数据
-        // const form = {}
-        // form.id = id
-        // form.title = community.title
-        // form.simple_intro = community.simple_intro
-        // form.tags = (community.tags && community.tags.length > 0 && community.tags[0].id) || '' // 目前单选，取第一个值
-        // form.master_uid = community.master_uid
-        // form.join_price = parseFloat(community.join_price)
-        // form.rate = parseFloat(community.rate) || ''
+        const form = {}
+        form.position_name = data.data.positionName
+        form.company_id = data.data.companyId
+        form.type = data.data.typeName
 
-        // form.posters = community.posters
-        // form.master_intro = community.master_intro
-        // form.show_status = community.show_status.toString()
-        // form.is_course = community.is_course
+        form.address_id = data.data.addressId
+        form.area_id = data.data.areaId
+        form.lng = data.data.lng
+        form.lat = data.data.lat
+        form.address = data.data.address
+        form.doorplate = data.data.doorplate
+        form.labels = data.data.skillsLabel
+        
+        form.work_experience = data.data.workExperience
+        form.education = data.data.education
+        form.describe = data.data.describe
 
-        // this.form = $.extend(true, {}, this.form, form)
-        // this.communityIntroEditor.content = community.intro // 社区介绍
+        form.type = data.data.type
+        this.selectPositionItem = {
+          name: data.data.typeName,
+          typeId: data.data.type
+        }
+
+        this.addressList[1] = {
+            value: data.data.addressId,
+            label: data.data.address,
+        }
+
+        form.emolument_min = data.data.emolumentMin
+        form.emolument_max = data.data.emolumentMax
+        this.setEmolumentMax(data.data.emolumentMin)
+        // form.mobile = '18802090814'
+        this.form = form
+
+        console.log(this.form)
+        //this.form = $.extend(true, {}, this.form, form)
       } else {
-
-      	this.getPositionList()
         // const res = await getCreateCommunityData({
         //   globalLoading: true
         // })
@@ -364,27 +450,179 @@ export default class CommunityEdit extends Vue {
   /**
    * 保存社区
    */
-  async saveCommunity () {
+  async savePosition () {
+    console.log('savePosition')
     try {
-      this.$store.dispatch('showAjaxLoading')
+      // this.$store.dispatch('showAjaxLoading')
       const params = this.transformData(this.form)
       console.log('---', params)
-      if (!this.$route.params.id) {
-        await postCreateCommunity(params)
-        this.$message.success('创建社区成功')
+      if (!this.$route.query.id) {
+        addPositionApi(params).then(res=>{
+          this.$message.success('创建成功')
+          console.log(res)
+
+          this.$router.push({
+            name: 'positionManage'
+          })
+
+        }).catch(e=>{
+          console.log(e.msg)
+        })
       } else {
-        await putSaveCommunity(this.form.id, params)
-        this.$message.success('保存社区成功')
+        params.id = this.$route.query.id
+        editPositionApi(params).then(res=>{
+          this.$message.success('编辑成功')
+          console.log(res)
+
+          this.$router.push({
+            name: 'positionManage'
+          })
+        }).catch(e=>{
+          console.log(e.msg)
+        })
       }
 
-      this.$router.push({
-        name: 'communityList'
-      })
+      
     } catch (e) {
       this.$message.error(e.message)
     } finally {
-      this.$store.dispatch('hideAjaxLoading')
+      //this.$store.dispatch('hideAjaxLoading')
     }
+  }
+
+  // 技能
+  getProfessionalSkills () {
+    let that = this
+    professionalSkillsApi({
+      type: 'skills'
+    }).then(res => {
+      //that.professionalSkillsList = res.data.data.labelProfessionalSkills
+
+      let options = []
+      res.data.data.labelProfessionalSkills.map((item,index) => {
+        options[index] = {
+          label: item.name,
+          value: item.labelId
+        }
+      })
+      this.options = options
+    })
+  }
+  // 搜索职位
+  handleSearch (e) {
+    console.log(e)
+    searchPositionApi({
+      name: e,
+      page: 1,
+      count: 20
+    }).then(res => {
+      this.secondPositionList = []
+      this.thirdPositionList = res.data.data
+    })
+  }
+
+  //添加工作地点
+  addAdress () {
+    console.log(this.adressInput)
+    console.log(this.addressData)
+    if(this.adressInput.length>0){
+      let adress = this.adressInput
+
+      this.addressData.address = this.adressInput
+      this.addressData.doorplate = this.adress_id_Input
+      console.log(adress)
+      geocoder.getLocation(adress)
+    }
+  }
+
+  selectPosition (index) {
+    console.log(this.secondPositionList)
+    if (!this.positionList[index].active) {
+      this.positionList.map((item,index2)=>{
+        if(index2===index){
+          item.active = true
+          item.children.map((item2)=>{
+              item2.active = false
+              this.thirdPositionList = item2.children
+          })
+          this.secondPositionList = item.children
+        }else {
+          item.active = false
+        }
+      })
+    }
+    this.thirdPositionList = []
+  }
+
+  selectSecondPosition (index) {
+
+    if (!this.secondPositionList[index].active) {
+      this.secondPositionList.map((item,index2)=>{
+        if(index2===index){
+          item.active = true
+          this.thirdPositionList = item.children
+        }else {
+          item.active = false
+        }
+      })
+    }else {
+      this.secondPositionList[index].active = false
+      this.thirdPositionList = []
+    }
+  }
+
+  thirdSecondPosition (item) {
+    console.log(item)
+    this.pop.isShow = false
+    this.selectPositionItem = {
+      name: item.name,
+      typeId: item.labelId
+    }
+    this.form.type = item.labelId
+
+    // this.professionalSkillsList.map(item2 => {
+    //    if ( item2.labelId === item.labelId ) {
+    //       let children = item2.children
+    //       //children.
+    //    }
+    // })
+  }
+
+  changePosition () {
+    this.pop = {
+      isShow: true,
+      type: 'position'
+    }
+  }
+
+  // 工作地点选择 
+  changeAdress (e) {
+    console.log(this.form.mobile)
+    if(!this.form.mobile || this.form.mobile.length<1){
+      this.$message.error('需要先填写手机号')
+      return
+    }
+    if(e==='0'){
+      this.pop = {
+        isShow: true,
+        type: 'addAdress'
+      }
+    }
+  }
+
+  getLabelPositionList () {
+    getLabelPositionListApi().then(res => {
+      res.data.data.map((item,index)=>{
+        if(index===0){
+          item.active = true
+          this.secondPositionList = item.children
+          console.log(item.children)
+        }else {
+          item.active = false
+        }
+      })
+      this.positionList = res.data.data
+    })
   }
 
   /**
@@ -392,39 +630,22 @@ export default class CommunityEdit extends Vue {
    * @param {*} form
    */
   transformData (form) {
-    const newForm = $.extend(true, {}, form || {})
+    const newForm = {...form}
     // 分类标签
-    if (newForm.tags) {
-      newForm.tags = [newForm.tags]
+    console.log(newForm)
+    if(newForm.labels && newForm.labels.length>0){
+      let labels = []
+      newForm.labels.map(item=>{
+        labels.push({
+          id :item,
+          is_diy: '0'
+        })
+      })
+      //var jsObject = JSON.parse(jsonString); //转换为json对象
+      newForm.labels = JSON.stringify(labels); //转换为json类型的字符串　　
+      console.log(newForm.labels)
     }
-
-    // 起止时间
-    if (newForm.start_time && newForm.start_time instanceof Date) {
-      newForm.start_time = parseInt(newForm.start_time.getTime() / 1000)
-    }
-    if (newForm.end_time && newForm.end_time instanceof Date) {
-      newForm.end_time = parseInt(newForm.end_time.getTime() / 1000)
-    }
-
-    if (!newForm.sort) {
-      newForm.sort = 0
-    }
-
-    if (!newForm.rate) {
-      newForm.rate = 0
-    }
-
-    // 如果图片路径是绝对url路径，证明没有修改过，去除参数
-    if (this.$util.isAbsoulteURL(newForm.detail_img)) {
-      delete newForm.detail_img
-    }
-    if (this.$util.isAbsoulteURL(newForm.icon)) {
-      delete newForm.icon
-    }
-    if (this.$util.isAbsoulteURL(newForm.mini_apps_share_img)) {
-      delete newForm.mini_apps_share_img
-    }
-
+    
     return newForm
   }
 
@@ -458,73 +679,17 @@ export default class CommunityEdit extends Vue {
     return test
   }
 
-  /**
-   * 点击增加
-   */
-  addPos () {
-    console.log(this.form.posters.length)
-    if (this.form.posters.length > 4) {
-      return
-    }
-    let a = {
-      color: '1',
-      wap_file_id: 0,
-      applet_file_id: 0,
-      new_wap_file_id: '',
-      new_applet_file_id: ''
-    }
-    Vue.set(this.form.posters, this.form.posters.length, a)
-    /* let poList = document.getElementsByClassName('poster_blo')
-    console.log(poList) */
-  }
-
-  /**
-   * 点击删除
-   */
-  removePos (e) {
-    let index = e.currentTarget.getAttribute('index')
-    let data = this.form.posters
-    let a = {}
-    // 删除了也要提交
-    if (data[index].applet_file_id) {
-      a = data[index]
-      a.new_wap_file_id = a.new_applet_file_id = 0
-      this.deletePoster.push(a)
-    }
-    this.form.posters.splice(index, 1)
-    console.log(a, this.deletePoster.length)
-  }
 
   /**
    * 点击提交
    */
   handleSubmit () {
     console.log(this.form)
-    let test = this.examinePos()
+    // let test = this.examinePos()
     this.$refs.form.validate(valid => {
       if (valid) {
         let data = this.form
-        // 加上删除的
-        if (this.deletePoster.length > 0) {
-          console.log(data.posters, this.deletePoster)
-          if (data.posters) {
-            data.posters = [...data.posters, ...this.deletePoster]
-          } else {
-            data.posters = [...this.deletePoster]
-          }
-        }
-
-        console.log(this.deletePoster)
-        // 修改color
-        if (data.posters && data.posters.length > 0) {
-          for (let i = 0; data.posters.length > i; i++) {
-            data.posters[i].color = data.posters[i].color === '1' ? '0,0,0' : '255,255,255'
-          }
-        }
-        console.log('==========', data.posters, test)
-        if (test) {
-          this.saveCommunity()
-        }
+        this.savePosition()
       } else {}
     })
   }
@@ -538,41 +703,6 @@ export default class CommunityEdit extends Vue {
    */
   handleCancel () {
     this.$router.go(-1)
-  }
-
-  /**
-   * 图片读取成功
-   */
-  handleImageLoaded () {
-    this.$refs.form.validateField('detail_img')
-  }
-
-  /**
-   * 列表图片读取成功
-   */
-  handleIconLoaded () {
-    this.$refs.form.validateField('icon')
-  }
-
-  /**
-   * 分享图片读取成功
-   */
-  handleShareImageLoaded () {
-    this.$refs.form.validateField('mini_apps_share_img')
-  }
-
-  /**
-   * 小程序特殊 分销／邀请海报
-   */
-  handlePosterX () {
-    this.$refs.form.validateField('xcx_poster')
-  }
-
-  /**
-   * WAP 分销／邀请海报
-   */
-  handlePosterW () {
-    this.$refs.form.validateField('wap_poster')
   }
 
   /**
@@ -607,48 +737,4 @@ export default class CommunityEdit extends Vue {
   //   this.$refs.form.validateField('introduce')
   }
 
-  /**
-   * 重新设置上传的图片文件列表
-   * @param {*} fileList
-   */
-
-  resetImageFileList (fileList) {
-    // console.log('重新设置上传的图片文件列表', fileList)
-    fileList = fileList || []
-    // this.form.posters[fileList[0].aryName[0]]['new_' + fileList[0].aryName[1] + '_file_id'] = fileList[0].fileId
-    /* this.form.file_ids = fileList.map(item => {
-      return {
-        file_id: item.fileId
-      }
-    })
-    this.$refs.form.validateField('file_ids') */
-  }
-
-  /**
-   * 上传图片成功
-   * @param {*} res
-   * @param {*} file
-   * @param {*} fileList
-   */
-  handleUploadImageSuccess (res, file, fileList) {
-    console.log('上传图片成功', this.form.posters)
-    this.resetImageFileList(fileList)
-  }
-
-  /**
-   * 上传图片失败
-   * @param {*} error
-   */
-  handleUploadImageError (error) {
-    this.$message.error(error.message)
-  }
-
-  /**
-   * 移除文件
-   * @param {*} file
-   * @param {*} fileList
-   */
-  handleRemoveImage (file, fileList) {
-    this.resetImageFileList(fileList)
-  }
 }

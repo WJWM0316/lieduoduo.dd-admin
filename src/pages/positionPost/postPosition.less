@@ -139,6 +139,7 @@
   background: rgba(0, 0, 0, 0.8);
   width: 100%;
   height: 100%;
+  z-index: 100;
 }
 .jobSelectPop {
   width:878px;
@@ -311,6 +312,9 @@
       align-items: center;
       justify-content: center;
       padding: 0;
+      span {
+        color: #fff;
+      }
     }
 
   }
@@ -318,4 +322,8 @@
 }
 .el-form-item.is-required:not(.is-no-asterisk)>.el-form-item__label:before {
   margin-right: 0;
+}
+
+.el-button--primary {
+  color: #fff !important;
 }

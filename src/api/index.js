@@ -42,7 +42,7 @@ axios.interceptors.response.use(
 
 export const request = ({type = 'post', url, data = {}, config = {}} = {}) => {
 
-  console.log('API_ROOT===>',API_ROOT)
+  //console.log('API_ROOT===>',API_ROOT)
   if (data.globalLoading) {
     loadingInstance = Loading.service({})
     delete params.globalLoading

@@ -61,6 +61,39 @@ export const setIdentityInfoApi = data => request({
   data
 })
 
+/* 获取地址 */
+export const getCompanyAdressApi = data => request({
+  url: `/company/position/address/${data.id}`,
+  type: 'get'
+})
+
+/* 修改地址 */
+export const editCompanyAdressApi = data => request({
+  url: `/company/position/address/${data.id}`,
+  type: 'post',
+  data
+})
+
+/* 删除地址 */
+export const deleteCompanyAdressApi = data => request({
+  url: `/company/position/address/${data.id}`,
+  type: 'delete',
+  data
+})
+
+/* 添加地址 */
+export const addCompanyAdressApi = data => request({
+  url: `/company/position/address`,
+  type: 'put',
+  data
+})
+
+/* 分页获取地址列表 */
+export const getAdressListApi = data => request({
+  url: `/company/position/simplepage/addresses`,
+  type: 'get',
+  data
+})
 /* 获取录入公司列表 */
 export const getCompanyListApi = data => request({
   url: `/company/list`,
