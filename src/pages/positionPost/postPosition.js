@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 // import config from '@/configs'
 import { professionalSkillsApi, getLabelPositionListApi, searchPositionApi, getPositionApi, editPositionApi, addPositionApi } from 'API/position'
-import { getAdressListApi, addCompanyAdressApi, deleteCompanyAdressApi, editCompanyAdressApi } from 'API/company'
+import { getAdressListApi, addCompanyAdressApi } from 'API/company'
 import SearchBar from '@/components/searchBar'
 import {TMap} from '../../util/js/TMap.js'
 //P63BZ-4RM35-BIJIV-QOL7E-XNCZZ-WIF4L
@@ -212,7 +212,7 @@ export default class CommunityEdit extends Vue {
     area_id: '',
     address: '',
     doorplate: '',
-    Ing: '',
+    lng: '',
     lat: ''
   }
 
@@ -317,32 +317,32 @@ export default class CommunityEdit extends Vue {
         geocoder = new qq.maps.Geocoder({
           complete : function(result){
             console.log(result)
-            /*let data = {
-              mobile: that.form.mobile,
-              areaId: '',
+            let data = {
+              mobile: that.form.mobile || 15989135199,
+              areaId: result.detail.addressComponents.street || '',
               address: result.detail.address,
               doorplate: that.addressData.doorplate,
-              Ing: result.detail.location.Ing,
+              lng: result.detail.location.lng,
               lat: result.detail.location.lat
             }
 
             addCompanyAdressApi(data).then(res => {
               console.log(res)
-            })*/
+            }).catch(e=>{
+              console.log('===',e)
+              that.$message.error(e.data.msg)
+            })
           }
         })
 
-        geocoder.getAddress(new qq.maps.LatLng(23, 113));
-        geocoder.getLocation('广州塔');
-
-        searchService = new qq.maps.SearchService({
-          complete : function(result){
-            console.log('searchService',result)
-          },//若服务请求失败，则运行以下函数
-          error: function() {
-            that.$message.error("出错了。")
-          }
-        })
+        // searchService = new qq.maps.SearchService({
+        //   complete : function(result){
+        //     console.log('searchService',result)
+        //   },//若服务请求失败，则运行以下函数
+        //   error: function() {
+        //     that.$message.error("出错了。")
+        //   }
+        // })
 
     });
   }
@@ -395,7 +395,12 @@ export default class CommunityEdit extends Vue {
         form.lat = data.data.lat
         form.address = data.data.address
         form.doorplate = data.data.doorplate
-        form.labels = data.data.skillsLabel
+
+        form.labels = []
+        data.data.skillsLabel.map(item=>{
+          console.log(item.labelId)
+          form.labels.push(item.labelId)
+        })
         
         form.work_experience = data.data.workExperience
         form.education = data.data.education
@@ -526,17 +531,10 @@ export default class CommunityEdit extends Vue {
     console.log(this.addressData)
     if(this.adressInput.length>0){
       let adress = this.adressInput
-
       this.addressData.address = this.adressInput
       this.addressData.doorplate = this.adress_id_Input
       console.log(adress)
-      //geocoder.getLocation(adress)
-
-      searchService.search(adress);
-      /*citylocation.searchCityByLatLng({
-        lat: 23.106345,
-        lng: 113.323434
-      })*/
+      geocoder.getLocation(adress)
     }
   }
 
@@ -585,12 +583,16 @@ export default class CommunityEdit extends Vue {
       topPid: item.topPid,
     }
     this.form.type = item.labelId
+    this.setSkillsList()
+  }
 
-    this.professionalSkillsList.map(item2 => {
-       if ( item2.labelId === item.topPid ) {
-          this.options = item2.children
+  //设置技能列表
+  setSkillsList () {
+    let topPid = this.selectPositionItem.topPid
+    this.professionalSkillsList.map(item => {
+       if ( item.labelId === topPid ) {
+          this.options = item.children
        }
-
        console.log(this.options)
     })
   }
@@ -605,6 +607,8 @@ export default class CommunityEdit extends Vue {
   // 工作地点选择 
   changeAdress (e) {
     console.log(this.form.mobile)
+    console.log(this.form.address_id)
+    // this.form.address_id = 1
     if(!this.form.mobile || this.form.mobile.length<1){
       this.$message.error('需要先填写手机号')
       return
@@ -615,6 +619,8 @@ export default class CommunityEdit extends Vue {
         type: 'addAdress'
       }
     }
+
+    return false
   }
 
   getLabelPositionList () {

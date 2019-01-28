@@ -1,6 +1,6 @@
 <template>
   <div class="post-job">
-    <h2 class="u-title-1" v-text="editTitle"></h2>
+    <!-- <h2 class="u-title-1" v-text="editTitle"></h2> -->
     <el-form class="edit-form" ref="form" :model="form" :rules="rules" label-width="120px" label-suffix="：">
 
       <el-form-item label="招聘官手机" prop="mobile" style="width: 380px;">
@@ -149,7 +149,7 @@
 
           <div class="btn-add">
             <el-button class="btn_cancel" @click="popCancel">取消</el-button>
-            <el-button class="btn_submit" type="primary" @click="addAdress">添加</el-button>
+            <el-button class="btn_submit" type="primary" @click="addAdress">保存地址</el-button>
           </div>
         </div>
       </div>
