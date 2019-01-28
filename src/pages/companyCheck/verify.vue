@@ -22,7 +22,7 @@
       <!--内容-->
       <div class="content">
         <div class="title">基本信息</div>
-        <div class="item"><span class="lable">公司全称：</span> {{companyInfo.companyName}}</div>
+        <div class="item companyName"><span class="lable">公司全称：</span> {{companyInfo.companyName}}</div>
         <div class="item"><span class="lable">公司简称：</span> {{companyInfo.companyShortname}}</div>
         <div class="item"><span class="lable">所属行业：</span> {{companyInfo.industry}}</div>
         <div class="item"><span class="lable">融资阶段：</span> {{companyInfo.financingInfo}}</div>
@@ -52,6 +52,7 @@
           <span class="status" v-show="personalInfo.status === 0"><i class="el-icon-warning" style="color: #E6A23C;"></i> 已提交</span>
           <span class="status" v-show="personalInfo.status === 1"><i class="el-icon-success" style="color: #67C23A;"></i> 已通过</span>
           <span class="status" v-show="personalInfo.status === 2"><i class="el-icon-error" style="color: #F56C6C;"></i> 未通过</span>
+          <span class="status" v-show="!personalInfo.status && personalInfo.status !== 0"><i class="el-icon-error" style="color: #F56C6C;"></i> 相关信息未提交</span>
         </div>
         <div class="editBox" v-if="!isEdit">
           <el-button type="primary" @click.stop="Review(personalInfo.uid, 'identity')" v-show="personalInfo.status === 0">审核</el-button>
@@ -332,6 +333,14 @@ export default class checkPage extends Vue {
       .lable{
         margin-right: 10px;
         color: #909399;
+      }
+    }
+    .companyName{
+      font-size: 15px;
+      font-weight: 700;
+      span{
+        font-size: 14px;
+        font-weight: 500;
       }
     }
     .imgBox{

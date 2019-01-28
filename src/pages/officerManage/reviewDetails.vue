@@ -20,10 +20,11 @@
           <span class="status" v-show="identityInfo.status === 0"><i class="el-icon-warning" style="color: #E6A23C;"></i> 已提交</span>
           <span class="status" v-show="identityInfo.status === 1"><i class="el-icon-success" style="color: #67C23A;"></i> 已通过</span>
           <span class="status" v-show="identityInfo.status === 2"><i class="el-icon-error" style="color: #F56C6C;"></i> 未通过</span>
+          <span class="status" v-show="!identityInfo.status && identityInfo.status !== 0"><i class="el-icon-error" style="color: #F56C6C;"></i> 未提交身份证信息</span>
         </div>
         <div class="editBox">
-          <el-button type="primary" @click.stop="Review(personalInfo.uid)" v-show="personalInfo.status === 0">审核</el-button>
-          <el-button type="primary" disabled v-show="personalInfo.status !== 0">审核</el-button>
+          <el-button type="primary" @click.stop="Review(personalInfo.uid)" v-show="identityInfo.status === 0">审核</el-button>
+          <el-button type="primary" disabled v-show="identityInfo.status !== 0">审核</el-button>
         </div>
       </div>
       <!--内容-->

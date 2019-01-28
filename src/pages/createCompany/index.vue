@@ -227,7 +227,6 @@ export default class createCompany extends Vue{
   }
   next() {
     if (this.active >= 2 ) {
-      console.log('成功')
       
       return
     }
@@ -236,17 +235,23 @@ export default class createCompany extends Vue{
         this.personalInfo.company_id = res.data.data.companyId
         this.active++
       }).catch(err => {
-        this.$message.error('有信息没填，无法通过哦');
+        this.$message.error(`${err.data.msg}，无法通过哦`);
       })
     } else {
       setIdentityInfoApi(this.personalInfo).then(res => {
+        let that = this
         this.active+=2
         this.$message({
           message: '恭喜你，信息录入完成',
           type: 'success'
         })
+        setTimeout(function () {
+          that.$router.push({
+            path: '/index'
+          })
+        }, 1000)
       }).catch(err => {
-        this.$message.error('有信息没填，无法通过哦');
+        this.$message.error(`${err.data.msg}`);
       })
     }
   }

@@ -31,7 +31,6 @@
                 <el-option label="审核中" value="0"></el-option>
                 <el-option label="通过" value="1"></el-option>
                 <el-option label="未通过" value="2"></el-option>
-                <el-option label="未提交" value="3"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label-width="100px" label="身份认证状态" prop="auth_status">
@@ -75,7 +74,7 @@
             <div class="btn-container" v-else-if="props.scope.column.property === 'status' || props.scope.column.property === 'authStatus'" style="height: 48px;">
               <div>
                 <span :class="{'row-delete': props.scope.row.status !== 1}" v-show="!props.scope.row[props.scope.column.property] && props.scope.row[props.scope.column.property] !== 0">
-                  未提交 <i class="el-icon-warning" style="color: #E6A23C;"></i>
+                  未提交 <i class="el-icon-error" style="color: #F56C6C;"></i>
                 </span>
                 <span :class="{'row-delete': props.scope.row.status !== 1}" v-show="props.scope.row[props.scope.column.property] === 0">
                   审核中 <i class="el-icon-warning" style="color: #E6A23C;"></i>
