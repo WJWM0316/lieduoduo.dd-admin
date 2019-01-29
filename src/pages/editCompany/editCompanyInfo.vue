@@ -6,7 +6,7 @@
         <span class="title">公司认证信息</span>
       </div>
       <div class="editBox">
-        <el-button type="primary" @click.stop="save">保存</el-button>
+        <el-button class="inquire" @click.stop="save">保存</el-button>
       </div>
     </div>
     <!--公司信息表格-->
@@ -229,11 +229,16 @@ export default class editCompany extends Vue {
   text-align: left;
   .point{
     font-size: 14px;
-    color: #606266;
-    background-color: #E6A23C;
+    color: #FFFFFF;
+    background-color: #652791;
     padding: 10px;
     text-align: center;
     margin-bottom: 30px;
   }
+}
+.inquire{
+  background-color: #652791;
+  color: #FFFFFF;
+  border-radius: 4px;
 }
 </style>

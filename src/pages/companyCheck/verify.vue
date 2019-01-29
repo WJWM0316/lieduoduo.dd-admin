@@ -187,6 +187,7 @@ export default class checkPage extends Vue {
     this.$confirm('删除公司将清除已关联的招聘官和职位, 您确定删除吗?', '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
+      customClass: 'messageBox',
       type: 'warning'
     }).then(() => {
       deleteCompanyApi(this.editCompanyID).then(res => {
@@ -291,14 +292,14 @@ export default class checkPage extends Vue {
 .mask{
   position: fixed;
   top: 0;
-  left: 0;
+  right: 0;
   z-index: 999;
-  width: 100%;
+  width: 50%;
   height: 100%;
   background-color: rgba(0,0,0,0.5);
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content:  center;
   img{
     height: 90%;
   }
