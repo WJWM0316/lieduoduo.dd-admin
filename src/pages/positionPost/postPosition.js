@@ -217,6 +217,194 @@ export default class CommunityEdit extends Vue {
   }
 
   professionalSkillsList = []
+
+  mounted() {
+    let that = this
+    TMap('P63BZ-4RM35-BIJIV-QOL7E-XNCZZ-WIF4L').then(qq => {
+        geocoder = new qq.maps.Geocoder({
+          complete : function(result){
+            console.log(result)
+            let data = {
+              mobile: that.form.mobile || 15989135199,
+              areaName: result.detail.addressComponents.street || '',
+              address: result.detail.address,
+              doorplate: that.addressData.doorplate,
+              lng: result.detail.location.lng,
+              lat: result.detail.location.lat
+            }
+
+            addCompanyAdressApi(data).then(res => {
+              console.log(res)
+            }).catch(e=>{
+              console.log('===',e)
+              that.$message.error(e.data.msg)
+            })
+          }
+        })
+
+        // searchService = new qq.maps.SearchService({
+        //   complete : function(result){
+        //     console.log('searchService',result)
+        //   },//若服务请求失败，则运行以下函数
+        //   error: function() {
+        //     that.$message.error("出错了。")
+        //   }
+        // })
+
+    });
+  }
+
+  created () {
+    // this.getTagList()
+    this.init()
+    this.setEmolumentMin()
+    this.getProfessionalSkills()
+    this.getAdressList()
+    this.getLabelPositionList()
+  }
+  
+  /**
+   * 初始化数据
+   */
+  async init () {
+    try {
+      // 如果有id，则为编辑
+      if (this.$route.query.id) {
+        const id = parseInt(this.$route.query.id)
+        const { data } = await getPositionApi({
+          id:id
+        })
+
+        console.log('====',data.data)
+        // // 创建编辑表单数据
+        const form = {}
+        form.position_name = data.data.positionName
+        form.company_id = data.data.companyId
+        form.type = data.data.typeName
+
+        form.address_id = data.data.addressId
+        form.area_id = data.data.areaId
+        form.lng = data.data.lng
+        form.lat = data.data.lat
+        form.address = data.data.address
+        form.doorplate = data.data.doorplate
+
+        
+        
+        form.work_experience = data.data.workExperience
+        form.education = data.data.education
+        form.describe = data.data.describe
+
+
+        form.type = data.data.type
+        this.selectPositionItem = {
+          name: data.data.typeName,
+          typeId: data.data.type
+        }
+        // 设置技能
+        if (data.data.skillsLabel.length > 0) {
+          this.selectPositionItem.topPid = data.data.skillsLabel[0].topPid
+
+          if(this.professionalSkillsList.length < 1){
+            console.log(this.professionalSkillsList)
+            this.getProfessionalSkills().then(()=>{
+              this.setSkillsList()
+            })
+          }else {
+            console.log(this.professionalSkillsList)
+
+            this.setSkillsList()
+          }
+        }
+        form.labels = []
+        data.data.skillsLabel.map(item=>{
+          form.labels.push(item.labelId)
+        })
+
+        this.addressList[1] = {
+          value: data.data.addressId,
+          label: data.data.address,
+        }
+
+        form.emolument_min = data.data.emolumentMin
+        form.emolument_max = data.data.emolumentMax
+        this.setEmolumentMax(data.data.emolumentMin)
+        form.mobile = data.data.mobile
+        this.form = form
+
+        console.log(this.form)
+        //this.form = $.extend(true, {}, this.form, form)
+      } else {
+        // const res = await getCreateCommunityData({
+        //   globalLoading: true
+        // })
+        // this.tags = reshaol
+      }
+    } catch (error) {
+      // this.is_course = true;
+      // this.$message.error(error.message)
+    }
+  }
+
+  /**
+   * 保存社区
+   */
+  async savePosition () {
+    console.log('savePosition')
+    try {
+      // this.$store.dispatch('showAjaxLoading')
+      const params = this.transformData(this.form)
+      console.log('---', params)
+      if (!this.$route.query.id) {
+        addPositionApi(params).then(res=>{
+          this.$message.success('创建成功')
+          console.log(res)
+
+          this.$router.push({
+            name: 'positionManage'
+          })
+
+        }).catch(e=>{
+          console.log(e.msg)
+        })
+      } else {
+        params.id = this.$route.query.id
+        editPositionApi(params).then(res=>{
+          this.$message.success('编辑成功')
+          console.log(res)
+
+          this.$router.push({
+            name: 'positionManage'
+          })
+        }).catch(e=>{
+          console.log(e.msg)
+        })
+      }
+
+      
+    } catch (e) {
+      this.$message.error(e.message)
+    } finally {
+      //this.$store.dispatch('hideAjaxLoading')
+    }
+  }
+
+  //获取地址列表
+  getAdressList(){
+    let data = {
+      mobile: this.form.mobile,
+      page: 1,
+      count: 20,
+      sort: 'asc'
+    }
+    getAdressListApi(data).then(res=>{
+      if(res.data.data.length>0){
+
+      }
+      console.log('==>',res.data)
+    })
+  }
+
   setEmolumentMin () {
     let max = 260
     let i = 0
@@ -311,193 +499,12 @@ export default class CommunityEdit extends Vue {
     return this.$route.query.type !== 'add' ? '编辑职位' : '添加职位'
   }
 
-  mounted() {
-    let that = this
-    TMap('P63BZ-4RM35-BIJIV-QOL7E-XNCZZ-WIF4L').then(qq => {
-        geocoder = new qq.maps.Geocoder({
-          complete : function(result){
-            console.log(result)
-            let data = {
-              mobile: that.form.mobile || 15989135199,
-              areaId: result.detail.addressComponents.street || '',
-              address: result.detail.address,
-              doorplate: that.addressData.doorplate,
-              lng: result.detail.location.lng,
-              lat: result.detail.location.lat
-            }
-
-            addCompanyAdressApi(data).then(res => {
-              console.log(res)
-            }).catch(e=>{
-              console.log('===',e)
-              that.$message.error(e.data.msg)
-            })
-          }
-        })
-
-        // searchService = new qq.maps.SearchService({
-        //   complete : function(result){
-        //     console.log('searchService',result)
-        //   },//若服务请求失败，则运行以下函数
-        //   error: function() {
-        //     that.$message.error("出错了。")
-        //   }
-        // })
-
-    });
-  }
-
-  created () {
-    // this.getTagList()
-    this.init()
-    this.setEmolumentMin()
-    this.getProfessionalSkills()
-    this.getAdressList()
-    this.getLabelPositionList()
-  }
-  //获取地址列表
-  getAdressList(){
-    let data = {
-      mobile: this.form.mobile,
-      page: 1,
-      count: 20,
-      sort: 'asc'
-    }
-    getAdressListApi(data).then(res=>{
-      if(res.data.data.length>0){
-
-      }
-      console.log('==>',res.data)
-    })
-  }
-  /**
-   * 初始化数据
-   */
-  async init () {
-    try {
-      // 如果有id，则为编辑
-      if (this.$route.query.id) {
-        const id = parseInt(this.$route.query.id)
-        const { data } = await getPositionApi({
-        	id:id
-        })
-
-        console.log('====',data.data)
-        // // 创建编辑表单数据
-        const form = {}
-        form.position_name = data.data.positionName
-        form.company_id = data.data.companyId
-        form.type = data.data.typeName
-
-        form.address_id = data.data.addressId
-        form.area_id = data.data.areaId
-        form.lng = data.data.lng
-        form.lat = data.data.lat
-        form.address = data.data.address
-        form.doorplate = data.data.doorplate
-
-        form.labels = []
-        data.data.skillsLabel.map(item=>{
-          console.log(item.labelId)
-          form.labels.push(item.labelId)
-        })
-        
-        form.work_experience = data.data.workExperience
-        form.education = data.data.education
-        form.describe = data.data.describe
-
-        form.type = data.data.type
-        this.selectPositionItem = {
-          name: data.data.typeName,
-          typeId: data.data.type
-        }
-
-        this.addressList[1] = {
-            value: data.data.addressId,
-            label: data.data.address,
-        }
-
-        form.emolument_min = data.data.emolumentMin
-        form.emolument_max = data.data.emolumentMax
-        this.setEmolumentMax(data.data.emolumentMin)
-        // form.mobile = '18802090814'
-        this.form = form
-
-        console.log(this.form)
-        //this.form = $.extend(true, {}, this.form, form)
-      } else {
-        // const res = await getCreateCommunityData({
-        //   globalLoading: true
-        // })
-        // this.tags = reshaol
-      }
-    } catch (error) {
-      // this.is_course = true;
-      // this.$message.error(error.message)
-    }
-  }
-
-  /**
-   * 获取社区分类列表
-   */
-  async getTagList () {
-    try {
-      const params = {
-        type: 4
-      }
-      this.communityTags = await getTagList(params) || []
-    } catch (error) {
-      this.$message.error(error.message)
-    }
-  }
-
-  /**
-   * 保存社区
-   */
-  async savePosition () {
-    console.log('savePosition')
-    try {
-      // this.$store.dispatch('showAjaxLoading')
-      const params = this.transformData(this.form)
-      console.log('---', params)
-      if (!this.$route.query.id) {
-        addPositionApi(params).then(res=>{
-          this.$message.success('创建成功')
-          console.log(res)
-
-          this.$router.push({
-            name: 'positionManage'
-          })
-
-        }).catch(e=>{
-          console.log(e.msg)
-        })
-      } else {
-        params.id = this.$route.query.id
-        editPositionApi(params).then(res=>{
-          this.$message.success('编辑成功')
-          console.log(res)
-
-          this.$router.push({
-            name: 'positionManage'
-          })
-        }).catch(e=>{
-          console.log(e.msg)
-        })
-      }
-
-      
-    } catch (e) {
-      this.$message.error(e.message)
-    } finally {
-      //this.$store.dispatch('hideAjaxLoading')
-    }
-  }
+  
 
   // 技能
   getProfessionalSkills () {
     let that = this
-    professionalSkillsApi({
+    return professionalSkillsApi({
       type: 'skills'
     }).then(res => {
       that.professionalSkillsList = res.data.data.labelProfessionalSkills
@@ -533,7 +540,6 @@ export default class CommunityEdit extends Vue {
       let adress = this.adressInput
       this.addressData.address = this.adressInput
       this.addressData.doorplate = this.adress_id_Input
-      console.log(adress)
       geocoder.getLocation(adress)
     }
   }
@@ -582,19 +588,27 @@ export default class CommunityEdit extends Vue {
       typeId: item.labelId,
       topPid: item.topPid,
     }
+    this.form.labels = []
     this.form.type = item.labelId
     this.setSkillsList()
   }
 
   //设置技能列表
   setSkillsList () {
-    let topPid = this.selectPositionItem.topPid
-    this.professionalSkillsList.map(item => {
-       if ( item.labelId === topPid ) {
-          this.options = item.children
-       }
-       console.log(this.options)
-    })
+    console.log('setSkillsList')
+    console.log(this.professionalSkillsList)
+    if (this.professionalSkillsList.length > 0){
+      let topPid = this.selectPositionItem.topPid
+
+      console.log(topPid)
+      this.professionalSkillsList.map(item => {
+         if ( item.labelId === topPid ) {
+            this.options = item.children
+            console.log('==>',item.children)
+         }
+      })
+    }else {
+    }
   }
 
   changePosition () {
