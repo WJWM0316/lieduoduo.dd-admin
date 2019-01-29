@@ -294,11 +294,11 @@ export default class createCompany extends Vue{
   margin-left: 200px;
   padding: 22px;
   .header{
-    padding: 22px;
+    padding: 20px;
     box-sizing: border-box;
-    border-radius: 4px;
+    border-radius: 4px 4px 0 0;
     height: 100px;
-    border: 1px solid #BCBCBC;
+    border: 1px solid #CCCCCC;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -318,6 +318,13 @@ export default class createCompany extends Vue{
       padding: 10px;
       text-align: center;
       margin-bottom: 30px;
+    }
+  }
+  .companyInfo{
+    border: 1px solid #CCCCCC;
+    border-radius: 4px;
+    h3{
+      padding-left: 10px;
     }
   }
 }

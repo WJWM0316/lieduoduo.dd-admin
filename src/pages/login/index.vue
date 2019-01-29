@@ -37,9 +37,15 @@ export default class login extends Vue{
     loginApi(this.loginForm).then(res => {
       console.log(res.data.data.adminToken, '登录')
       saveAccessToken(res.data.data.adminToken)
+      this.$message({
+        message: '登录成功',
+        type: 'success'
+      })
       this.$router.push({
         path: '/companyCheck'
       })
+    }).catch(err => {
+      this.$message.error(`${err.data.msg}`);
     })
   }
   resetForm(formName) {
@@ -56,7 +62,7 @@ export default class login extends Vue{
   width: 100%;
   height: 100vh;
   background-color: #FFFFFF;
-  z-index: 9999;
+  z-index: 999;
   display: flex;
   flex-direction: column;
   align-items: center;

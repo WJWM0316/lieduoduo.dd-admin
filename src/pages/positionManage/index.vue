@@ -12,7 +12,7 @@
 
           <el-form ref="form" :model="form" label-width="80px" validate="validate">
             <el-form-item label="职位名称">
-              <el-input v-model="form.name"></el-input>
+              <el-input v-model="form.name" placeholder="输入职位/发布者/主体公司"></el-input>
             </el-form-item>
             
             <el-form-item label-width="100px" label="上线/下线">
@@ -24,10 +24,9 @@
 
             <el-form-item label-width="100px" label="审核状态">
               <el-select v-model="form.status" placeholder="全部状态">
-                <el-option label="关闭" value="0"></el-option>
-                <el-option label="审核通过" value="1"></el-option>
-                <el-option label="审核中" value="2"></el-option>
-                <el-option label="审核失败" value="3"></el-option>
+                <el-option label="已通过" value="1"></el-option>
+                <el-option label="待审核" value="2"></el-option>
+                <el-option label="未通过" value="3"></el-option>
               </el-select>
             </el-form-item>
 
@@ -104,13 +103,13 @@
                   关闭
               </span>
               <span v-show="props.scope.row.status ===1">
-                  开启
+                  已通过
               </span>
               <span v-show="props.scope.row.status ===2">
-                  审核中
+                 待审核
               </span>
               <span v-show="props.scope.row.status ===3">
-                  审核失败
+                  未通过
               </span>
             </div>
 
@@ -188,22 +187,21 @@ export default class companyCheck extends Vue {
     {
       prop: 'isOnline',
       label: '上线/下线',
-      width: 200
+      width: 150
     },
     {
       prop: 'status',
       label: '审核状态',
-      width: 200
+      width: 150
     },
     {
       prop: 'op',
-      label: '操作',
-      width: 200
+      label: '操作'
     }
   ]
   list = []
   onSubmit (e) {
-    // console.log(this.form)
+    this.form.page = 1
     this.getTemplist()
   }
   addCompany () {

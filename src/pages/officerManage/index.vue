@@ -7,15 +7,15 @@
         <div class="selectionBox">
           <el-form ref="form" :model="form" label-width="80px" validate="validate">
             <el-form-item label="关键词" prop="keyword">
-              <el-input v-model="form.keyword"></el-input>
+              <el-input v-model="form.keyword" placeholder="请输入姓名/职务/加入公司"></el-input>
             </el-form-item>
             <el-form-item label="申请时间" prop="start">
               <el-col :span="11">
-                <el-date-picker type="date" placeholder="选择日期" v-model="form.start" style="width: 100%;"></el-date-picker>
+                <el-date-picker type="date" placeholder="选择日期" value-format="yyyy-MM-dd" v-model="form.start" style="width: 100%;"></el-date-picker>
               </el-col>
               <el-col class="line" :span="2">-</el-col>
               <el-col :span="11">
-                <el-date-picker type="date" placeholder="选择日期" v-model="form.end" style="width: 100%;"></el-date-picker>
+                <el-date-picker type="date" placeholder="选择日期" value-format="yyyy-MM-dd" v-model="form.end" style="width: 100%;"></el-date-picker>
               </el-col>
             </el-form-item>
             
@@ -168,6 +168,7 @@ export default class officerManage extends Vue{
   ]
   list = []
   onSubmit (e) {
+    this.form.page = 1
     this.getRecruiterList()
   }
   /* 重置筛选 */

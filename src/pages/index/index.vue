@@ -10,7 +10,7 @@
       <div class="selectionBox">
         <el-form ref="form" :model="form" label-width="80px" validate="validate">
           <el-form-item label="关键词" prop="keyword">
-            <el-input v-model="form.keyword"></el-input>
+            <el-input v-model="form.keyword" placeholder="请输公司名字"></el-input>
           </el-form-item>
           <el-form-item label="申请时间" prop="start">
             <el-col :span="11">
@@ -28,8 +28,6 @@
           <el-form-item class="btn">
             <el-button type="primary" @click="onSubmit">查询</el-button>
             <el-button @click.stop="resetForm('form')">重置</el-button>
-            <!--<span @click.stop="resetForm('form')">重置</span>-->
-            <!--<el-button @click.stop="resetForm('form')">清除条件</el-button>-->
           </el-form-item>
         </el-form>
       </div>
@@ -153,6 +151,7 @@ export default class indexPage extends Vue {
     console.log('添加公司')
   }
   onSubmit () {
+    this.form.page = 1
     this.getCompanyList()
   }
   /* 清除列表选项 */
