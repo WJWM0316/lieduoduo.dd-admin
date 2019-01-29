@@ -12,8 +12,8 @@
           <span class="status" v-show="positionData.status === 3"><i class="el-icon-error" style="color: #F56C6C;"></i> 未通过</span>
         </div>
         <div class="editBox">
-          <el-button class="inquire" v-if="positionData.status ===2 || positionData.status ===3">审核</el-button>
-          <el-button type="info" disabled @click="Review(positionData.id)" v-else>审核</el-button>
+          <el-button class="inquire" @click="Review(positionData.id)" v-if="positionData.status ===2 || positionData.status ===3">审核</el-button>
+          <el-button type="info" disabled v-else>审核</el-button>
           <el-button class="inquire" @click='toPostPosition("edit")'>编辑</el-button>
         </div>
       </div>
@@ -109,6 +109,7 @@ export default class checkPage extends Vue {
     console.log(this.checkId)
     auditPositionApi({id: this.checkId, action: this.form.result}).then(res => {
       this.$message.success('成功')
+      this.isCheck = false
       this.getPosition()
     }).catch(err => {
       this.$message.success(err.msg)

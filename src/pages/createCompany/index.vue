@@ -27,11 +27,11 @@
         </el-form-item>
         
         <el-form-item label="公司全称" prop="title">
-          <el-input v-model="companyInfo.company_name" placeholder="请输入名称" :maxlength="30" style="width: 400px;"></el-input>
+          <el-input v-model="companyInfo.company_name" placeholder="请输入名称" :minlength="2" :maxlength="50" style="width: 400px;"></el-input>
         </el-form-item>
         
         <el-form-item label="公司简称" prop="title">
-          <el-input v-model="companyInfo.company_shortname" placeholder="请输入名称" :maxlength="30" style="width: 400px;"></el-input>
+          <el-input v-model="companyInfo.company_shortname" placeholder="请输入名称" :maxlength="10" style="width: 400px;"></el-input>
         </el-form-item>
         
         <el-form-item label="所属行业" prop="tags">
@@ -57,6 +57,7 @@
             type="textarea"
             :rows="4"
             placeholder="请输入内容"
+            :maxlength="5000"
             v-model="companyInfo.intro">
           </el-input>
         </el-form-item>
@@ -86,28 +87,28 @@
       <el-form class="edit-form" ref="form" :model="personalInfo" label-width="150px" label-suffix="：">
         <h3>个人信息</h3>
         <el-form-item label="姓名" prop="title">
-          <el-input v-model="personalInfo.name" placeholder="请输入姓名" :maxlength="30" style="width: 400px;"></el-input>
+          <el-input v-model="personalInfo.name" placeholder="请输入姓名" :maxlength="20" style="width: 400px;"></el-input>
         </el-form-item>
         
         <el-form-item label="公司职务" prop="title">
-          <el-input v-model="personalInfo.user_position " placeholder="请输入公司职务" :maxlength="30" style="width: 400px;"></el-input>
+          <el-input v-model="personalInfo.user_position " placeholder="请输入公司职务" style="width: 400px;"></el-input>
         </el-form-item>
         
         <el-form-item label="公司邮箱" prop="title">
-          <el-input v-model="personalInfo.user_email" placeholder="请输入邮箱" :maxlength="30" style="width: 400px;"></el-input>
+          <el-input v-model="personalInfo.user_email" placeholder="请输入邮箱" style="width: 400px;"></el-input>
         </el-form-item>
         
         <el-form-item label="手机号码" prop="title">
-          <el-input v-model="personalInfo.mobile" placeholder="请输入手机号码" :maxlength="30" style="width: 400px;"></el-input>
+          <el-input v-model="personalInfo.mobile" placeholder="请输入手机号码" :maxlength="11" style="width: 400px;"></el-input>
         </el-form-item>
         
         <h3>身份信息</h3>
         <el-form-item label="真实姓名" prop="title">
-          <el-input v-model="personalInfo.real_name" placeholder="请输入真实姓名" :maxlength="30" style="width: 400px;"></el-input>
+          <el-input v-model="personalInfo.real_name" placeholder="请输入真实姓名" :maxlength="20" style="width: 400px;"></el-input>
         </el-form-item>
         
         <el-form-item label="身份证号码" prop="title">
-          <el-input v-model="personalInfo.identity_num" placeholder="请输入身份证号码" :maxlength="30" style="width: 400px;"></el-input>
+          <el-input v-model="personalInfo.identity_num" placeholder="请输入身份证号码" :maxlength="18" style="width: 400px;"></el-input>
         </el-form-item>
         
         <el-form-item label="有效期" prop="date1">
