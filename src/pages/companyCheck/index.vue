@@ -42,7 +42,7 @@
               </el-select>
             </el-form-item>
             <el-form-item class="btn">
-              <el-button type="primary" @click="onSubmit">查询</el-button>
+              <el-button @click="onSubmit">查询</el-button>
               <span @click.stop="resetForm('form')">重置</span>
               <!--<el-button @click.stop="resetForm('form')">清除条件</el-button>-->
             </el-form-item>
@@ -163,6 +163,7 @@ export default class companyCheck extends Vue {
     },
     {
       prop: 'id',
+      fixed: "right",
       label: '操作'
     }
   ]
@@ -270,10 +271,23 @@ export default class companyCheck extends Vue {
         width: 100%;
         span{
           display: inline-block;
-          background-color: #FAFAFA;
+          background-color: #F8F8F8;
           padding: 0 4px;
           border-radius: 3px;
+          margin-left: 6px;
         }
+      }
+    }
+    .btn-container{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn{
+      .el-button{
+        background-color: #652791;
+        color: #FFFFFF;
+        border-radius: 4px;
       }
     }
   }

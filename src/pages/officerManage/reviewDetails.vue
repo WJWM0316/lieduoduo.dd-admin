@@ -23,7 +23,7 @@
           <span class="status" v-show="!identityInfo.status && identityInfo.status !== 0"><i class="el-icon-error" style="color: #F56C6C;"></i> 未提交身份证信息</span>
         </div>
         <div class="editBox">
-          <el-button type="primary" @click.stop="Review(personalInfo.uid)" v-show="identityInfo.status === 0">审核</el-button>
+          <el-button class="inquire" @click.stop="Review(personalInfo.uid)" v-show="identityInfo.status === 0">审核</el-button>
           <el-button type="info" disabled v-show="identityInfo.status !== 0">审核</el-button>
         </div>
       </div>
@@ -254,5 +254,10 @@ export default class reviewDetails extends Vue {
   img{
     height: 90%;
   }
+}
+.inquire{
+  background-color: #652791;
+  color: #FFFFFF;
+  border-radius: 4px;
 }
 </style>

@@ -26,7 +26,7 @@
           </el-form-item>
           
           <el-form-item class="btn">
-            <el-button type="primary" @click="onSubmit">查询</el-button>
+            <el-button class="inquire" @click="onSubmit">查询</el-button>
             <el-button @click.stop="resetForm('form')">重置</el-button>
           </el-form-item>
         </el-form>
@@ -128,6 +128,7 @@ export default class indexPage extends Vue {
     },
     {
       prop: 'id',
+      fixed: "right",
       label: '操作'
     }
   ]
@@ -214,6 +215,10 @@ export default class indexPage extends Vue {
       display: inline-block;
     }
     .btn{
+      .inquire{
+        color: #FFFFFF;
+        background-color: #652791;
+      }
       span{
         white-space: nowrap;
         user-select:none;

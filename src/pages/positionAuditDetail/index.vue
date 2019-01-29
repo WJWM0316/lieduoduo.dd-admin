@@ -12,9 +12,9 @@
           <span class="status" v-show="positionData.status === 3"><i class="el-icon-error" style="color: #F56C6C;"></i> 未通过</span>
         </div>
         <div class="editBox">
-          <el-button type="primary" disabled v-if="positionData.status ===3">审核</el-button>
+          <el-button class="inquire" v-if="positionData.status ===2 || positionData.status ===3">审核</el-button>
           <el-button type="info" disabled @click="Review(positionData.id)" v-else>审核</el-button>
-          <el-button type="primary" @click='toPostPosition("edit")'>编辑</el-button>
+          <el-button class="inquire" @click='toPostPosition("edit")'>编辑</el-button>
         </div>
       </div>
       <!--内容-->
@@ -38,8 +38,8 @@
           <span v-for="item,index in positionData.skillsLabel">{{item.name}} </span>
         </div>
 
-        <div class="item"><span class="lable">职位描述：</span> </div>
-        <p>{{personalInfo.describe}}</p>
+        <div class="item"><span class="lable">职位描述：</span> {{positionData.describe}} </div>
+        
       </div>
     </div>
     <!--审核蒙层-->
@@ -207,5 +207,10 @@ export default class checkPage extends Vue {
       }
     }
   }
+}
+.inquire{
+  background-color: #652791;
+  color: #FFFFFF;
+  border-radius: 4px;
 }
 </style>

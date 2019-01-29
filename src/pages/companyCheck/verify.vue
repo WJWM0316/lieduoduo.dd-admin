@@ -12,11 +12,11 @@
           <span class="status" v-show="companyInfo.status === 2"><i class="el-icon-error" style="color: #F56C6C;"></i> 未通过</span>
         </div>
         <div class="editBox" v-if="!isEdit">
-          <el-button type="primary" @click.stop="Review(companyInfo.id, 'company')" v-show="companyInfo.status === 0">审核</el-button>
+          <el-button class="inquire" @click.stop="Review(companyInfo.id, 'company')" v-show="companyInfo.status === 0">审核</el-button>
           <el-button type="info" disabled v-show="companyInfo.status !== 0">审核</el-button>
         </div>
         <div class="editBox" v-else>
-          <el-button type="primary" @click.stop="edit('editCompany')">编辑</el-button>
+          <el-button class="inquire" @click.stop="edit('editCompany')">编辑</el-button>
         </div>
       </div>
       <!--内容-->
@@ -55,11 +55,11 @@
           <span class="status" v-show="!personalInfo.status && personalInfo.status !== 0"><i class="el-icon-error" style="color: #F56C6C;"></i> 相关信息未提交</span>
         </div>
         <div class="editBox" v-if="!isEdit">
-          <el-button type="primary" @click.stop="Review(personalInfo.uid, 'identity')" v-show="personalInfo.status === 0">审核</el-button>
+          <el-button class="inquire" @click.stop="Review(personalInfo.uid, 'identity')" v-show="personalInfo.status === 0">审核</el-button>
           <el-button type="info" disabled v-show="personalInfo.status !== 0">审核</el-button>
         </div>
         <div class="editBox" v-else>
-          <el-button type="primary" disabled>编辑</el-button>
+          <el-button class="inquire" disabled>编辑</el-button>
         </div>
       </div>
       <!--内容-->
@@ -373,5 +373,10 @@ export default class checkPage extends Vue {
       }
     }
   }
+}
+.inquire{
+  background-color: #652791;
+  color: #FFFFFF;
+  border-radius: 4px;
 }
 </style>

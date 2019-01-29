@@ -40,7 +40,7 @@
             </el-form-item>
             
             <el-form-item class="btn" label-width="50px">
-              <el-button type="primary" @click="onSubmit">查询</el-button>
+              <el-button class="inquire" @click="onSubmit">查询</el-button>
               <span @click.stop="resetForm('form')">重置</span>
               <!--<el-button>清除条件</el-button>-->
             </el-form-item>
@@ -163,6 +163,7 @@ export default class officerManage extends Vue{
     },
     {
       prop: 'id',
+      fixed: "right",
       label: '操作'
     }
   ]
@@ -235,5 +236,15 @@ export default class officerManage extends Vue{
       color: #409EFF;
     }
   }
+  .btn-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+.inquire{
+  background-color: #652791;
+  color: #FFFFFF;
+  border-radius: 4px;
 }
 </style>
