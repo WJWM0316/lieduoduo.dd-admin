@@ -188,6 +188,21 @@ export default class CommunityEdit extends Vue {
     ],
     is_course: [
       { required: true, type: 'number', message: '请选择社区分类', trigger: 'change' }
+    ],
+    work_experience: [
+      { required: true, message: '请选择工作经验', trigger: 'change' }
+    ],
+    education: [
+      { required: true, message: '请选择学历要求', trigger: 'change' }
+    ],
+    emolument_min: [
+      { required: true, message: '请选择最低薪酬', trigger: 'change' }
+    ],
+    skill_tag: [
+      { required: true, message: '请选择技能要求', trigger: 'change' }
+    ],
+    describe: [
+      { required: true, message: '请输职位描述', trigger: 'change' }
     ]
   }
 
@@ -501,8 +516,6 @@ export default class CommunityEdit extends Vue {
     return this.$route.query.type !== 'add' ? '编辑职位' : '添加职位'
   }
 
-  
-
   // 技能
   getProfessionalSkills () {
     let that = this
@@ -519,8 +532,10 @@ export default class CommunityEdit extends Vue {
         }
       })
       this.options = options
+      console.log(this.options, '7777777')
     })
   }
+  
   // 搜索职位
   handleSearch (e) {
     console.log(e)
@@ -713,7 +728,6 @@ export default class CommunityEdit extends Vue {
    */
   handleSubmit () {
     console.log(this.form)
-    // let test = this.examinePos()
     this.$refs.form.validate(valid => {
       if (valid) {
         let data = this.form

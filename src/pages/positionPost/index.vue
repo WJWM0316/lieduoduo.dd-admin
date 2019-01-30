@@ -12,7 +12,7 @@
 
 
       <h3 class="title">职位基本信息</h3>
-      <p class="hint">加“ <span style="color: red; font-size: 15px;">*</span> ”内容，在确认发布成功后，将无法修改</p>
+      <p class="hint"><!--加“ <span style="color: red; font-size: 15px;">*</span> ”内容，在确认发布成功后，将无法修改--></p>
       <el-form-item label="职位名称" prop="position_name" style="width: 380px;">
         <el-input v-model="form.position_name" placeholder="限制50个字以内" :maxlength="30"></el-input>
       </el-form-item>
@@ -86,7 +86,7 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="技能要求" prop="labels" style="width: 380px;">
+      <el-form-item label="技能要求" prop="skill_tag" style="width: 380px;">
         <el-select
           style="width: 100%;"
           v-model="form.labels"
@@ -97,9 +97,9 @@
           placeholder="请选择技能要求">
           <el-option
             v-for="item in options"
-            :key="item.labelId"
-            :label="item.name"
-            :value="item.labelId">
+            :key="item.name"
+            :label="item.label"
+            :value="item.value">
           </el-option>
         </el-select>
       </el-form-item>
