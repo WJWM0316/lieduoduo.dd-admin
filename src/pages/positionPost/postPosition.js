@@ -139,7 +139,7 @@ export default class CommunityEdit extends Vue {
 
   // 表单数据
   form = {
-    mobile: '', //13450211224
+    mobile: 13450211224, //13450211224
     position_name: '', // 职位名称
     type: '', // 职位类型
     address_id: '', // 选择的公司地址ID
@@ -228,7 +228,7 @@ export default class CommunityEdit extends Vue {
             console.log(result)
             let data = {
               mobile: that.form.mobile,
-              areaName: result.detail.addressComponents.street || '',
+              areaName: result.detail.addressComponents.city || '',
               address: result.detail.address,
               doorplate: that.addressData.doorplate,
               lng: result.detail.location.lng,
@@ -236,6 +236,12 @@ export default class CommunityEdit extends Vue {
             }
 
             addCompanyAdressApi(data).then(res => {
+              that.pop = {
+                isShow: false,
+                type: ''
+              }
+              that.form.address_id = ''
+              that.getAdressList()
               console.log(res)
             }).catch(e=>{
               console.log('===',e)
@@ -363,26 +369,22 @@ export default class CommunityEdit extends Vue {
       if (!this.$route.query.id) {
         addPositionApi(params).then(res=>{
           this.$message.success('创建成功')
-          console.log(res)
-
           this.$router.push({
             name: 'positionManage'
           })
 
         }).catch(e=>{
-          console.log(e.msg)
+          this.$message.error(e.data.msg)
         })
       } else {
         params.id = this.$route.query.id
         editPositionApi(params).then(res=>{
           this.$message.success('编辑成功')
-          console.log(res)
-
           this.$router.push({
             name: 'positionManage'
           })
         }).catch(e=>{
-          console.log(e.msg)
+          this.$message.error(e.data.msg)
         })
       }
 
@@ -402,6 +404,8 @@ export default class CommunityEdit extends Vue {
       count: 20,
       sort: 'asc'
     }
+
+
     getAdressListApi(data).then(res=>{
       if(res.data.data.length>0){
         res.data.data.map(item => {
@@ -409,7 +413,13 @@ export default class CommunityEdit extends Vue {
           item.label = item.address
         })
 
-        this.addressList = [...this.addressList,...res.data.data]
+        this.addressList = [
+          {
+            value: '0',
+            label: '添加新的公司地址',
+          },
+          ...res.data.data
+        ]
       }
     })
   }
