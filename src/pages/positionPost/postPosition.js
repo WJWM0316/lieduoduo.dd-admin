@@ -248,6 +248,10 @@ export default class CommunityEdit extends Vue {
               console.log('===',e)
               that.$message.error(e.data.msg)
             })
+          },//若服务请求失败，则运行以下函数
+          error: function(e) {
+            console.log(e)
+            that.$message.error("搜索失败")
           }
         })
 
@@ -559,6 +563,7 @@ export default class CommunityEdit extends Vue {
       let adress = this.adressInput
       this.addressData.address = this.adressInput
       this.addressData.doorplate = this.adress_id_Input
+      console.log(adress)
       geocoder.getLocation(adress)
     }
   }
