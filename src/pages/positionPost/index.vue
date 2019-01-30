@@ -45,7 +45,7 @@
       <p class="hint">我们将通过以下条件，为您精确推荐合适的求职者，请尽量详细填写</p>
 
       <el-form-item label="经验要求" prop="work_experience" style="width: 380px;">
-        <el-select v-model="form.work_experience" placeholder="请输入名称"  style="width: 100%;">
+        <el-select v-model="form.work_experience" placeholder="请选择经验要求"  style="width: 100%;">
           <el-option
             v-for="item in experienceList"
             :key="item.value"
@@ -56,7 +56,7 @@
       </el-form-item>
 
       <el-form-item label="最低学历" prop="education" style="width: 380px;">
-        <el-select v-model="form.education" placeholder="请填写一句话介绍"  style="width: 100%;">
+        <el-select v-model="form.education" placeholder="请选择学历要求"  style="width: 100%;">
           <el-option
             v-for="item in educationList"
             :key="item.value"

@@ -35,7 +35,7 @@
                 <el-option label="已提交" value="0"></el-option>
                 <el-option label="通过" value="1"></el-option>
                 <el-option label="未通过" value="2"></el-option>
-                <!--<el-option label="未提交" value="3"></el-option>-->
+                <el-option label="未提交" value="3"></el-option>
               </el-select>
             </el-form-item>
             

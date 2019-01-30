@@ -63,6 +63,7 @@
             </el-form-item> -->
             <el-form-item>
               <el-button class="inquire" @click="onSubmit">查询</el-button>
+              <el-button @click="resetForm('form')">重置</el-button>
               <!--<el-button>清除条件</el-button>-->
             </el-form-item>
           </el-form>
@@ -221,6 +222,10 @@ export default class companyCheck extends Vue {
       path: '/positionAuditDetail',
       query: {id: id}
     })
+  }
+  /* 重置 */
+  resetForm(formName) {
+    this.$refs[formName].resetFields();
   }
 
   addPosition() {

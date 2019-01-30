@@ -193,9 +193,9 @@ export default class CommunityEdit extends Vue {
     emolument_min: [
       { required: true, message: '请选择最低薪酬', trigger: 'change' }
     ],
-    skill_tag: [
-      { required: true, message: '请选择技能要求', trigger: 'change' }
-    ],
+//  skill_tag: [
+//    { required: true, message: '请选择技能要求', trigger: 'change' }
+//  ],
     describe: [
       { required: true, message: '请输职位描述', trigger: 'change' }
     ]
