@@ -126,6 +126,7 @@ export default class ImageUploader extends Vue {
    * @param {Object} event
    */
   handleChangeFile (event) {
+    console.log('文件选择错误888888')
     let file = null
     const files = event.target.files
     if (!files || files.length <= 0) {
