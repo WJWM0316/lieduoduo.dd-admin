@@ -139,7 +139,7 @@ export default class CommunityEdit extends Vue {
 
   // 表单数据
   form = {
-    mobile: 13450211224, //13450211224
+    mobile: null, //13450211224
     position_name: '', // 职位名称
     type: '', // 职位类型
     address_id: '', // 选择的公司地址ID
