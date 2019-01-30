@@ -143,7 +143,7 @@ export default class CommunityEdit extends Vue {
     position_name: '', // 职位名称
     type: '', // 职位类型
     address_id: '', // 选择的公司地址ID
-    area_id: '', // 区域ID(省，市，区的ID，级别最小的)
+    // area_id: '', // 区域ID(省，市，区的ID，级别最小的)
     lng: '', // 经度
     lat: '', // 纬度
     address: '', // 工作地址
@@ -205,6 +205,7 @@ export default class CommunityEdit extends Vue {
   emolumentMaxList = [] //选择薪资范围
   emolumentMinList = [] //选择薪资范围
   addressData = {
+    areaName: '',
     area_id: '',
     address: '',
     doorplate: '',
@@ -290,7 +291,6 @@ export default class CommunityEdit extends Vue {
         form.type = data.data.typeName
 
         form.address_id = data.data.addressId
-        form.area_id = data.data.areaId
         form.lng = data.data.lng
         form.lat = data.data.lat
         form.address = data.data.address
@@ -409,7 +409,7 @@ export default class CommunityEdit extends Vue {
     getAdressListApi(data).then(res=>{
       if(res.data.data.length>0){
         res.data.data.map(item => {
-          item.value = item.areaId
+          item.value = item.id
           item.label = item.address
         })
 
