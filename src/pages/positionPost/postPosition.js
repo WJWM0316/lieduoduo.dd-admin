@@ -213,7 +213,13 @@ export default class CommunityEdit extends Vue {
   }
 
   professionalSkillsList = []
-
+  mobileBlur(e){
+    console.log(e.target.value)
+    let value = e.target.value
+    if(value.length === 11) {
+      this.getAdressList()
+    }
+  }
   mounted() {
     let that = this
     TMap('P63BZ-4RM35-BIJIV-QOL7E-XNCZZ-WIF4L').then(qq => {
@@ -255,7 +261,6 @@ export default class CommunityEdit extends Vue {
     this.init()
     this.setEmolumentMin()
     this.getProfessionalSkills()
-    this.getAdressList()
     this.getLabelPositionList()
   }
   
@@ -327,6 +332,10 @@ export default class CommunityEdit extends Vue {
         this.setEmolumentMax(data.data.emolumentMin)
         form.mobile = data.data.mobile
         this.form = form
+
+
+
+        this.getAdressList()
 
         console.log(this.form)
         //this.form = $.extend(true, {}, this.form, form)
