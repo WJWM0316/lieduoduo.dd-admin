@@ -3,8 +3,11 @@
     <!-- <h2 class="u-title-1" v-text="editTitle"></h2> -->
     <el-form class="edit-form" ref="form" :model="form" :rules="rules" label-width="120px" label-suffix="：">
 
-      <el-form-item label="招聘官手机" prop="mobile" style="width: 380px;">
-        <el-input v-model="form.mobile" placeholder="填写招聘官手机号" :maxlength="11"></el-input>
+      <el-form-item label="招聘官手机" prop="mobile" style="width: 380px;" v-if="!isEdit">
+        <el-input v-model="form.mobile" placeholder="填写招聘官手机号" :maxlength="11" onkeypress="return event.keyCode>=48&&event.keyCode<=57"></el-input>
+      </el-form-item>
+      <el-form-item label="招聘官手机" prop="mobile" style="width: 380px;" v-else>
+        <el-input v-model="form.mobile" :disabled="true" placeholder="填写招聘官手机号" :maxlength="11"></el-input>
       </el-form-item>
 
 

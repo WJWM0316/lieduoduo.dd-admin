@@ -31,7 +31,7 @@
         <div class="title">其他信息</div>
 
         <div class="item"><span class="lable">薪资范围：</span> {{positionData.emolumentMin}}k-{{positionData.emolumentMax}}k</div>
-        <div class="item"><span class="lable">经验要求：</span> {{positionData.workExperience}}年</div>
+        <div class="item"><span class="lable">经验要求：</span> {{positionData.workExperienceName}}</div>
         <div class="item"><span class="lable">最低学历：</span> {{positionData.educationName}}</div>
         <div class="item"><span class="lable">技能要求：</span>
          

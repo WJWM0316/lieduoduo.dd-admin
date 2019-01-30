@@ -26,7 +26,8 @@
               <el-select v-model="form.status" placeholder="全部状态">
                 <el-option label="已通过" value="1"></el-option>
                 <el-option label="待审核" value="2"></el-option>
-                <el-option label="未通过" value="3"></el-option>
+                <el-option label="退回重审核" value="3"></el-option>
+                <el-option label="未通过" value="4"></el-option>
               </el-select>
             </el-form-item>
 
@@ -105,10 +106,10 @@
               <span v-show="props.scope.row.status ===1">
                   已通过
               </span>
-              <span v-show="props.scope.row.status ===2">
+              <span v-show="props.scope.row.status ===2 || props.scope.row.status ===3">
                  待审核
               </span>
-              <span v-show="props.scope.row.status ===3">
+              <span v-show="props.scope.row.status ===4">
                   未通过
               </span>
             </div>
