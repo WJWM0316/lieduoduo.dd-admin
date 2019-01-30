@@ -59,7 +59,7 @@
           <el-button type="info" disabled v-show="personalInfo.status !== 0">审核</el-button>
         </div>
         <div class="editBox" v-else>
-          <el-button class="inquire" disabled>编辑</el-button>
+          <el-button class="inquire" @click.stop="editIdentity(personalInfo.uid)">编辑</el-button>
         </div>
       </div>
       <!--内容-->
@@ -204,11 +204,18 @@ export default class checkPage extends Vue {
       })        
     })
   }
-  /* 编辑 */
+  /* 编辑公司信息 */
   edit (name) {
     this.$router.push({
       path: `/${name}`,
       query: {id: this.companyInfo.id}
+    })
+  }
+  /* 编辑身份信息 */
+  editIdentity (uid) {
+    this.$router.push({
+      path: `/editIdentity`,
+      query: {id: uid}
     })
   }
   /* 点击审核按钮 */
@@ -301,7 +308,8 @@ export default class checkPage extends Vue {
   align-items: center;
   justify-content:  center;
   img{
-    height: 90%;
+    max-width: 90%;
+    max-height: 90%;
   }
 }
 .el-form-item__content{

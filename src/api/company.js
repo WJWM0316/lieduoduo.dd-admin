@@ -119,3 +119,17 @@ export const editCompanyApi = (id, data) => request({
   type: 'put',
   data
 })
+
+/* 编辑身份信息 */
+export const editIdentityApi = (id, data) => request({
+  url: `/identity/${id}`,
+  type: 'put',
+  data
+})
+
+/* 编辑身份信息 */
+export const getIdentityApi = (id, data) => request({
+  url: `/identity/${id}`,
+  type: 'get',
+  data
+})

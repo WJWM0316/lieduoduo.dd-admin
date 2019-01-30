@@ -80,5 +80,12 @@ export const routes = [
     name: 'editCompany',
     meta: {title: '编辑公司信息', haveParent: true, parentPath: '/index', parentName: '公司库'},
     component: resolve => require(['@/pages/editCompany/editCompanyInfo.vue'], resolve),
+  },
+  /* 编辑身份信息 */
+  {
+    path: '/editIdentity',
+    name: 'editIdentity',
+    meta: {title: '编辑身份信息', haveParent: true, parentPath: '/index', parentName: '公司库'},
+    component: resolve => require(['@/pages/editCompany/editIdentity.vue'], resolve),
   }
 ]

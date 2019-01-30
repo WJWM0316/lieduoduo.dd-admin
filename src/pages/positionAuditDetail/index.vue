@@ -7,9 +7,10 @@
       <div class="header">
         <div class="left">
           <span class="title">职位信息</span>
-          <span class="status" v-show="positionData.status === 0"><i class="el-icon-warning" style="color: #E6A23C;"></i> 待审核</span>
+          <span class="status" v-show="positionData.status === 2"><i class="el-icon-warning" style="color: #E6A23C;"></i> 待审核</span>
+          <span class="status" v-show="positionData.status === 3"><i class="el-icon-warning" style="color: #E6A23C;"></i> 退回重审</span>
           <span class="status" v-show="positionData.status === 1"><i class="el-icon-success" style="color: #67C23A;"></i> 通过</span>
-          <span class="status" v-show="positionData.status === 3"><i class="el-icon-error" style="color: #F56C6C;"></i> 未通过</span>
+          <span class="status" v-show="positionData.status === 4"><i class="el-icon-error" style="color: #F56C6C;"></i> 未通过</span>
         </div>
         <div class="editBox">
           <el-button class="inquire" @click="Review(positionData.id)" v-if="positionData.status ===2 || positionData.status ===3">审核</el-button>
