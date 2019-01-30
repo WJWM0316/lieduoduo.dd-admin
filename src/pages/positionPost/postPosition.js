@@ -131,10 +131,6 @@ export default class CommunityEdit extends Vue {
   	{
 			value: '0',
 			label: '添加新的公司地址',
-		},
-		{
-			value: '广州市天河区',
-			label: '广州市天河区',
 		}
   ]
 
@@ -143,9 +139,8 @@ export default class CommunityEdit extends Vue {
 
   // 表单数据
   form = {
-    mobile: '',
+    mobile: '', //13450211224
     position_name: '', // 职位名称
-    company_id: '', // 公司ID
     type: '', // 职位类型
     address_id: '', // 选择的公司地址ID
     area_id: '', // 区域ID(省，市，区的ID，级别最小的)
@@ -233,7 +228,13 @@ export default class CommunityEdit extends Vue {
   }
 
   professionalSkillsList = []
-
+  mobileBlur(e){
+    console.log(e.target.value)
+    let value = e.target.value
+    if(value.length === 11) {
+      this.getAdressList()
+    }
+  }
   mounted() {
     let that = this
     TMap('P63BZ-4RM35-BIJIV-QOL7E-XNCZZ-WIF4L').then(qq => {
@@ -241,7 +242,7 @@ export default class CommunityEdit extends Vue {
           complete : function(result){
             console.log(result)
             let data = {
-              mobile: that.form.mobile || 15989135199,
+              mobile: that.form.mobile,
               areaName: result.detail.addressComponents.street || '',
               address: result.detail.address,
               doorplate: that.addressData.doorplate,
@@ -275,7 +276,6 @@ export default class CommunityEdit extends Vue {
     this.init()
     this.setEmolumentMin()
     this.getProfessionalSkills()
-    this.getAdressList()
     this.getLabelPositionList()
   }
   
@@ -296,7 +296,6 @@ export default class CommunityEdit extends Vue {
         // // 创建编辑表单数据
         const form = {}
         form.position_name = data.data.positionName
-        form.company_id = data.data.companyId
         form.type = data.data.typeName
 
         form.address_id = data.data.addressId
@@ -348,6 +347,10 @@ export default class CommunityEdit extends Vue {
         this.setEmolumentMax(data.data.emolumentMin)
         form.mobile = data.data.mobile
         this.form = form
+
+
+
+        this.getAdressList()
 
         console.log(this.form)
         //this.form = $.extend(true, {}, this.form, form)
@@ -416,9 +419,13 @@ export default class CommunityEdit extends Vue {
     }
     getAdressListApi(data).then(res=>{
       if(res.data.data.length>0){
+        res.data.data.map(item => {
+          item.value = item.areaId
+          item.label = item.address
+        })
 
+        this.addressList = [...this.addressList,...res.data.data]
       }
-      console.log('==>',res.data)
     })
   }
 
@@ -687,6 +694,8 @@ export default class CommunityEdit extends Vue {
       //var jsObject = JSON.parse(jsonString); //转换为json对象
       newForm.labels = JSON.stringify(labels); //转换为json类型的字符串　　
       console.log(newForm.labels)
+    }else {
+      delete newForm.labels
     }
     
     return newForm
