@@ -139,11 +139,11 @@ export default class CommunityEdit extends Vue {
 
   // 表单数据
   form = {
-    mobile: '', //13450211224
+    mobile: null, //13450211224
     position_name: '', // 职位名称
     type: '', // 职位类型
     address_id: '', // 选择的公司地址ID
-    area_id: '', // 区域ID(省，市，区的ID，级别最小的)
+    // area_id: '', // 区域ID(省，市，区的ID，级别最小的)
     lng: '', // 经度
     lat: '', // 纬度
     address: '', // 工作地址
@@ -220,6 +220,7 @@ export default class CommunityEdit extends Vue {
   emolumentMaxList = [] //选择薪资范围
   emolumentMinList = [] //选择薪资范围
   addressData = {
+    areaName: '',
     area_id: '',
     address: '',
     doorplate: '',
@@ -243,7 +244,7 @@ export default class CommunityEdit extends Vue {
             console.log(result)
             let data = {
               mobile: that.form.mobile,
-              areaName: result.detail.addressComponents.street || '',
+              areaName: result.detail.addressComponents.city || '',
               address: result.detail.address,
               doorplate: that.addressData.doorplate,
               lng: result.detail.location.lng,
@@ -251,11 +252,21 @@ export default class CommunityEdit extends Vue {
             }
 
             addCompanyAdressApi(data).then(res => {
+              that.pop = {
+                isShow: false,
+                type: ''
+              }
+              that.form.address_id = ''
+              that.getAdressList()
               console.log(res)
             }).catch(e=>{
               console.log('===',e)
               that.$message.error(e.data.msg)
             })
+          },//若服务请求失败，则运行以下函数
+          error: function(e) {
+            console.log(e)
+            that.$message.error("搜索失败")
           }
         })
 
@@ -299,7 +310,6 @@ export default class CommunityEdit extends Vue {
         form.type = data.data.typeName
 
         form.address_id = data.data.addressId
-        form.area_id = data.data.areaId
         form.lng = data.data.lng
         form.lat = data.data.lat
         form.address = data.data.address
@@ -378,26 +388,22 @@ export default class CommunityEdit extends Vue {
       if (!this.$route.query.id) {
         addPositionApi(params).then(res=>{
           this.$message.success('创建成功')
-          console.log(res)
-
           this.$router.push({
             name: 'positionManage'
           })
 
         }).catch(e=>{
-          console.log(e.msg)
+          this.$message.error(e.data.msg)
         })
       } else {
         params.id = this.$route.query.id
         editPositionApi(params).then(res=>{
           this.$message.success('编辑成功')
-          console.log(res)
-
           this.$router.push({
             name: 'positionManage'
           })
         }).catch(e=>{
-          console.log(e.msg)
+          this.$message.error(e.data.msg)
         })
       }
 
@@ -417,14 +423,22 @@ export default class CommunityEdit extends Vue {
       count: 20,
       sort: 'asc'
     }
+
+
     getAdressListApi(data).then(res=>{
       if(res.data.data.length>0){
         res.data.data.map(item => {
-          item.value = item.areaId
+          item.value = item.id
           item.label = item.address
         })
 
-        this.addressList = [...this.addressList,...res.data.data]
+        this.addressList = [
+          {
+            value: '0',
+            label: '添加新的公司地址',
+          },
+          ...res.data.data
+        ]
       }
     })
   }
@@ -564,6 +578,7 @@ export default class CommunityEdit extends Vue {
       let adress = this.adressInput
       this.addressData.address = this.adressInput
       this.addressData.doorplate = this.adress_id_Input
+      console.log(adress)
       geocoder.getLocation(adress)
     }
   }
