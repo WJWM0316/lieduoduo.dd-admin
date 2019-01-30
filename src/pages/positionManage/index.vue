@@ -26,7 +26,7 @@
               <el-select v-model="form.status" placeholder="全部状态">
                 <el-option label="已通过" value="1"></el-option>
                 <el-option label="待审核" value="2"></el-option>
-                <el-option label="退回重核" value="3"></el-option>
+                <el-option label="退回重审" value="3"></el-option>
                 <el-option label="未通过" value="4"></el-option>
               </el-select>
             </el-form-item>
@@ -63,7 +63,7 @@
             </el-form-item> -->
             <el-form-item>
               <el-button class="inquire" @click="onSubmit">查询</el-button>
-              <el-button @click="resetForm('form')">重置</el-button>
+              <!--<el-button @click="resetForm('form')">重置</el-button>-->
               <!--<el-button>清除条件</el-button>-->
             </el-form-item>
           </el-form>
@@ -102,19 +102,19 @@
 
             <div class="btn-container" v-else-if="props.scope.column.property === 'status'" style="height: 48px;">
               <span v-show="props.scope.row.status ===0">
-                  关闭
+                  关闭<i class="el-icon-error" style="color: #F56C6C;"></i>
               </span>
               <span v-show="props.scope.row.status ===1">
-                  已通过
+                  已通过<i class="el-icon-success" style="color: #67C23A;"></i>
               </span>
               <span v-show="props.scope.row.status ===2">
-                 待审核
+                 待审核<i class="el-icon-warning" style="color: #E6A23C;"></i>
               </span>
               <span v-show="props.scope.row.status ===3">
-                 退回重审
+                 退回重审<i class="el-icon-warning" style="color: #E6A23C;"></i>
               </span>
               <span v-show="props.scope.row.status ===4">
-                  未通过
+                  未通过<i class="el-icon-error" style="color: #F56C6C;"></i>
               </span>
             </div>
 
