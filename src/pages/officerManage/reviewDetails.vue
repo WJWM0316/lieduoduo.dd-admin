@@ -23,12 +23,15 @@
           <span class="status" v-show="!identityInfo.status && identityInfo.status !== 0"><i class="el-icon-error" style="color: #F56C6C;"></i> 未提交身份证信息</span>
         </div>
         <div class="editBox">
-          <el-button type="primary" @click.stop="Review(personalInfo.uid)" v-show="identityInfo.status === 0">审核</el-button>
-          <el-button type="primary" disabled v-show="identityInfo.status !== 0">审核</el-button>
+          <el-button class="inquire" @click.stop="Review(personalInfo.uid)" v-show="identityInfo.status === 0">审核</el-button>
+          <el-button type="info" disabled v-show="identityInfo.status !== 0">审核</el-button>
         </div>
       </div>
       <!--内容-->
-      <div class="content">
+      <div class="content noData" v-if="!identityInfo.status && identityInfo.status !== 0">
+        用户还未上传身份认证信息
+      </div>
+      <div class="content" v-else>
         <div class="title">个人信息</div>
         <div class="item"><span class="lable">姓名：</span> {{personalInfo.realName}}</div>
         <div class="item"><span class="lable">公司职务：</span> {{personalInfo.userPosition}}</div>
@@ -71,7 +74,7 @@
             <el-option label="退回" value="false"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="原因" label-width="100px" style="text-align: left;">
+        <el-form-item label="原因" label-width="100px" style="text-align: left;" v-show="needReason !== 'true'">
           <el-select v-model="form.reason" placeholder="请选择审核结果">
             <el-option label="您提供的身份信息与身份证上登记的信息不符" value="您提供的身份信息与身份证上登记的信息不符"></el-option>
             <el-option label="身份证件信息模糊 / 遮挡 / 与身份认证需持【本人证件】的规定不符" value="身份证件信息模糊 / 遮挡 / 与身份认证需持【本人证件】的规定不符"></el-option>
@@ -94,13 +97,21 @@ import Component from 'vue-class-component'
 import { getReviewDetailsApi } from 'API/recruiter'
 import { identityPassApi, identityFailApi } from 'API/company'
 @Component({
-  name: 'reviewDetails'
+  name: 'reviewDetails',
+  watch: {
+    'form.result': {
+      handler (tags, oldTags) {
+        this.needReason = tags
+      }
+    }
+  }
 })
 export default class reviewDetails extends Vue {
   personalInfo = ''
   identityInfo = ''
   nowImg = ''
   isCheck = false
+  needReason = '' //是否需要审核原因
   form = {
     result: '',
     reason: ''
@@ -151,9 +162,12 @@ export default class reviewDetails extends Vue {
 
 <style lang="less" scoped="scoped">
 .reviewDetail{
+  padding: 20px;
   margin-left: 200px;
 }
 .companyCheck{
+  border: 1px solid #f4f4f4;
+  border-radius: 4px;
   padding: 22px;
   display: flex;
   justify-content: space-between;
@@ -220,21 +234,30 @@ export default class reviewDetails extends Vue {
       }
     }
   }
+  .noData{
+    align-items: center;
+    font-size: 15px;
+  }
 }
 /*查看大图*/
 .mask{
   position: fixed;
   top: 0;
-  left: 0;
+  right: 0;
   z-index: 999;
-  width: 100%;
+  width: 50%;
   height: 100%;
   background-color: rgba(0,0,0,0.5);
   display: flex;
   align-items: center;
   justify-content: center;
   img{
-    height: 90%;
+    max-height: 90%;
   }
+}
+.inquire{
+  background-color: #652791;
+  color: #FFFFFF;
+  border-radius: 4px;
 }
 </style>

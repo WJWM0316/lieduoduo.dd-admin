@@ -5,13 +5,13 @@
     </div>
     <div class="uploader-control f-flex-auto f-flex">
       <div>
-        <el-button type="primary" size="small" class="u-file-btn" @click="handleChoose">
+        <div size="small" class="u-file-btn" @click="handleChoose">
         <slot name="point">
           <p class="help-block" v-text="point" v-if="point"></p>
         </slot>
           <span v-text="previewSrc ? '重新上传' : '选择文件'"></span>
           <input type="file" ref="fileInput" name="file" :accept="accept" @change="handleChangeFile">
-        </el-button>
+        </div>
         <slot name="tips">
           <p class="help-block" v-text="tips" v-if="tips"></p>
         </slot>
@@ -49,6 +49,10 @@ export default ImageUploader
   }
 
   .uploader-control {
+    align-items: center;
+  }
+  .u-file-btn{
+    display: flex;
     align-items: center;
   }
 

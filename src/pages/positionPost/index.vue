@@ -3,13 +3,16 @@
     <!-- <h2 class="u-title-1" v-text="editTitle"></h2> -->
     <el-form class="edit-form" ref="form" :model="form" :rules="rules" label-width="120px" label-suffix="：">
 
-      <el-form-item label="招聘官手机" prop="mobile" style="width: 380px;">
-        <el-input v-model="form.mobile" placeholder="填写招聘官手机号" :maxlength="11"></el-input>
+      <el-form-item label="招聘官手机" prop="mobile" style="width: 380px;" v-if="!isEdit">
+        <el-input v-model="form.mobile" placeholder="填写招聘官手机号" :maxlength="11" onkeypress="return event.keyCode>=48&&event.keyCode<=57"></el-input>
+      </el-form-item>
+      <el-form-item label="招聘官手机" prop="mobile" style="width: 380px;" v-else>
+        <el-input v-model="form.mobile" :disabled="true" placeholder="填写招聘官手机号" :maxlength="11"></el-input>
       </el-form-item>
 
 
       <h3 class="title">职位基本信息</h3>
-      <p class="hint">加“*”内容，在确认发布成功后，将无法修改</p>
+      <p class="hint">加“ <span style="color: red; font-size: 15px;">*</span> ”内容，在确认发布成功后，将无法修改</p>
       <el-form-item label="职位名称" prop="position_name" style="width: 380px;">
         <el-input v-model="form.position_name" placeholder="限制50个字以内" :maxlength="30"></el-input>
       </el-form-item>

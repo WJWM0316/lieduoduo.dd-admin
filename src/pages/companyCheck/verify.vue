@@ -12,11 +12,11 @@
           <span class="status" v-show="companyInfo.status === 2"><i class="el-icon-error" style="color: #F56C6C;"></i> 未通过</span>
         </div>
         <div class="editBox" v-if="!isEdit">
-          <el-button type="primary" @click.stop="Review(companyInfo.id, 'company')" v-show="companyInfo.status === 0">审核</el-button>
-          <el-button type="primary" disabled v-show="companyInfo.status !== 0">审核</el-button>
+          <el-button class="inquire" @click.stop="Review(companyInfo.id, 'company')" v-show="companyInfo.status === 0">审核</el-button>
+          <el-button type="info" disabled v-show="companyInfo.status !== 0">审核</el-button>
         </div>
         <div class="editBox" v-else>
-          <el-button type="primary" @click.stop="edit('editCompany')">编辑</el-button>
+          <el-button class="inquire" @click.stop="edit('editCompany')">编辑</el-button>
         </div>
       </div>
       <!--内容-->
@@ -55,11 +55,11 @@
           <span class="status" v-show="!personalInfo.status && personalInfo.status !== 0"><i class="el-icon-error" style="color: #F56C6C;"></i> 相关信息未提交</span>
         </div>
         <div class="editBox" v-if="!isEdit">
-          <el-button type="primary" @click.stop="Review(personalInfo.uid, 'identity')" v-show="personalInfo.status === 0">审核</el-button>
-          <el-button type="primary" disabled v-show="personalInfo.status !== 0">审核</el-button>
+          <el-button class="inquire" @click.stop="Review(personalInfo.uid, 'identity')" v-show="personalInfo.status === 0">审核</el-button>
+          <el-button type="info" disabled v-show="personalInfo.status !== 0">审核</el-button>
         </div>
         <div class="editBox" v-else>
-          <el-button type="primary" disabled>编辑</el-button>
+          <el-button class="inquire" disabled>编辑</el-button>
         </div>
       </div>
       <!--内容-->
@@ -112,7 +112,7 @@
             <el-option label="退回" value="false"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="不通过原因" label-width="100px" style="text-align: left;">
+        <el-form-item label="不通过原因" label-width="100px" style="text-align: left;" v-show="needReason !== 'true'">
           <el-select v-model="form.reason" placeholder="请选择审核结果" v-if="type === 'company'">
             <el-option label="您提供的公司名称与营业执照上登记的主体名称不符" value="您提供的公司名称与营业执照上登记的主体名称不符"></el-option>
             <el-option label="认证信息不能包含联系方式，包括但不限于：微博、微信、邮箱、QQ、网站链接；不能出现营销推广信息，内容健康、积极，不能包含敏感、色情等信息" value="认证信息不能包含联系方式，包括但不限于：微博、微信、邮箱、QQ、网站链接；不能出现营销推广信息，内容健康、积极，不能包含敏感、色情等信息"></el-option>
@@ -146,7 +146,15 @@ Component.registerHooks([
   'beforeRouteUpdate' // for vue-router 2.2+
 ])
 @Component({
-  name: 'checkPage'
+  name: 'checkPage',
+  watch: {
+    'form.result': {
+      handler (tags, oldTags) {
+        this.needReason = tags
+        console.log(this.needReason, '11111')
+      }
+    }
+  }
 })
 export default class checkPage extends Vue {
   companyInfo = ''
@@ -157,6 +165,7 @@ export default class checkPage extends Vue {
   checkId = ''
   isEdit = false // 是否编辑公司库信息
   editCompanyID = '' // 当前编辑的公司id
+  needReason = ''
   form = {
     result: '',
     reason: ''
@@ -178,6 +187,7 @@ export default class checkPage extends Vue {
     this.$confirm('删除公司将清除已关联的招聘官和职位, 您确定删除吗?', '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
+      customClass: 'messageBox',
       type: 'warning'
     }).then(() => {
       deleteCompanyApi(this.editCompanyID).then(res => {
@@ -282,14 +292,14 @@ export default class checkPage extends Vue {
 .mask{
   position: fixed;
   top: 0;
-  left: 0;
+  right: 0;
   z-index: 999;
-  width: 100%;
+  width: 50%;
   height: 100%;
   background-color: rgba(0,0,0,0.5);
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content:  center;
   img{
     height: 90%;
   }
@@ -364,5 +374,10 @@ export default class checkPage extends Vue {
       }
     }
   }
+}
+.inquire{
+  background-color: #652791;
+  color: #FFFFFF;
+  border-radius: 4px;
 }
 </style>

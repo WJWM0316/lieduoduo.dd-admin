@@ -8,11 +8,11 @@
       <el-main>
         <!--筛选-->
         <div class="selectionBox">
-          <el-button type="primary" @click="addPosition" style="margin-bottom: 20px;margin-left: 20px;float: right;">发布职位</el-button>
+          <el-button class="inquire" @click="addPosition" style="margin-bottom: 20px;margin-left: 20px;float: right;">发布职位</el-button>
 
           <el-form ref="form" :model="form" label-width="80px" validate="validate">
             <el-form-item label="职位名称">
-              <el-input v-model="form.name"></el-input>
+              <el-input v-model="form.name" placeholder="输入职位/发布者/主体公司"></el-input>
             </el-form-item>
             
             <el-form-item label-width="100px" label="上线/下线">
@@ -24,10 +24,10 @@
 
             <el-form-item label-width="100px" label="审核状态">
               <el-select v-model="form.status" placeholder="全部状态">
-                <el-option label="关闭" value="0"></el-option>
-                <el-option label="审核通过" value="1"></el-option>
-                <el-option label="审核中" value="2"></el-option>
-                <el-option label="审核失败" value="3"></el-option>
+                <el-option label="已通过" value="1"></el-option>
+                <el-option label="待审核" value="2"></el-option>
+                <el-option label="退回重审核" value="3"></el-option>
+                <el-option label="未通过" value="4"></el-option>
               </el-select>
             </el-form-item>
 
@@ -62,7 +62,7 @@
               </el-col>
             </el-form-item> -->
             <el-form-item>
-              <el-button type="primary" @click="onSubmit">查询</el-button>
+              <el-button class="inquire" @click="onSubmit">查询</el-button>
               <!--<el-button>清除条件</el-button>-->
             </el-form-item>
           </el-form>
@@ -88,46 +88,46 @@
               </div>
             </div>
 
-            <div  v-else-if="props.scope.column.property === 'positionMsg'" style="height: 48px;">
+            <div class="btn-container"  v-else-if="props.scope.column.property === 'positionMsg'" style="height: 48px;">
               <div class="positionMsg">
                 <div class="job_name">{{props.scope.row.positionName}}</div>
-                <div class="job_info">
+                <!--<div class="job_info">
                   <span v-if="props.scope.row.address">{{props.scope.row.address}}</span>
                   <span v-if="props.scope.row.workExperience">{{props.scope.row.workExperience}}年</span>
                   <span v-if="props.scope.row.workExperienceName">{{props.scope.row.workExperienceName}}</span>
-                </div>
+                </div>-->
               </div>
             </div>
 
-            <div v-else-if="props.scope.column.property === 'status'" style="height: 48px;">
+            <div class="btn-container" v-else-if="props.scope.column.property === 'status'" style="height: 48px;">
               <span v-show="props.scope.row.status ===0">
                   关闭
               </span>
               <span v-show="props.scope.row.status ===1">
-                  开启
+                  已通过
               </span>
-              <span v-show="props.scope.row.status ===2">
-                  审核中
+              <span v-show="props.scope.row.status ===2 || props.scope.row.status ===3">
+                 待审核
               </span>
-              <span v-show="props.scope.row.status ===3">
-                  审核失败
+              <span v-show="props.scope.row.status ===4">
+                  未通过
               </span>
             </div>
 
 
-            <div v-else-if="props.scope.column.property === 'recruiterName'" style="height: 48px;">
+            <div class="btn-container" v-else-if="props.scope.column.property === 'recruiterName'" style="height: 48px;">
               <span v-if="props.scope.row.recruiterInfo">
                   {{props.scope.row.recruiterInfo.name}}
               </span>
             </div>
 
-            <div v-else-if="props.scope.column.property === 'company'" style="height: 48px;">
+            <div class="btn-container" v-else-if="props.scope.column.property === 'company'" style="height: 48px;">
               <span>
                   {{props.scope.row.companyInfo.companyName}}
               </span>
             </div>
 
-            <div v-else-if="props.scope.column.property === 'isOnline'" style="height: 48px;">
+            <div class="btn-container" v-else-if="props.scope.column.property === 'isOnline'" style="height: 48px;">
               <span>
                   {{props.scope.row.isOnline === 2 ? '下线' : '上线'}}
               </span>
@@ -188,22 +188,22 @@ export default class companyCheck extends Vue {
     {
       prop: 'isOnline',
       label: '上线/下线',
-      width: 200
+      width: 150
     },
     {
       prop: 'status',
       label: '审核状态',
-      width: 200
+      width: 150
     },
     {
       prop: 'op',
-      label: '操作',
-      width: 200
+      fixed: "right",
+      label: '操作'
     }
   ]
   list = []
   onSubmit (e) {
-    // console.log(this.form)
+    this.form.page = 1
     this.getTemplist()
   }
   addCompany () {
@@ -292,7 +292,6 @@ export default class companyCheck extends Vue {
   }
   .positionMsg {
     .job_name {
-      font-size:16px;
       font-family:PingFang-SC-Medium;
       font-weight:500;
       color:rgba(53,64,72,1);
@@ -312,6 +311,15 @@ export default class companyCheck extends Vue {
       }
     }
   }
-  
+  .btn-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+.inquire{
+  background-color: #652791;
+  color: #FFFFFF;
+  border-radius: 4px;
 }
 </style>

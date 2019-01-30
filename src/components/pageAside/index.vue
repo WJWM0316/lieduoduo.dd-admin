@@ -73,7 +73,7 @@ export default class PageAside extends Vue {
 #page-aside {
   width: 200px;
   height: 100vh;
-  background: #354048;
+  background: #3E294D;
   position: relative;
   position: fixed;
   top: 0;

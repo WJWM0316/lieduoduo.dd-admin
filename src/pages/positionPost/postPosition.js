@@ -160,13 +160,13 @@ export default class CommunityEdit extends Vue {
   	// 表单验证规则
   rules = {
     mobile: [
-        { required: true, message: '手机号必须填写，最多11个字，纯数字',trigger: 'blur' }, 
-        {
-          max: 11,
-          min: 11,
-          trigger: 'blur',
-          message: '手机号必须填写，最多11个字，纯数字'
-        }
+      { required: true, message: '手机号必须填写，最多11个字，纯数字',trigger: 'blur' }, 
+      {
+        max: 11,
+        min: 11,
+        trigger: 'blur',
+        message: '手机号必须填写，最多11个字，纯数字'
+      }
     ],
     position_name: [
       { required: true, message: '请填写职位名称', trigger: 'blur' },
@@ -192,6 +192,7 @@ export default class CommunityEdit extends Vue {
   searchPosition = ''
   adressInput = ''
   adress_id_Input = ''
+  isEdit = false
   pop = {
   	isShow: false,
   	type: 'position'
@@ -266,6 +267,7 @@ export default class CommunityEdit extends Vue {
       // 如果有id，则为编辑
       if (this.$route.query.id) {
         const id = parseInt(this.$route.query.id)
+        this.isEdit = true
         const { data } = await getPositionApi({
           id:id
         })
@@ -641,7 +643,6 @@ export default class CommunityEdit extends Vue {
         if(index===0){
           item.active = true
           this.secondPositionList = item.children
-          console.log(item.children)
         }else {
           item.active = false
         }

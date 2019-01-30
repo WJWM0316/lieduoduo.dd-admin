@@ -12,9 +12,9 @@
           <span class="status" v-show="positionData.status === 3"><i class="el-icon-error" style="color: #F56C6C;"></i> 未通过</span>
         </div>
         <div class="editBox">
-          <el-button type="primary" disabled v-if="positionData.status ===3">审核</el-button>
-          <el-button type="primary" @click="Review(positionData.id)" v-else>审核</el-button>
-          <el-button type="primary" @click='toPostPosition("edit")'>编辑</el-button>
+          <el-button class="inquire" @click="Review(positionData.id)" v-if="positionData.status ===2 || positionData.status ===3">审核</el-button>
+          <el-button type="info" disabled v-else>审核</el-button>
+          <el-button class="inquire" @click='toPostPosition("edit")'>编辑</el-button>
         </div>
       </div>
       <!--内容-->
@@ -31,15 +31,15 @@
         <div class="title">其他信息</div>
 
         <div class="item"><span class="lable">薪资范围：</span> {{positionData.emolumentMin}}k-{{positionData.emolumentMax}}k</div>
-        <div class="item"><span class="lable">经验要求：</span> {{positionData.workExperience}}年</div>
+        <div class="item"><span class="lable">经验要求：</span> {{positionData.workExperienceName}}</div>
         <div class="item"><span class="lable">最低学历：</span> {{positionData.educationName}}</div>
         <div class="item"><span class="lable">技能要求：</span>
          
           <span v-for="item,index in positionData.skillsLabel">{{item.name}} </span>
         </div>
 
-        <div class="item"><span class="lable">职位描述：</span> </div>
-        <p>{{personalInfo.describe}}</p>
+        <div class="item"><span class="lable">职位描述：</span> {{positionData.describe}} </div>
+        
       </div>
     </div>
     <!--审核蒙层-->
@@ -109,6 +109,7 @@ export default class checkPage extends Vue {
     console.log(this.checkId)
     auditPositionApi({id: this.checkId, action: this.form.result}).then(res => {
       this.$message.success('成功')
+      this.isCheck = false
       this.getPosition()
     }).catch(err => {
       this.$message.success(err.msg)
@@ -207,5 +208,10 @@ export default class checkPage extends Vue {
       }
     }
   }
+}
+.inquire{
+  background-color: #652791;
+  color: #FFFFFF;
+  border-radius: 4px;
 }
 </style>

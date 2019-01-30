@@ -57,6 +57,7 @@ export const routes = [
   {
     path: '/positionAuditDetail',
     name: 'positionAuditDetail',
+    meta: {title: '职位审核详情', haveParent: true, parentPath: '/positionManage', parentName: '职位管理'},
     component: resolve => require(['@/pages/positionAuditDetail/index.vue'], resolve),
   },
   /* 职位发布编辑 */

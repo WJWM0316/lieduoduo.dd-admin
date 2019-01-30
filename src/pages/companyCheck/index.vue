@@ -11,7 +11,7 @@
         <div class="selectionBox">
           <el-form ref="form" :model="form" label-width="80px" validate="validate">
             <el-form-item label="关键词" prop="keyword">
-              <el-input v-model="form.keyword"></el-input>
+              <el-input v-model="form.keyword" placeholder="请输入提交人/公司全称"></el-input>
             </el-form-item>
             <el-form-item label="申请时间" prop="start">
               <el-col :span="11">
@@ -42,7 +42,7 @@
               </el-select>
             </el-form-item>
             <el-form-item class="btn">
-              <el-button type="primary" @click="onSubmit">查询</el-button>
+              <el-button @click="onSubmit">查询</el-button>
               <span @click.stop="resetForm('form')">重置</span>
               <!--<el-button @click.stop="resetForm('form')">清除条件</el-button>-->
             </el-form-item>
@@ -69,6 +69,23 @@
                   查看
                 </el-button>
               </div>
+            </div>
+            <!-- 申请信息列 -->
+            <div class="btn-container" v-else-if="props.scope.column.property === 'companyName'" style="height: 48px;">
+              <div class="companyName">
+                <div class="name">{{props.scope.row[props.scope.column.property]}}</div>
+                <div class="label"><span class="industry">{{props.scope.row.industry}}</span> <span class="capital">{{props.scope.row.financingInfo}}</span> <span class="extent">{{props.scope.row.employeesInfo}}</span></div>
+              </div>
+              <!--<div>
+                <el-button
+                  type="text"
+                  @click="check(props.scope.row[props.scope.column.property])"
+                  class="func-btn-text"
+                  :class="{'row-delete': props.scope.row.isPunchCard !== 1}"
+                  >
+                  查看
+                </el-button>
+              </div>-->
             </div>
             <!--认证状态-->
             <div class="btn-container" v-else-if="props.scope.column.property === 'status' || props.scope.column.property === 'authStatus'" style="height: 48px;">
@@ -122,7 +139,7 @@ export default class companyCheck extends Vue {
     {
       prop: 'companyName',
       label: '申请信息',
-      width: 250
+      width: 300
     },
     {
       prop: 'realName',
@@ -146,12 +163,13 @@ export default class companyCheck extends Vue {
     },
     {
       prop: 'id',
+      fixed: "right",
       label: '操作'
     }
   ]
   list = []
   onSubmit (e) {
-//  console.log(this.form)
+    this.form.page = 1
     this.getTemplist()
   }
   addCompany () {
@@ -238,6 +256,38 @@ export default class companyCheck extends Vue {
         cursor: pointer;
         line-height: 12px;
         color: #409EFF;
+      }
+    }
+    /* 公司申请信息栏样式 */
+    .companyName{
+      display: flex;
+      flex-direction: column;
+      .name{
+        line-height: 30px;
+      }
+      .label{
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        span{
+          display: inline-block;
+          background-color: #F8F8F8;
+          padding: 0 4px;
+          border-radius: 3px;
+          margin-left: 6px;
+        }
+      }
+    }
+    .btn-container{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn{
+      .el-button{
+        background-color: #652791;
+        color: #FFFFFF;
+        border-radius: 4px;
       }
     }
   }
