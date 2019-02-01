@@ -40,22 +40,6 @@ export default class CommunityEdit extends Vue {
   // 列表
   deletePoster = []
   options= [
-	  {
-	    value: '选项1',
-	    label: '黄金糕'
-	   }, {
-	    value: '选项2',
-	    label: '双皮奶'
-	   }, {
-	    value: '选项3',
-	    label: '蚵仔煎'
-	   }, {
-	    value: '选项4',
-	    label: '龙须面'
-	   }, {
-	    value: '选项5',
-	    label: '北京烤鸭'
-	   }
   ]
   //职位类别
   typeList = [
@@ -183,21 +167,6 @@ export default class CommunityEdit extends Vue {
     ],
     is_course: [
       { required: true, type: 'number', message: '请选择社区分类', trigger: 'change' }
-    ],
-    work_experience: [
-      { required: true, message: '请选择工作经验', trigger: 'change' }
-    ],
-    education: [
-      { required: true, message: '请选择学历要求', trigger: 'change' }
-    ],
-    emolument_min: [
-      { required: true, message: '请选择最低薪酬', trigger: 'change' }
-    ],
-//  skill_tag: [
-//    { required: true, message: '请选择技能要求', trigger: 'change' }
-//  ],
-    describe: [
-      { required: true, message: '请输职位描述', trigger: 'change' }
     ]
   }
 
@@ -536,6 +505,7 @@ export default class CommunityEdit extends Vue {
   get editTitle () {
     return this.$route.query.type !== 'add' ? '编辑职位' : '添加职位'
   }
+  
 
   // 技能
   getProfessionalSkills () {
@@ -553,10 +523,8 @@ export default class CommunityEdit extends Vue {
         }
       })
       this.options = options
-      console.log(this.options, '7777777')
     })
   }
-  
   // 搜索职位
   handleSearch (e) {
     console.log(e)
@@ -627,6 +595,8 @@ export default class CommunityEdit extends Vue {
       typeId: item.labelId,
       topPid: item.topPid,
     }
+
+    console.log(item.topPid)
     this.form.labels = []
     this.form.type = item.labelId
     this.setSkillsList()
@@ -641,10 +611,10 @@ export default class CommunityEdit extends Vue {
 
       console.log(topPid)
       this.professionalSkillsList.map(item => {
-         if ( item.labelId === topPid ) {
-            this.options = item.children
-            console.log('==>',item.children)
-         }
+        if ( item.labelId === topPid ) {
+          this.options = item.children
+          console.log('==>',item.children)
+        }
       })
     }else {
     }
@@ -752,6 +722,7 @@ export default class CommunityEdit extends Vue {
    */
   handleSubmit () {
     console.log(this.form)
+    // let test = this.examinePos()
     this.$refs.form.validate(valid => {
       if (valid) {
         let data = this.form

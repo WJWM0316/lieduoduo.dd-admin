@@ -97,9 +97,9 @@
           placeholder="请选择技能要求">
           <el-option
             v-for="item in options"
-            :key="item.name"
-            :label="item.label"
-            :value="item.value">
+            :key="item.labelId"
+            :label="item.name"
+            :value="item.labelId">
           </el-option>
         </el-select>
       </el-form-item>
