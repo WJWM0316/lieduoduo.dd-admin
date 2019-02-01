@@ -256,7 +256,7 @@ export default class checkPage extends Vue {
           this.isCheck = false
         })
       } else {
-        identityFailApi(this.checkId).then(res => {
+        identityFailApi(this.checkId, param).then(res => {
           this.personalInfo.status = 2
           this.isCheck = false
         })
