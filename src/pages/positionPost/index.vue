@@ -90,6 +90,7 @@
         <el-select
           style="width: 100%;"
           v-model="form.labels"
+          multiple-limit="4"
           multiple
           filterable
           allow-create

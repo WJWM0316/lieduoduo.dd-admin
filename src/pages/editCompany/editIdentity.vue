@@ -16,15 +16,15 @@
         <h3>个人信息</h3>
         
         <el-form-item label="姓名" prop="title">
-          <el-input v-model="personalInfo.name" placeholder="请输入姓名" :maxlength="30" style="width: 400px;"></el-input>
+          <el-input v-model="personalInfo.name" :disabled="true" placeholder="请输入姓名" :maxlength="30" style="width: 400px;"></el-input>
         </el-form-item>
         
         <el-form-item label="公司职务" prop="title">
-          <el-input v-model="personalInfo.user_position" placeholder="请输入公司职务" :maxlength="30" style="width: 400px;"></el-input>
+          <el-input v-model="personalInfo.user_position" placeholder="请输入公司职务" :disabled="true" :maxlength="30" style="width: 400px;"></el-input>
         </el-form-item>
         
         <el-form-item label="公司邮箱" prop="title">
-          <el-input v-model="personalInfo.user_email" placeholder="请输入公司邮箱" :maxlength="30" style="width: 400px;"></el-input>
+          <el-input v-model="personalInfo.user_email" placeholder="请输入公司邮箱" :disabled="true" :maxlength="30" style="width: 400px;"></el-input>
         </el-form-item>
         
         <!--<el-form-item label="手机号码" prop="title">
@@ -40,8 +40,16 @@
           <el-input v-model="personalInfo.identity_num" placeholder="请输入身份证号码" :maxlength="18" style="width: 400px;"></el-input>
         </el-form-item>
         
-        <el-form-item label="有效期" prop="date1">
+        <!--<el-form-item label="有效期" prop="date1">
           <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="选择日期" v-model="personalInfo.validity" style="width: 100%;"></el-date-picker>
+        </el-form-item>-->
+        <!--身份证开始时间-->
+        <el-form-item label="开始有效时间" prop="date1">
+          <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="选择开始日期" v-model="personalInfo.validity_start" style="width: 100%;"></el-date-picker>
+        </el-form-item>
+        <!--身份证过期时间-->
+        <el-form-item label="有效期结束时间" prop="date1">
+          <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="选择过期日期" v-model="personalInfo.validity_end" style="width: 100%;"></el-date-picker>
         </el-form-item>
         
         <h3>认证材料</h3>
@@ -113,6 +121,8 @@ export default class editCompany extends Vue {
 //  mobile: '', // 手机号
     identity_num : '', // 身份证号码
     validity: '', // 有效期
+    validity_start: '', // 开始有效期
+    validity_end: '',
     passport_front : '', // 身份证正面照片
     passport_reverse: '', // 身份证反面照
     handheld_passport: '' // 手持身份证照
@@ -179,6 +189,8 @@ export default class editCompany extends Vue {
 //      mobile: '', // 手机号
         identity_num : res.data.data.identityNum, // 身份证号码
         validity: res.data.data.validity, // 有效期
+        validity_start: res.data.data.validityStart, // 有效期开始
+        validity_end: res.data.data.validityEnd, // 有效期结束
         passport_front : res.data.data.passportFrontInfo.id, // 身份证正面照片
         passport_reverse: res.data.data.passportReverseInfo.id, // 身份证反面照
         handheld_passport: res.data.data.handheldPassportInfo.id // 手持身份证照

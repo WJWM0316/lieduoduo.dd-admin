@@ -125,7 +125,7 @@ export default class editCompany extends Vue {
     {name: 'A轮', id: 3},
     {name: 'B轮', id: 4},
     {name: 'C轮', id: 5},
-    {name: 'D轮', id: 6},
+    {name: 'D轮及以上', id: 6},
     {name: '已上市', id: 7},
     {name: '不需要融资', id: 8}
   ]

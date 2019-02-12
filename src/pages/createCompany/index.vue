@@ -111,9 +111,18 @@
           <el-input v-model="personalInfo.identity_num" placeholder="请输入身份证号码" :maxlength="18" style="width: 400px;"></el-input>
         </el-form-item>
         
-        <el-form-item label="有效期" prop="date1">
+        <!--<el-form-item label="有效期" prop="date1">
           <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="选择日期" v-model="personalInfo.validity" style="width: 100%;"></el-date-picker>
+        </el-form-item>-->
+        <!--身份证有效期开始时间-->
+        <el-form-item label="身份证有效期开始" prop="date1">
+          <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="选择日期" v-model="personalInfo.validity_start" style="width: 100%;"></el-date-picker>
         </el-form-item>
+        <!--有效期结束-->
+        <el-form-item label="身份证有效期结束" prop="date1">
+          <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="选择日期" v-model="personalInfo.validity_end" style="width: 100%;"></el-date-picker>
+        </el-form-item>
+        
         <!--身份证正面-->
         <el-form-item class="full" label="身份证正面" prop="icon">
           <image-uploader :width="iconUploader.width"
@@ -186,6 +195,8 @@ export default class createCompany extends Vue{
     mobile: '', // 手机号
     identity_num : '', // 身份证号码
     validity: '', // 有效期
+    validity_start: '',
+    validity_end: '',
     passport_front : '', // 身份证正面照片
     passport_reverse: '', // 身份证反面照
     handheld_passport: '' // 手持身份证照
@@ -197,7 +208,7 @@ export default class createCompany extends Vue{
     {name: 'A轮', id: 3},
     {name: 'B轮', id: 4},
     {name: 'C轮', id: 5},
-    {name: 'D轮', id: 6},
+    {name: 'D轮及以上', id: 6},
     {name: '已上市', id: 7},
     {name: '不需要融资', id: 8}
   ]

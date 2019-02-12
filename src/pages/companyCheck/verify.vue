@@ -72,7 +72,7 @@
         <div class="title">身份信息</div>
         <div class="item"><span class="lable">真实姓名：</span> {{personalInfo.realName}}</div>
         <div class="item"><span class="lable">身份证号码：</span> {{personalInfo.identityNum}}</div>
-        <div class="item"><span class="lable">有效期：</span> {{personalInfo.validity}}</div>
+        <div class="item"><span class="lable">有效期：</span> {{personalInfo.validityStart}} 至 {{personalInfo.validityEnd}}</div>
         <div class="title">认证材料</div>
         <div class="item">
           <div class="imgBox" v-if="personalInfo.passportFrontInfo">
