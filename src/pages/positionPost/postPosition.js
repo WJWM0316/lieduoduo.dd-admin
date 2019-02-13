@@ -414,6 +414,8 @@ export default class CommunityEdit extends Vue {
           ...res.data.data
         ]
       }
+    }).catch(err => {
+      this.$message.error("该手机号码的用户还不是招聘官哦~")
     })
   }
 
@@ -469,33 +471,6 @@ export default class CommunityEdit extends Vue {
     this.emolumentMaxList = list
   }
 
-  ajax(url,type,fnSucc){
-    let getType = type || 'get'
-    if(window.XMLHttpRequest){
-      var oAjax = new XMLHttpRequest();
-    }else{
-      var oAjax = new ActiveXObject("Microsoft.XMLHTTP");//IE6浏览器创建ajax对象
-    }
-
-
-    oAjax.open(getType,url,true);//把要读取的参数的传过来。
-    oAjax.send();
-    oAjax.onreadystatechange = function(){
-      if(oAjax.readyState==4)
-      {
-        if(oAjax.status==200){
-            nSucc(oAjax.responseText);//成功的时候调用这个方法
-        }else{
-
-          console.log(oAjax)
-          // if(fnfiled){
-          //   fnField(oAjax.status);
-          // }
-        }
-      }
-    }
-  }
-
   querySearch(queryString, cb){
     console.log(queryString)
     if(queryString.length>0){
@@ -519,7 +494,6 @@ export default class CommunityEdit extends Vue {
       type: 'skills'
     }).then(res => {
       that.professionalSkillsList = res.data.data.labelProfessionalSkills
-
       let options = []
       res.data.data.labelProfessionalSkills.map((item,index) => {
         options[index] = {
@@ -557,7 +531,7 @@ export default class CommunityEdit extends Vue {
   }
 
   selectPosition (index) {
-    console.log(this.secondPositionList)
+    console.log(this.secondPositionList, '-----------------')
     if (!this.positionList[index].active) {
       this.positionList.map((item,index2)=>{
         if(index2===index){
@@ -609,20 +583,14 @@ export default class CommunityEdit extends Vue {
 
   //设置技能列表
   setSkillsList () {
-    console.log('setSkillsList')
-    console.log(this.professionalSkillsList)
     if (this.professionalSkillsList.length > 0){
       let topPid = this.selectPositionItem.topPid
-
-      console.log(topPid)
       this.professionalSkillsList.map(item => {
         if ( item.labelId === topPid ) {
           this.options = item.children
-          console.log('==>',item.children)
         }
       })
-    }else {
-    }
+    }else {}
   }
 
   changePosition () {
