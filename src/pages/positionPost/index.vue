@@ -90,8 +90,8 @@
         <el-select
           style="width: 100%;"
           v-model="form.labels"
-          multiple-limit="4"
           multiple
+          :multiple-limit="4"
           filterable
           allow-create
           default-first-option

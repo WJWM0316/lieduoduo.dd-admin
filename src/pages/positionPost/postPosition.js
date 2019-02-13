@@ -141,7 +141,7 @@ export default class CommunityEdit extends Vue {
     describe: '', // 职位描述
   }
 
-  	// 表单验证规则
+  // 表单验证规则
   rules = {
     mobile: [
       { required: true, message: '手机号必须填写，最多11个字，纯数字',trigger: 'blur' }, 
@@ -186,6 +186,10 @@ export default class CommunityEdit extends Vue {
     name: '',
     typeId: ''
   }
+  
+  // 技能要求个数
+  limit = 4
+  
   emolumentMaxList = [] //选择薪资范围
   emolumentMinList = [] //选择薪资范围
   addressData = {
@@ -210,11 +214,12 @@ export default class CommunityEdit extends Vue {
     TMap('P63BZ-4RM35-BIJIV-QOL7E-XNCZZ-WIF4L').then(qq => {
         geocoder = new qq.maps.Geocoder({
           complete : function(result){
-            console.log(result)
+            console.log(result, 9999)
             let data = {
               mobile: that.form.mobile,
               areaName: result.detail.addressComponents.city || '',
-              address: result.detail.address,
+              //address: result.detail.address,
+              address: that.adressInput,
               doorplate: that.addressData.doorplate,
               lng: result.detail.location.lng,
               lat: result.detail.location.lat
@@ -398,7 +403,7 @@ export default class CommunityEdit extends Vue {
       if(res.data.data.length>0){
         res.data.data.map(item => {
           item.value = item.id
-          item.label = item.address
+          item.label = `${item.address}${item.doorplate}`
         })
 
         this.addressList = [
@@ -540,8 +545,8 @@ export default class CommunityEdit extends Vue {
 
   //添加工作地点
   addAdress () {
-    console.log(this.adressInput)
-    console.log(this.addressData)
+    console.log(this.adressInput, 11111)
+    console.log(this.addressData, 222)
     if(this.adressInput.length>0){
       let adress = this.adressInput
       this.addressData.address = this.adressInput
