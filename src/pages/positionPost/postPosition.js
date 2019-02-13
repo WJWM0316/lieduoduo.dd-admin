@@ -145,12 +145,7 @@ export default class CommunityEdit extends Vue {
   rules = {
     mobile: [
       { required: true, message: '手机号必须填写，最多11个字，纯数字',trigger: 'blur' }, 
-      {
-        max: 11,
-        min: 11,
-        trigger: 'blur',
-        message: '手机号必须填写，最多11个字，纯数字'
-      }
+      { max: 11,min: 11, trigger: 'blur', message: '手机号必须填写，最多11个字，纯数字'}
     ],
     position_name: [
       { required: true, message: '请填写职位名称', trigger: 'blur' },
@@ -240,7 +235,7 @@ export default class CommunityEdit extends Vue {
           },//若服务请求失败，则运行以下函数
           error: function(e) {
             console.log(e)
-            that.$message.error("搜索失败")
+            that.$message.error("地址搜索失败")
           }
         })
 
@@ -531,7 +526,6 @@ export default class CommunityEdit extends Vue {
   }
 
   selectPosition (index) {
-    console.log(this.secondPositionList, '-----------------')
     if (!this.positionList[index].active) {
       this.positionList.map((item,index2)=>{
         if(index2===index){
@@ -606,6 +600,7 @@ export default class CommunityEdit extends Vue {
     console.log(this.form.address_id)
     // this.form.address_id = 1
     if(!this.form.mobile || this.form.mobile.length<1){
+      this.form.address_id = ''
       this.$message.error('需要先填写手机号')
       return
     }
@@ -614,6 +609,7 @@ export default class CommunityEdit extends Vue {
         isShow: true,
         type: 'addAdress'
       }
+      this.form.address_id = ''
     }
 
     return false
