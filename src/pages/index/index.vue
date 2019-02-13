@@ -7,7 +7,7 @@
     </el-header>
   	<el-main width="200px">
   	  <!--筛选-->
-      <div class="selectionBox">
+      <div class="selectionBox" @keyup.enter="search">
         <el-form ref="form" :model="form" label-width="80px" validate="validate">
           <el-form-item label="关键词" prop="keyword">
             <el-input v-model="form.keyword" placeholder="请输公司名字"></el-input>
@@ -154,6 +154,10 @@ export default class indexPage extends Vue {
   onSubmit () {
     this.form.page = 1
     this.getCompanyList()
+  }
+  // 搜索公司
+  search () {
+    this.onSubmit()
   }
   /* 清除列表选项 */
   resetForm (name) {

@@ -596,6 +596,7 @@ export default class CommunityEdit extends Vue {
 
   // 工作地点选择 
   changeAdress (e) {
+    console.log(e, '999999999----*--*')
     console.log(this.form.mobile)
     console.log(this.form.address_id)
     // this.form.address_id = 1
@@ -611,7 +612,6 @@ export default class CommunityEdit extends Vue {
       }
       this.form.address_id = ''
     }
-
     return false
   }
 
@@ -690,8 +690,7 @@ export default class CommunityEdit extends Vue {
    * 点击提交
    */
   handleSubmit () {
-    console.log(this.form)
-    // let test = this.examinePos()
+    console.log(this.form, '-*****-***--*-*-')
     this.$refs.form.validate(valid => {
       if (valid) {
         let data = this.form

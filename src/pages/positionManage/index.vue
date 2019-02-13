@@ -7,7 +7,7 @@
       </el-header>
       <el-main>
         <!--筛选-->
-        <div class="selectionBox">
+        <div class="selectionBox" @keyup.enter="search">
           <el-button class="inquire" @click="addPosition" style="margin-bottom: 20px;margin-left: 20px;float: right;">发布职位</el-button>
 
           <el-form ref="form" :model="form" label-width="80px" validate="validate">
@@ -31,36 +31,6 @@
               </el-select>
             </el-form-item>
 
-
-            <!-- <el-form-item label-width="100px" label="职位类别">
-              <el-select v-model="form.status" placeholder="全部状态">
-                <el-option label="已提交" value="shanghai"></el-option>
-                <el-option label="未通过" value="beijing"></el-option>
-                <el-option label="通过" value="beijing"></el-option>
-              </el-select> -->
-
-            <!-- <el-form-item label-width="100px" label="薪资范围">
-              <el-select v-model="form.auth_status" placeholder="全部状态">
-                <el-option label="已提交" value="shanghai"></el-option>
-                <el-option label="未通过" value="beijing"></el-option>
-                <el-option label="通过" value="beijing"></el-option>
-              </el-select>
-            </el-form-item> 
-            <el-form-item label-width="100px" label="城市">
-              <el-select v-model="form.status" placeholder="全部状态">
-                <el-option label="已提交" value="shanghai"></el-option>
-                <el-option label="未通过" value="beijing"></el-option>
-                <el-option label="通过" value="beijing"></el-option>
-              </el-select>-->
-            <!-- <el-form-item label="修改时间">
-              <el-col :span="11">
-                <el-date-picker type="date" placeholder="选择日期" v-model="form.start" style="width: 100%;"></el-date-picker>
-              </el-col>
-              <el-col class="line" :span="2">-</el-col>
-              <el-col :span="11">
-                <el-date-picker type="date" placeholder="选择日期" v-model="form.end" style="width: 100%;"></el-date-picker>
-              </el-col>
-            </el-form-item> -->
             <el-form-item>
               <el-button class="inquire" @click="onSubmit">查询</el-button>
               <!--<el-button @click="resetForm('form')">重置</el-button>-->
@@ -210,6 +180,10 @@ export default class companyCheck extends Vue {
     this.form.page = 1
     this.getTemplist()
   }
+  // 搜索地址
+  search () {
+    this.onSubmit()
+  }
   addCompany () {
     this.$router.push({
       path: '/createCompany'
@@ -242,7 +216,6 @@ export default class companyCheck extends Vue {
   getTemplist () {
     getListApi(this.form).then(res => {
 
-      console.log(res)
       this.list = res.data.data
       this.total = res.data.meta.total
       this.pageCount = res.data.meta.lastPage

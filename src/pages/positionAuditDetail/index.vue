@@ -24,7 +24,7 @@
 
         <div class="item"><span class="lable">职位名称：</span> {{positionData.positionName}}</div>
         <div class="item"><span class="lable">职位类别：</span> {{positionData.typeName}}</div>
-        <div class="item"><span class="lable">工作地点：</span> {{positionData.address}}</div>
+        <div class="item"><span class="lable">工作地点：</span> {{positionData.address}}{{positionData.doorplate}}</div>
         <div class="item"><span class="lable">团队亮点：</span> 
 
           <span v-for="item,index in positionData.lightspotInfo">{{item}} </span>

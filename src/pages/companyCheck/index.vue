@@ -8,7 +8,7 @@
   	  </el-header>
       <el-main>
         <!--筛选-->
-        <div class="selectionBox">
+        <div class="selectionBox" @keyup.enter="search">
           <el-form ref="form" :model="form" label-width="80px" validate="validate">
             <el-form-item label="关键词" prop="keyword">
               <el-input v-model="form.keyword" placeholder="请输入提交人/公司全称"></el-input>
@@ -171,6 +171,10 @@ export default class companyCheck extends Vue {
   onSubmit (e) {
     this.form.page = 1
     this.getTemplist()
+  }
+  // 搜索公司
+  search () {
+    this.onSubmit()
   }
   addCompany () {
     this.$router.push({
