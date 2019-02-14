@@ -215,7 +215,6 @@ export default class companyCheck extends Vue {
   /* 请求职位管理列表 */
   getTemplist () {
     getListApi(this.form).then(res => {
-
       this.list = res.data.data
       this.total = res.data.meta.total
       this.pageCount = res.data.meta.lastPage

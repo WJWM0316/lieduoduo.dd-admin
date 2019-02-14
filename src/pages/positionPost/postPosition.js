@@ -238,16 +238,6 @@ export default class CommunityEdit extends Vue {
             that.$message.error("地址搜索失败")
           }
         })
-
-        // searchService = new qq.maps.SearchService({
-        //   complete : function(result){
-        //     console.log('searchService',result)
-        //   },//若服务请求失败，则运行以下函数
-        //   error: function() {
-        //     that.$message.error("出错了。")
-        //   }
-        // })
-
     });
   }
 

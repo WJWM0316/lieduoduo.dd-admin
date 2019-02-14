@@ -27,6 +27,7 @@
           </el-option>
         </el-select>
       </el-form-item>
+      
       <el-form-item label="工作地点" prop="address_id" style="width: 380px;">
         <el-select v-model="form.address_id" placeholder="点击选择工作地点" @change="changeAdress" style="width: 100%;">
           <el-option
