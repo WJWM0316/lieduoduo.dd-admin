@@ -32,17 +32,12 @@
         </el-form-item>
         
         <el-form-item label="公司地址" prop="address_id" style="width: 380px;">
-          <span class="addAdress"><i class="el-icon-circle-plus" style="color: #67C23A;"></i>点击添加公司地址</span>
-          <!--<el-select v-model="form.address_id" placeholder="点击选择工作地点" @change="changeAdress" style="width: 100%;">
-            <el-option
-              v-for="item in addressList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-              <span style="float: left;color: #999;" v-if="item.value!=='0'">{{ item.label }}</span>
-              <span style="float: left; color: #652791;" v-else>{{ item.label }}</span>
-            </el-option>
-          </el-select>-->
+          <span class="addAdress" @click.stop="changeAdress"><i class="el-icon-circle-plus" style="color: #67C23A;"></i>点击添加公司地址</span>
+          <!--公司地址列表-->
+          <span class="AdressList" v-for="item in adressList">
+            <i @click.stop="delAdress(item.id)" class="el-icon-remove" style="color: rgb(245, 108, 108);"></i>
+            {{`${item.address}${item.doorplate}`}}
+          </span>
         </el-form-item>
         
         <el-form-item label="所属行业" prop="tags">
@@ -91,19 +86,27 @@
         </el-form-item>
       </el-form>
     </div>
-    <div class="pop" v-if="pop.isShow">
-      <div class="addAdressPop" v-if="pop.type==='addAdress'">
-        <img class="clo" @click="popCancel" />
-        <h3 class="">添加新的公司地址</h3>
-        <p>添加新的公司地址</p>
-        <el-input style="width: 368px;margin: 13px 0 26px 0;box-sizing: border-box;" v-model="adressInput" placeholder="请输入工作地址）"></el-input>
-        <el-input style="width: 368px;margin: 13px 0 26px 0;box-sizing: border-box;" v-model="adress_id_Input" placeholder="请输入门牌号（选填）"></el-input>
-        <div class="btn-add">
-          <el-button class="btn_cancel" @click="popCancel">取消</el-button>
-          <el-button class="btn_submit" type="primary" @click="addAdress">保存地址</el-button>
+    <!--添加新公司地址弹窗-->
+    <div class="pop" v-show="pop.isShow">
+      <div class="addAdressBox">
+        <div id="map" style="width:500px; height:400px"></div>
+        
+        <div class="searchBox">
+          <input class="textbox" type="textbox" v-model="keyword">
+          <input class="btn" type="button" value="搜索" @click="searchKeyword">
+          <div style='width: 300px; height: 180px' id="infoDiv" @click.stop="clickAdress"></div>
+        </div>
+        <div class="nowPosi">
+          <div class="address"><span>地址：</span>{{nowPosiInfo.address || '请输入包含市名的地址'}}</div>
+          <div class="btnBox">
+            <el-button @click.stop="popCancel">取消</el-button>
+            <el-button @click.stop="addAdress" style="background-color: #652791; color: #FFFFFF;">保存</el-button>
+          </div>
+          <div class="doorplate"><span>门牌号：</span><input class="textbox" type="textbox" v-model="doorplate"></div>
         </div>
       </div>
     </div>
+    
   </div>
 </template>
 
@@ -112,7 +115,7 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import ImageUploader from '@/components/imageUploader'
 import { fieldApi, uploadApi } from 'API/commont'
-import { getCompanyInfoApi, editCompanyApi } from 'API/company'
+import { getCompanyInfoApi, editCompanyApi, addCompanyAddressApi, delCompanyAddressApi } from 'API/company'
 import {TMap} from '../../util/js/TMap.js'
 @Component({
   name: 'editCompany',
@@ -121,7 +124,17 @@ import {TMap} from '../../util/js/TMap.js'
   }
 })
 export default class editCompany extends Vue {
-  geocoder = null
+  map = null // 当前地图对象
+  geocoder = null // 地址获取地图信息
+  searchService = null // 查询地图信息
+  qqMapObj = null
+  center = null // 当前选择坐标值
+  marker = null // 当前选择的坐标对象
+  markers = [] // 当前查询回来的地址信息数组
+  nowResults = [] // 当前搜索地址的结果列表
+  nowPosiInfo = '' // 当前地址信息
+  keyword = '北京市天安门广场' // 搜索地址关键词
+  doorplate = ''
   /* 公司信息 */
   companyInfo = {
     company_name: '', // 公司名称
@@ -181,12 +194,7 @@ export default class editCompany extends Vue {
     lat: ''
   }
   /* 地址列表 */
-  addressList = [
-    {
-      value: '0',
-      label: '添加新的公司地址',
-    }
-  ]
+  adressList = []
   /* 所属行业 */
   industry = []
   adressInput = ''
@@ -194,9 +202,65 @@ export default class editCompany extends Vue {
   mounted () {
     let that = this
     TMap('P63BZ-4RM35-BIJIV-QOL7E-XNCZZ-WIF4L').then(qq => {
-      this.geocoder = new qq.maps.Geocoder({
+      that.$nextTick(() => {
+        let center = new that.qqMapObj.maps.LatLng(39.916527, 116.397128);
+        that.map = new that.qqMapObj.maps.Map(document.getElementById('map'), {
+          center: center,
+          zoom: 13
+        })
+      })
+      // 保存地图对象
+      that.qqMapObj = qq
+      let latlngBounds = new qq.maps.LatLngBounds();
+      that.searchService = new qq.maps.SearchService({
+        //设置搜索范围为北京
+        location: "北京",
+        //设置搜索页码为1
+        pageIndex: 1,
+        //设置每页的结果数为5
+        pageCapacity: 5,
+        //设置展现查询结构到infoDIV上
+        panel: document.getElementById('infoDiv'),
+        //设置动扩大检索区域。默认值true，会自动检索指定城市以外区域。
+        autoExtend: true,
+        //检索成功的回调函数
+        complete: function(results) {
+            that.nowResults = results.detail.pois
+            //设置回调函数参数
+            var pois = results.detail.pois;
+            for (var i = 0, l = pois.length; i < l; i++) {
+                var poi = pois[i];
+                //扩展边界范围，用来包含搜索到的Poi点
+                latlngBounds.extend(poi.latLng);
+                var marker = new qq.maps.Marker({
+                    map: that.map,
+                    position: poi.latLng
+                });
+
+                marker.setTitle(i + 1);
+                that.markers.push(marker);
+
+            }
+            //调整地图视野及中心坐标
+            let nowPosi = new qq.maps.LatLng(that.markers[0].position.lat, that.markers[0].position.lng);
+            that.map.fitBounds(latlngBounds)
+            that.map.zoomTo(13)
+            that.map.setCenter(nowPosi)
+        },
+        //若服务请求失败，则运行以下函数
+        error: function() {
+            alert("出错了。");
+        }
+    });
+      
+      that.geocoder = new qq.maps.Geocoder({
         complete : function(result){
-          console.log(result, 9999)
+          if (that.nowPosiInfo === '') {
+            that.nowPosiInfo = result.detail
+          } else {
+            that.nowPosiInfo.addressComponents = result.detail.addressComponents
+          }
+          console.log(that.nowPosiInfo, '搜索后的地址对象')
           let data = {
             mobile: that.form.mobile,
             areaName: result.detail.addressComponents.city || '',
@@ -206,10 +270,10 @@ export default class editCompany extends Vue {
             lng: result.detail.location.lng,
             lat: result.detail.location.lat
           }
-          that.pop = {
-            isShow: false,
-            type: ''
-          }
+//        that.pop = {
+//          isShow: false,
+//          type: ''
+//        }
 
 //        addCompanyAdressApi(data).then(res => {
 //          that.pop = {
@@ -226,57 +290,131 @@ export default class editCompany extends Vue {
         },//若服务请求失败，则运行以下函数
         error: function(e) {
           console.log(e)
-          that.$message.error("地址搜索失败")
+          that.nowPosiInfo = ''
+          that.$message.error("地址搜索失败,请确保地址准确且包含城市名")
         }
       })
     })
   }
   
-  //添加工作地点
+  //添加公司地点
   addAdress () {
-    console.log(this.adressInput, 11111)
-    console.log(this.addressData, 222)
-    if(this.adressInput.length>0){
-      let adress = this.adressInput
-      this.addressData.address = this.adressInput
-      this.addressData.doorplate = this.adress_id_Input
-      console.log(adress)
-      this.geocoder.getLocation(adress)
+    const { id } = this.$route.query
+    const data = {
+      area_id: this.nowPosiInfo.addressComponents.city,
+      doorplate: this.doorplate,
+      address: this.nowPosiInfo.address,
+      lng: this.nowPosiInfo.location ? this.nowPosiInfo.location.lng : this.nowPosiInfo.latLng.lng,
+      lat: this.nowPosiInfo.location ? this.nowPosiInfo.location.lat : this.nowPosiInfo.latLng.lat
     }
+    
+    addCompanyAddressApi(id, data).then((res) => {
+      console.log(res.data.data,'/////')
+      this.$message({
+        type: 'success',
+        message: '添加成功!'
+      })
+      this.adressList.push(res.data.data)
+      this.popCancel()
+    })
   }
-  
+  /* 删除公司地址 */
+  delAdress (id) {
+    this.$confirm('您确定删除吗?', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      customClass: 'messageBox',
+      type: 'warning'
+    }).then(() => {
+      delCompanyAddressApi(id).then(res => {
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+        this.adressList.map((item, index) => {
+          if (item.id === id) {
+            this.adressList.splice(index, 1)
+          }
+        })
+      }).catch(err => {
+        console.log(err)
+      })
+    }).catch(() => {
+      this.$message({
+        type: 'info',
+        message: '已取消删除'
+      })        
+    })
+  }
+  // 关闭地图层
   popCancel () {
     this.pop.isShow = false
+    this.nowPosiInfo = ''
+  }
+  // 搜索地址
+  searchKeyword () {
+    this.nowPosiInfo = ''
+    this.clearOverlays(this.markers)
+    this.geocoder.getLocation(this.keyword)
+    this.searchService.search(this.keyword);
+  }
+  
+  // 选中搜索后的地址
+  clickAdress (e) {
+    let that = this
+//  console.log(e.target.innerText, this.nowResults, '12121321------')
+    this.nowResults.map((item, index) => {
+      if (item.address === e.target.innerText || item.name === e.target.innerText) {
+        console.log(item, '***********')
+        that.nowPosiInfo = item
+        let latLng = new that.qqMapObj.maps.LatLng(item.latLng.lat, item.latLng.lng)
+        that.geocoder.getAddress(latLng)
+      }
+    })
+  }
+  
+  //清除上次查询后地图上的标注
+  clearOverlays (overlays) {
+    var overlay;
+    while (overlay = overlays.pop()) {
+      overlay.setMap(null);
+    }
   }
   
   // 工作地点选择 
   changeAdress (e) {
-    console.log(e, '999999999----*--*')
-    console.log(this.form.mobile)
-    console.log(this.form.address_id)
-    if(e==='0'){
-      this.pop = {
-        isShow: true,
-        type: 'addAdress'
-      }
-      this.form.address_id = ''
+    let that = this
+    let center = new that.qqMapObj.maps.LatLng(39.916527, 116.397128);
+    
+    this.qqMapObj.maps.event.addListener(that.map, 'click', function(e) {
+      console.log(e, '78787*/*/*/78787')
+      // 清除之前的坐标
+//    if (that.marker) that.marker.setMap(null)
+//    let choosePosition = new that.qqMapObj.maps.LatLng(e.latLng.lat, e.latLng.lng);
+//    that.marker = new that.qqMapObj.maps.Marker({
+//      position: choosePosition,
+//      map: map
+//    });
+    });
+      
+    this.pop = {
+      isShow: true,
+      type: 'addAdress'
     }
+    this.form.address_id = ''
     return false
   }
   
   /* 编辑图片 */
   handleIconLoaded (e) {
-    console.log(e, 999)
     let formData = new FormData()
     formData.append('attach_type', 'img')
     formData.append('img', e)
     uploadApi(formData).then(res => {
       if (e.uploadType === 'business_license') {
         this.companyInfo.business_license = res.data.data[0].id
-//      console.log(res.data.data[0].id, 'business_license')
       } else if (e.uploadType === 'on_job') {
         this.companyInfo.on_job = res.data.data[0].id
-//      console.log(res.data.data[0].id, 'on_job')
       } else if (e.uploadType === 'logo') {
         this.companyInfo.logo = res.data.data[0].id
       }
@@ -309,6 +447,9 @@ export default class editCompany extends Vue {
         on_job: res.data.data.companyInfo.onJobInfo.id, // 在职证明
         logo: res.data.data.companyInfo.logoInfo.id
       }
+      /* 地址列表 */
+     console.log(res.data)
+      this.adressList = res.data.data.companyInfo.address
     })
   }
   /* 保存 */
@@ -361,8 +502,19 @@ export default class editCompany extends Vue {
   }
 }
 .addAdress{
+  i{
+    margin-right: 5px;
+  }
   color: #652791;
   cursor: pointer;
+}
+.AdressList{
+  white-space: nowrap;
+  i{
+    margin-right: 5px;
+    cursor: pointer;
+  }
+  display: block;
 }
 .inquire{
   background-color: #652791;
@@ -382,7 +534,6 @@ export default class editCompany extends Vue {
   transform: translate(-50%, -50%);
   box-sizing: border-box;
   padding: 36px;
-
   text-align: left;
   .clo {
     width:10px;
@@ -454,5 +605,52 @@ export default class editCompany extends Vue {
   width: 100%;
   height: 100%;
   z-index: 100;
+  .addAdressBox{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 30px;
+    border-radius: 10px;
+    width: 820px;
+    height: 500px;
+    background-color: #FFFFFF;
+    #map{
+      float: left;
+      margin-right: 10px;
+      margin-bottom: 20px;
+    }
+    .searchBox {
+      float: left;
+      input {
+        border: 1px solid #CCCCCC;
+        border-radius: 5px;
+        margin-right: 10px;
+        padding: 5px;
+      }
+    }
+    .nowPosi {
+      padding: 20px 0;
+      clear: both;
+      width: 100%;
+      border-top: 1px solid #CCCCCC;
+      .address {
+        float: left;
+      }
+      .doorplate {
+        margin-right: 20px;
+        float: right;
+        input {
+          border: 1px solid #CCCCCC;
+          border-radius: 5px;
+          margin-right: 10px;
+          padding: 5px;
+        }
+      }
+      .btnBox {
+        float: right;
+      }
+    }
+  }
 }
 </style>

@@ -133,3 +133,16 @@ export const getIdentityApi = (id, data) => request({
   type: 'get',
   data
 })
+
+/* 添加公司地址 */
+export const addCompanyAddressApi = (id, data) => request({
+  url: `/company/address/${id}`,
+  type: 'put',
+  data
+})
+
+/* 删除公司地址 */
+export const delCompanyAddressApi = (id) => request({
+  url: `/company/address/${id}`,
+  type: 'delete'
+})

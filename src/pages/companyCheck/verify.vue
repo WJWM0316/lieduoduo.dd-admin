@@ -24,6 +24,12 @@
         <div class="title">基本信息</div>
         <div class="item companyName"><span class="lable">公司全称：</span> {{companyInfo.companyName}}</div>
         <div class="item"><span class="lable">公司简称：</span> {{companyInfo.companyShortname}}</div>
+        <!--<el-form-item label="公司地址" prop="address_id" style="width: 380px;">
+          <span class="AdressList" v-for="item in companyInfo.address">
+            <i @click.stop="delAdress(item.id)" class="el-icon-remove" style="color: rgb(245, 108, 108);"></i>
+            {{`${item.address}${item.doorplate}`}}
+          </span>
+        </el-form-item>-->
         <div class="item"><span class="lable">所属行业：</span> {{companyInfo.industry}}</div>
         <div class="item"><span class="lable">融资阶段：</span> {{companyInfo.financingInfo}}</div>
         <div class="item"><span class="lable">人员规模：</span> {{companyInfo.employeesInfo}}</div>

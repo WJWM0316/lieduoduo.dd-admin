@@ -267,6 +267,8 @@ export default class companyCheck extends Vue {
       display: flex;
       flex-direction: column;
       .name{
+        width: 200px;
+        white-space: nowrap;
         line-height: 30px;
       }
       .label{
