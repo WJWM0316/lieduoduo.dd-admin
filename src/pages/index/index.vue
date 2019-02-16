@@ -157,6 +157,10 @@ export default class indexPage extends Vue {
     }
   ]
   getCompanyList () {
+    if (this.firstAreaId !== '' && this.form.area_id === '') {
+      this.$message.error("请选择城市")
+      return
+    }
     getCompanyListApi(this.form).then(res => {
       this.list = res.data.data
       this.pageCount = res.data.meta.lastPage
@@ -197,6 +201,7 @@ export default class indexPage extends Vue {
     this.firstAreaIdList.map(item => {
       if (item.areaId === this.firstAreaId) {
         this.cityLable = item.children
+        this.form.area_id = ''
       }
     })
   }
