@@ -156,9 +156,9 @@ export default class editCompany extends Vue {
   /* 提示语 */
   iconUploader = {
     point: '',
-    width: 160,
-    height: '',
-    tips: '建议尺寸400X400px，JPG、PNG格式，图片小于5M。'
+    width: 280,
+    height: 158,
+    tips: '建议尺寸280X158px，JPG、PNG格式，图片小于5M。'
   }
   /* 融资情况标签 */
   financing = [
@@ -481,6 +481,13 @@ export default class editCompany extends Vue {
     text-align: center;
     margin-bottom: 30px;
   }
+  h3{
+    font-size: 20px;
+    font-weight: 700;
+    color: #354048;
+    line-height: 28px;
+    margin-bottom: 32px;
+  }
 }
 .addAdress{
   i{
@@ -525,7 +532,6 @@ export default class editCompany extends Vue {
   }
   h3 {
     font-size:16px;
-    font-family:PingFangSC-Medium;
     font-weight:500;
     color:rgba(53,64,72,1);
   }

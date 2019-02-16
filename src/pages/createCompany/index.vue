@@ -322,7 +322,9 @@ export default class createCompany extends Vue{
   /*公司信息*/
   .companyInfo,
   .personalInfo{
+    padding: 0 32px;
     text-align: left;
+    border: 1px solid #CCCCCC;
     .point{
       font-size: 14px;
       color: #606266;
@@ -330,13 +332,21 @@ export default class createCompany extends Vue{
       padding: 10px;
       text-align: center;
       margin-bottom: 30px;
+      margin-left: -32px;
+      margin-right: -32px;
     }
   }
-  .companyInfo{
+  .companyInfo,
+  .personalInfo{
     border: 1px solid #CCCCCC;
     border-radius: 4px;
     h3{
+      color: #354048;
+      font-size: 20px;
+      padding-bottom: 16px;
       padding-left: 10px;
+      border-bottom: 1px solid #EBEEF5;
+      margin-bottom: 32px;
     }
   }
 }

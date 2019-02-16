@@ -107,9 +107,9 @@ export default class editCompany extends Vue {
   /* 提示语 */
   iconUploader = {
     point: '',
-    width: 160,
-    height: '',
-    tips: '建议尺寸400X400px，JPG、PNG格式，图片小于5M。'
+    width: 280,
+    height: 158,
+    tips: '建议尺寸280X158px，JPG、PNG格式，图片小于5M。'
   }
   /* 身份信息 */
   personalInfo = {

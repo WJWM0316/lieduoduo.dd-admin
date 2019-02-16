@@ -115,12 +115,12 @@
         </div>
       </div>
     </div>
-    <!--底部删除-->
-    <div class="header del" v-if="isEdit">
+    <!--底部删除(暂时关闭该功能)-->
+    <!--<div class="header del" v-if="isEdit">
       <div class="editBox">
         <el-button type="danger" @click.stop="del">删除</el-button>
       </div>
-    </div>
+    </div>-->
     <!--大图蒙层-->
     <div class="mask" v-if="nowImg" @click.stop="hiddenMask">
       <img :src="nowImg"/>

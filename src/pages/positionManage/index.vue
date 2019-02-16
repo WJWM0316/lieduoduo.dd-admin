@@ -271,11 +271,19 @@ export default class companyCheck extends Vue {
     }
   }
   .positionMsg {
+    width: 100%;
     .job_name {
       font-family:PingFang-SC-Medium;
       font-weight:500;
       color:rgba(53,64,72,1);
       margin-bottom: 8px;
+      text-overflow: -o-ellipsis-lastline;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
     }
     .job_info {
       span {
