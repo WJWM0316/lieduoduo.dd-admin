@@ -33,12 +33,18 @@
           <div class="imgBox" v-if="companyInfo.businessLicenseInfo">
             <div class="imgNote">营业执照</div>
             <img :src="companyInfo.businessLicenseInfo.middleUrl"/>
-            <i class="el-icon-zoom-in" @click.stop="showImg(companyInfo.businessLicenseInfo.url)"></i>
+            <div class="zoomBox" @click.stop="showImg(companyInfo.businessLicenseInfo.url)">
+              <i class="el-icon-zoom-in"></i>
+              查看大图
+            </div>
           </div>
           <div class="imgBox" v-if="companyInfo.onJobInfo">
             <div class="imgNote">上传工牌/名片/在职证明</div>
             <img :src="companyInfo.onJobInfo.middleUrl"/>
-            <i class="el-icon-zoom-in" @click.stop="showImg(companyInfo.onJobInfo.url)"></i>
+            <div class="zoomBox" @click.stop="showImg(companyInfo.onJobInfo.url)">
+              <i class="el-icon-zoom-in"></i>
+              查看大图
+            </div>
           </div>
         </div>
         <div class="title">其他信息</div>
@@ -85,17 +91,26 @@
           <div class="imgBox" v-if="personalInfo.passportFrontInfo">
             <div class="imgNote">身份证（正面）</div>
             <img :src="personalInfo.passportFrontInfo.middleUrl"/>
-            <i class="el-icon-zoom-in" @click.stop="showImg(personalInfo.passportFrontInfo.url)"></i>
+            <div class="zoomBox" @click.stop="showImg(personalInfo.passportFrontInfo.url)">
+              <i class="el-icon-zoom-in"></i>
+              查看大图
+            </div>
           </div>
           <div class="imgBox" v-if="personalInfo.passportReverseInfo">
             <div class="imgNote">身份证（反面）</div>
             <img :src="personalInfo.passportReverseInfo.middleUrl"/>
-            <i class="el-icon-zoom-in" @click.stop="showImg(personalInfo.passportReverseInfo.url)"></i>
+            <div class="zoomBox" @click.stop="showImg(personalInfo.passportReverseInfo.url)">
+              <i class="el-icon-zoom-in"></i>
+              查看大图
+            </div>
           </div>
           <div class="imgBox" v-if="personalInfo.handheldPassportInfo">
             <div class="imgNote">手持身份照</div>
             <img :src="personalInfo.handheldPassportInfo.middleUrl"/>
-            <i class="el-icon-zoom-in" @click.stop="showImg(personalInfo.handheldPassportInfo.url)"></i>
+            <div class="zoomBox" @click.stop="showImg(personalInfo.handheldPassportInfo.url)">
+              <i class="el-icon-zoom-in"></i>
+              查看大图
+            </div>
           </div>
         </div>
       </div>
@@ -379,13 +394,24 @@ export default class checkPage extends Vue {
         object-fit: cover;
         vertical-align: middle;
       }
-      i{
+      /*i{
         cursor: pointer;
         color: #FFFFFF;
         font-size: 20px;
         position: absolute;
         bottom: 10px;
         right: 10px;
+      }*/
+      .zoomBox{
+        background-color: rgba(0, 0, 0, 0.2);
+        padding: 0 5px;
+        border-radius: 5px;
+        cursor: pointer;
+        color: #FFFFFF;
+        font-size: 15px;
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
       }
     }
   }

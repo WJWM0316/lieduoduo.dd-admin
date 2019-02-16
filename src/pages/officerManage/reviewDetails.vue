@@ -46,17 +46,26 @@
           <div class="imgBox" v-if="identityInfo.passportFrontInfo">
             <div class="imgNote">身份证（正面）</div>
             <img :src="identityInfo.passportFrontInfo.middleUrl"/>
-            <i class="el-icon-zoom-in" @click.stop="showImg(identityInfo.passportFrontInfo.url)"></i>
+            <div class="zoomBox" @click.stop="showImg(identityInfo.passportFrontInfo.url)">
+              <i class="el-icon-zoom-in"></i>
+              查看大图
+            </div>
           </div>
           <div class="imgBox" v-if="identityInfo.passportReverseInfo">
             <div class="imgNote">身份证（反面）</div>
             <img :src="identityInfo.passportReverseInfo.middleUrl"/>
-            <i class="el-icon-zoom-in" @click.stop="showImg(identityInfo.passportReverseInfo.url)"></i>
+            <div class="zoomBox" @click.stop="showImg(identityInfo.passportReverseInfo.url)">
+              <i class="el-icon-zoom-in"></i>
+              查看大图
+            </div>
           </div>
           <div class="imgBox" v-if="identityInfo.handheldPassportInfo">
             <div class="imgNote">手持身份照</div>
             <img :src="identityInfo.handheldPassportInfo.middleUrl"/>
-            <i class="el-icon-zoom-in" @click.stop="showImg(identityInfo.handheldPassportInfo.url)"></i>
+            <div class="zoomBox" @click.stop="showImg(identityInfo.handheldPassportInfo.url)">
+              <i class="el-icon-zoom-in"></i>
+              查看大图
+            </div>
           </div>
         </div>
       </div>
@@ -224,13 +233,24 @@ export default class reviewDetails extends Vue {
         object-fit: cover;
         vertical-align: middle;
       }
-      i{
+      /*i{
         cursor: pointer;
         color: #FFFFFF;
         font-size: 20px;
         position: absolute;
         bottom: 10px;
         right: 10px;
+      }*/
+      .zoomBox{
+        background-color: rgba(0, 0, 0, 0.2);
+        padding: 0 5px;
+        border-radius: 5px;
+        cursor: pointer;
+        color: #FFFFFF;
+        font-size: 15px;
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
       }
     }
   }

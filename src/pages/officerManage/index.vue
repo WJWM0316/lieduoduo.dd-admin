@@ -31,7 +31,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label-width="120px" label="身份认证状态" prop="auth_status">
-              <el-select v-model="form.auth_status" placeholder="全部状态">
+              <el-select v-model="form.auth_status" placeholder="全部状态 ">
                 <el-option label="已提交" value="0"></el-option>
                 <el-option label="已通过" value="1"></el-option>
                 <el-option label="未通过" value="2"></el-option>
