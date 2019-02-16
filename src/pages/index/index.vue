@@ -13,8 +13,8 @@
             <el-input v-model="form.keyword" placeholder="请输公司名字"></el-input>
           </el-form-item>
           <!--地区筛选-->
-          <el-form-item label="地区筛选" prop="keyword">
-            <el-select v-model="firstAreaId" placeholder="请选择省份" @change="changeProvince" style="width: 120px; margin-right: 10px;">
+          <el-form-item label="地区筛选" prop="area">
+            <el-select v-model="form.firstAreaId" placeholder="请选择省份" @change="changeProvince" style="width: 120px; margin-right: 10px;">
               <el-option
                 v-for="item in firstAreaIdList"
                 :key="item.areaId"
@@ -118,9 +118,10 @@ export default class indexPage extends Vue {
     end: '',
     page: 1,
     count: 20,
-    area_id: ''
+    area_id: '',
+    firstAreaId: ''
   }
-  firstAreaId = ''
+//firstAreaId = ''
   firstAreaIdList = []
   cityLable = []
   list = []
@@ -157,10 +158,11 @@ export default class indexPage extends Vue {
     }
   ]
   getCompanyList () {
-    if (this.firstAreaId !== '' && this.form.area_id === '') {
+    if (this.form.firstAreaId !== '' && this.form.area_id === '') {
       this.$message.error("请选择城市")
       return
     }
+//  delete this.form.firstAreaId
     getCompanyListApi(this.form).then(res => {
       this.list = res.data.data
       this.pageCount = res.data.meta.lastPage
@@ -199,7 +201,7 @@ export default class indexPage extends Vue {
   /* 选择省 */
   changeProvince () {
     this.firstAreaIdList.map(item => {
-      if (item.areaId === this.firstAreaId) {
+      if (item.areaId === this.form.firstAreaId) {
         this.cityLable = item.children
         this.form.area_id = ''
       }
@@ -208,6 +210,10 @@ export default class indexPage extends Vue {
   /* 清除列表选项 */
   resetForm (name) {
     this.$refs[name].resetFields()
+    // 清除地区数据
+    this.form.firstAreaId = ''
+    this.form.area_id = ''
+    this.cityLable = []
   }
   check (id) {
     this.$router.push({
