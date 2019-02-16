@@ -146,3 +146,9 @@ export const delCompanyAddressApi = (id) => request({
   url: `/company/address/${id}`,
   type: 'delete'
 })
+
+/* 城市标签 */
+export const getCityApi = () => request({
+  url: `/area?level=3`,
+  type: 'get'
+})

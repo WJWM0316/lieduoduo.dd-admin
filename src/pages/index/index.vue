@@ -13,16 +13,24 @@
             <el-input v-model="form.keyword" placeholder="请输公司名字"></el-input>
           </el-form-item>
           <!--地区筛选-->
-          <!--<el-form-item label="地区筛选" prop="keyword">
-            <el-select v-model="value" placeholder="请选择">
+          <el-form-item label="地区筛选" prop="keyword">
+            <el-select v-model="firstAreaId" placeholder="请选择省份" @change="changeProvince" style="width: 120px; margin-right: 10px;">
               <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
+                v-for="item in firstAreaIdList"
+                :key="item.areaId"
+                :label="item.title"
+                :value="item.areaId">
               </el-option>
             </el-select>
-          </el-form-item>-->
+            <el-select v-model="form.area_id" placeholder="请选择城市" style="width: 100px;">
+              <el-option
+                v-for="item in cityLable"
+                :key="item.areaId"
+                :label="item.title"
+                :value="item.areaId">
+              </el-option>
+            </el-select>
+          </el-form-item>
           
           <el-form-item label="申请时间" prop="start">
             <el-col :span="11">
@@ -93,7 +101,7 @@
 <script>
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { getCompanyListApi } from 'API/company'
+import { getCompanyListApi, getCityApi } from 'API/company'
 import List from '@/components/list'
 @Component({
   name: 'companyLibrary',
@@ -109,8 +117,12 @@ export default class indexPage extends Vue {
     start: '',
     end: '',
     page: 1,
-    count: 20
+    count: 20,
+    area_id: ''
   }
+  firstAreaId = ''
+  firstAreaIdList = []
+  cityLable = []
   list = []
   fields = [
     {
@@ -171,6 +183,23 @@ export default class indexPage extends Vue {
   search () {
     this.onSubmit()
   }
+  // 获取城市标签
+  getCity () {
+    getCityApi().then(res => {
+      res.data.data.map(item => {
+        this.firstAreaIdList.push(item)
+      })
+      console.log(this.cityLable)
+    })
+  }
+  /* 选择省 */
+  changeProvince () {
+    this.firstAreaIdList.map(item => {
+      if (item.areaId === this.firstAreaId) {
+        this.cityLable = item.children
+      }
+    })
+  }
   /* 清除列表选项 */
   resetForm (name) {
     this.$refs[name].resetFields()
@@ -182,6 +211,7 @@ export default class indexPage extends Vue {
     })
   }
   created () {
+    this.getCity()
     this.getCompanyList()
   }
 }

@@ -96,10 +96,11 @@
           <div style='width: 380px; height: 180px' id="infoDiv" @click.stop="clickAdress"></div>
         </div>
         <div class="nowPosi">
-          <div class="address"><span>地址：</span>{{nowPosiInfo.address || '请输入包含市名的地址'}}</div>
+          <div class="address"><span>地址：</span>{{nowPosiInfo.address}}</div>
           <div class="btnBox">
             <el-button @click.stop="popCancel">取消</el-button>
-            <el-button @click.stop="addAdress" style="background-color: #652791; color: #FFFFFF;">保存</el-button>
+            <el-button @click.stop="addAdress" style="background-color: #652791; color: #FFFFFF;" v-if="nowPosiInfo.address">保存</el-button>
+            <el-button @click.stop="addAdress" disabled  type="info" v-else>保存</el-button>
           </div>
           <div class="doorplate"><span>门牌号：</span><input class="textbox" type="textbox" v-model="doorplate"></div>
         </div>
@@ -269,23 +270,6 @@ export default class editCompany extends Vue {
             lng: result.detail.location.lng,
             lat: result.detail.location.lat
           }
-//        that.pop = {
-//          isShow: false,
-//          type: ''
-//        }
-
-//        addCompanyAdressApi(data).then(res => {
-//          that.pop = {
-//            isShow: false,
-//            type: ''
-//          }
-//          that.form.address_id = ''
-//          that.getAdressList()
-//          console.log(res)
-//        }).catch(e=>{
-//          console.log('===',e)
-//          that.$message.error(e.data.msg)
-//        })
         },//若服务请求失败，则运行以下函数
         error: function(e) {
           console.log(e)
@@ -638,9 +622,13 @@ export default class editCompany extends Vue {
       width: 100%;
       border-top: 1px solid #CCCCCC;
       .address {
+        color: #652791;
         width: 400px;
         text-align: left;
         float: left;
+        span{
+          color: #929292;
+        }
       }
       .doorplate {
         margin-right: 20px;
