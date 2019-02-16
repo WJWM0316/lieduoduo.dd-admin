@@ -90,11 +90,10 @@
     <div class="pop" v-show="pop.isShow">
       <div class="addAdressBox">
         <div id="map" style="width:500px; height:400px"></div>
-        
         <div class="searchBox">
-          <input class="textbox" type="textbox" v-model="keyword">
+          <input class="textbox searchMap" placeholder="请输入包含市名的地址" type="textbox" v-model="keyword"  @keyup.enter="searchKeyword">
           <input class="btn" type="button" value="搜索" @click="searchKeyword">
-          <div style='width: 300px; height: 180px' id="infoDiv" @click.stop="clickAdress"></div>
+          <div style='width: 380px; height: 180px' id="infoDiv" @click.stop="clickAdress"></div>
         </div>
         <div class="nowPosi">
           <div class="address"><span>地址：</span>{{nowPosiInfo.address || '请输入包含市名的地址'}}</div>
@@ -216,7 +215,7 @@ export default class editCompany extends Vue {
         //设置搜索范围为北京
         location: "北京",
         //设置搜索页码为1
-        pageIndex: 1,
+        pageIndex: 0,
         //设置每页的结果数为5
         pageCapacity: 5,
         //设置展现查询结构到infoDIV上
@@ -249,7 +248,7 @@ export default class editCompany extends Vue {
         },
         //若服务请求失败，则运行以下函数
         error: function() {
-            alert("出错了。");
+            alert("地址太过模糊，无法找到信息。");
         }
     });
       
@@ -260,7 +259,7 @@ export default class editCompany extends Vue {
           } else {
             that.nowPosiInfo.addressComponents = result.detail.addressComponents
           }
-          console.log(that.nowPosiInfo, '搜索后的地址对象')
+//        console.log(that.nowPosiInfo, '搜索后的地址对象')
           let data = {
             mobile: that.form.mobile,
             areaName: result.detail.addressComponents.city || '',
@@ -291,7 +290,7 @@ export default class editCompany extends Vue {
         error: function(e) {
           console.log(e)
           that.nowPosiInfo = ''
-          that.$message.error("地址搜索失败,请确保地址准确且包含城市名")
+//        that.$message.error("地址搜索失败,请确保地址准确且包含城市名")
         }
       })
     })
@@ -362,10 +361,8 @@ export default class editCompany extends Vue {
   // 选中搜索后的地址
   clickAdress (e) {
     let that = this
-//  console.log(e.target.innerText, this.nowResults, '12121321------')
     this.nowResults.map((item, index) => {
       if (item.address === e.target.innerText || item.name === e.target.innerText) {
-        console.log(item, '***********')
         that.nowPosiInfo = item
         let latLng = new that.qqMapObj.maps.LatLng(item.latLng.lat, item.latLng.lng)
         that.geocoder.getAddress(latLng)
@@ -389,12 +386,12 @@ export default class editCompany extends Vue {
     this.qqMapObj.maps.event.addListener(that.map, 'click', function(e) {
       console.log(e, '78787*/*/*/78787')
       // 清除之前的坐标
-//    if (that.marker) that.marker.setMap(null)
-//    let choosePosition = new that.qqMapObj.maps.LatLng(e.latLng.lat, e.latLng.lng);
-//    that.marker = new that.qqMapObj.maps.Marker({
-//      position: choosePosition,
-//      map: map
-//    });
+      if (that.marker) that.marker.setMap(null)
+      let choosePosition = new that.qqMapObj.maps.LatLng(e.latLng.lat, e.latLng.lng);
+      that.marker = new that.qqMapObj.maps.Marker({
+        position: choosePosition,
+        map: map
+      });
     });
       
     this.pop = {
@@ -612,7 +609,7 @@ export default class editCompany extends Vue {
     transform: translate(-50%, -50%);
     padding: 30px;
     border-radius: 10px;
-    width: 820px;
+    width: 900px;
     height: 500px;
     background-color: #FFFFFF;
     #map{
@@ -628,6 +625,12 @@ export default class editCompany extends Vue {
         margin-right: 10px;
         padding: 5px;
       }
+      .searchMap{
+        width: 300px;
+      }
+      #infoDiv{
+        text-align: left;
+      }
     }
     .nowPosi {
       padding: 20px 0;
@@ -635,6 +638,8 @@ export default class editCompany extends Vue {
       width: 100%;
       border-top: 1px solid #CCCCCC;
       .address {
+        width: 400px;
+        text-align: left;
         float: left;
       }
       .doorplate {

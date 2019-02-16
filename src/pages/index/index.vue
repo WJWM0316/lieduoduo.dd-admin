@@ -12,6 +12,18 @@
           <el-form-item label="关键词" prop="keyword">
             <el-input v-model="form.keyword" placeholder="请输公司名字"></el-input>
           </el-form-item>
+          <!--地区筛选-->
+          <!--<el-form-item label="地区筛选" prop="keyword">
+            <el-select v-model="value" placeholder="请选择">
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>-->
+          
           <el-form-item label="申请时间" prop="start">
             <el-col :span="11">
               <el-date-picker type="date" placeholder="选择日期" value-format="yyyy-MM-dd" v-model="form.start" style="width: 100%;"></el-date-picker>

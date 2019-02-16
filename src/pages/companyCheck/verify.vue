@@ -24,13 +24,6 @@
         <div class="title">基本信息</div>
         <div class="item companyName"><span class="lable">公司全称：</span> {{companyInfo.companyName}}</div>
         <div class="item"><span class="lable">公司简称：</span> {{companyInfo.companyShortname}}</div>
-        <!--<div class="item" v-for="(item, index) in companyInfo.address"><span class="lable">公司地址{{index+1}}：</span> {{item.address}}{{item.doorplate}}</div>-->
-        <!--<el-form-item label="公司地址" prop="address_id" style="width: 380px;">
-          <span class="AdressList" v-for="item in companyInfo.address">
-            <i @click.stop="delAdress(item.id)" class="el-icon-remove" style="color: rgb(245, 108, 108);"></i>
-            {{`${item.address}${item.doorplate}`}}
-          </span>
-        </el-form-item>-->
         <div class="item"><span class="lable">所属行业：</span> {{companyInfo.industry}}</div>
         <div class="item"><span class="lable">融资阶段：</span> {{companyInfo.financingInfo}}</div>
         <div class="item"><span class="lable">人员规模：</span> {{companyInfo.employeesInfo}}</div>
@@ -49,7 +42,7 @@
           </div>
         </div>
         <div class="title">其他信息</div>
-        <template v-if="companyInfo.address.length">
+        <template v-if="companyInfo.address && companyInfo.address.length">
           <div class="item" v-for="(item, index) in companyInfo.address"><span class="lable">公司地址{{index+1}}：</span> {{item.address}}{{item.doorplate}}</div>
         </template>
         <template v-else>
