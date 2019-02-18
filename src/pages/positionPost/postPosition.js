@@ -89,7 +89,7 @@ export default class CommunityEdit extends Vue {
   	},
   	{
   		value: '2',
-  		label: '中专/应届生'
+  		label: '应届生'
   	},
   	{
   		value: '3',
