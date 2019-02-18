@@ -276,12 +276,9 @@ export default class CommunityEdit extends Vue {
         form.address = data.data.address
         form.doorplate = data.data.doorplate
 
-        
-        
         form.work_experience = data.data.workExperience
         form.education = data.data.education
         form.describe = data.data.describe
-
 
         form.type = data.data.type
         this.selectPositionItem = {
@@ -318,8 +315,6 @@ export default class CommunityEdit extends Vue {
         this.setEmolumentMax(data.data.emolumentMin)
         form.mobile = data.data.mobile
         this.form = form
-
-
 
         this.getAdressList()
 
@@ -367,7 +362,6 @@ export default class CommunityEdit extends Vue {
           this.$message.error(e.data.msg)
         })
       }
-
       
     } catch (e) {
       this.$message.error(e.message)
