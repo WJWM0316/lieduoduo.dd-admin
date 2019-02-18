@@ -1,5 +1,5 @@
 <template>
-  <div id="login">
+  <div id="login"  @keyup.enter="login">
     <div class="box">
       <el-form :model="loginForm" status-icon ref="loginForm" label-width="100px" class="demo-ruleForm" label-position="left">
         <el-form-item label-width="0px">
@@ -35,6 +35,7 @@ export default class login extends Vue{
   }
   login () {
     loginApi(this.loginForm).then(res => {
+      sessionStorage.setItem('email',this.loginForm.email);
       console.log(res.data.data.adminToken, '登录')
       saveAccessToken(res.data.data.adminToken)
       this.$message({
@@ -45,11 +46,18 @@ export default class login extends Vue{
         path: '/companyCheck'
       })
     }).catch(err => {
-      this.$message.error(`${err.data.msg}`);
+      this.$message.error(`用户账号或密码错误`);
     })
   }
   resetForm(formName) {
     this.$refs[formName].resetFields();
+     this.loginForm.email = ''
+  }
+  created () {
+    const email = sessionStorage.getItem('email') || ''
+    if (email) {
+      this.loginForm.email = email
+    }
   }
 }
 </script>

@@ -4,6 +4,7 @@ import Component from 'vue-class-component'
 import { professionalSkillsApi, getLabelPositionListApi, searchPositionApi, getPositionApi, editPositionApi, addPositionApi } from 'API/position'
 import { getAdressListApi, addCompanyAdressApi } from 'API/company'
 import SearchBar from '@/components/searchBar'
+import mapSearch from '@/components/map'
 import {TMap} from '../../util/js/TMap.js'
 //P63BZ-4RM35-BIJIV-QOL7E-XNCZZ-WIF4L
 
@@ -14,7 +15,8 @@ var citylocation = {}
   name: 'community-edit',
   components: {
     /*Editor*/
-    SearchBar
+    SearchBar,
+    mapSearch
   },
 
   filters: {

@@ -10,7 +10,7 @@
         <el-input v-model="form.mobile" :disabled="true" placeholder="填写招聘官手机号" :maxlength="11"></el-input>
       </el-form-item>
 
-
+      
       <h3 class="title">职位基本信息</h3>
       <p class="hint"><!--加“ <span style="color: red; font-size: 15px;">*</span> ”内容，在确认发布成功后，将无法修改--></p>
       <el-form-item label="职位名称" prop="position_name" style="width: 380px;">
@@ -136,6 +136,7 @@
             </ul>
           </div>
         </div>
+        <!--<map-search v-if="pop.isShow"></map-search>-->
 
         <div class="addAdressPop" v-if="pop.type==='addAdress'">
           <img class="clo" @click="popCancel" />
@@ -144,11 +145,6 @@
 
           <el-input style="width: 368px;margin: 13px 0 26px 0;box-sizing: border-box;" v-model="adressInput" placeholder="请输入工作地址）"></el-input>
 
-          <!-- <el-autocomplete style="width: 368px;box-sizing: border-box;" v-model="adressInput" 
-          placeholder="请输入工作地址" 
-          :fetch-suggestions="querySearch"
-          @select="handleSelect"
-          ></el-autocomplete> -->
 
           <el-input style="width: 368px;margin: 13px 0 26px 0;box-sizing: border-box;" v-model="adress_id_Input" placeholder="请输入门牌号（选填）"></el-input>
 
