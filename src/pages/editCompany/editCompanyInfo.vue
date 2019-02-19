@@ -129,7 +129,7 @@ export default class editCompany extends Vue {
   searchService = null // 查询地图信息
   qqMapObj = null
   center = null // 当前选择坐标值
-  marker = null // 当前选择的坐标对象
+  nowMarker = null // 当前选择的坐标对象
   markers = [] // 当前查询回来的地址信息数组
   nowResults = [] // 当前搜索地址的结果列表
   nowPosiInfo = '' // 当前地址信息
@@ -225,27 +225,27 @@ export default class editCompany extends Vue {
         autoExtend: true,
         //检索成功的回调函数
         complete: function(results) {
-            that.nowResults = results.detail.pois
-            //设置回调函数参数
-            var pois = results.detail.pois;
-            for (var i = 0, l = pois.length; i < l; i++) {
-                var poi = pois[i];
-                //扩展边界范围，用来包含搜索到的Poi点
-                latlngBounds.extend(poi.latLng);
-                var marker = new qq.maps.Marker({
-                    map: that.map,
-                    position: poi.latLng
-                });
+          that.nowResults = results.detail.pois
+          //设置回调函数参数
+          let pois = results.detail.pois;
+          for (let i = 0, l = pois.length; i < l; i++) {
+              let poi = pois[i];
+              //扩展边界范围，用来包含搜索到的Poi点
+              latlngBounds.extend(poi.latLng);
+              let marker = new qq.maps.Marker({
+                  map: that.map,
+                  position: poi.latLng
+              });
 
-                marker.setTitle(i + 1);
-                that.markers.push(marker);
+              marker.setTitle(i + 1);
+              that.markers.push(marker);
 
-            }
-            //调整地图视野及中心坐标
-            let nowPosi = new qq.maps.LatLng(that.markers[0].position.lat, that.markers[0].position.lng);
-            that.map.fitBounds(latlngBounds)
-            that.map.zoomTo(13)
-            that.map.setCenter(nowPosi)
+          }
+          //调整地图视野及中心坐标
+          let nowPosi = new qq.maps.LatLng(that.markers[0].position.lat, that.markers[0].position.lng);
+          that.map.fitBounds(latlngBounds)
+          that.map.zoomTo(13)
+          that.map.setCenter(nowPosi)
         },
         //若服务请求失败，则运行以下函数
         error: function() {
@@ -369,12 +369,16 @@ export default class editCompany extends Vue {
     
     this.qqMapObj.maps.event.addListener(that.map, 'click', function(e) {
       console.log(e, '78787*/*/*/78787')
-      // 清除之前的坐标
-      if (that.marker) that.marker.setMap(null)
-      let choosePosition = new that.qqMapObj.maps.LatLng(e.latLng.lat, e.latLng.lng);
-      that.marker = new that.qqMapObj.maps.Marker({
+      // 清除地图上搜索的坐标
+      that.markers.map(item => {
+        item.setMap(null)
+      })
+      // 清除上一次选择的坐标
+      if (that.nowMarker) that.nowMarker.setMap(null)
+      let choosePosition = new that.qqMapObj.maps.LatLng(e.latLng.lat, e.latLng.lng)
+      that.nowMarker = new that.qqMapObj.maps.Marker({
         position: choosePosition,
-        map: map
+        map: that.map
       });
     });
       
