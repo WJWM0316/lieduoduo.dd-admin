@@ -176,7 +176,6 @@ Component.registerHooks([
     'form.result': {
       handler (tags, oldTags) {
         this.needReason = tags
-        console.log(this.needReason, '11111')
       }
     }
   }

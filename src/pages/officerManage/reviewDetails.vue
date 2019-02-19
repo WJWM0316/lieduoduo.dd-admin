@@ -91,6 +91,9 @@
           </el-select>
           <!--<el-input v-model="form.reason" autocomplete="off"></el-input>-->
         </el-form-item>
+        <el-form-item label="其他原因" v-show="needReason !== 'true'" label-width="100px" style="text-align: left;">
+          <el-input type="textarea" v-model="form.other" placeholder="请输入其他原因"></el-input>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.stop="isCheck = false">取 消</el-button>
@@ -123,7 +126,8 @@ export default class reviewDetails extends Vue {
   needReason = '' //是否需要审核原因
   form = {
     result: '',
-    reason: ''
+    reason: '',
+    other: ''
   }
   getReviewDetails () {
     const { id } = this.$route.query
@@ -148,7 +152,7 @@ export default class reviewDetails extends Vue {
   /*设置审核结果 */
   setResult () {
     let param = {
-      review_note: this.form.reason
+      review_note: `${this.form.reason};${this.form.other}`
     }
     //审核人员信息
     if (this.form.result === 'true') {
