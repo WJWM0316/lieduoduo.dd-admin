@@ -152,7 +152,7 @@ export default class reviewDetails extends Vue {
   /*设置审核结果 */
   setResult () {
     let param = {
-      review_note: `${this.form.reason};${this.form.other}`
+      review_note: this.form.reason ? `${this.form.reason};${this.form.other}` : `${this.form.other}`
     }
     //审核人员信息
     if (this.form.result === 'true') {

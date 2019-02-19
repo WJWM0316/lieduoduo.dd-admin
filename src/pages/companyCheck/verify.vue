@@ -258,7 +258,7 @@ export default class checkPage extends Vue {
   /*设置审核结果 */
   setResult () {
     let param = {
-      review_note: `${this.form.reason};${this.form.other}`
+      review_note: this.form.reason ? `${this.form.reason};${this.form.other}` : `${this.form.other}`
     }
     if (this.type === 'company') {
       //审核公司信息
