@@ -500,8 +500,6 @@ export default class CommunityEdit extends Vue {
 
   //添加工作地点
   addAdress (param) {
-    console.log(param, '*****我是要保存的数据')
-    return
     console.log(this.adressInput, 11111)
     console.log(this.addressData, 222)
     if(this.adressInput.length>0){

@@ -136,9 +136,9 @@
             </ul>
           </div>
         </div>
-        <map-search v-if="pop.isShow" @popCancel="popCancel" @addAdress="addAdress"></map-search>
+        <!--<map-search v-if="pop.isShow" @popCancel="popCancel" @addAdress="addAdress"></map-search>-->
 
-        <!--<div class="addAdressPop" v-if="pop.type==='addAdress'">
+        <div class="addAdressPop" v-if="pop.type==='addAdress'">
           <img class="clo" @click="popCancel" />
           <h3 class="">添加新的公司地址</h3>
           <p>添加新的公司地址</p>
@@ -152,7 +152,7 @@
             <el-button class="btn_cancel" @click="popCancel">取消</el-button>
             <el-button class="btn_submit" type="primary" @click="addAdress">保存地址</el-button>
           </div>
-        </div>-->
+        </div>
       </div>
       
     </el-form>
