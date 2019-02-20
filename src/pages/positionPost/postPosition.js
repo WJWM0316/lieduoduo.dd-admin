@@ -499,7 +499,9 @@ export default class CommunityEdit extends Vue {
   }
 
   //添加工作地点
-  addAdress () {
+  addAdress (param) {
+    console.log(param, '*****我是要保存的数据')
+    return
     console.log(this.adressInput, 11111)
     console.log(this.addressData, 222)
     if(this.adressInput.length>0){
@@ -705,6 +707,12 @@ export default class CommunityEdit extends Vue {
   handleTimeRangeChange (range, start, end) {
     this.form.start_time = start
     this.form.end_time = end
+  }
+  
+  /* 关闭弹窗 */
+  popCancel () {
+    this.pop.isShow = false
+    this.nowPosiInfo = ''
   }
 
   /**

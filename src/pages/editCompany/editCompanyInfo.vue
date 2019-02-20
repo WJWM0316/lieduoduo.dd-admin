@@ -88,6 +88,7 @@
     </div>
     <!--添加新公司地址弹窗-->
     <div class="pop" v-show="pop.isShow">
+      <!--<map-search></map-search>-->
       <div class="addAdressBox">
         <div id="map" style="width:500px; height:400px"></div>
         <div class="searchBox">
@@ -117,10 +118,12 @@ import ImageUploader from '@/components/imageUploader'
 import { fieldApi, uploadApi } from 'API/commont'
 import { getCompanyInfoApi, editCompanyApi, addCompanyAddressApi, delCompanyAddressApi } from 'API/company'
 import {TMap} from '../../util/js/TMap.js'
+//import mapSearch from '@/components/map'
 @Component({
   name: 'editCompany',
   components: {
     ImageUploader
+//  mapSearch
   }
 })
 export default class editCompany extends Vue {
@@ -292,7 +295,6 @@ export default class editCompany extends Vue {
     }
     
     addCompanyAddressApi(id, data).then((res) => {
-      console.log(res.data.data,'/////')
       this.$message({
         type: 'success',
         message: '添加成功!'

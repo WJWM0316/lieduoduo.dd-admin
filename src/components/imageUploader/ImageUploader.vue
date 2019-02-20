@@ -1,6 +1,6 @@
 <template>
   <div class="m-image-uploader f-flex">
-    <div class="preview f-flex-fixed" v-show="previewSrc" v-loading="uploading">
+    <div class="preview f-flex-fixed" v-show="previewSrc" v-loading="uploading" @click.stop="preview(previewSrc)">
       <i class="u-image auto" :style="{ width: imageWidth, height: imageHeight, lineHeight: imageHeight }"><img :src="previewSrc" alt="预览图"></i>
     </div>
     <div class="uploader-control f-flex-auto f-flex">

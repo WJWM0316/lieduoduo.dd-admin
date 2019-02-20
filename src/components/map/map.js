@@ -24,6 +24,16 @@ export default class mapSearch extends Vue {
   keyword = '北京市天安门广场' // 搜索地址关键词
   doorplate = ''
   
+  /* 地址数据 */
+  addressData = {
+    areaName: '',
+    area_id: '',
+    address: '',
+    doorplate: '',
+    lng: '',
+    lat: ''
+  }
+  
   mounted () {
     let that = this
     TMap('P63BZ-4RM35-BIJIV-QOL7E-XNCZZ-WIF4L').then(qq => {
@@ -114,7 +124,6 @@ export default class mapSearch extends Vue {
   
   /* 添加公司地点 */
   addAdress () {
-    const { id } = this.componyId
     const data = {
       area_id: this.nowPosiInfo.addressComponents.city,
       doorplate: this.doorplate,
@@ -122,15 +131,18 @@ export default class mapSearch extends Vue {
       lng: this.nowPosiInfo.location ? this.nowPosiInfo.location.lng : this.nowPosiInfo.latLng.lng,
       lat: this.nowPosiInfo.location ? this.nowPosiInfo.location.lat : this.nowPosiInfo.latLng.lat
     }
-    addCompanyAddressApi(id, data).then((res) => {
-      console.log(res.data.data,'/////')
-      this.$message({
-        type: 'success',
-        message: '添加成功!'
-      })
-      this.adressList.push(res.data.data)
-      this.popCancel()
-    })
+    this.saveData(data)
+    this.popCancel()
+  }
+  
+  /* 返回地址数据 */
+  saveData (data) {
+    this.$emit('addAdress', {data: data})
+  }
+  
+  /* 关闭弹窗 */
+  popCancel () {
+    this.$emit('popCancel')
   }
   
   /* 选中搜索后的地址 */

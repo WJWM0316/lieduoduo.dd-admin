@@ -109,6 +109,11 @@ export default class ImageUploader extends Vue {
       fileReader.readAsDataURL(file)
     })
   }
+  
+  /* 预览图片 */
+  preview (url) {
+    console.log(url, '我是预览图片......')
+  }
 
   /**
    * 清除文件域已选择的文件

@@ -22,6 +22,7 @@ axios.interceptors.request.use(
     return Promise.error(error)
   }
 )
+// http response 拦截器
 axios.interceptors.response.use(
   res => {
     if (loadingInstance) loadingInstance.close()
