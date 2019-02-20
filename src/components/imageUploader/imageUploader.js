@@ -114,7 +114,6 @@ export default class ImageUploader extends Vue {
   /* 预览图片 */
   preview (url) {
     this.nowImg = url
-    console.log(url, '我是预览图片......')
   }
   
   hiddenMask () {
