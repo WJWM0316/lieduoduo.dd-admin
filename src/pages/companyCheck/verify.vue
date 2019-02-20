@@ -148,9 +148,9 @@
             <el-option label="系统判定为存在安全问题的其他情况" value="系统判定为存在安全问题的其他情况"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="其他原因" v-show="needReason !== 'true'" label-width="100px" style="text-align: left;">
+        <!--<el-form-item label="其他原因" v-show="needReason !== 'true'" label-width="100px" style="text-align: left;">
           <el-input type="textarea" v-model="form.other" placeholder="请输入其他原因"></el-input>
-        </el-form-item>
+        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.stop="isCheck = false">取 消</el-button>

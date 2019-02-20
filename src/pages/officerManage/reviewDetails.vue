@@ -91,9 +91,9 @@
           </el-select>
           <!--<el-input v-model="form.reason" autocomplete="off"></el-input>-->
         </el-form-item>
-        <el-form-item label="其他原因" v-show="needReason !== 'true'" label-width="100px" style="text-align: left;">
+        <!--<el-form-item label="其他原因" v-show="needReason !== 'true'" label-width="100px" style="text-align: left;">
           <el-input type="textarea" v-model="form.other" placeholder="请输入其他原因"></el-input>
-        </el-form-item>
+        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.stop="isCheck = false">取 消</el-button>
