@@ -17,6 +17,9 @@
         </slot>
       </div>
     </div>
+    <div class="mask" v-if="nowImg" @click.stop="hiddenMask">
+      <img :src="nowImg"/>
+    </div>
   </div>
 </template>
 
@@ -60,6 +63,22 @@ export default ImageUploader
     margin: 5px 0;
     font-size: 12px;
     color: #bcbcbc;
+  }
+}
+.mask{
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 999;
+  width: 50%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content:  center;
+  img{
+    max-width: 90%;
+    max-height: 90%;
   }
 }
 </style>

@@ -96,7 +96,6 @@ export default class mapSearch extends Vue {
             that.nowPosiInfo.addressComponents = result.detail.addressComponents
           }
           let data = {
-//          mobile: that.form.mobile,
             areaName: result.detail.addressComponents.city || '',
             //address: result.detail.address,
             address: that.adressInput,

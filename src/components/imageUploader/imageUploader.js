@@ -67,6 +67,7 @@ export default class ImageUploader extends Vue {
   // 预览图片的src
   previewSrc = null
   fileInput = null
+  nowImg = null
 
   /**
    * 图片容器宽度
@@ -112,7 +113,12 @@ export default class ImageUploader extends Vue {
   
   /* 预览图片 */
   preview (url) {
+    this.nowImg = url
     console.log(url, '我是预览图片......')
+  }
+  
+  hiddenMask () {
+    this.nowImg = ''
   }
 
   /**
