@@ -173,12 +173,16 @@ export default class companyCheck extends Vue {
     console.log('添加公司')
   }
   check (id) {
+    this.$route.meta.scrollY = window.scrollY
     this.$router.push({
       path: '/verify',
       query: {id: id}
     })
   }
+  /* 翻页 */
   handlePageChange (nowPage) {
+    this.$route.meta.scrollY = 0
+    window.scrollTo(0, 0)
     this.form.page = nowPage
     this.getTemplist()
   }
@@ -196,6 +200,12 @@ export default class companyCheck extends Vue {
   }
   created () {
     this.getTemplist()
+  }
+  activated () {
+    let that = this
+    setTimeout(function () {
+      window.scrollTo(0, that.$route.meta.scrollY)
+    }, 300)
   }
 }
 </script>

@@ -31,7 +31,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          
+
           <el-form-item label="申请时间" prop="start">
             <el-col :span="11">
               <el-date-picker type="date" placeholder="选择日期" value-format="yyyy-MM-dd" v-model="form.start" style="width: 100%;"></el-date-picker>
@@ -171,6 +171,8 @@ export default class indexPage extends Vue {
   }
   /* 翻页 */
   handlePageChange (nowPage) {
+    this.$route.meta.scrollY = 0
+    window.scrollTo(0, 0)
     this.form.page = nowPage
     this.getCompanyList()
   }
@@ -179,7 +181,6 @@ export default class indexPage extends Vue {
     this.$router.push({
       path: '/createCompany'
     })
-    console.log('添加公司')
   }
   onSubmit () {
     this.form.page = 1
@@ -216,6 +217,7 @@ export default class indexPage extends Vue {
     this.cityLable = []
   }
   check (id) {
+    this.$route.meta.scrollY = window.scrollY
     this.$router.push({
       path: '/verify',
       query: {id: id, isEdit: true}
@@ -224,6 +226,12 @@ export default class indexPage extends Vue {
   created () {
     this.getCity()
     this.getCompanyList()
+  }
+  activated () {
+    let that = this
+    setTimeout(function () {
+      window.scrollTo(0, that.$route.meta.scrollY)
+    }, 300)
   }
 }
 </script>

@@ -15,14 +15,14 @@ export const routes = [
   {
     path: '/index',
     name: 'index',
-    meta: {title: '公司库'},
+    meta: {title: '公司库', keepAlive: true, scrollY: 0},
     component: resolve => require(['@/pages/index/index.vue'], resolve),
   },
   /* 公司审核管理 */
   {
     path: '/companyCheck',
     name: 'companyCheck',
-    meta: {title: '公司审核管理'},
+    meta: {title: '公司审核管理', keepAlive: true},
     component: resolve => require(['@/pages/companyCheck/index.vue'], resolve),
   },
   /* 公司审核详情 */
@@ -36,7 +36,7 @@ export const routes = [
   {
     path: '/recruitmentOfficer',
     name: 'recruitmentOfficer',
-    meta: {title: '招聘官管理'},
+    meta: {title: '招聘官管理', keepAlive: true},
     component: resolve => require(['@/pages/officerManage/index.vue'], resolve),
   },
   /* 招聘官审核详情 */
@@ -50,7 +50,7 @@ export const routes = [
   {
     path: '/positionManage',
     name: 'positionManage',
-    meta: {title: '职位管理'},
+    meta: {title: '职位管理', keepAlive: true},
     component: resolve => require(['@/pages/positionManage/index.vue'], resolve),
   },
   /* 职位审核详情 */

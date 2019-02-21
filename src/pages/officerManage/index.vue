@@ -190,12 +190,14 @@ export default class officerManage extends Vue{
   }
   /* 翻页 */
   handlePageChange (nowPage) {
+    this.$route.meta.scrollY = 0
+    window.scrollTo(0, 0)
     this.form.page = nowPage
     this.getRecruiterList()
   }
   /* 查看相应的招聘官审核详情 */
   check (id) {
-    console.log(id, 7777)
+    this.$route.meta.scrollY = window.scrollY
     this.$router.push({
       path: '/reviewDetails',
       query: {id: id}
@@ -203,6 +205,12 @@ export default class officerManage extends Vue{
   }
   created () {
     this.getRecruiterList()
+  }
+  activated () {
+    let that = this
+    setTimeout(function () {
+      window.scrollTo(0, that.$route.meta.scrollY)
+    }, 300)
   }
 }
 </script>
