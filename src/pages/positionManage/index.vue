@@ -58,6 +58,16 @@
                 </el-button>
               </div>
             </div>
+            <!--职位id-->
+            <div class="btn-container" v-if="props.scope.column.property === 'id'" style="height: 48px;">
+              <div>
+                <el-button
+                  type="text"
+                  >
+                  {{props.scope.row.id}}
+                </el-button>
+              </div>
+            </div>
 
             <div class="btn-container"  v-else-if="props.scope.column.property === 'positionMsg'" style="height: 48px;">
               <div class="positionMsg">
@@ -139,6 +149,11 @@ export default class companyCheck extends Vue {
     count: 20
   }
   fields = [
+    {
+      prop: 'id',
+      label: '职位ID',
+      width: 150
+    },
     {
       prop: 'positionMsg',
       label: '职位信息',

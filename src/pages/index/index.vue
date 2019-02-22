@@ -13,8 +13,8 @@
             <el-input v-model="form.keyword" placeholder="请输公司名字"></el-input>
           </el-form-item>
           <!--地区筛选-->
-          <el-form-item label="地区筛选" prop="area">
-            <el-select v-model="form.firstAreaId" placeholder="请选择省份" @change="changeProvince" style="width: 120px; margin-right: 10px;">
+          <el-form-item class="area" label="地区筛选" prop="area">
+            <el-select v-model="form.firstAreaId" placeholder="请选择省份" @change="changeProvince" style="margin-right: 10px;">
               <el-option
                 v-for="item in firstAreaIdList"
                 :key="item.areaId"
@@ -22,7 +22,7 @@
                 :value="item.areaId">
               </el-option>
             </el-select>
-            <el-select v-model="form.area_id" placeholder="请选择城市" style="width: 100px;">
+            <el-select v-model="form.area_id" placeholder="请选择城市">
               <el-option
                 v-for="item in cityLable"
                 :key="item.areaId"
@@ -32,7 +32,7 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item label="申请时间" prop="start">
+          <el-form-item class="time" label="申请时间" prop="start">
             <el-col :span="11">
               <el-date-picker type="date" placeholder="选择日期" value-format="yyyy-MM-dd" v-model="form.start" style="width: 100%;"></el-date-picker>
             </el-col>
@@ -270,16 +270,25 @@ export default class indexPage extends Vue {
       }
     }
     .el-form{
-      display: flex;
-      align-items: center;
+      /*display: flex;*/
+      /*align-items: center;*/
       .el-input{
         width: 200px;
       }
+      &::after {
+        content: '';
+        display: block;
+        height: 0;
+        clear: both;
+      }
     }
     .el-form-item{
-      display: inline-block;
+      float: left;
+    }
+    .area{
     }
     .btn{
+      float: right;
       .inquire{
         color: #FFFFFF;
         background-color: #652791;
