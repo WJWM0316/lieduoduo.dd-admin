@@ -10,7 +10,6 @@
         <el-input v-model="form.mobile" :disabled="true" placeholder="填写招聘官手机号" :maxlength="11"></el-input>
       </el-form-item>
 
-      
       <h3 class="title">职位基本信息</h3>
       <p class="hint"><!--加“ <span style="color: red; font-size: 15px;">*</span> ”内容，在确认发布成功后，将无法修改--></p>
       <el-form-item label="职位名称" prop="position_name" style="width: 380px;">
@@ -107,7 +106,7 @@
       </el-form-item>
 
       <el-form-item label="职位描述" prop="describe" style="width: 700px;">
-        <el-input type="textarea" autosize placeholder="请填写职位描述" v-model="form.describe"></el-input>
+        <el-input type="textarea" :rows="6" autosize placeholder="请填写职位描述" v-model="form.describe"></el-input>
       </el-form-item>
 
       <p class="ruleHint">发布职位即表示同意遵守<a>《猎多多职位信息发布规则》</a>，如违反将导致您的账号被锁定</p>

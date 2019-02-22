@@ -276,6 +276,7 @@ export default class reviewDetails extends Vue {
   align-items: center;
   justify-content: center;
   img{
+    max-width: 90%;
     max-height: 90%;
   }
 }

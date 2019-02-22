@@ -103,6 +103,7 @@ export default class login extends Vue{
      h2 {
       color: #354048;
       font-size: 20px;
+      font-weight: 500;
     }
     .el-form{
       width: 100%;
@@ -126,6 +127,7 @@ export default class login extends Vue{
       border-radius:4px;
       border:1px solid rgba(220,220,220,1);
       .inp {
+        font-size: 16px;
         width: 100%;
         height: 52px;
         padding: 19px 40px;
@@ -141,6 +143,8 @@ export default class login extends Vue{
       }
     }
     .longinBtn {
+      border: none;
+      font-size: 16px;
       height: 52px;
       margin-top: 24px;
       width: 100%;

@@ -397,14 +397,6 @@ export default class checkPage extends Vue {
         object-fit: cover;
         vertical-align: middle;
       }
-      /*i{
-        cursor: pointer;
-        color: #FFFFFF;
-        font-size: 20px;
-        position: absolute;
-        bottom: 10px;
-        right: 10px;
-      }*/
       .zoomBox{
         background-color: rgba(0, 0, 0, 0.2);
         padding: 0 5px;

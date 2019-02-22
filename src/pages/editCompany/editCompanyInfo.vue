@@ -58,10 +58,10 @@
           </el-select> 
         </el-form-item>
         
-        <el-form-item class="" label="公司简介">
+        <el-form-item class="introduction" label="公司简介">
           <el-input
             type="textarea"
-            :rows="4"
+            :rows="6"
             placeholder="请输入内容"
             v-model="companyInfo.intro">
           </el-input>
@@ -493,6 +493,9 @@ export default class editCompany extends Vue {
     color: #354048;
     line-height: 28px;
     margin-bottom: 32px;
+  }
+  .introduction{
+    width: 520px;
   }
 }
 .addAdress{
