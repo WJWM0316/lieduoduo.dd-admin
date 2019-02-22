@@ -189,16 +189,10 @@ export default class companyCheck extends Vue {
   search () {
     this.onSubmit()
   }
-  addCompany () {
-    this.$router.push({
-      path: '/createCompany'
-    })
-    console.log('添加公司')
-  }
   check (id) {
     this.$route.meta.scrollY = window.scrollY
     this.$router.push({
-      path: '/positionAuditDetail',
+      path: '/positionManage/positionAuditDetail',
       query: {id: id}
     })
   }
@@ -209,7 +203,7 @@ export default class companyCheck extends Vue {
 
   addPosition() {
     this.$router.push({
-      path: '/positionPost'
+      path: '/positionManage/positionPost'
     })
   }
   handlePageChange (nowPage) {

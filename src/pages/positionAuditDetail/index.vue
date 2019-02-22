@@ -101,7 +101,7 @@ export default class checkPage extends Vue {
       query.id = id
     }
     this.$router.push({
-      path: '/positionPost',
+      path: '/positionManage/positionPost',
       query: query
     })
   }

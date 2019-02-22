@@ -232,14 +232,14 @@ export default class checkPage extends Vue {
   /* 编辑公司信息 */
   edit (name) {
     this.$router.push({
-      path: `/${name}`,
+      path: `/index/${name}`,
       query: {id: this.companyInfo.id}
     })
   }
   /* 编辑身份信息 */
   editIdentity (uid) {
     this.$router.push({
-      path: `/editIdentity`,
+      path: `/index/editIdentity`,
       query: {id: uid}
     })
   }

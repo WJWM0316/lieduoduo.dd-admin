@@ -195,7 +195,7 @@ export default class indexPage extends Vue {
   /* 新建公司 */
   addCompany () {
     this.$router.push({
-      path: '/createCompany'
+      path: '/index/createCompany'
     })
   }
   onSubmit () {
@@ -235,7 +235,7 @@ export default class indexPage extends Vue {
   check (id) {
     this.$route.meta.scrollY = window.scrollY
     this.$router.push({
-      path: '/verify',
+      path: '/index/verify',
       query: {id: id, isEdit: true}
     })
   }
