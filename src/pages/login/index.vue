@@ -1,19 +1,26 @@
 <template>
   <div id="login"  @keyup.enter="login">
+    <div class="title">
+    	<img src="../../assets/logintitle.png"/>
+    	<div class="info">
+    		机会多，面试多
+    	</div>
+    </div>
     <div class="box">
       <el-form :model="loginForm" status-icon ref="loginForm" label-width="100px" class="demo-ruleForm" label-position="left">
         <el-form-item label-width="0px">
-          <h2>登录</h2>
+          <h2>猎多多业务后台登录</h2>
         </el-form-item>
-        <el-form-item label="账号" prop="email">
-          <el-input type="text" v-model="loginForm.email" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="登录密码" prop="password">
-          <el-input type="password" v-model="loginForm.password" autocomplete="off"></el-input>
-        </el-form-item>
+        <div class="inpBox">
+          <i slot="prefix" class="icon iconfont iconicon_account"></i>
+          <input class="inp" placeholder="请输入登录账号" type="tel" v-model="loginForm.email" />
+        </div>
+        <div class="inpBox">
+          <i slot="prefix" class="icon iconfont iconicon_password"></i>
+          <input class="inp" placeholder="请输入登录密码" type="password" v-model="loginForm.password" />
+        </div>
         <el-form-item label-width="0px">
-          <el-button type="primary" @click.stop="login">登录</el-button>
-          <el-button @click="resetForm('loginForm')">重置</el-button>
+          <el-button class="longinBtn" style="background-color: #652791; color: #FFFFFF;" @click.stop="login">登录</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -63,7 +70,10 @@ export default class login extends Vue{
 </script>
 
 <style lang="less" scoped="scoped">
+@import "../../style/iconfont.less";
 #login{
+  background: url(../../assets/loginbg.png);
+  background-color: #FBFBFF;
   position: fixed;
   top: 0;
   left: 0;
@@ -75,14 +85,69 @@ export default class login extends Vue{
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  .title{
+    img {
+      width: 160px;
+      height: 58px;
+    }
+    .info{
+      font-weight: 400;
+      color: #652791;
+      line-height: 33px;
+      font-size: 24px;
+      margin-top: 14px;
+      margin-bottom: 66px;
+    }
+  }
   .box{
-    border: 1px solid #666666;
-    border-radius: 10px;
-    width: 500px;
-    height: 300px;
+     h2 {
+      color: #354048;
+      font-size: 20px;
+    }
+    .el-form{
+      width: 100%;
+    }
+    padding: 0 95px;
+    box-sizing: border-box;
+    background-color: #FFFFFF;
+    box-shadow:0px 8px 12px 0px rgba(48,50,51,0.1);
+    width: 590px;
+    height: 420px;
     display: flex;
     align-items: center;
     justify-content: center;
+    .inpBox{
+      position: relative;
+      width: 100%;
+      height:52px;
+      border: 1px solid #000000;
+      box-sizing: border-box;
+      margin-bottom: 16px;
+      border-radius:4px;
+      border:1px solid rgba(220,220,220,1);
+      .inp {
+        width: 100%;
+        height: 52px;
+        padding: 19px 40px;
+        box-sizing: border-box;
+        display: inline-block;
+        background-color: transparent;
+      }
+      i {
+        position: absolute;
+        top: 18px;
+        left: 18px;
+        color: #929292;
+      }
+    }
+    .longinBtn {
+      height: 52px;
+      margin-top: 24px;
+      width: 100%;
+      box-shadow:0px 8px 12px 0px rgba(48,50,51,0.1);
+      border-radius:4px;
+      overflow: hidden;
+    }
   }
 }
 </style>

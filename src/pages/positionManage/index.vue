@@ -58,16 +58,6 @@
                 </el-button>
               </div>
             </div>
-            <!--职位id-->
-            <div class="btn-container" v-if="props.scope.column.property === 'id'" style="height: 48px;">
-              <div>
-                <el-button
-                  type="text"
-                  >
-                  {{props.scope.row.id}}
-                </el-button>
-              </div>
-            </div>
 
             <div class="btn-container"  v-else-if="props.scope.column.property === 'positionMsg'" style="height: 48px;">
               <div class="positionMsg">
