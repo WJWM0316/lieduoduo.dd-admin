@@ -103,6 +103,12 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import { getCompanyListApi, getCityApi } from 'API/company'
 import List from '@/components/list'
+Component.registerHooks([
+  'beforeRouteEnter',
+  'beforeRouteLeave',
+  'beforeRouteUpdate' // for vue-router 2.2+
+])
+
 @Component({
   name: 'companyLibrary',
   components: {
@@ -157,6 +163,16 @@ export default class indexPage extends Vue {
       label: '操作'
     }
   ]
+  beforeRouteEnter (to, from, next) {
+    if (from.name === 'createCompany') {
+      next(vm => {
+        vm.getCompanyList()
+      })
+    } else {
+      next()
+    }
+    
+  }
   getCompanyList () {
     if (this.form.firstAreaId !== '' && this.form.area_id === '') {
       this.$message.error("请选择城市")
