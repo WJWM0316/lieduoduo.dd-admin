@@ -11,18 +11,18 @@
           <el-button class="inquire" @click="addPosition" style="margin-bottom: 20px;margin-left: 20px;float: right;">发布职位</el-button>
 
           <el-form ref="form" :model="form" label-width="80px" validate="validate">
-            <el-form-item label="职位名称">
+            <el-form-item label="职位名称" prop="name">
               <el-input v-model="form.name" placeholder="输入职位/发布者/主体公司"></el-input>
             </el-form-item>
             
-            <el-form-item label-width="100px" label="上线/下线">
+            <el-form-item label-width="100px" label="上线/下线" prop="is_online">
               <el-select v-model="form.is_online" placeholder="全部状态">
                 <el-option label="上线" value='1'></el-option>
                 <el-option label="下线" value='2'></el-option>
               </el-select>
             </el-form-item>
 
-            <el-form-item label-width="100px" label="审核状态">
+            <el-form-item label-width="100px" label="审核状态" prop="status">
               <el-select v-model="form.status" placeholder="全部状态">
                 <el-option label="已通过" value="1"></el-option>
                 <el-option label="待审核" value="2"></el-option>
@@ -33,7 +33,7 @@
 
             <el-form-item>
               <el-button class="inquire" @click="onSubmit">查询</el-button>
-              <!--<el-button @click="resetForm('form')">重置</el-button>-->
+              <el-button @click="resetForm('form')">重置</el-button>
               <!--<el-button>清除条件</el-button>-->
             </el-form-item>
           </el-form>
