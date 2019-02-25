@@ -123,7 +123,8 @@
     </div>-->
     <!--大图蒙层-->
     <div class="mask" v-if="nowImg" @click.stop="hiddenMask">
-      <img :src="nowImg"/>
+      <vue-photo-zoom-pro type="circle" width="250" :url="nowImg"></vue-photo-zoom-pro>
+      <!--<img :src="nowImg"/>-->
     </div>
     <!--审核蒙层-->
     <el-dialog title="审核" :visible.sync="isCheck">
@@ -139,8 +140,8 @@
             <el-option label="您提供的公司名称与营业执照上登记的主体名称不符" value="您提供的公司名称与营业执照上登记的主体名称不符"></el-option>
             <el-option label="认证信息不能包含联系方式，包括但不限于：微博、微信、邮箱、QQ、网站链接；不能出现营销推广信息，内容健康、积极，不能包含敏感、色情等信息" value="认证信息不能包含联系方式，包括但不限于：微博、微信、邮箱、QQ、网站链接；不能出现营销推广信息，内容健康、积极，不能包含敏感、色情等信息"></el-option>
             <el-option label="资质不支持认证信息 / 认证信息非企业面貌 / 认证信息包含营销信息" value="资质不支持认证信息 / 认证信息非企业面貌 / 认证信息包含营销信息"></el-option>
-            <el-option label="营业执照信息不全 / 与工商局登记信息不符 / 伪造证件" value="营业执照信息不全 / 与工商局登记信息不符 / 伪造证件"></el-option>
-            <el-option label="资质信息与公司信息不符 / 伪造公章 / 未盖章 / 运营人信息不实" value="资质信息与公司信息不符 / 伪造公章 / 未盖章 / 运营人信息不实"></el-option>
+            <el-option label="营业执照信息不全 / 与工商局登记信息不符 / 模糊不清" value="营业执照信息不全 / 与工商局登记信息不符 / 模糊不清"></el-option>
+            <el-option label="资质信息与公司信息不符 / 伪造公章或证件 / 未盖章 / 运营人信息不实" value="资质信息与公司信息不符 / 伪造公章或证件 / 未盖章 / 运营人信息不实"></el-option>
           </el-select>
           <el-select v-model="form.reason" placeholder="请选择审核结果" v-else>
             <el-option label="您提供的身份信息与身份证上登记的信息不符" value="您提供的身份信息与身份证上登记的信息不符"></el-option>
@@ -232,14 +233,14 @@ export default class checkPage extends Vue {
   /* 编辑公司信息 */
   edit (name) {
     this.$router.push({
-      path: `/${name}`,
+      path: `/index/${name}`,
       query: {id: this.companyInfo.id}
     })
   }
   /* 编辑身份信息 */
   editIdentity (uid) {
     this.$router.push({
-      path: `/editIdentity`,
+      path: `/index/editIdentity`,
       query: {id: uid}
     })
   }
@@ -397,14 +398,6 @@ export default class checkPage extends Vue {
         object-fit: cover;
         vertical-align: middle;
       }
-      /*i{
-        cursor: pointer;
-        color: #FFFFFF;
-        font-size: 20px;
-        position: absolute;
-        bottom: 10px;
-        right: 10px;
-      }*/
       .zoomBox{
         background-color: rgba(0, 0, 0, 0.2);
         padding: 0 5px;

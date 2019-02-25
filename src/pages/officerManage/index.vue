@@ -3,6 +3,9 @@
   <div class="officerManage">
     <el-container class="container" style="border: 1px solid #eee">
       <el-header class="header" style="text-align: right; font-size: 15px">
+        <div class="title">招聘官管理({{total}})</div>
+      </el-header>
+      <el-main>
         <!--筛选-->
         <div class="selectionBox" @keyup.enter="search">
           <el-form ref="form" :model="form" label-width="80px" validate="validate">
@@ -39,16 +42,17 @@
               </el-select>
             </el-form-item>
             
-            <el-form-item class="btn" label-width="50px">
+            <el-form-item class="btn">
+              <el-button class="inquire" @click="onSubmit">查询</el-button>
+              <el-button @click.stop="resetForm('form')">重置</el-button>
+            </el-form-item>
+            <!--<el-form-item class="btn" label-width="50px">
               <el-button class="inquire" @click="onSubmit">查询</el-button>
               <span @click.stop="resetForm('form')">重置</span>
-              <!--<el-button>清除条件</el-button>-->
-            </el-form-item>
+            </el-form-item>-->
           </el-form>
         </div>
         <!--筛选-->
-      </el-header>
-      <el-main>
         <list
           :fields="fields"
           :list="list"
@@ -190,19 +194,27 @@ export default class officerManage extends Vue{
   }
   /* 翻页 */
   handlePageChange (nowPage) {
+    this.$route.meta.scrollY = 0
+    window.scrollTo(0, 0)
     this.form.page = nowPage
     this.getRecruiterList()
   }
   /* 查看相应的招聘官审核详情 */
   check (id) {
-    console.log(id, 7777)
+    this.$route.meta.scrollY = window.scrollY
     this.$router.push({
-      path: '/reviewDetails',
+      path: '/recruitmentOfficer/reviewDetails',
       query: {id: id}
     })
   }
   created () {
     this.getRecruiterList()
+  }
+  activated () {
+    let that = this
+    setTimeout(function () {
+      window.scrollTo(0, that.$route.meta.scrollY)
+    }, 300)
   }
 }
 </script>
@@ -214,24 +226,54 @@ export default class officerManage extends Vue{
   .container{
     min-width: 1000px;
     margin: 22px;
-  }
-  .selectionBox{
-    display: flex;
-    align-items: center;
+    .header{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .title{
+        display: flex;
+        align-items: center;
+        position: relative;
+        font-size: 15px;
+        &::before{
+          background: #ffe266;
+          content: "";
+          display: inline-block;
+          float: left;
+          height: 100%;
+          height: 16px;
+          margin-right: 10px;
+          width: 6px;
+        }
+      }
+      .creatBtn{
+        font-size: 15px;
+        padding: 12px 20px;
+        background-color: #ffe266;
+        border-radius: 4px;
+      }
+    }
   }
   .el-form{
-    display: flex;
-    align-items: center;
     .el-input{
       width: 200px;
     }
+    &::after {
+      content: '';
+      display: block;
+      height: 0;
+      clear: both;
+    }
   }
   .el-form-item{
-    display: inline-block;
+    float: left;
   }
   .btn{
-    padding-top: 10px;
-    text-align: center;
+    float: right;
+    .inquire{
+      color: #FFFFFF;
+      background-color: #652791;
+    }
     span{
       white-space: nowrap;
       user-select:none;

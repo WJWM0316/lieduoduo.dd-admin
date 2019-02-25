@@ -13,8 +13,8 @@
             <el-input v-model="form.keyword" placeholder="请输公司名字"></el-input>
           </el-form-item>
           <!--地区筛选-->
-          <el-form-item label="地区筛选" prop="area">
-            <el-select v-model="form.firstAreaId" placeholder="请选择省份" @change="changeProvince" style="width: 120px; margin-right: 10px;">
+          <el-form-item class="area" label="地区筛选" prop="area">
+            <el-select v-model="form.firstAreaId" placeholder="请选择省份" @change="changeProvince" style="margin-right: 10px;">
               <el-option
                 v-for="item in firstAreaIdList"
                 :key="item.areaId"
@@ -22,7 +22,7 @@
                 :value="item.areaId">
               </el-option>
             </el-select>
-            <el-select v-model="form.area_id" placeholder="请选择城市" style="width: 100px;">
+            <el-select v-model="form.area_id" placeholder="请选择城市">
               <el-option
                 v-for="item in cityLable"
                 :key="item.areaId"
@@ -31,8 +31,8 @@
               </el-option>
             </el-select>
           </el-form-item>
-          
-          <el-form-item label="申请时间" prop="start">
+
+          <el-form-item class="time" label="申请时间" prop="start">
             <el-col :span="11">
               <el-date-picker type="date" placeholder="选择日期" value-format="yyyy-MM-dd" v-model="form.start" style="width: 100%;"></el-date-picker>
             </el-col>
@@ -103,6 +103,12 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import { getCompanyListApi, getCityApi } from 'API/company'
 import List from '@/components/list'
+Component.registerHooks([
+  'beforeRouteEnter',
+  'beforeRouteLeave',
+  'beforeRouteUpdate' // for vue-router 2.2+
+])
+
 @Component({
   name: 'companyLibrary',
   components: {
@@ -157,6 +163,16 @@ export default class indexPage extends Vue {
       label: '操作'
     }
   ]
+  beforeRouteEnter (to, from, next) {
+    if (from.name === 'createCompany') {
+      next(vm => {
+        vm.getCompanyList()
+      })
+    } else {
+      next()
+    }
+    
+  }
   getCompanyList () {
     if (this.form.firstAreaId !== '' && this.form.area_id === '') {
       this.$message.error("请选择城市")
@@ -171,15 +187,16 @@ export default class indexPage extends Vue {
   }
   /* 翻页 */
   handlePageChange (nowPage) {
+    this.$route.meta.scrollY = 0
+    window.scrollTo(0, 0)
     this.form.page = nowPage
     this.getCompanyList()
   }
   /* 新建公司 */
   addCompany () {
     this.$router.push({
-      path: '/createCompany'
+      path: '/index/createCompany'
     })
-    console.log('添加公司')
   }
   onSubmit () {
     this.form.page = 1
@@ -216,14 +233,21 @@ export default class indexPage extends Vue {
     this.cityLable = []
   }
   check (id) {
+    this.$route.meta.scrollY = window.scrollY
     this.$router.push({
-      path: '/verify',
+      path: '/index/verify',
       query: {id: id, isEdit: true}
     })
   }
   created () {
     this.getCity()
     this.getCompanyList()
+  }
+  activated () {
+    let that = this
+    setTimeout(function () {
+      window.scrollTo(0, that.$route.meta.scrollY)
+    }, 300)
   }
 }
 </script>
@@ -262,16 +286,25 @@ export default class indexPage extends Vue {
       }
     }
     .el-form{
-      display: flex;
-      align-items: center;
+      /*display: flex;*/
+      /*align-items: center;*/
       .el-input{
         width: 200px;
       }
+      &::after {
+        content: '';
+        display: block;
+        height: 0;
+        clear: both;
+      }
     }
     .el-form-item{
-      display: inline-block;
+      float: left;
+    }
+    .area{
     }
     .btn{
+      float: right;
       .inquire{
         color: #FFFFFF;
         background-color: #652791;

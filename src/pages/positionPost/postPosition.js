@@ -34,15 +34,16 @@ var citylocation = {}
   },
 
   watch: {
-    form () {
+    'form.type' () {
+      this.options
     }
   }
 })
 export default class CommunityEdit extends Vue {
   // 列表
   deletePoster = []
-  options= [
-  ]
+  options= []
+  firstOptions = []
   //职位类别
   typeList = [
     {
@@ -133,7 +134,6 @@ export default class CommunityEdit extends Vue {
     lng: '', // 经度
     lat: '', // 纬度
     address: '', // 工作地址
-
     doorplate: '', // 工作地址-门牌
     labels: '', // 技能标签json数组[{’id’:1,’is_diy’:0},{’d’:12,’is_diy’:1}]
     emolument_min: '', // 薪资范围起点
@@ -157,13 +157,23 @@ export default class CommunityEdit extends Vue {
     type: [
       { required: true, message: '请选择职位类型', trigger: 'blur' },
     ],
-    master_intro: [
-      { required: true, message: '请填写简介', trigger: 'blur' },
-      { min: 2, message: '简介不得少于2个字', trigger: 'blur' },
-      { max: 25, message: '简介最多输入25个字', trigger: 'blur' }
+    address_id: [
+      { required: true, message: '请选择工作地点', trigger: 'blur' },
     ],
-    is_course: [
-      { required: true, type: 'number', message: '请选择社区分类', trigger: 'change' }
+    work_experience: [
+      { required: true, message: '请选择经验要求', trigger: 'blur' },
+    ],
+    education: [
+      { required: true, message: '请选择经验要求', trigger: 'blur' },
+    ],
+    emolument_min: [
+      { required: true, message: '请选择薪资范围', trigger: 'blur' },
+    ],
+    labels: [
+      { required: true, message: '请选择技能要求', trigger: 'blur' },
+    ],
+    describe: [
+      { required: true, message: '请填写职位描述', trigger: 'blur' }
     ]
   }
 
@@ -496,9 +506,9 @@ export default class CommunityEdit extends Vue {
       that.professionalSkillsList = res.data.data.labelProfessionalSkills
       let options = []
       res.data.data.labelProfessionalSkills.map((item,index) => {
-        options[index] = {
-          label: item.name,
-          value: item.labelId
+        if (this.form.type === item.labelId) {
+          options = item.children
+          return
         }
       })
       this.options = options

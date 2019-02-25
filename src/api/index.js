@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Loading } from 'element-ui'
+import { Loading, Message } from 'element-ui'
 import router from '@/router/index'
 let loadingInstance = null
 
@@ -15,6 +15,8 @@ axios.defaults.baseURL = API_ROOT
 // 请求拦截器
 axios.interceptors.request.use(
   config => {
+    loadingInstance = Loading.service({})
+//  config.headers.Cookie = getAccessToken()
     config.headers.common['Authorization-Admin'] = getAccessToken()
     return config
   },
@@ -33,7 +35,7 @@ axios.interceptors.response.use(
     if(err.response.data.httpStatus === 401) {
       router.push({name: 'login'})
       removeAccessToken()
-      return
+      Message.error(`登录状态已过期,请重新登录`)
     }
     if (loadingInstance) loadingInstance.close()
     return Promise.reject(err.response)
@@ -41,11 +43,13 @@ axios.interceptors.response.use(
 )
 
 export const request = ({type = 'post', url, data = {}, config = {}} = {}) => {
-
-  //console.log('API_ROOT===>',API_ROOT)
   if (data.globalLoading) {
     loadingInstance = Loading.service({})
     delete params.globalLoading
   }
   return axios[type](url, type === 'get' ? { params: data } : data)
+  .catch(err => {
+    /* 通用的错误捕获可以在这里操作 */
+   return Promise.reject(err)
+  })
 }

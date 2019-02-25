@@ -72,7 +72,8 @@
     </div>
     <!--大图蒙层-->
     <div class="mask" v-if="nowImg" @click.stop="hiddenMask">
-      <img :src="nowImg"/>
+      <vue-photo-zoom-pro type="circle" width="250" :url="nowImg"></vue-photo-zoom-pro>
+      <!--<img :src="nowImg"/>-->
     </div>
     <!--审核蒙层-->
     <el-dialog title="审核" :visible.sync="isCheck">
@@ -132,7 +133,6 @@ export default class reviewDetails extends Vue {
   getReviewDetails () {
     const { id } = this.$route.query
     getReviewDetailsApi(id).then(res => {
-      console.log(res.data.data)
       this.personalInfo = res.data.data.applyInfo
       this.identityInfo = res.data.data.identityInfo
     })
@@ -275,8 +275,12 @@ export default class reviewDetails extends Vue {
   display: flex;
   align-items: center;
   justify-content: center;
+  .pic-img{
+    max-width: 90% !important;
+  }
   img{
-    max-height: 90%;
+    max-width: 90% !important;
+    max-height: 90% !important;
   }
 }
 .inquire{

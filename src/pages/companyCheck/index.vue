@@ -13,11 +13,11 @@
             <el-form-item label="关键词" prop="keyword">
               <el-input v-model="form.keyword" placeholder="请输入提交人/公司全称"></el-input>
             </el-form-item>
-            <el-form-item label="申请时间" prop="start">
+            <el-form-item label="申请时间" prop="start" style="margin-left: 10px;">
               <el-col :span="11">
                 <el-date-picker type="date" placeholder="选择日期" value-format="yyyy-MM-dd" v-model="form.start" style="width: 100%;"></el-date-picker>
               </el-col>
-              <el-col class="line" :span="2">-</el-col>
+              <el-col class="line" :span="2">—</el-col>
               <el-col :span="11">
                 <el-date-picker type="date" placeholder="选择日期" value-format="yyyy-MM-dd" v-model="form.end" style="width: 100%;"></el-date-picker>
               </el-col>
@@ -26,14 +26,14 @@
             <el-form-item label-width="1px" label="" prop="end">
             </el-form-item>
             
-            <el-form-item label-width="100px" label="公司认证状态" prop="status">
+            <el-form-item label-width="100px" label="公司认证状态" prop="status" style="margin-left: 20px;">
               <el-select v-model="form.status" placeholder="全部状态">
                 <el-option label="待审核" value="0"></el-option>
                 <el-option label="已通过" value="1"></el-option>
                 <el-option label="未通过" value="2"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label-width="100px" label="身份认证状态" prop="auth_status">
+            <el-form-item label-width="100px" label="身份认证状态" prop="auth_status" style="margin-left: 20px;">
               <el-select v-model="form.auth_status" placeholder="全部状态">
                 <el-option label="待审核" value="0"></el-option>
                 <el-option label="已通过" value="1"></el-option>
@@ -41,11 +41,15 @@
                 <el-option label="未提交" value="3"></el-option>
               </el-select>
             </el-form-item>
+            
             <el-form-item class="btn">
+              <el-button class="inquire" @click="onSubmit">查询</el-button>
+              <el-button @click.stop="resetForm('form')">重置</el-button>
+            </el-form-item>
+            <!--<el-form-item class="btn">
               <el-button @click="onSubmit">查询</el-button>
               <span @click.stop="resetForm('form')">重置</span>
-              <!--<el-button @click.stop="resetForm('form')">清除条件</el-button>-->
-            </el-form-item>
+            </el-form-item>-->
           </el-form>
         </div>
         <!--筛选-->
@@ -173,12 +177,16 @@ export default class companyCheck extends Vue {
     console.log('添加公司')
   }
   check (id) {
+    this.$route.meta.scrollY = window.scrollY
     this.$router.push({
-      path: '/verify',
+      path: '/companyCheck/verify',
       query: {id: id}
     })
   }
+  /* 翻页 */
   handlePageChange (nowPage) {
+    this.$route.meta.scrollY = 0
+    window.scrollTo(0, 0)
     this.form.page = nowPage
     this.getTemplist()
   }
@@ -196,6 +204,12 @@ export default class companyCheck extends Vue {
   }
   created () {
     this.getTemplist()
+  }
+  activated () {
+    let that = this
+    setTimeout(function () {
+      window.scrollTo(0, that.$route.meta.scrollY)
+    }, 300)
   }
 }
 </script>
@@ -234,14 +248,18 @@ export default class companyCheck extends Vue {
       }
     }
     .el-form{
-      display: flex;
-      align-items: center;
       .el-input{
         width: 200px;
       }
+      &::after {
+        content: '';
+        display: block;
+        height: 0;
+        clear: both;
+      }
     }
     .el-form-item{
-      display: inline-block;
+      float: left;
     }
     .btn{
       span{
@@ -283,10 +301,17 @@ export default class companyCheck extends Vue {
       justify-content: center;
     }
     .btn{
-      .el-button{
-        background-color: #652791;
+      float: right;
+      .inquire{
         color: #FFFFFF;
-        border-radius: 4px;
+        background-color: #652791;
+      }
+      span{
+        white-space: nowrap;
+        user-select:none;
+        cursor: pointer;
+        line-height: 12px;
+        color: #409EFF;
       }
     }
   }

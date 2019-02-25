@@ -11,19 +11,20 @@
           <el-button class="inquire" @click="addPosition" style="margin-bottom: 20px;margin-left: 20px;float: right;">发布职位</el-button>
 
           <el-form ref="form" :model="form" label-width="80px" validate="validate">
-            <el-form-item label="职位名称">
+            <el-form-item label="职位名称" prop="name">
               <el-input v-model="form.name" placeholder="输入职位/发布者/主体公司"></el-input>
             </el-form-item>
             
-            <el-form-item label-width="100px" label="上线/下线">
+            <el-form-item label-width="100px" label="上线/下线" prop="is_online">
               <el-select v-model="form.is_online" placeholder="全部状态">
                 <el-option label="上线" value='1'></el-option>
                 <el-option label="下线" value='2'></el-option>
               </el-select>
             </el-form-item>
 
-            <el-form-item label-width="100px" label="审核状态">
+            <el-form-item label-width="100px" label="审核状态" prop="status">
               <el-select v-model="form.status" placeholder="全部状态">
+                <el-option label="全部状态" value=" "></el-option>
                 <el-option label="已通过" value="1"></el-option>
                 <el-option label="待审核" value="2"></el-option>
                 <el-option label="退回重审" value="3"></el-option>
@@ -33,8 +34,7 @@
 
             <el-form-item>
               <el-button class="inquire" @click="onSubmit">查询</el-button>
-              <!--<el-button @click="resetForm('form')">重置</el-button>-->
-              <!--<el-button>清除条件</el-button>-->
+              <el-button @click="resetForm('form')">重置</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -62,11 +62,6 @@
             <div class="btn-container"  v-else-if="props.scope.column.property === 'positionMsg'" style="height: 48px;">
               <div class="positionMsg">
                 <div class="job_name">{{props.scope.row.positionName}}</div>
-                <!--<div class="job_info">
-                  <span v-if="props.scope.row.address">{{props.scope.row.address}}</span>
-                  <span v-if="props.scope.row.workExperience">{{props.scope.row.workExperience}}年</span>
-                  <span v-if="props.scope.row.workExperienceName">{{props.scope.row.workExperienceName}}</span>
-                </div>-->
               </div>
             </div>
 
@@ -140,6 +135,11 @@ export default class companyCheck extends Vue {
   }
   fields = [
     {
+      prop: 'id',
+      label: '职位ID',
+      width: 150
+    },
+    {
       prop: 'positionMsg',
       label: '职位信息',
       width: 250
@@ -184,16 +184,10 @@ export default class companyCheck extends Vue {
   search () {
     this.onSubmit()
   }
-  addCompany () {
-    this.$router.push({
-      path: '/createCompany'
-    })
-    console.log('添加公司')
-  }
   check (id) {
-    console.log(id)
+    this.$route.meta.scrollY = window.scrollY
     this.$router.push({
-      path: '/positionAuditDetail',
+      path: '/positionManage/positionAuditDetail',
       query: {id: id}
     })
   }
@@ -204,10 +198,12 @@ export default class companyCheck extends Vue {
 
   addPosition() {
     this.$router.push({
-      path: '/positionPost'
+      path: '/positionManage/positionPost'
     })
   }
   handlePageChange (nowPage) {
+    this.$route.meta.scrollY = 0
+    window.scrollTo(0, 0)
     console.log(nowPage)
     this.form.page = nowPage
     this.getTemplist()
@@ -222,6 +218,12 @@ export default class companyCheck extends Vue {
   }
   created () {
     this.getTemplist()
+  }
+  activated () {
+    let that = this
+    setTimeout(function () {
+      window.scrollTo(0, that.$route.meta.scrollY)
+    }, 300)
   }
 }
 </script>

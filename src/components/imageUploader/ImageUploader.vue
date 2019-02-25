@@ -18,7 +18,8 @@
       </div>
     </div>
     <div class="mask" v-if="nowImg" @click.stop="hiddenMask">
-      <img :src="nowImg"/>
+      <!--<img :src="nowImg"/>-->
+      <vue-photo-zoom-pro type="circle" width="250" :url="nowImg"></vue-photo-zoom-pro>
     </div>
   </div>
 </template>
