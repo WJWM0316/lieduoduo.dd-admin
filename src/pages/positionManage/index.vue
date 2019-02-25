@@ -24,6 +24,7 @@
 
             <el-form-item label-width="100px" label="审核状态" prop="status">
               <el-select v-model="form.status" placeholder="全部状态">
+                <el-option label="全部状态" value=" "></el-option>
                 <el-option label="已通过" value="1"></el-option>
                 <el-option label="待审核" value="2"></el-option>
                 <el-option label="退回重审" value="3"></el-option>
