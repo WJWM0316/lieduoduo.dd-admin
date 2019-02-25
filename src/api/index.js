@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Loading } from 'element-ui'
+import { Loading, Message } from 'element-ui'
 import router from '@/router/index'
 let loadingInstance = null
 
@@ -34,8 +34,10 @@ axios.interceptors.response.use(
     // 登陆过期或者未登录
     if(err.response.data.httpStatus === 401) {
       router.push({name: 'login'})
+      loadingInstance.close()
       removeAccessToken()
-      return
+      Message.error(`登录状态已过期,请重新登录`)
+      return Promise.reject(err.response)
     }
     if (loadingInstance) loadingInstance.close()
     return Promise.reject(err.response)
