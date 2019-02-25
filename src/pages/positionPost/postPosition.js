@@ -34,15 +34,16 @@ var citylocation = {}
   },
 
   watch: {
-    form () {
+    'form.type' () {
+      this.options
     }
   }
 })
 export default class CommunityEdit extends Vue {
   // 列表
   deletePoster = []
-  options= [
-  ]
+  options= []
+  firstOptions = []
   //职位类别
   typeList = [
     {
@@ -486,7 +487,10 @@ export default class CommunityEdit extends Vue {
       that.professionalSkillsList = res.data.data.labelProfessionalSkills
       let options = []
       res.data.data.labelProfessionalSkills.map((item,index) => {
-        options[index] = item
+        if (this.form.type === item.labelId) {
+          options = item.children
+          return
+        }
       })
       this.options = options
     })
