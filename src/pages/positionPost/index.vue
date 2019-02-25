@@ -1,8 +1,6 @@
 <template>
   <div class="post-job">
-    <!-- <h2 class="u-title-1" v-text="editTitle"></h2> -->
     <el-form class="edit-form" ref="form" :model="form" :rules="rules" label-width="120px" label-suffix="：">
-
       <el-form-item label="招聘官手机" prop="mobile" style="width: 380px;" v-if="!isEdit">
         <el-input v-model="form.mobile" placeholder="填写招聘官手机号" :maxlength="11" onkeypress="return event.keyCode>=48&&event.keyCode<=57" @blur="mobileBlur"></el-input>
       </el-form-item>
@@ -66,8 +64,8 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="薪酬范围" prop="emolument_min" style="width: 380px;">
-        <el-select v-model="form.emolument_min" placeholder="选择薪资范围" @change="changeEmolumentMin"  style="width: 100px;">
+      <el-form-item label="薪酬范围" prop="emolument_min" style="width: 500px; text-align: left;">
+        <el-select v-model="form.emolument_min" placeholder="选择薪资范围" @change="changeEmolumentMin"  style="width: 150px;">
           <el-option
             v-for="item in emolumentMinList"
             :key="item.value"
@@ -76,7 +74,7 @@
           </el-option>
         </el-select>
         ----
-        <el-select v-model="form.emolument_max" placeholder="选择薪资范围"  style="width: 100px;">
+        <el-select v-model="form.emolument_max" placeholder="选择薪资范围"  style="width: 150px;">
           <el-option
             v-for="item in emolumentMaxList"
             :key="item.value"
@@ -105,8 +103,13 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="职位描述" prop="describe" style="width: 700px;">
-        <el-input type="textarea" :rows="6" autosize placeholder="请填写职位描述" v-model="form.describe"></el-input>
+      <el-form-item label="职位描述" prop="describe" style="width: 500px;">
+        <el-input
+          type="textarea"
+          :rows="6"
+          placeholder="请填写职位描述"
+          v-model="form.describe">
+        </el-input>
       </el-form-item>
 
       <p class="ruleHint">发布职位即表示同意遵守<a>《猎多多职位信息发布规则》</a>，如违反将导致您的账号被锁定</p>
@@ -141,12 +144,8 @@
           <img class="clo" @click="popCancel" />
           <h3 class="">添加新的公司地址</h3>
           <p>添加新的公司地址</p>
-
           <el-input style="width: 368px;margin: 13px 0 26px 0;box-sizing: border-box;" v-model="adressInput" placeholder="请输入工作地址）"></el-input>
-
-
           <el-input style="width: 368px;margin: 13px 0 26px 0;box-sizing: border-box;" v-model="adress_id_Input" placeholder="请输入门牌号（选填）"></el-input>
-
           <div class="btn-add">
             <el-button class="btn_cancel" @click="popCancel">取消</el-button>
             <el-button class="btn_submit" type="primary" @click="addAdress">保存地址</el-button>

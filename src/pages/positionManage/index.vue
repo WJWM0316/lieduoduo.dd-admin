@@ -34,7 +34,6 @@
             <el-form-item>
               <el-button class="inquire" @click="onSubmit">查询</el-button>
               <el-button @click="resetForm('form')">重置</el-button>
-              <!--<el-button>清除条件</el-button>-->
             </el-form-item>
           </el-form>
         </div>
@@ -62,11 +61,6 @@
             <div class="btn-container"  v-else-if="props.scope.column.property === 'positionMsg'" style="height: 48px;">
               <div class="positionMsg">
                 <div class="job_name">{{props.scope.row.positionName}}</div>
-                <!--<div class="job_info">
-                  <span v-if="props.scope.row.address">{{props.scope.row.address}}</span>
-                  <span v-if="props.scope.row.workExperience">{{props.scope.row.workExperience}}年</span>
-                  <span v-if="props.scope.row.workExperienceName">{{props.scope.row.workExperienceName}}</span>
-                </div>-->
               </div>
             </div>
 
