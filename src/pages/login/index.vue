@@ -43,7 +43,6 @@ export default class login extends Vue{
   login () {
     loginApi(this.loginForm).then(res => {
       sessionStorage.setItem('email',this.loginForm.email);
-      console.log(res.data.data.adminToken, '登录')
       saveAccessToken(res.data.data.adminToken)
       this.$message({
         message: '登录成功',

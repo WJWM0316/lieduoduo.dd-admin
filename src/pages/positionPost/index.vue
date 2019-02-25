@@ -84,7 +84,7 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="技能要求" prop="skill_tag" style="width: 380px;">
+      <el-form-item label="技能要求" prop="labels" style="width: 450px;">
         <el-select
           style="width: 100%;"
           v-model="form.labels"

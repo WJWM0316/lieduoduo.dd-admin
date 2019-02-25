@@ -34,10 +34,8 @@ axios.interceptors.response.use(
     // 登陆过期或者未登录
     if(err.response.data.httpStatus === 401) {
       router.push({name: 'login'})
-      loadingInstance.close()
       removeAccessToken()
       Message.error(`登录状态已过期,请重新登录`)
-      return Promise.reject(err.response)
     }
     if (loadingInstance) loadingInstance.close()
     return Promise.reject(err.response)
@@ -50,4 +48,8 @@ export const request = ({type = 'post', url, data = {}, config = {}} = {}) => {
     delete params.globalLoading
   }
   return axios[type](url, type === 'get' ? { params: data } : data)
+  .catch(err => {
+    /* 通用的错误捕获可以在这里操作 */
+   return Promise.reject(err)
+  })
 }
