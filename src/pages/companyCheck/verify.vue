@@ -311,6 +311,10 @@ export default class checkPage extends Vue {
 </script>
 
 <style lang="less" scoped="scoped">
+img{
+  max-width: 90%;
+  max-height: 90%;
+}
 .checkPage{
   margin-left: 200px;
   padding: 22px;
@@ -394,6 +398,7 @@ export default class checkPage extends Vue {
       img{
         width: 200px;
         height: 150px;
+        max-width: 100%;
         background-color: #BCBCBC;
         object-fit: cover;
         vertical-align: middle;
