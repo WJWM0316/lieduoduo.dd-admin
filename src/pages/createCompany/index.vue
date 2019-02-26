@@ -111,10 +111,6 @@
           <el-input v-model="personalInfo.identity_num" placeholder="请输入身份证号码" :maxlength="18" style="width: 400px;"></el-input>
         </el-form-item>
         
-        <!--<el-form-item label="有效期" prop="date1">
-          <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="选择日期" v-model="personalInfo.validity" style="width: 100%;"></el-date-picker>
-        </el-form-item>-->
-        <!--身份证有效期开始时间-->
         <el-form-item label="身份证有效期开始" prop="date1">
           <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="选择日期" v-model="personalInfo.validity_start" style="width: 100%;"></el-date-picker>
         </el-form-item>
@@ -239,7 +235,6 @@ export default class createCompany extends Vue{
   }
   next() {
     if (this.active >= 2 ) {
-      
       return
     }
     if (this.active === 0) {

@@ -78,7 +78,7 @@
       <!--内容-->
       <div class="content">
         <div class="title">个人信息</div>
-        <div class="item"><span class="lable">姓名：</span> {{personalInfo.realName}}</div>
+        <div class="item"><span class="lable">姓名：</span> {{companyInfo.realName}}</div>
         <div class="item"><span class="lable">公司职务：</span> {{companyInfo.userPosition}}</div>
         <div class="item"><span class="lable">公司邮箱：</span> {{companyInfo.userEmail}}</div>
         <div class="item"><span class="lable">手机号码：</span> {{personalInfo.mobile}}</div>
@@ -123,7 +123,7 @@
     </div>-->
     <!--大图蒙层-->
     <div class="mask" v-if="nowImg" @click.stop="hiddenMask">
-      <vue-photo-zoom-pro type="circle" width="250" :url="nowImg"></vue-photo-zoom-pro>
+      <vue-photo-zoom-pro type="circle" :width="250" :url="nowImg"></vue-photo-zoom-pro>
       <!--<img :src="nowImg"/>-->
     </div>
     <!--审核蒙层-->

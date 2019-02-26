@@ -72,7 +72,7 @@
     </div>
     <!--大图蒙层-->
     <div class="mask" v-if="nowImg" @click.stop="hiddenMask">
-      <vue-photo-zoom-pro type="circle" width="250" :url="nowImg"></vue-photo-zoom-pro>
+      <vue-photo-zoom-pro type="circle" :width="250" :url="nowImg"></vue-photo-zoom-pro>
       <!--<img :src="nowImg"/>-->
     </div>
     <!--审核蒙层-->
