@@ -216,6 +216,25 @@ export default class CommunityEdit extends Vue {
       this.getAdressList()
     }
   }
+
+  //添加工作地点
+  addAdress (param) {
+    console.log(param)
+
+    console.log(this.adressInput, 11111)
+    console.log(this.addressData, 222)
+    if(this.adressInput.length>0){
+      let adress = this.adressInput
+      this.addressData.address = this.adressInput
+      this.addressData.doorplate = this.adress_id_Input
+      console.log(adress)
+      geocoder.getLocation(adress)
+    }
+
+    param.areaName = param.area_id
+    delete param.area_id
+  }
+
   mounted() {
     let that = this
     TMap('P63BZ-4RM35-BIJIV-QOL7E-XNCZZ-WIF4L').then(qq => {
@@ -508,18 +527,6 @@ export default class CommunityEdit extends Vue {
     })
   }
 
-  //添加工作地点
-  addAdress (param) {
-    console.log(this.adressInput, 11111)
-    console.log(this.addressData, 222)
-    if(this.adressInput.length>0){
-      let adress = this.adressInput
-      this.addressData.address = this.adressInput
-      this.addressData.doorplate = this.adress_id_Input
-      console.log(adress)
-      geocoder.getLocation(adress)
-    }
-  }
 
   selectPosition (index) {
     if (!this.positionList[index].active) {
