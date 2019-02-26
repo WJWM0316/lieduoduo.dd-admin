@@ -39,7 +39,8 @@
           <span v-for="item,index in positionData.skillsLabel">{{item.name}} </span>
         </div>
 
-        <div class="item"><span class="lable">职位描述：</span> {{positionData.describe}} </div>
+        <div class="item"><span class="lable">职位描述：</span></div>
+        <pre class="describe"> {{positionData.describe}} </pre>
         
       </div>
     </div>
@@ -138,6 +139,9 @@ export default class checkPage extends Vue {
   margin-left: 200px;
   padding: 22px 22px 22px 22px;
   position: relative;
+}
+.describe {
+  text-align: left;
 }
 .mask{
   position: fixed;
