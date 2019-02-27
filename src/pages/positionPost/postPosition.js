@@ -5,7 +5,6 @@ import { professionalSkillsApi, getLabelPositionListApi, searchPositionApi, getP
 import { getAdressListApi, addCompanyAdressApi } from 'API/company'
 import SearchBar from '@/components/searchBar'
 import mapSearch from '@/components/map'
-import {TMap} from '../../util/js/TMap.js'
 //P63BZ-4RM35-BIJIV-QOL7E-XNCZZ-WIF4L
 
 var geocoder = {}
@@ -193,10 +192,10 @@ export default class CommunityEdit extends Vue {
     name: '',
     typeId: ''
   }
-  
+
   // 技能要求个数
   limit = 4
-  
+
   emolumentMaxList = [] //选择薪资范围
   emolumentMinList = [] //选择薪资范围
   addressData = {
@@ -219,57 +218,22 @@ export default class CommunityEdit extends Vue {
 
   //添加工作地点
   addAdress (param) {
-    console.log(param)
-
-    console.log(this.adressInput, 11111)
-    console.log(this.addressData, 222)
-    if(this.adressInput.length>0){
-      let adress = this.adressInput
-      this.addressData.address = this.adressInput
-      this.addressData.doorplate = this.adress_id_Input
-      console.log(adress)
-      geocoder.getLocation(adress)
-    }
-
-    param.areaName = param.area_id
-    delete param.area_id
+    param.data.areaName = param.data.area_id
+    param.data.mobile = this.form.mobile
+    delete param.data.area_id
+    this.addCompanyAdress(param.data)
   }
-
-  mounted() {
-    let that = this
-    TMap('P63BZ-4RM35-BIJIV-QOL7E-XNCZZ-WIF4L').then(qq => {
-        geocoder = new qq.maps.Geocoder({
-          complete : function(result){
-            console.log(result, 9999)
-            let data = {
-              mobile: that.form.mobile,
-              areaName: result.detail.addressComponents.city || '',
-              //address: result.detail.address,
-              address: that.adressInput,
-              doorplate: that.addressData.doorplate,
-              lng: result.detail.location.lng,
-              lat: result.detail.location.lat
-            }
-
-            addCompanyAdressApi(data).then(res => {
-              that.pop = {
-                isShow: false,
-                type: ''
-              }
-              that.form.address_id = ''
-              that.getAdressList()
-              console.log(res)
-            }).catch(e=>{
-              console.log('===',e)
-              that.$message.error(e.data.msg)
-            })
-          },//若服务请求失败，则运行以下函数
-          error: function(e) {
-            console.log(e)
-            that.$message.error("地址搜索失败")
-          }
-        })
-    });
+  
+  /* 添加地址 */
+  addCompanyAdress (data) {
+    addCompanyAdressApi(data).then(res => {
+      this.form.address_id = ''
+      this.getAdressList()
+      console.log(res)
+    }).catch(e=>{
+      console.log('===',e)
+      this.$message.error(e.data.msg)
+    })
   }
 
   created () {
@@ -481,13 +445,6 @@ export default class CommunityEdit extends Vue {
     this.emolumentMaxList = list
   }
 
-  querySearch(queryString, cb){
-    console.log(queryString)
-    if(queryString.length>0){
-      geocoder.getLocation(queryString)
-    }
-  }
-
   handleSelect(e){
   }
 
@@ -599,10 +556,8 @@ export default class CommunityEdit extends Vue {
 
   // 工作地点选择 
   changeAdress (e) {
-    console.log(e, '999999999----*--*')
-    console.log(this.form.mobile)
-    console.log(this.form.address_id)
-    // this.form.address_id = 1
+    console.log(this.form.mobile, '招聘官手机')
+    console.log(this.form.address_id, '地址id')
     if(!this.form.mobile || this.form.mobile.length<1){
       this.form.address_id = ''
       this.$message.error('需要先填写手机号')
@@ -637,6 +592,7 @@ export default class CommunityEdit extends Vue {
    * @param {*} form
    */
   transformData (form) {
+    console.log(form, '33333333333333')
     const newForm = {...form}
     // 分类标签
     console.log(newForm)
@@ -658,40 +614,7 @@ export default class CommunityEdit extends Vue {
     return newForm
   }
 
-  /**
-   * 检查pos
-   */
-  examinePos () {
-    console.log('examinePos', typeof this.form.posters)
-    let test = true
-    let data = this.form
-
-    if (!data.posters) { return }
-
-    if (data.promotion_status === '3') {
-      data.posters = []
-      return test
-    }
-
-    if (data.posters.length < 1) {
-      delete data.posters
-      return test
-    }
-
-    this.form.posters.map((item, index) => {
-      if (item.new_wap_file_id && item.new_applet_file_id) {
-      } else {
-        test = false
-        this.$message.error('分销／邀请函海报上传图片不全，请重新上传')
-      }
-    })
-    return test
-  }
-
-
-  /**
-   * 点击提交
-   */
+  /* 点击提交 */
   handleSubmit () {
     console.log(this.form, '-*****-***--*-*-')
     this.$refs.form.validate(valid => {
@@ -702,53 +625,29 @@ export default class CommunityEdit extends Vue {
     })
   }
 
-  popCancel () {
-  	this.pop.isShow = false
-  }
-
   /**
    * 点击取消
    */
   handleCancel () {
-    this.$router.go(-1)
-  }
-
-  /**
-   * 修改生效时间
-   * @param {*} range
-   * @param {*} start
-   * @param {*} end
-   */
-  handleTimeRangeChange (range, start, end) {
-    this.form.start_time = start
-    this.form.end_time = end
+    this.$confirm('', '退出将不保存更改的内容, 是否继续?', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+      center: true
+    }).then(() => {
+      this.$router.go(-1)
+    }).catch(() => {
+      this.$message({
+        type: 'info',
+        message: '已取消退出'
+      })
+    })
   }
   
   /* 关闭弹窗 */
-  popCancel () {
+popCancel () {
     this.pop.isShow = false
     this.nowPosiInfo = ''
-  }
-
-  /**
-   * 修改活动周期
-   * @param {*} value
-   */
-  handleActivityCycleChange (value) {
-    console.log(value)
-    for (let [, item] of this.activityCycles.entries()) {
-      if (item.value === value) {
-        this.form.activity_cycle_unit = item.unit
-        break
-      }
-    }
-  }
-
-  /**
-   * 社区介绍失去焦点
-   */
-  handleCommunityIntroEditorBlur () {
-  //   this.$refs.form.validateField('introduce')
-  }
+}
 
 }

@@ -113,7 +113,7 @@
       </el-form-item>
 
       <p class="ruleHint">发布职位即表示同意遵守<a>《猎多多职位信息发布规则》</a>，如违反将导致您的账号被锁定</p>
-
+      
       <div class="btn-container">
         <el-button class="btn_submit" type="primary" @click="handleSubmit">发布</el-button>
         <el-button class="btn_cancel" @click="handleCancel">取消</el-button>
@@ -138,9 +138,9 @@
             </ul>
           </div>
         </div>
-        <!--<map-search v-if="pop.isShow" @popCancel="popCancel" @addAdress="addAdress"></map-search>-->
+        <map-search v-if="pop.isShow" @popCancel="popCancel" @addAdress="addAdress"></map-search>
 
-        <div class="addAdressPop" v-if="pop.type==='addAdress'">
+        <!--<div class="addAdressPop" v-if="pop.type==='addAdress'">
           <img class="clo" @click="popCancel" />
           <h3 class="">添加新的公司地址</h3>
           <p>添加新的公司地址</p>
@@ -150,7 +150,7 @@
             <el-button class="btn_cancel" @click="popCancel">取消</el-button>
             <el-button class="btn_submit" type="primary" @click="addAdress">保存地址</el-button>
           </div>
-        </div>
+        </div>-->
       </div>
       
     </el-form>
