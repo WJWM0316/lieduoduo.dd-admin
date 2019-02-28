@@ -35,7 +35,6 @@
         <div class="item"><span class="lable">经验要求：</span> {{positionData.workExperienceName}}</div>
         <div class="item"><span class="lable">最低学历：</span> {{positionData.educationName}}</div>
         <div class="item"><span class="lable">技能要求：</span>
-         
           <span v-for="item,index in positionData.skillsLabel">{{item.name}} </span>
         </div>
 
@@ -119,7 +118,6 @@ export default class checkPage extends Vue {
   }
   created () {
     this.getPosition()
-    
   }
 
   getPosition(){
@@ -141,6 +139,7 @@ export default class checkPage extends Vue {
   position: relative;
 }
 .describe {
+  display: inline-block;
   text-align: left;
 }
 .mask{
