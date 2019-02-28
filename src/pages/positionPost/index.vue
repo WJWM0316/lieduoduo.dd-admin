@@ -128,9 +128,14 @@
             </ul>
           </div>
           <div class="pop_right">
+            <img class="clo" src="../../assets/images/clo.png" @click="popCancel('name')" />
             <search-bar class="f-float-left" @search="handleSearch" :width="'200'" v-model="searchPosition" placeholder="请输入职位关键词" style="margin-top: 12px;"></search-bar>
             <ul class="job_classily">
-              <li v-for="item,index in secondPositionList" @click="selectSecondPosition(index)">{{item.active?'-':'+'}}{{item.name}}</li>
+              <li v-for="item,index in secondPositionList" @click="selectSecondPosition(index)">
+                <img class="classily_icon classily_open" src="../../assets/images/add_icon.png" v-if="!item.active" />
+                <img class="classily_icon classily_close" src="../../assets/images/close_icon.png" v-else />
+                {{item.name}}
+              </li>
             </ul>
 
             <ul class="open_jobs" v-if="thirdPositionList.length>0">
@@ -138,9 +143,9 @@
             </ul>
           </div>
         </div>
-        <map-search v-if="pop.isShow" @popCancel="popCancel" @addAdress="addAdress"></map-search>
+        <map-search v-if="pop.type==='addAdress'" @popCancel="popCancel" @addAdress="addAdress"></map-search>
 
-        <!--<div class="addAdressPop" v-if="pop.type==='addAdress'">
+        <div class="addAdressPop" v-if="pop.type==='addAdress2'">
           <img class="clo" @click="popCancel" />
           <h3 class="">添加新的公司地址</h3>
           <p>添加新的公司地址</p>
@@ -150,7 +155,7 @@
             <el-button class="btn_cancel" @click="popCancel">取消</el-button>
             <el-button class="btn_submit" type="primary" @click="addAdress">保存地址</el-button>
           </div>
-        </div>-->
+        </div>
       </div>
       
     </el-form>
