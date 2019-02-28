@@ -41,16 +41,11 @@ var citylocation = {}
 })
 export default class CommunityEdit extends Vue {
   // 列表
-  deletePoster = []
   options= []
-  firstOptions = []
+  options2= []
+
   //职位类别
-  typeList = [
-    {
-      value: '选项1',
-      label: '选择职位'
-    }
-  ]
+  typeList = []
   // 学历
   educationList = [
   	{
@@ -209,8 +204,11 @@ export default class CommunityEdit extends Vue {
   }
 
   professionalSkillsList = []
+
+  isEdit = false  // 是否编辑
+  isOnline = false // 编辑是否在线
+  
   mobileBlur(e){
-    console.log(e.target.value)
     let value = e.target.value
     if(value.length === 11) {
       this.getAdressList()
@@ -293,7 +291,9 @@ export default class CommunityEdit extends Vue {
           id:id
         })
 
-        console.log('====',data.data)
+        if(data.data.isOnline === 1){
+          this.isOnline = true
+        }
         // // 创建编辑表单数据
         const form = {}
         form.position_name = data.data.positionName
@@ -319,16 +319,16 @@ export default class CommunityEdit extends Vue {
           this.selectPositionItem.topPid = data.data.skillsLabel[0].topPid
 
           if(this.professionalSkillsList.length < 1){
-            console.log(this.professionalSkillsList)
             this.getProfessionalSkills().then(()=>{
-              this.setSkillsList()
+              this.setSkillsList(true)
             })
           }else {
-            console.log(this.professionalSkillsList)
-
-            this.setSkillsList()
+            this.setSkillsList(true)
           }
+        }else {
+          //this.skillChange(true)
         }
+
         form.labels = []
         data.data.skillsLabel.map(item=>{
           form.labels.push(item.labelId)
@@ -365,11 +365,9 @@ export default class CommunityEdit extends Vue {
    * 保存社区
    */
   async savePosition () {
-    console.log('savePosition')
     try {
       // this.$store.dispatch('showAjaxLoading')
       const params = this.transformData(this.form)
-      console.log('---', params)
       if (!this.$route.query.id) {
         addPositionApi(params).then(res=>{
           this.$message.success('创建成功')
@@ -405,9 +403,8 @@ export default class CommunityEdit extends Vue {
       mobile: this.form.mobile,
       page: 1,
       count: 20,
-      sort: 'asc'
+      sort: 'desc'
     }
-
 
     getAdressListApi(data).then(res=>{
       if(res.data.data.length>0){
@@ -415,7 +412,6 @@ export default class CommunityEdit extends Vue {
           item.value = item.id
           item.label = `${item.address}${item.doorplate}`
         })
-
         this.addressList = [
           {
             value: '0',
@@ -430,7 +426,7 @@ export default class CommunityEdit extends Vue {
   }
 
   setEmolumentMin () {
-    let max = 260
+    let max = 250
     let i = 0
     let list = []
 
@@ -440,7 +436,7 @@ export default class CommunityEdit extends Vue {
         i++
       } else if(i<100){
         i+=5
-      } else if(i<260){
+      } else if(i<max){
         i+=10
       }
 
@@ -454,24 +450,30 @@ export default class CommunityEdit extends Vue {
   }
 
   changeEmolumentMin(e){
+    this.form.emolument_max = ''
     this.setEmolumentMax(e)
   }
 
   setEmolumentMax (num) {
-    let max = 260
-    let i = num
+    let max = 0
     let list = []
 
-    while (i<max)
-    {
-      if(i<30){
-        i++
-      } else if(i<100){
-        i+=5
-      } else if(i<260){
-        i+=10
-      }
+    if (num <= 10) {
+      max = num+5
+    } else if (num > 10 && num < 31) {
+      max = num*2
 
+    } else if (num > 34 && num < 71) {
+      max = num+30
+
+    } else if (num > 74 && num < 96) {
+      max = num+30
+
+    } else if (num > 99 && num < 251) {
+      max = num*2
+    }
+
+    for (let i = num+1; i <= max; i++) {
       list.push({
         label : `${i}k`,
         value : i
@@ -516,7 +518,6 @@ export default class CommunityEdit extends Vue {
   }
   // 搜索职位
   handleSearch (e) {
-    console.log(e)
     searchPositionApi({
       name: e,
       page: 1,
@@ -526,7 +527,6 @@ export default class CommunityEdit extends Vue {
       this.thirdPositionList = res.data.data
     })
   }
-
 
   selectPosition (index) {
     if (!this.positionList[index].active) {
@@ -547,7 +547,6 @@ export default class CommunityEdit extends Vue {
   }
 
   selectSecondPosition (index) {
-
     if (!this.secondPositionList[index].active) {
       this.secondPositionList.map((item,index2)=>{
         if(index2===index){
@@ -579,13 +578,19 @@ export default class CommunityEdit extends Vue {
   }
 
   //设置技能列表
-  setSkillsList () {
+  setSkillsList (isNext) {
     if (this.professionalSkillsList.length > 0){
       let topPid = this.selectPositionItem.topPid
       this.professionalSkillsList.map(item => {
         if ( item.labelId === topPid ) {
           this.options = item.children
         }
+
+        // 编辑 显示技能 
+        if(isNext){
+          this.skillChange(isNext)
+        }
+
       })
     }else {}
   }
@@ -702,10 +707,6 @@ export default class CommunityEdit extends Vue {
     })
   }
 
-  popCancel () {
-  	this.pop.isShow = false
-  }
-
   /**
    * 点击取消
    */
@@ -724,31 +725,22 @@ export default class CommunityEdit extends Vue {
     this.form.end_time = end
   }
   
-  /* 关闭弹窗 */
-  popCancel () {
-    this.pop.isShow = false
-    this.nowPosiInfo = ''
-  }
-
-  /**
-   * 修改活动周期
-   * @param {*} value
-   */
-  handleActivityCycleChange (value) {
-    console.log(value)
-    for (let [, item] of this.activityCycles.entries()) {
-      if (item.value === value) {
-        this.form.activity_cycle_unit = item.unit
-        break
-      }
+  popCancel (type) {
+    if(type === 'name') {
+      this.selectPositionItem.name = ''
     }
+    this.pop.isShow = false
   }
 
-  /**
-   * 社区介绍失去焦点
-   */
-  handleCommunityIntroEditorBlur () {
-  //   this.$refs.form.validateField('introduce')
+  // 技能下拉框显示隐藏
+  skillChange(e){
+    if(e && this.selectPositionItem.name.length === 0){
+      this.$message.error('请先选择职位类别')
+      this.options2 = []
+
+    }else {
+      this.options2 = this.options
+    }
   }
 
 }
