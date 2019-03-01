@@ -110,7 +110,8 @@ export default class login extends Vue{
     padding: 0 95px;
     box-sizing: border-box;
     background-color: #FFFFFF;
-    box-shadow:0px 8px 12px 0px rgba(48,50,51,0.1);
+    box-shadow:0px 5px 20px 0px rgba(0,0,0,0.12);
+    border-radius: 6px;
     width: 590px;
     height: 420px;
     display: flex;
