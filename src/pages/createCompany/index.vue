@@ -52,10 +52,10 @@
           </el-select> 
         </el-form-item>
         
-        <el-form-item class="" label="公司简介">
+        <el-form-item class="" label="公司简介" style="width: 640px;">
           <el-input
             type="textarea"
-            :rows="4"
+            :rows="6"
             placeholder="请输入内容"
             :maxlength="5000"
             v-model="companyInfo.intro">
@@ -322,8 +322,8 @@ export default class createCompany extends Vue{
     border: 1px solid #CCCCCC;
     .point{
       font-size: 14px;
-      color: #606266;
-      background-color: #E6A23C;
+      color: #FFFFFF;
+      background-color: #652791;
       padding: 10px;
       text-align: center;
       margin-bottom: 30px;

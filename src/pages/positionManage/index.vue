@@ -50,12 +50,13 @@
             <!-- 操作列 -->
             <div class="btn-container" v-if="props.scope.column.property === 'op'" style="height: 48px;">
               <div>
-                <el-button
+                <span class="check" @click="check(props.scope.row.id)">查看</span>
+                <!--<el-button
                   type="text"
                   @click="check(props.scope.row.id)"
                   >
                   查看
-                </el-button>
+                </el-button>-->
               </div>
             </div>
 
@@ -305,6 +306,11 @@ export default class companyCheck extends Vue {
     display: flex;
     align-items: center;
     justify-content: center;
+    .check{
+      line-height: 48px;
+      color: #652791;
+      cursor: pointer;
+    }
   }
 }
 .inquire{

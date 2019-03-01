@@ -58,7 +58,7 @@
           </el-select> 
         </el-form-item>
         
-        <el-form-item class="introduction" label="公司简介">
+        <el-form-item class="introduction" label="公司简介" style="width: 640px;">
           <el-input
             type="textarea"
             :rows="6"

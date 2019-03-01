@@ -2,7 +2,7 @@
 	<header id="page-header">
 		  <el-breadcrumb separator="/">
         <el-breadcrumb-item v-if="haveParent" :to="{ path: `${parentPath}` }">{{parentName}}</el-breadcrumb-item>
-        <el-breadcrumb-item><a href="/">{{nowLinkName}}</a></el-breadcrumb-item>
+        <el-breadcrumb-item><a>{{nowLinkName}}</a></el-breadcrumb-item>
         <!--<el-breadcrumb-item>活动列表</el-breadcrumb-item>
         <el-breadcrumb-item>活动详情</el-breadcrumb-item>-->
       </el-breadcrumb>

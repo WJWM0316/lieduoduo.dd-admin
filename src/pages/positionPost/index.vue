@@ -103,7 +103,7 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="职位描述" prop="describe" style="width: 500px;">
+      <el-form-item label="职位描述" prop="describe" style="width: 640px;">
         <el-input
           type="textarea"
           :rows="6"
