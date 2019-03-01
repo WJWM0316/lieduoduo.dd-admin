@@ -74,6 +74,12 @@
                 </el-button>
               </div>
             </div>
+            <!-- 提交人 -->
+            <div class="btn-container" v-else-if="props.scope.column.property === 'realName'" style="justify-content: flex-start;">
+              <span style="text-align: left;">
+                {{props.scope.row[props.scope.column.property]}}
+              </span>
+            </div>
             <!-- 申请信息列 -->
             <div class="btn-container" v-else-if="props.scope.column.property === 'companyName'" style="height: 48px;">
               <div class="companyName">
@@ -133,12 +139,12 @@ export default class companyCheck extends Vue {
     {
       prop: 'companyName',
       label: '申请信息',
-      width: 300
+      width: 400
     },
     {
       prop: 'realName',
       label: '提交人',
-      width: 180
+      width: 250
     },
     {
       prop: 'status',
@@ -275,23 +281,26 @@ export default class companyCheck extends Vue {
       width: 100%;
       display: flex;
       flex-direction: column;
+      padding: 0 20px;
       .name{
-        width: 100%;
+        font-size: 16px;
+        font-weight: bolder;
+        width: 300px;
+        text-align: left;
         white-space: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;
         line-height: 30px;
       }
       .label{
-        display: flex;
-        justify-content: space-between;
+        text-align: left;
         width: 100%;
         span{
           display: inline-block;
           background-color: #F8F8F8;
           padding: 0 4px;
           border-radius: 3px;
-          margin-left: 6px;
+          margin-right: 20px;
         }
       }
     }
