@@ -9,13 +9,13 @@
       </el-form-item>
 
       <h3 class="title">职位基本信息</h3>
-      <p class="hint"><!--加“ <span style="color: red; font-size: 15px;">*</span> ”内容，在确认发布成功后，将无法修改--></p>
+      <!-- <p class="hint">加“ <span style="color: red; font-size: 15px;">*</span> ”内容，在确认发布成功后，将无法修改</p> -->
       <el-form-item label="职位名称" prop="position_name" style="width: 380px;">
         <el-input v-model="form.position_name" placeholder="限制50个字以内" :maxlength="30"></el-input>
       </el-form-item>
 
       <el-form-item label="职位类别" prop="type" style="width: 380px;">
-        <el-select v-model="selectPositionItem.name" placeholder="点击选择职位类别" @change="changePosition" style="width: 100%;">
+        <el-select v-model="selectPositionItem.name" placeholder="点击选择职位类别" @focus="changePosition" style="width: 100%;">
           <el-option
             v-for="item in typeList"
             :key="item.value"
@@ -128,9 +128,14 @@
             </ul>
           </div>
           <div class="pop_right">
+            <img class="clo" src="../../assets/images/clo.png" @click="popCancel('name')" />
             <search-bar class="f-float-left" @search="handleSearch" :width="'200'" v-model="searchPosition" placeholder="请输入职位关键词" style="margin-top: 12px;"></search-bar>
             <ul class="job_classily">
-              <li v-for="item,index in secondPositionList" @click="selectSecondPosition(index)">{{item.active?'-':'+'}}{{item.name}}</li>
+              <li v-for="item,index in secondPositionList" @click="selectSecondPosition(index)">
+                <img class="classily_icon classily_open" src="../../assets/images/add_icon.png" v-if="!item.active" />
+                <img class="classily_icon classily_close" src="../../assets/images/close_icon.png" v-else />
+                {{item.name}}
+              </li>
             </ul>
 
             <ul class="open_jobs" v-if="thirdPositionList.length>0">
@@ -138,9 +143,9 @@
             </ul>
           </div>
         </div>
-        <map-search v-if="pop.isShow" @popCancel="popCancel" @addAdress="addAdress"></map-search>
+        <map-search v-if="pop.type==='addAdress'" @popCancel="popCancel" @addAdress="addAdress"></map-search>
 
-        <!--<div class="addAdressPop" v-if="pop.type==='addAdress'">
+        <div class="addAdressPop" v-if="pop.type==='addAdress2'">
           <img class="clo" @click="popCancel" />
           <h3 class="">添加新的公司地址</h3>
           <p>添加新的公司地址</p>
@@ -150,7 +155,7 @@
             <el-button class="btn_cancel" @click="popCancel">取消</el-button>
             <el-button class="btn_submit" type="primary" @click="addAdress">保存地址</el-button>
           </div>
-        </div>-->
+        </div>
       </div>
       
     </el-form>
