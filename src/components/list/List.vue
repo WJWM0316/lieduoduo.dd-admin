@@ -4,7 +4,7 @@
     <div class="list-main">
       <!-- 可默认插入整个表格内容，也可单独指定columns插槽插入自定义列表内容 -->
       <slot>
-        <el-table stripe
+        <el-table 
                   ref="table"
                   :height="height || undefined"
                   :data="list"
@@ -59,7 +59,6 @@ export default List
 .el-table .warning-row {
   background: oldlace;
 }
-
 .m-list {
   position: relative;
   padding: 20px 20px 80px 20px;

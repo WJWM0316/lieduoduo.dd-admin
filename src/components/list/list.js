@@ -191,7 +191,8 @@ export default class List extends Vue {
     }
     // console.log(this.list.length, rowIndex, row, '99999999999999999999999')
     if (rowIndex === 2) {
-      return 'warning-row'
+//    return 'warning-row'
+      return {"background-color": "red"}
     }
     return ''
   }
