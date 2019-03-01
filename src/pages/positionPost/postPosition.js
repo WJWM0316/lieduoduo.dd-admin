@@ -445,8 +445,7 @@ export default class CommunityEdit extends Vue {
     this.emolumentMaxList = list
   }
 
-  handleSelect(e){
-  }
+  handleSelect(e){}
 
   // 编辑标题
   get editTitle () {
@@ -471,6 +470,7 @@ export default class CommunityEdit extends Vue {
       this.options = options
     })
   }
+  
   // 搜索职位
   handleSearch (e) {
     console.log(e)
@@ -504,7 +504,6 @@ export default class CommunityEdit extends Vue {
   }
 
   selectSecondPosition (index) {
-
     if (!this.secondPositionList[index].active) {
       this.secondPositionList.map((item,index2)=>{
         if(index2===index){
@@ -610,7 +609,6 @@ export default class CommunityEdit extends Vue {
     }else {
       delete newForm.labels
     }
-    
     return newForm
   }
 
