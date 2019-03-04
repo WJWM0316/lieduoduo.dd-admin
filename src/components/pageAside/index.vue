@@ -10,20 +10,8 @@
           <li><router-link to="/companyCheck">公司审核管理</router-link></li>
           <li><router-link to="/recruitmentOfficer">招聘官管理</router-link></li>
           <li><router-link to="/positionManage">职位管理</router-link></li>
-          <!--<li
-            v-for="(item, index) in routes"
-            :key="`item.name`+index"
-            :class="{'active' : $route.meta.module === item.meta.module}">
-              <router-link :to="{ name: item.name}">
-                <i :class="`zike-icon icon iconfont ${item.meta.icon}`"></i>  {{ item.title }}</router-link>
-          </li>-->
-          <!--<li
-            v-for="(item, index) in routes"
-            :key="`item.name`+index"
-            :class="{'active' : $route.meta.module === item.meta.module}">
-              <router-link :to="{ name: item.name}"> 
-                <i :class="`zike-icon icon iconfont ${item.meta.icon}`"></i>  {{ item.title }}</router-link>
-          </li>-->
+          <li><router-link to="/interview/application">申请列表</router-link></li>
+          <li><router-link to="/interview/invite">邀请列表</router-link></li>
         </ul>
       </div>
     </section>
@@ -36,6 +24,11 @@ import { routes } from '@/router/routes'
 
 @Component({
   name: 'page-asise',
+  watched: {
+    filterText(val) {
+      this.$refs.tree.filter(val);
+    }
+  },
 //computed: {
 //  ...mapGetters([
 //    'userInfos'
@@ -67,6 +60,44 @@ import { routes } from '@/router/routes'
 })
 export default class PageAside extends Vue {
   routes = null
+  data2 = [{
+    id: 1,
+    label: '一级 1',
+    children: [{
+      id: 4,
+      label: '二级 1-1',
+      children: [{
+        id: 9,
+        label: '三级 1-1-1'
+      }, {
+        id: 10,
+        label: '三级 1-1-2'
+      }]
+    }]
+  }, {
+    id: 2,
+    label: '一级 2',
+    children: [{
+      id: 5,
+      label: '二级 2-1'
+    }, {
+      id: 6,
+      label: '二级 2-2'
+    }]
+  }, {
+    id: 3,
+    label: '一级 3',
+    children: [{
+      id: 7,
+      label: '二级 3-1'
+    }, {
+      id: 8,
+      label: '二级 3-2'
+    }]
+  }]
+  handleNodeClick(data) {
+    console.log(data)
+  }
 }
 </script>
 <style lang="less" scoped>
@@ -130,7 +161,8 @@ export default class PageAside extends Vue {
       }
     }
   }
-  .router-link-active {
+  .router-link-active,
+  .filter-tree {
     background:rgba(255,226,102,0.12);
     position: relative;
     a {

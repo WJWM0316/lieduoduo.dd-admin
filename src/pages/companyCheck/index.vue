@@ -46,10 +46,6 @@
               <el-button class="inquire" @click="onSubmit">查询</el-button>
               <el-button @click.stop="resetForm('form')">重置</el-button>
             </el-form-item>
-            <!--<el-form-item class="btn">
-              <el-button @click="onSubmit">查询</el-button>
-              <span @click.stop="resetForm('form')">重置</span>
-            </el-form-item>-->
           </el-form>
         </div>
         <!--筛选-->
