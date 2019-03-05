@@ -7,7 +7,7 @@
       </el-header>
       <el-main width="200px">
         <!--筛选-->
-        <div class="selectionBox" @keyup.enter="search">
+        <div class="selectionBox" @keyup.enter="onSubmit">
           <el-form ref="form" :model="form" label-width="80px" validate="validate">
             
             <el-form-item class="content" prop="content" label-width="0">
@@ -57,14 +57,22 @@
             <div class="jobhunter" v-if="props.scope.column.property === 'jobhunterInfo'">
               <div class="name">{{props.scope.row.jobhunterInfo.realname}}</div>
               <div class="info" v-if="props.scope.row.jobhunterInfo.lastCompanyName || props.scope.row.jobhunterInfo.lastPosition"><span>{{props.scope.row.jobhunterInfo.lastCompanyName}}</span> | <span>{{props.scope.row.jobhunterInfo.lastPosition}}</span></div>
-              <div class="btn"><span>查看简历</span>  <span>联系用户</span></div>
-               <!--<span class="mobile">{{props.scope.row.jobhunterInfo.mobile}}</span>-->
+              <div class="btn"><span>查看简历</span>  <span @mouseover="showPhone($event, props.scope.row.jobhunterInfo.mobile)" @mouseleave="debounce(1000)">联系用户</span></div>
+            </div>
+            <!-- 状态 -->
+            <div class="jobhunter" v-else-if="props.scope.column.property === 'statusDesc'">
+              <div class="name arrow">
+                <i class="icon iconfont iconjiantouzuo" v-if="props.scope.row.status === 31 || props.scope.row.status === 52"></i>
+                <i class="icon iconfont iconjiantou" v-else></i>
+              </div>
+              <div class="info status">{{props.scope.row.statusDesc}}</div>
+              <div class="btn time" v-if="props.scope.row.arrangementInfo">{{props.scope.row.arrangementInfo.appointment}}</div>
             </div>
             <!-- 面试官信息 -->
             <div class="jobhunter" v-else-if="props.scope.column.property === 'recruiterInfo'">
               <div class="name">{{props.scope.row.recruiterInfo.realname}}</div>
               <div class="info"><span>{{props.scope.row.recruiterInfo.companyShortname}}</span> | <span>{{props.scope.row.recruiterInfo.position}}</span></div>
-              <div class="btn"><span>查看简历</span>  <span @mouseover="showPhone($event, 1)">联系用户</span></div>
+              <div class="btn"><span @click.stop="creatLink($event)">查看简历</span>  <span @mouseover="showPhone($event, props.scope.row.recruiterInfo.mobile)" @mouseleave="debounce(1000)">联系用户</span></div>
             </div>
             <!-- 约面信息 -->
             <div class="jobhunter" v-else-if="props.scope.column.property === 'interviewInfo'">
@@ -78,7 +86,12 @@
       </list>
     </el-container>
     <!--电话号码展示框-->
-    <div class="phone" ref="mobile">{{mobile}}</div>
+    <div class="phone" ref="mobile">
+      {{mobile}}
+      <img class="phoneBg" src="../../assets/number_bg.png"/>
+    </div>
+    <!--小程序码展示框-->
+    <div class="qrCode" ref="qrCode">{{qrCode}}</div>
   </div>
 </template>
 
@@ -94,6 +107,7 @@
   }
 })
   export default class application extends Vue {
+    timeout = null // 防抖
     total = 0
     fields = [
     {
@@ -115,7 +129,8 @@
     {
       prop: 'recruiterInfo',
       label: '面试官信息',
-      width: 400
+      width: 400,
+      align: 'left'
     },
     {
       prop: 'interviewInfo',
@@ -132,7 +147,8 @@
     }
     list = []
     pageCount = 0 // 请求回的数据共几页
-    mobile = '12345678910' // 当前查看的手机号码
+    mobile = '' // 当前查看的手机号码
+    qrCode = ''
     created () {
       this.init()
     }
@@ -146,15 +162,34 @@
       getApplyListApi(this.form).then(res => {
         this.list = res.data.data
         this.total = res.data.meta.total
+        this.pageCount = res.data.meta.lastPage
       })
     }
     
     /* 展示手机 */
-    showPhone (e, type) {
-//    console.log(e, '11111')
+    showPhone (e, mobile) {
+      if(this.timeout !== null) clearTimeout(this.timeout)
+      this.mobile = mobile || '用户未绑定手机'
       this.$nextTick(() => {
-        console.log(e, '222222')
-//      this.$refs['mobile'].top = 
+        this.$refs['mobile'].style.display = 'block'
+        this.$refs['mobile'].style.left = e.clientX + 'px'
+        this.$refs['mobile'].style.top = e.clientY + 'px'
+      })
+    }
+    
+    /* 生成小程序码 */
+    creatLink (e) {
+      console.log(e, '88888888888888')
+//    this.$nextTick(() => {
+//      this.$refs['qrCode'].style.display = 'block'
+//      this.$refs['qrCode'].style.left = e.clientX + 'px'
+//      this.$refs['qrCode'].style.top = e.clientY + 'px'
+//    })
+    }
+    
+    hiddenPhone () {
+      this.$nextTick(() => {
+        this.$refs['mobile'].style.display = 'none'
       })
     }
     
@@ -180,10 +215,17 @@
       this.form.page = nowPage
       this.getInterviewList()
     }
+    /* 防抖 */
+    debounce (wait) {
+      let that = this
+      if(this.timeout !== null) clearTimeout(that.timeout)
+      this.timeout = setTimeout(that.hiddenPhone, wait)
+    }
   }
 </script>
 
 <style lang="less" scoped="scoped">
+@import "../../style/iconfont.less";
 .application {
   margin-left: 200px;
   .container{
@@ -211,7 +253,7 @@
       }
     }
     .creatBtn{
-      font-size: 15px;
+      font-size: 14px;
       padding: 12px 20px;
       background-color: #ffe266;
       border-radius: 4px;
@@ -243,7 +285,7 @@
       user-select:none;
       cursor: pointer;
       line-height: 12px;
-      color: #409EFF;
+      color: #652791;
     }
   }
   /* 筛选 */
@@ -272,13 +314,27 @@
       text-overflow: ellipsis;
       text-align: left;
     }
+    .arrow,
+    .status,
+    .time{
+      text-align: center;
+    }
+    .status {
+      font-weight: 500;
+      color: #282828;
+    }
+    .time {
+      color: #929292;
+      font-weight: 400;
+      font-size: 14px;
+    }
     .name {
       .btn {
         white-space: nowrap;
         user-select:none;
         cursor: pointer;
         line-height: 12px;
-        color: #409EFF;
+        color: #652791;
       }
     }
     span {
@@ -289,6 +345,7 @@
       overflow: auto;
       float: none;
       position: relative;
+      font-size: 15px;
     }
     .mobile {
       display: inline-block;
@@ -300,12 +357,28 @@
     }
   }
   /*电话号码展示框*/
-  .phone {
-    width: 100px;
-    height: 100px;
-    background-color: #606266;
+  .phone,
+  .qrCode {
+    width: 150px;
+    height: 70px;
+    border-radius: 4px;
+    transform: translateY(-90%) translateX(-20%);
+    color: #652791;
     position: fixed;
+    top: -999px;
+    left: -999px;
     z-index: 3;
+    line-height: 60px;
+    .phoneBg {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 5%;
+      z-index: -1;
+    }
+  }
+  .qrCode {
+    background-color: #CCCCCC;
   }
 }
 </style>

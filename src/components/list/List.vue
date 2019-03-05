@@ -71,7 +71,7 @@ export default List
     left: 0;
     bottom: 20px;
     margin: 0 -5px;
-    padding: 0 20px;
+    padding: 20px 20px;
     width: 100%;
     .total {
       background-color: #FFFFFF;
