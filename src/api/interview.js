@@ -17,3 +17,16 @@ export const getInviteListApi = data => request({
   data
 })
 
+/* 获取简历小程序码 */
+export const getResumeCodeUrlApi = data => request({
+  url: '/resume/get_resume_code_url',
+  type: 'get',
+  data
+})
+
+/* 获取招聘官主页小程序码 */
+export const getRecruiterCodeUrlApi = data => request({
+  url: '/applyjoin/get_recruiter_code_url',
+  type: 'get',
+  data
+})

@@ -26,12 +26,13 @@
             
             <el-form-item class="state" label="状态" prop="status">
               <el-select class="selectState" v-model="form.status" placeholder="全部状态" @change="changeProvince">
-                <el-option label="待面试官处理" value="11"></el-option>
+                <el-option label="待求职者接受邀请" value="12"></el-option>
+                <el-option label="待面试官安排时间" value="21"></el-option>
                 <el-option label="待求职者确认" value="31"></el-option>
                 <el-option label="待面试官修改" value="32"></el-option>
                 <el-option label="已确定面试日程" value="41"></el-option>
                 <el-option label="不合适" value="52"></el-option>
-                <el-option label="待面试官安排时间" value="21"></el-option>
+                <el-option label="求职者暂不考虑" value="54"></el-option>
               </el-select>
             </el-form-item>
             
@@ -86,7 +87,7 @@
                 </span>
               </div>
               <div class="info" v-if="props.scope.row.recruiterInfo.companyName"><span>{{props.scope.row.recruiterInfo.companyName}}</span></div>
-              <div class="btn"><span @click.stop="creatLink">查看简历</span>  <span @mouseover="showPhone($event, props.scope.row.recruiterInfo.mobile)" @mouseleave="debounce(1000)">联系用户</span></div>
+              <div class="btn"><span @click.stop="creatLink">查看主页</span>  <span @mouseover="showPhone($event, props.scope.row.recruiterInfo.mobile)" @mouseleave="debounce(1000)">联系用户</span></div>
             </div>
             <!-- 约面信息 -->
             <div class="jobhunter" v-else-if="props.scope.column.property === 'interviewInfo'">

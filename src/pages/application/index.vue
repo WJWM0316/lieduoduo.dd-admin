@@ -65,7 +65,7 @@
                 </span>
               </div>
               <div class="info" v-if="props.scope.row.jobhunterInfo.lastCompanyName || props.scope.row.jobhunterInfo.lastPosition"><span>{{props.scope.row.jobhunterInfo.lastCompanyName}}</span></div>
-              <div class="btn"><span>查看简历</span>  <span @mouseover="showPhone($event, props.scope.row.jobhunterInfo.mobile)" @mouseleave="debounce(1000)">联系用户</span></div>
+              <div class="btn"><span @click.stop="creatLink($event, props.scope.row.jobhunterInfo.uid, props.scope.$index, 2)" @mouseleave="hiddenQr">查看简历</span>  <span @mouseover="showPhone($event, props.scope.row.jobhunterInfo.mobile)" @mouseleave="debounce(1000)">联系用户</span></div>
             </div>
             <!-- 状态 -->
             <div class="jobhunter" v-else-if="props.scope.column.property === 'statusDesc'">
@@ -89,7 +89,7 @@
               <div class="info" v-if="props.scope.row.recruiterInfo.companyName"><span>{{props.scope.row.recruiterInfo.companyName}}</span>
                 
               </div>
-              <div class="btn"><span @click.stop="creatLink($event)">查看简历</span>  <span @mouseover="showPhone($event, props.scope.row.recruiterInfo.mobile)" @mouseleave="debounce(1000)">联系用户</span></div>
+              <div class="btn"><span @click.stop="creatLink($event, props.scope.row.recruiterInfo.uid, props.scope.$index, 1)" @mouseleave="hiddenQr">查看主页</span>  <span @mouseover="showPhone($event, props.scope.row.recruiterInfo.mobile)" @mouseleave="debounce(1000)">联系用户</span></div>
             </div>
             <!-- 约面信息 -->
             <div class="jobhunter" v-else-if="props.scope.column.property === 'interviewInfo'">
@@ -108,14 +108,18 @@
       <img class="phoneBg" src="../../assets/number_bg.png"/>
     </div>
     <!--小程序码展示框-->
-    <div class="qrCode" ref="qrCode">{{qrCode}}</div>
+    <div class="qrCode" ref="qrCode">
+      <img class="bg" src="../../assets/code_bg.png"/>
+      <img class="Qr" :src="qrCode"/>
+      <div class="txt">微信扫码，打开小程序查看</div>
+    </div>
   </div>
 </template>
 
 <script>
   import Vue from 'vue'
   import Component from 'vue-class-component'
-  import { getApplyListApi } from 'API/interview'
+  import { getApplyListApi, getResumeCodeUrlApi, getRecruiterCodeUrlApi } from 'API/interview'
   import List from '@/components/list'
   @Component({
   name: 'application',
@@ -195,18 +199,63 @@
     }
     
     /* 生成小程序码 */
-    creatLink (e) {
-      console.log(e, '88888888888888')
-//    this.$nextTick(() => {
-//      this.$refs['qrCode'].style.display = 'block'
-//      this.$refs['qrCode'].style.left = e.clientX + 'px'
-//      this.$refs['qrCode'].style.top = e.clientY + 'px'
-//    })
+    async creatLink (e, uid, index, type) {
+      // 是否已经加载过二维码
+      if (this.list[index].qrCode && type === 1) {
+        this.qrCode = this.list[index].qrCode
+        this.$nextTick(() => {
+          this.$refs['qrCode'].style.display = 'block'
+          this.$refs['qrCode'].style.left = e.clientX + 'px'
+          this.$refs['qrCode'].style.top = e.clientY + 'px'
+        })
+        return
+      } else if (this.list[index].resumeQrCode && type === 2) {
+        this.qrCode = this.list[index].resumeQrCode
+        this.$nextTick(() => {
+          this.$refs['qrCode'].style.display = 'block'
+          this.$refs['qrCode'].style.left = e.clientX + 'px'
+          this.$refs['qrCode'].style.top = e.clientY + 'px'
+        })
+        return
+      }
+      
+      let res = await this.getQr(type, uid)
+      if (type === 1) {
+        this.qrCode = res.data.data.qrCodeUrl
+        this.list[index].qrCode = res.data.data.qrCodeUrl
+      } else {
+        this.resumeQrCode = res.data.data.qrCodeUrl
+        this.list[index].resumeQrCode = res.data.data.qrCodeUrl
+      }
+      this.$nextTick(() => {
+        this.$refs['qrCode'].style.display = 'block'
+        this.$refs['qrCode'].style.left = e.clientX + 'px'
+        this.$refs['qrCode'].style.top = e.clientY + 'px'
+      })
+    }
+    
+    /* 生成二维码 */
+    getQr (type, uid) {
+      switch (type) {
+        case 1:
+          return getRecruiterCodeUrlApi({id: uid})
+          break;
+        case 2:
+          return getResumeCodeUrlApi({id: uid})
+          break;
+      }
     }
     
     hiddenPhone () {
+      this.qrCode = ''
       this.$nextTick(() => {
         this.$refs['mobile'].style.display = 'none'
+      })
+    }
+    
+    hiddenQr () {
+      this.$nextTick(() => {
+        this.$refs['qrCode'].style.display = 'none'
       })
     }
     
@@ -398,7 +447,28 @@
     }
   }
   .qrCode {
-    background-color: #CCCCCC;
+    width: 212px;
+    height: 164px;
+    /*background-color: #CCCCCC;*/
+    transform: translateY(-100%) translateX(-50%);
+    .Qr{
+      width: 100px;
+      height: 100px;
+      margin-top: 15px;
+    }
+    .bg{
+      max-width: 100%;
+      max-height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+    .txt{
+      line-height: normal;
+      color: #5C565D;
+      margin-top: 5px;
+    }
   }
 }
 </style>
