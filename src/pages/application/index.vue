@@ -70,8 +70,8 @@
             </div>
             <!-- 面试官信息 -->
             <div class="jobhunter" v-else-if="props.scope.column.property === 'recruiterInfo'">
-              <div class="name">{{props.scope.row.recruiterInfo.realname}}</div>
-              <div class="info"><span>{{props.scope.row.recruiterInfo.companyShortname}}</span> | <span>{{props.scope.row.recruiterInfo.position}}</span></div>
+              <div class="name">{{props.scope.row.recruiterInfo.realname}}<span> · {{props.scope.row.recruiterInfo.position}}</span></div>
+              <div class="info"><span>{{props.scope.row.recruiterInfo.companyShortname}}</span></div>
               <div class="btn"><span @click.stop="creatLink($event)">查看简历</span>  <span @mouseover="showPhone($event, props.scope.row.recruiterInfo.mobile)" @mouseleave="debounce(1000)">联系用户</span></div>
             </div>
             <!-- 约面信息 -->
