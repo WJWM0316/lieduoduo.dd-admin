@@ -74,7 +74,7 @@
                 <i class="icon iconfont iconjiantou" v-else></i>
               </div>
               <div class="info status">{{props.scope.row.statusDesc}}</div>
-              <div class="btn time" v-if="props.scope.row.arrangementInfo">{{props.scope.row.arrangementInfo.appointment}}</div>
+              <div class="btn time">{{props.scope.row.updatedAtTime * 1000 | date}}</div>
             </div>
             <!-- 面试官信息 -->
             <div class="jobhunter" v-else-if="props.scope.column.property === 'recruiterInfo'">
@@ -86,7 +86,7 @@
                    · {{props.scope.row.recruiterInfo.position}}
                 </span>
               </div>
-              <div class="info" v-if="props.scope.row.recruiterInfo.companyShortname"><span>{{props.scope.row.recruiterInfo.companyShortname}}</span>
+              <div class="info" v-if="props.scope.row.recruiterInfo.companyName"><span>{{props.scope.row.recruiterInfo.companyName}}</span>
                 
               </div>
               <div class="btn"><span @click.stop="creatLink($event)">查看简历</span>  <span @mouseover="showPhone($event, props.scope.row.recruiterInfo.mobile)" @mouseleave="debounce(1000)">联系用户</span></div>
@@ -96,7 +96,7 @@
               <div class="name" v-if="props.scope.row.positionName"><span class="btn">职位：{{props.scope.row.positionName}}</span><span>{{props.scope.row.emolument}}</span></div>
               <div class="name" v-else><span>职位：直接约面</span></div>
               <div class="info"><span>地址：{{props.scope.row.address}}</span></div>
-              <div class="btn">时间：{{props.scope.row.updatedAt}}</div>
+              <div class="btn" v-if="props.scope.row.arrangementInfo">时间：{{props.scope.row.arrangementInfo.appointment}}</div>
             </div>
             <template v-else><span :class="{'row-delete': props.scope.row.status !== 1}">{{props.scope.row[props.scope.column.property]}}</span></template>
           </template>
@@ -325,6 +325,7 @@
     .name,
     .info,
     .btn {
+      color: #282828;
       width: 100%;
       overflow: hidden;
       white-space: nowrap;

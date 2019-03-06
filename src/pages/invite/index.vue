@@ -55,7 +55,6 @@
           <template slot-scope="props" slot="columns">
             <!-- 求职者信息 -->
             <div class="jobhunter" v-if="props.scope.column.property === 'jobhunterInfo'">
-              <!--<div class="name">{{props.scope.row.jobhunterInfo.realname}}</div>-->
               <div class="name">
                 <span style="font-weight: bold;display: inline-block; max-width: 120px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
                 {{props.scope.row.jobhunterInfo.realname}}
@@ -74,11 +73,10 @@
                 <i class="icon iconfont iconjiantou" v-else></i>
               </div>
               <div class="info status">{{props.scope.row.statusDesc}}</div>
-              <div class="btn time" v-if="props.scope.row.arrangementInfo">{{props.scope.row.arrangementInfo.appointment}}</div>
+              <div class="btn time">{{props.scope.row.updatedAtTime * 1000 | date}}</div>
             </div>
             <!-- 面试官信息 -->
             <div class="jobhunter" v-else-if="props.scope.column.property === 'recruiterInfo'">
-              <!--<div class="name">{{props.scope.row.recruiterInfo.realname}}</div>-->
               <div class="name">
                 <span style="font-weight: bold;display: inline-block; max-width: 120px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
                 {{props.scope.row.recruiterInfo.realname}}
@@ -95,7 +93,7 @@
               <div class="name" v-if="props.scope.row.positionName"><span class="btn">职位：{{props.scope.row.positionName}}</span><span>{{props.scope.row.emolument}}</span></div>
               <div class="name" v-else><span>职位：直接约面</span></div>
               <div class="info"><span>地址：{{props.scope.row.address}}</span></div>
-              <div class="btn">时间：{{props.scope.row.updatedAt}}</div>
+              <div class="btn" v-if="props.scope.row.arrangementInfo">时间：{{props.scope.row.arrangementInfo.appointment}}</div>
             </div>
             <template v-else><span :class="{'row-delete': props.scope.row.status !== 1}">{{props.scope.row[props.scope.column.property]}}</span></template>
           </template>
@@ -320,6 +318,7 @@
     .name,
     .info,
     .btn {
+      color: #282828;
       width: 100%;
       overflow: hidden;
       white-space: nowrap;
