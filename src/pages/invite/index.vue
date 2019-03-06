@@ -55,8 +55,16 @@
           <template slot-scope="props" slot="columns">
             <!-- 求职者信息 -->
             <div class="jobhunter" v-if="props.scope.column.property === 'jobhunterInfo'">
-              <div class="name">{{props.scope.row.jobhunterInfo.realname}}</div>
-              <div class="info" v-if="props.scope.row.jobhunterInfo.lastCompanyName || props.scope.row.jobhunterInfo.lastPosition"><span>{{props.scope.row.jobhunterInfo.lastCompanyName}}</span> | <span>{{props.scope.row.jobhunterInfo.lastPosition}}</span></div>
+              <!--<div class="name">{{props.scope.row.jobhunterInfo.realname}}</div>-->
+              <div class="name">
+                <span style="font-weight: bold;display: inline-block; max-width: 120px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+                {{props.scope.row.jobhunterInfo.realname}}
+                </span>
+                <span style="display: inline-block; max-width: 200px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+                   · {{props.scope.row.jobhunterInfo.lastPosition}}
+                </span>
+              </div>
+              <div class="info" v-if="props.scope.row.jobhunterInfo.lastCompanyName || props.scope.row.jobhunterInfo.lastPosition"><span>{{props.scope.row.jobhunterInfo.lastCompanyName}}</span></div>
               <div class="btn"><span>查看简历</span>  <span @mouseover="showPhone($event, props.scope.row.jobhunterInfo.mobile)" @mouseleave="debounce(1000)">联系用户</span></div>
             </div>
             <!-- 状态 -->
@@ -70,8 +78,16 @@
             </div>
             <!-- 面试官信息 -->
             <div class="jobhunter" v-else-if="props.scope.column.property === 'recruiterInfo'">
-              <div class="name">{{props.scope.row.recruiterInfo.realname}}</div>
-              <div class="info"><span>{{props.scope.row.recruiterInfo.companyShortname}}</span> | <span>{{props.scope.row.recruiterInfo.position}}</span></div>
+              <!--<div class="name">{{props.scope.row.recruiterInfo.realname}}</div>-->
+              <div class="name">
+                <span style="font-weight: bold;display: inline-block; max-width: 120px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+                {{props.scope.row.recruiterInfo.realname}}
+                </span>
+                <span style="display: inline-block; max-width: 200px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+                   · {{props.scope.row.recruiterInfo.position}}
+                </span>
+              </div>
+              <div class="info" v-if="props.scope.row.recruiterInfo.companyName"><span>{{props.scope.row.recruiterInfo.companyName}}</span></div>
               <div class="btn"><span @click.stop="creatLink">查看简历</span>  <span @mouseover="showPhone($event, props.scope.row.recruiterInfo.mobile)" @mouseleave="debounce(1000)">联系用户</span></div>
             </div>
             <!-- 约面信息 -->
@@ -119,7 +135,7 @@
     {
       prop: 'jobhunterInfo',
       label: '求职者信息',
-      width: 200,
+      width: 300,
       align: 'left'
     },
     {
@@ -130,7 +146,7 @@
     {
       prop: 'recruiterInfo',
       label: '面试官信息',
-      width: 400,
+      width: 350,
       align: 'left'
     },
     {
@@ -325,6 +341,8 @@
       font-size: 14px;
     }
     .name {
+      height: 22px;
+      color: #282828;
       .btn {
         white-space: nowrap;
         user-select:none;
