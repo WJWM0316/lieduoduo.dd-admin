@@ -86,7 +86,11 @@
       </list>
     </el-container>
     <!--电话号码展示框-->
-    <div class="phone" ref="mobile">{{mobile}}</div>
+    <!--电话号码展示框-->
+    <div class="phone" ref="mobile">
+      {{mobile}}
+      <img class="phoneBg" src="../../assets/number_bg.png"/>
+    </div>
     <!--小程序码展示框-->
     <div class="qrCode" ref="qrCode">{{qrCode}}</div>
   </div>
@@ -281,6 +285,7 @@
     }
   }
   /* 筛选 */
+  
   .inputSelect{
     width: 400px !important;
     float: left;
@@ -347,18 +352,25 @@
       left: 0;
     }
   }
-  /*电话号码展示框*/
-  .phone {
-    width: 122px;
-    height: 52px;
-    background-color: #FFFFFF;
-    border: 1px solid #CCCCCC;
+  .phone,
+  .qrCode {
+    width: 150px;
+    height: 70px;
     border-radius: 4px;
+    transform: translateY(-90%) translateX(-20%);
     color: #652791;
     position: fixed;
     top: -999px;
     left: -999px;
     z-index: 3;
+    line-height: 60px;
+    .phoneBg {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 5%;
+      z-index: -1;
+    }
   }
 }
 </style>
