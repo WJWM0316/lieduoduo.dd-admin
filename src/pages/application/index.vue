@@ -134,28 +134,33 @@
     {
       prop: 'interviewId',
       label: '面试ID',
-      width: 100
+      minWidth: '8%'
+//    width: 100
     },
     {
       prop: 'jobhunterInfo',
       label: '求职者信息',
+      minWidth: '25%',
 //    width: 300,
       align: 'left'
     },
     {
       prop: 'statusDesc',
       label: '状态',
-      width: 200
+      minWidth: '20%'
+//    width: 200
     },
     {
       prop: 'recruiterInfo',
       label: '面试官信息',
+      minWidth: '25%',
 //    width: 300,
       align: 'left'
     },
     {
       prop: 'interviewInfo',
       label: '约面信息',
+      minWidth: '31%',
 //    width: 500,
       align: 'left'
     }
@@ -195,7 +200,7 @@
       this.$nextTick(() => {
         this.$refs['mobile'].style.display = 'block'
         this.$refs['mobile'].style.left = e.clientX + 'px'
-        this.$refs['mobile'].style.top = e.clientY + 'px'
+        this.$refs['mobile'].style.top = e.clientY + window.scrollY + 'px'
       })
     }
     
@@ -207,7 +212,7 @@
         this.$nextTick(() => {
           this.$refs['qrCode'].style.display = 'block'
           this.$refs['qrCode'].style.left = e.clientX + 'px'
-          this.$refs['qrCode'].style.top = e.clientY + 'px'
+          this.$refs['qrCode'].style.top = e.clientY + window.scrollY + 'px'
         })
         return
       } else if (this.list[index].resumeQrCode && type === 2) {
@@ -215,7 +220,7 @@
         this.$nextTick(() => {
           this.$refs['qrCode'].style.display = 'block'
           this.$refs['qrCode'].style.left = e.clientX + 'px'
-          this.$refs['qrCode'].style.top = e.clientY + 'px'
+          this.$refs['qrCode'].style.top = e.clientY + window.scrollY + 'px'
         })
         return
       } else if (this.list[index].jobQrCode && type === 3) {
@@ -223,7 +228,7 @@
         this.$nextTick(() => {
           this.$refs['qrCode'].style.display = 'block'
           this.$refs['qrCode'].style.left = e.clientX + 'px'
-          this.$refs['qrCode'].style.top = e.clientY + 'px'
+          this.$refs['qrCode'].style.top = e.clientY + window.scrollY + 'px'
         })
         return
       }
@@ -242,7 +247,7 @@
       this.$nextTick(() => {
         this.$refs['qrCode'].style.display = 'block'
         this.$refs['qrCode'].style.left = e.clientX + 'px'
-        this.$refs['qrCode'].style.top = e.clientY + 'px'
+        this.$refs['qrCode'].style.top = e.clientY + window.scrollY + 'px'
       })
     }
     
@@ -415,11 +420,7 @@
       font-weight: 500;
       color: #282828;
     }
-    .time {
-      color: #929292;
-      font-weight: 400;
-      font-size: 14px;
-    }
+    
     .name {
       display: flex;
       height: 22px;
@@ -450,6 +451,11 @@
       position: relative;
       font-size: 15px;
     }
+    .time {
+      color: #929292;
+      font-weight: 400;
+      font-size: 14px;
+    }
     .mobile {
       display: inline-block;
       background-color: #FFFFFF;
@@ -467,7 +473,7 @@
     border-radius: 4px;
     transform: translateY(-90%) translateX(-20%);
     color: #652791;
-    position: fixed;
+    position: absolute;
     top: -999px;
     left: -999px;
     z-index: 3;

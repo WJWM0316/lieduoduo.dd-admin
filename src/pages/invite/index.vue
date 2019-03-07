@@ -129,35 +129,40 @@
     timeout = null // 防抖
     total = 0
     fields = [
-    {
-      prop: 'interviewId',
-      label: '面试ID',
-      width: 100
-    },
-    {
-      prop: 'jobhunterInfo',
-      label: '求职者信息',
-//    width: 300,
-      align: 'left'
-    },
-    {
-      prop: 'statusDesc',
-      label: '状态',
-      width: 200
-    },
-    {
-      prop: 'recruiterInfo',
-      label: '面试官信息',
-//    width: 380,
-      align: 'left'
-    },
-    {
-      prop: 'interviewInfo',
-      label: '约面信息',
-//    width: 500,
-      align: 'left'
-    }
-  ]
+      {
+        prop: 'interviewId',
+        label: '面试ID',
+        minWidth: '8%'
+  //    width: 100
+      },
+      {
+        prop: 'jobhunterInfo',
+        label: '求职者信息',
+        minWidth: '25%',
+  //    width: 300,
+        align: 'left'
+      },
+      {
+        prop: 'statusDesc',
+        label: '状态',
+        minWidth: '20%'
+  //    width: 200
+      },
+      {
+        prop: 'recruiterInfo',
+        label: '面试官信息',
+        minWidth: '25%',
+  //    width: 300,
+        align: 'left'
+      },
+      {
+        prop: 'interviewInfo',
+        label: '约面信息',
+        minWidth: '31%',
+  //    width: 500,
+        align: 'left'
+      }
+    ]
     form = {
       searchType: 'id',
       content: '',
@@ -240,7 +245,7 @@
       this.$nextTick(() => {
         this.$refs['qrCode'].style.display = 'block'
         this.$refs['qrCode'].style.left = e.clientX + 'px'
-        this.$refs['qrCode'].style.top = e.clientY + 'px'
+        this.$refs['qrCode'].style.top = e.clientY + window.scrollY + 'px'
       })
     }
     
@@ -377,6 +382,7 @@
   /* 筛选 */
   
   .inputSelect{
+    height: auto;
     width: 400px !important;
     float: left;
     margin-right: 20px;
@@ -459,7 +465,7 @@
     border-radius: 4px;
     transform: translateY(-90%) translateX(-20%);
     color: #652791;
-    position: fixed;
+    position: absolute;
     top: -999px;
     left: -999px;
     z-index: 3;

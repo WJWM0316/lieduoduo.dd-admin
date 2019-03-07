@@ -23,6 +23,7 @@
             :label="field.label"
             :align="field.align || 'center'"
             :width="field.width"
+            :min-width="field.minWidth"
             :fixed="field.fixed"
             :sortable="field.sortable"
             :filters="field.filters && field.filters.length > 0 ? field.filters : undefined"
@@ -67,20 +68,17 @@ export default List
   min-height: 100%;
 
   .list-footer {
+    box-sizing: border-box;
     position: fixed;
     left: 0;
     bottom: 0;
     margin-left: 200px;
-    padding:15px;
+    padding:8px;
     padding-left: 52px;
-    box-sizing: border-box;
     width: 100%;
     background-color: #FFFFFF;
     box-shadow:0px -1px 0px 0px rgba(232,233,235,1);
     border: 1px solid #E8E9EB;
-    .total {
-      background-color: #FFFFFF;
-    }
   }
 }
 </style>
