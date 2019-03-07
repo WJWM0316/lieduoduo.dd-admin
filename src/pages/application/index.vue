@@ -93,9 +93,9 @@
             </div>
             <!-- 约面信息 -->
             <div class="jobhunter" v-else-if="props.scope.column.property === 'interviewInfo'">
-              <div class="name" v-if="props.scope.row.positionName"><span class="btn positionName">职位：{{props.scope.row.positionName}}</span><span style="display: inline-block;">{{props.scope.row.emolument}}</span></div>
+              <div class="name" v-if="props.scope.row.positionName"><span class="btn positionName" @click.stop="creatLink($event, props.scope.row.positionId, props.scope.$index, 3)" @mouseleave="hiddenQr">职位：{{props.scope.row.positionName}}</span><span style="display: inline-block;">{{props.scope.row.emolument}}</span></div>
               <div class="name" v-else><span>职位：直接约面</span></div>
-              <div class="info"><span>地址：{{props.scope.row.address || '未设置公司地址'}}</span></div>
+              <div class="info"><span>地址：{{props.scope.row.address || '未设置面试地址'}}</span></div>
               <div class="btn" v-if="props.scope.row.arrangementInfo && props.scope.row.arrangementInfo.appointmentTime">时间：{{props.scope.row.arrangementInfo.appointmentTime*1000 | date}}</div>
             </div>
             <template v-else><span :class="{'row-delete': props.scope.row.status !== 1}">{{props.scope.row[props.scope.column.property]}}</span></template>
@@ -145,18 +145,19 @@
     {
       prop: 'statusDesc',
       label: '状态',
-      width: 200
+      width: 280
     },
     {
       prop: 'recruiterInfo',
       label: '面试官信息',
-      width: 350,
+      width: 380,
       align: 'left'
     },
     {
       prop: 'interviewInfo',
       label: '约面信息',
-      width: 500
+//    width: 500,
+      align: 'left'
     }
   ]
     form = {
@@ -217,15 +218,26 @@
           this.$refs['qrCode'].style.top = e.clientY + 'px'
         })
         return
+      } else if (this.list[index].jobQrCode && type === 3) {
+        this.qrCode = this.list[index].jobQrCode
+        this.$nextTick(() => {
+          this.$refs['qrCode'].style.display = 'block'
+          this.$refs['qrCode'].style.left = e.clientX + 'px'
+          this.$refs['qrCode'].style.top = e.clientY + 'px'
+        })
+        return
       }
       
       let res = await this.getQr(type, uid)
       if (type === 1) {
         this.qrCode = res.data.data.qrCodeUrl
         this.list[index].qrCode = res.data.data.qrCodeUrl
-      } else {
-        this.resumeQrCode = res.data.data.qrCodeUrl
+      } else if (type === 2) {
+        this.qrCode = res.data.data.qrCodeUrl
         this.list[index].resumeQrCode = res.data.data.qrCodeUrl
+      } else {
+        this.qrCode = res.data.data.qrCodeUrl
+        this.list[index].jobQrCode = res.data.data.qrCodeUrl
       }
       this.$nextTick(() => {
         this.$refs['qrCode'].style.display = 'block'
@@ -242,6 +254,10 @@
           break;
         case 2:
           return getResumeCodeUrlApi({id: uid})
+          break;
+        case 3: 
+          if (uid === 0) return
+          return getPositionCodeUrlApi({id: uid})
           break;
       }
     }
