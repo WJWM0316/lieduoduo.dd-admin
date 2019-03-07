@@ -60,7 +60,7 @@
                 <span style="font-weight: bold;display: inline-block; max-width: 120px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
                 {{props.scope.row.jobhunterInfo.realname}}
                 </span>
-                <span style="display: inline-block; max-width: 200px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+                <span style="display: inline-block; max-width: 200px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;" v-if="props.scope.row.jobhunterInfo.lastPosition">
                    · {{props.scope.row.jobhunterInfo.lastPosition}}
                 </span>
               </div>
@@ -119,7 +119,7 @@
 <script>
   import Vue from 'vue'
   import Component from 'vue-class-component'
-  import { getApplyListApi, getResumeCodeUrlApi, getRecruiterCodeUrlApi } from 'API/interview'
+  import { getApplyListApi, getResumeCodeUrlApi, getRecruiterCodeUrlApi, getPositionCodeUrlApi } from 'API/interview'
   import List from '@/components/list'
   @Component({
   name: 'application',

@@ -61,14 +61,12 @@
             <div class="btn-container" v-if="props.scope.column.property === 'id'" style="height: 48px;">
               <div>
                 <span class="check" @click="check(props.scope.row[props.scope.column.property])">查看</span>
-                <!--<el-button
-                  type="text"
-                  @click="check(props.scope.row[props.scope.column.property])"
-                  class="func-btn-text"
-                  :class="{'row-delete': props.scope.row.isPunchCard !== 1}"
-                  >
-                  查看
-                </el-button>-->
+              </div>
+            </div>
+            <!-- 序号 -->
+            <div class="btn-container" v-else-if="props.scope.column.property === 'index'">
+              <div>
+                <span>{{props.scope.$index +1}}</span>
               </div>
             </div>
             <!-- 提交人 -->
@@ -133,6 +131,11 @@ export default class companyCheck extends Vue {
           count: 20
         }
   fields = [
+    {
+      prop: 'index',
+      label: '序号',
+      width: 80
+    },
     {
       prop: 'companyName',
       label: '申请信息',

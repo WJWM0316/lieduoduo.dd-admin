@@ -30,3 +30,10 @@ export const getRecruiterCodeUrlApi = data => request({
   type: 'get',
   data
 })
+
+/* 获取职位详情小程序码 */
+export const getPositionCodeUrlApi = data => request({
+  url: '/get_position_code_url',
+  type: 'get',
+  data
+})

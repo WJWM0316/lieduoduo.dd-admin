@@ -14,7 +14,7 @@
             <el-form-item label="职位名称" prop="name">
               <el-input v-model="form.name" placeholder="输入职位/发布者/主体公司"></el-input>
             </el-form-item>
-            
+
             <el-form-item label-width="100px" label="上线/下线" prop="is_online">
               <el-select v-model="form.is_online" placeholder="全部状态">
                 <el-option label="上线" value='1'></el-option>
@@ -48,16 +48,11 @@
           @page-change="handlePageChange">
           <template slot-scope="props" slot="columns">
             <!-- 操作列 -->
-            <div class="btn-container" v-if="props.scope.column.property === 'op'" style="height: 48px;">
+            <div class="btn-container" style="flex-wrap: wrap;" v-if="props.scope.column.property === 'op'">
               <div>
                 <span class="check" @click="check(props.scope.row.id)">查看</span>
-                <!--<el-button
-                  type="text"
-                  @click="check(props.scope.row.id)"
-                  >
-                  查看
-                </el-button>-->
               </div>
+              <div style="width: 100%; cursor: pointer; color: #652791;" @click.stop="creatLink($event, props.scope.row.id, props.scope.$index)" @mouseleave="hiddenQr">查看职位</div>
             </div>
 
             <div class="btn-container"  v-else-if="props.scope.column.property === 'positionMsg'" style="height: 48px;">
@@ -84,7 +79,6 @@
               </span>
             </div>
 
-
             <div class="btn-container" v-else-if="props.scope.column.property === 'recruiterName'" style="height: 48px;">
               <span v-if="props.scope.row.recruiterInfo">
                   {{props.scope.row.recruiterInfo.name}}
@@ -107,6 +101,12 @@
         </list>
       </el-main>
     </el-container>
+    <!--小程序码展示框-->
+    <div class="qrCode" ref="qrCode">
+      <img class="bg" src="../../assets/code_bg.png"/>
+      <img class="Qr" :src="qrCode"/>
+      <div class="txt">微信扫码，打开小程序查看</div>
+    </div>
   </div>
 </template>
 
@@ -115,6 +115,7 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import List from '@/components/list'
 import { login, templistApi } from 'API/company'
+import { getPositionCodeUrlApi } from 'API/interview'
 import { getListApi } from 'API/position'
 @Component({
   name: 'course-list',
@@ -125,6 +126,7 @@ import { getListApi } from 'API/position'
 export default class companyCheck extends Vue {
   total = 0 // 筛查结果数量
   pageCount = 0 // 请求回的数据共几页
+  qrCode = ''
   form =  {
     type: '',
     is_online: '', // 状态（1 上线，2 下线)
@@ -215,6 +217,39 @@ export default class companyCheck extends Vue {
       this.list = res.data.data
       this.total = res.data.meta.total
       this.pageCount = res.data.meta.lastPage
+    })
+  }
+  /* 生成小程序码 */
+  async creatLink (e, positionId, index) {
+    // 是否已经加载过二维码
+    if (this.list[index].qrCode) {
+      this.qrCode = this.list[index].qrCode
+      this.$nextTick(() => {
+        this.$refs['qrCode'].style.display = 'block'
+        this.$refs['qrCode'].style.left = e.clientX + 'px'
+        this.$refs['qrCode'].style.top = e.clientY + 'px'
+      })
+      return
+    }
+    
+    let res = await this.getQr(positionId)
+    this.qrCode = res.data.data.qrCodeUrl
+    this.list[index].qrCode = res.data.data.qrCodeUrl
+    
+    this.$nextTick(() => {
+      this.$refs['qrCode'].style.display = 'block'
+      this.$refs['qrCode'].style.left = e.clientX + 'px'
+      this.$refs['qrCode'].style.top = e.clientY + 'px'
+    })
+  }
+  
+  /* 生成二维码 */
+  getQr ( id) {
+    return getPositionCodeUrlApi({id: id})
+  }
+  hiddenQr () {
+    this.$nextTick(() => {
+      this.$refs['qrCode'].style.display = 'none'
     })
   }
   created () {
@@ -317,5 +352,48 @@ export default class companyCheck extends Vue {
   background-color: #652791;
   color: #FFFFFF;
   border-radius: 4px;
+}
+.qrCode {
+  width: 150px;
+  height: 70px;
+  border-radius: 4px;
+  transform: translateY(-90%) translateX(-20%);
+  color: #652791;
+  position: fixed;
+  top: -999px;
+  left: -999px;
+  z-index: 3;
+  line-height: 60px;
+  .phoneBg {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 5%;
+    z-index: -1;
+  }
+}
+.qrCode {
+  width: 212px;
+  height: 164px;
+  /*background-color: #CCCCCC;*/
+  transform: translateY(-100%) translateX(-50%);
+  .Qr{
+    width: 100px;
+    height: 100px;
+    margin-top: 15px;
+  }
+  .bg{
+    max-width: 100%;
+    max-height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+  }
+  .txt{
+    line-height: normal;
+    color: #5C565D;
+    margin-top: 5px;
+  }
 }
 </style>

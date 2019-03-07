@@ -64,14 +64,18 @@
             <div class="btn-container" v-if="props.scope.column.property === 'id'" style="height: 48px;">
               <div>
                 <span class="check" @click="check(props.scope.row[props.scope.column.property])">查看</span>
-                <!--<el-button
-                  type="text"
-                  @click="check(props.scope.row[props.scope.column.property])"
-                  class="func-btn-text"
-                  :class="{'row-delete': props.scope.row.isPunchCard !== 1}"
-                  >
-                  查看
-                </el-button>-->
+              </div>
+            </div>
+            <!-- 地址列 -->
+            <div class="btn-container" v-else-if="props.scope.column.property === 'address'">
+              <div>
+                <span>{{props.scope.row.address.address}}</span>
+              </div>
+            </div>
+            <!-- 序号 -->
+            <div class="btn-container" v-else-if="props.scope.column.property === 'index'">
+              <div>
+                <span>{{props.scope.$index +1}}</span>
               </div>
             </div>
             <!--认证状态-->
@@ -134,6 +138,11 @@ export default class indexPage extends Vue {
   list = []
   fields = [
     {
+      prop: 'index',
+      label: '序号',
+      width: 80
+    },
+    {
       prop: 'companyName',
       label: '申请信息',
       width: 250
@@ -159,9 +168,14 @@ export default class indexPage extends Vue {
       width: 200
     },
     {
+      prop: 'address',
+      label: '公司地址',
+      width: 300
+    },
+    {
       prop: 'id',
       fixed: "right",
-      label: '操作'
+      label: '操作',
     }
   ]
   beforeRouteEnter (to, from, next) {
