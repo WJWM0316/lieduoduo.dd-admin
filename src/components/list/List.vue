@@ -72,7 +72,7 @@ export default List
     position: fixed;
     left: 0;
     bottom: 0;
-    margin-left: 200px;
+    padding-left: 200px;
     padding:8px;
     padding-left: 52px;
     width: 100%;
