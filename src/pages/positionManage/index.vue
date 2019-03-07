@@ -1,6 +1,6 @@
 <!--职位管理-->
 <template>
-  <div class="positionManage">
+  <div class="positionManage" @click="closeTopic">
     <el-container class="container" style="border: 1px solid #eee">
       <el-header class="header" style="text-align: right; font-size: 15px">
         <div class="title">职位管理({{total}})</div>
@@ -52,7 +52,7 @@
               <div>
                 <span class="check" @click="check(props.scope.row.id)">查看</span>
               </div>
-              <div style="width: 100%; cursor: pointer; color: #652791;" @click.stop="creatLink($event, props.scope.row.id, props.scope.$index)" @mouseleave="hiddenQr">查看职位</div>
+              <div style="width: 100%; cursor: pointer; color: #652791;" @click.stop="creatLink($event, props.scope.row.id, props.scope.$index)">查看职位</div>
             </div>
 
             <div class="btn-container"  v-else-if="props.scope.column.property === 'positionMsg'" style="height: 48px;">
@@ -219,6 +219,14 @@ export default class companyCheck extends Vue {
       this.pageCount = res.data.meta.lastPage
     })
   }
+  
+  /* 关闭浮窗 */
+  closeTopic () {
+    this.$nextTick(() => {
+      this.$refs['qrCode'].style.display = 'none'
+    })
+  }
+  
   /* 生成职位详情小程序码 */
   async creatLink (e, positionId, index) {
     // 是否已经加载过二维码
@@ -227,7 +235,7 @@ export default class companyCheck extends Vue {
       this.$nextTick(() => {
         this.$refs['qrCode'].style.display = 'block'
         this.$refs['qrCode'].style.left = e.clientX + 'px'
-        this.$refs['qrCode'].style.top = e.clientY + 'px'
+        this.$refs['qrCode'].style.top = e.clientY + window.scrollY  + 'px'
       })
       return
     }
@@ -239,7 +247,7 @@ export default class companyCheck extends Vue {
     this.$nextTick(() => {
       this.$refs['qrCode'].style.display = 'block'
       this.$refs['qrCode'].style.left = e.clientX + 'px'
-      this.$refs['qrCode'].style.top = e.clientY + 'px'
+      this.$refs['qrCode'].style.top = e.clientY + window.scrollY  + 'px'
     })
   }
   
@@ -360,7 +368,7 @@ export default class companyCheck extends Vue {
   border-radius: 4px;
   transform: translateY(-90%) translateX(-20%);
   color: #652791;
-  position: fixed;
+  position: absolute;
   top: -999px;
   left: -999px;
   z-index: 3;

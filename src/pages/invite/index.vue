@@ -198,7 +198,7 @@
       this.$nextTick(() => {
         this.$refs['mobile'].style.display = 'block'
         this.$refs['mobile'].style.left = e.clientX + 'px'
-        this.$refs['mobile'].style.top = e.clientY + 'px'
+        this.$refs['mobile'].style.top = e.clientY + window.scrollY + 'px'
       })
     }
     
@@ -210,7 +210,7 @@
         this.$nextTick(() => {
           this.$refs['qrCode'].style.display = 'block'
           this.$refs['qrCode'].style.left = e.clientX + 'px'
-          this.$refs['qrCode'].style.top = e.clientY + 'px'
+          this.$refs['qrCode'].style.top = e.clientY + window.scrollY + 'px'
         })
         return
       } else if (this.list[index].resumeQrCode && type === 2) {
@@ -218,7 +218,7 @@
         this.$nextTick(() => {
           this.$refs['qrCode'].style.display = 'block'
           this.$refs['qrCode'].style.left = e.clientX + 'px'
-          this.$refs['qrCode'].style.top = e.clientY + 'px'
+          this.$refs['qrCode'].style.top = e.clientY + window.scrollY + 'px'
         })
         return
       } else if (this.list[index].jobQrCode && type === 3) {
@@ -226,7 +226,7 @@
         this.$nextTick(() => {
           this.$refs['qrCode'].style.display = 'block'
           this.$refs['qrCode'].style.left = e.clientX + 'px'
-          this.$refs['qrCode'].style.top = e.clientY + 'px'
+          this.$refs['qrCode'].style.top = e.clientY + window.scrollY + 'px'
         })
         return
       }

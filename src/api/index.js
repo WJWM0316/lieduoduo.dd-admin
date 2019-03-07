@@ -50,6 +50,7 @@ export const request = ({type = 'post', url, data = {}, config = {}} = {}) => {
   return axios[type](url, type === 'get' ? { params: data } : data)
   .catch(err => {
     /* 通用的错误捕获可以在这里操作 */
+   Message.error(err)
    return Promise.reject(err)
   })
 }
