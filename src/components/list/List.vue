@@ -69,10 +69,15 @@ export default List
   .list-footer {
     position: fixed;
     left: 0;
-    bottom: 20px;
-    margin: 0 -5px;
-    padding: 20px 20px;
+    bottom: 0;
+    margin-left: 200px;
+    padding:15px;
+    padding-left: 52px;
+    box-sizing: border-box;
     width: 100%;
+    background-color: #FFFFFF;
+    box-shadow:0px -1px 0px 0px rgba(232,233,235,1);
+    border: 1px solid #E8E9EB;
     .total {
       background-color: #FFFFFF;
     }

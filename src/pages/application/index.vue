@@ -1,6 +1,6 @@
 <!-- 面试申请管理 -->
 <template>
-  <div class="application">
+  <div class="application" @click="closeTopic">
     <el-container class="container" style="border: 1px solid #eee">
       <el-header class="header" style="text-align: right; font-size: 15px">
         <div class="title">申请列表管理({{total}})</div>
@@ -65,7 +65,7 @@
                 </span>
               </div>
               <div class="info" v-if="props.scope.row.jobhunterInfo.lastCompanyName || props.scope.row.jobhunterInfo.lastPosition"><span>{{props.scope.row.jobhunterInfo.lastCompanyName}}</span></div>
-              <div class="btn"><span @click.stop="creatLink($event, props.scope.row.jobhunterInfo.uid, props.scope.$index, 2)" @mouseleave="hiddenQr">查看简历</span>  <span @mouseover="showPhone($event, props.scope.row.jobhunterInfo.mobile)" @mouseleave="debounce(1000)">联系用户</span></div>
+              <div class="btn"><span @click.stop="creatLink($event, props.scope.row.jobhunterInfo.uid, props.scope.$index, 2)">查看简历</span>  <span @click.stop="showPhone($event, props.scope.row.jobhunterInfo.mobile)">联系用户</span></div>
             </div>
             <!-- 状态 -->
             <div class="jobhunter" v-else-if="props.scope.column.property === 'statusDesc'">
@@ -89,11 +89,11 @@
               <div class="info" v-if="props.scope.row.recruiterInfo.companyName"><span>{{props.scope.row.recruiterInfo.companyName}}</span>
                 
               </div>
-              <div class="btn"><span @click.stop="creatLink($event, props.scope.row.recruiterInfo.uid, props.scope.$index, 1)" @mouseleave="hiddenQr">查看主页</span>  <span @mouseover="showPhone($event, props.scope.row.recruiterInfo.mobile)" @mouseleave="debounce(1000)">联系用户</span></div>
+              <div class="btn"><span @click.stop="creatLink($event, props.scope.row.recruiterInfo.uid, props.scope.$index, 1)">查看主页</span>  <span @click.stop="showPhone($event, props.scope.row.recruiterInfo.mobile)">联系用户</span></div>
             </div>
             <!-- 约面信息 -->
             <div class="jobhunter" v-else-if="props.scope.column.property === 'interviewInfo'">
-              <div class="name" v-if="props.scope.row.positionName"><span class="btn positionName" @click.stop="creatLink($event, props.scope.row.positionId, props.scope.$index, 3)" @mouseleave="hiddenQr">职位：{{props.scope.row.positionName}}</span><span style="display: inline-block;">{{props.scope.row.emolument}}</span></div>
+              <div class="name" v-if="props.scope.row.positionName"><span class="btn positionName" @click.stop="creatLink($event, props.scope.row.positionId, props.scope.$index, 3)">职位：{{props.scope.row.positionName}}</span><span style="display: inline-block;">{{props.scope.row.emolument}}</span></div>
               <div class="name" v-else><span>职位：直接约面</span></div>
               <div class="info"><span style="position: relative;">地址：{{props.scope.row.address || '未设置面试地址'}} <span class="addre"></span></span></div>
               <div class="btn" v-if="props.scope.row.arrangementInfo && props.scope.row.arrangementInfo.appointmentTime">时间：{{props.scope.row.arrangementInfo.appointmentTime*1000 | date}}</div>
@@ -270,6 +270,14 @@
     
     hiddenQr () {
       this.$nextTick(() => {
+        this.$refs['qrCode'].style.display = 'none'
+      })
+    }
+    
+    /* 关闭浮窗 */
+    closeTopic () {
+      this.$nextTick(() => {
+        this.$refs['mobile'].style.display = 'none'
         this.$refs['qrCode'].style.display = 'none'
       })
     }
