@@ -231,7 +231,7 @@ export default class officerManage extends Vue{
       return
     }
     
-    let res = await this.getQr(data.positionId)
+    let res = await this.getQr(data.uid)
     this.qrCode = res.data.data.qrCodeUrl
     this.list[index].qrCode = res.data.data.qrCodeUrl
     
