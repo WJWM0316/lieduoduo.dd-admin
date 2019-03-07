@@ -3,7 +3,7 @@
   <div class="application">
     <el-container class="container" style="border: 1px solid #eee">
       <el-header class="header" style="text-align: right; font-size: 15px">
-        <div class="title">申请列表管理({{total}})</div>
+        <div class="title">邀请列表管理({{total}})</div>
       </el-header>
       <el-main width="200px">
         <!--筛选-->
@@ -91,7 +91,7 @@
             </div>
             <!-- 约面信息 -->
             <div class="jobhunter" v-else-if="props.scope.column.property === 'interviewInfo'">
-              <div class="name" v-if="props.scope.row.positionName"><span class="btn">职位：{{props.scope.row.positionName}}</span><span>{{props.scope.row.emolument}}</span></div>
+              <div class="name" v-if="props.scope.row.positionName"><span class="btn positionName">职位：{{props.scope.row.positionName}}</span><span style="display: inline-block;">{{props.scope.row.emolument}}</span></div>
               <div class="name" v-else><span>职位：直接约面</span></div>
               <div class="info"><span>地址：{{props.scope.row.address}}</span></div>
               <div class="btn" v-if="props.scope.row.arrangementInfo">时间：{{props.scope.row.arrangementInfo.appointment}}</div>
@@ -159,7 +159,7 @@
     }
   ]
     form = {
-      searchType: '',
+      searchType: 'id',
       content: '',
       status: '',
       page: 1,
@@ -373,7 +373,7 @@
     .info,
     .btn {
       color: #282828;
-      width: 100%;
+      /*width: 100%;*/
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
@@ -383,6 +383,7 @@
     .status,
     .time{
       text-align: center;
+      justify-content: center;
     }
     .status {
       font-weight: 500;
@@ -396,17 +397,23 @@
     .name {
       height: 22px;
       color: #282828;
+      display: flex;
       .btn {
         white-space: nowrap;
         user-select:none;
         cursor: pointer;
-        line-height: 12px;
         color: #652791;
+      }
+      .positionName {
+        display: inline-block;
+        max-width: 200px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
       }
     }
     span {
       margin-right: 10px;
-      /*color: #652791;*/
     }
     .btn{
       overflow: auto;

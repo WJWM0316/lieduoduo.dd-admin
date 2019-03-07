@@ -9,7 +9,7 @@ moment.locale('zh-cn')
 /**
  * 日期过滤
  */
-Vue.filter('date', (value, format = 'YYYY-MM-DD HH:mm:ss') => moment(value).format(format))
+Vue.filter('date', (value, format = 'YYYY-MM-DD HH:mm') => moment(value).format(format))
 
 /**
  * 时间段过滤器

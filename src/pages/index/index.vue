@@ -69,13 +69,13 @@
             <!-- 地址列 -->
             <div class="btn-container" v-else-if="props.scope.column.property === 'address'">
               <div>
-                <span>{{props.scope.row.address.address}}</span>
+                <span>{{props.scope.row.address.address || '公司未设置地址'}}</span>
               </div>
             </div>
             <!-- 序号 -->
             <div class="btn-container" v-else-if="props.scope.column.property === 'index'">
               <div>
-                <span>{{props.scope.$index +1}}</span>
+                <span>{{props.scope.row.id}}</span>
               </div>
             </div>
             <!--认证状态-->
@@ -146,6 +146,7 @@ export default class indexPage extends Vue {
       prop: 'companyName',
       label: '申请信息',
       width: 250
+//    align: 'left'
     },
     {
       prop: 'industry',

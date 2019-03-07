@@ -219,7 +219,7 @@ export default class companyCheck extends Vue {
       this.pageCount = res.data.meta.lastPage
     })
   }
-  /* 生成小程序码 */
+  /* 生成职位详情小程序码 */
   async creatLink (e, positionId, index) {
     // 是否已经加载过二维码
     if (this.list[index].qrCode) {
@@ -247,6 +247,7 @@ export default class companyCheck extends Vue {
   getQr ( id) {
     return getPositionCodeUrlApi({id: id})
   }
+  /* 关闭二维码弹窗 */
   hiddenQr () {
     this.$nextTick(() => {
       this.$refs['qrCode'].style.display = 'none'

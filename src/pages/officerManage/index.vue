@@ -62,10 +62,11 @@
           @page-change="handlePageChange">
           <template slot-scope="props" slot="columns">
             <!-- 操作列 -->
-            <div class="btn-container" v-if="props.scope.column.property === 'id'" style="height: 48px;">
+            <div style="flex-wrap: wrap;" class="btn-container" v-if="props.scope.column.property === 'id'">
               <div>
                 <span class="check" @click="check(props.scope.row[props.scope.column.property])">查看</span>
               </div>
+              <div style="width: 100%; cursor: pointer; color: #652791;" @click.stop="creatLink($event, props.scope.row.uid, props.scope.$index)" @mouseleave="hiddenQr">查看招聘官</div>
             </div>
             <!-- 序号 -->
             <div class="btn-container" v-else-if="props.scope.column.property === 'index'">
@@ -95,8 +96,13 @@
           </template>
         </list>
       </el-main>
-      <!--<el-main width="200px" style="background-color:brown"> 招聘官管理</el-main>-->
     </el-container>
+    <!--小程序码展示框-->
+    <div class="qrCode" ref="qrCode">
+      <img class="bg" src="../../assets/code_bg.png"/>
+      <img class="Qr" :src="qrCode"/>
+      <div class="txt">微信扫码，打开小程序查看</div>
+    </div>
   </div>
 </template>
 
@@ -105,6 +111,7 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import List from '@/components/list'
 import { getRecruiterListApi } from 'API/recruiter'
+import { getRecruiterCodeUrlApi } from 'API/interview'
 @Component({
   name: 'officerManage',
   components: {
@@ -114,6 +121,7 @@ import { getRecruiterListApi } from 'API/recruiter'
 export default class officerManage extends Vue{
   total = 0
   pageCount = 0
+  qrCode = ''
   form =  {
     keyword: '',
     status: '',
@@ -149,11 +157,6 @@ export default class officerManage extends Vue{
       label: '加入公司',
       width: 220
     },
-//  {
-//    prop: 'authStatus',
-//    label: '身份认证状态',
-//    width: 200
-//  },
     {
       prop: 'createdAt',
       label: '申请时间',
@@ -211,6 +214,41 @@ export default class officerManage extends Vue{
       query: {id: id}
     })
   }
+  /* 生成职位详情小程序码 */
+  async creatLink (e, positionId, index) {
+    // 是否已经加载过二维码
+    if (this.list[index].qrCode) {
+      this.qrCode = this.list[index].qrCode
+      this.$nextTick(() => {
+        this.$refs['qrCode'].style.display = 'block'
+        this.$refs['qrCode'].style.left = e.clientX + 'px'
+        this.$refs['qrCode'].style.top = e.clientY + 'px'
+      })
+      return
+    }
+    
+    let res = await this.getQr(positionId)
+    this.qrCode = res.data.data.qrCodeUrl
+    this.list[index].qrCode = res.data.data.qrCodeUrl
+    
+    this.$nextTick(() => {
+      this.$refs['qrCode'].style.display = 'block'
+      this.$refs['qrCode'].style.left = e.clientX + 'px'
+      this.$refs['qrCode'].style.top = e.clientY + 'px'
+    })
+  }
+  
+  /* 生成二维码 */
+  getQr ( id) {
+    return getRecruiterCodeUrlApi({id: id})
+  }
+  /* 关闭二维码弹窗 */
+  hiddenQr () {
+    this.$nextTick(() => {
+      this.$refs['qrCode'].style.display = 'none'
+    })
+  }
+  
   created () {
     this.getRecruiterList()
   }
@@ -301,5 +339,48 @@ export default class officerManage extends Vue{
   background-color: #652791;
   color: #FFFFFF;
   border-radius: 4px;
+}
+.qrCode {
+  width: 150px;
+  height: 70px;
+  border-radius: 4px;
+  transform: translateY(-90%) translateX(-20%);
+  color: #652791;
+  position: fixed;
+  top: -999px;
+  left: -999px;
+  z-index: 3;
+  line-height: 60px;
+  .phoneBg {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 5%;
+    z-index: -1;
+  }
+}
+.qrCode {
+  width: 212px;
+  height: 164px;
+  /*background-color: #CCCCCC;*/
+  transform: translateY(-100%) translateX(-50%);
+  .Qr{
+    width: 100px;
+    height: 100px;
+    margin-top: 15px;
+  }
+  .bg{
+    max-width: 100%;
+    max-height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+  }
+  .txt{
+    line-height: normal;
+    color: #5C565D;
+    margin-top: 5px;
+  }
 }
 </style>
