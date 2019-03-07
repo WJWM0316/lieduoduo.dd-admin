@@ -95,7 +95,7 @@
             <div class="jobhunter" v-else-if="props.scope.column.property === 'interviewInfo'">
               <div class="name" v-if="props.scope.row.positionName"><span class="btn positionName">职位：{{props.scope.row.positionName}}</span><span style="display: inline-block;">{{props.scope.row.emolument}}</span></div>
               <div class="name" v-else><span>职位：直接约面</span></div>
-              <div class="info"><span>地址：{{props.scope.row.address}}</span></div>
+              <div class="info"><span>地址：{{props.scope.row.address || '未设置公司地址'}}</span></div>
               <div class="btn" v-if="props.scope.row.arrangementInfo">时间：{{props.scope.row.arrangementInfo.appointmentTime*1000 | date}}</div>
             </div>
             <template v-else><span :class="{'row-delete': props.scope.row.status !== 1}">{{props.scope.row[props.scope.column.property]}}</span></template>
@@ -387,6 +387,7 @@
       justify-content: center;
       text-align: center;
     }
+    
     .status {
       font-weight: 500;
       color: #282828;
@@ -413,6 +414,9 @@
         white-space: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;
+      }
+      &.arrow{
+        color: #BCBCBC;
       }
     }
     span {

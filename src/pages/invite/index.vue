@@ -373,7 +373,6 @@
     .info,
     .btn {
       color: #282828;
-      /*width: 100%;*/
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
@@ -396,7 +395,6 @@
     }
     .name {
       height: 22px;
-      color: #282828;
       display: flex;
       .btn {
         white-space: nowrap;
@@ -410,6 +408,9 @@
         white-space: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;
+      }
+      &.arrow{
+        color: #BCBCBC;
       }
     }
     span {
