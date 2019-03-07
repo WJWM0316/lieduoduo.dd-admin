@@ -95,7 +95,7 @@
             <div class="jobhunter" v-else-if="props.scope.column.property === 'interviewInfo'">
               <div class="name" v-if="props.scope.row.positionName"><span class="btn positionName" @click.stop="creatLink($event, props.scope.row.positionId, props.scope.$index, 3)" @mouseleave="hiddenQr">职位：{{props.scope.row.positionName}}</span><span style="display: inline-block;">{{props.scope.row.emolument}}</span></div>
               <div class="name" v-else><span>职位：直接约面</span></div>
-              <div class="info"><span>地址：{{props.scope.row.address || '未设置面试地址'}}</span></div>
+              <div class="info"><span style="position: relative;">地址：{{props.scope.row.address || '未设置面试地址'}} <span class="addre"></span></span></div>
               <div class="btn" v-if="props.scope.row.arrangementInfo && props.scope.row.arrangementInfo.appointmentTime">时间：{{props.scope.row.arrangementInfo.appointmentTime*1000 | date}}</div>
             </div>
             <template v-else><span :class="{'row-delete': props.scope.row.status !== 1}">{{props.scope.row[props.scope.column.property]}}</span></template>
@@ -134,23 +134,23 @@
     {
       prop: 'interviewId',
       label: '面试ID',
-      width: 150
+      width: 100
     },
     {
       prop: 'jobhunterInfo',
       label: '求职者信息',
-      width: 300,
+//    width: 300,
       align: 'left'
     },
     {
       prop: 'statusDesc',
       label: '状态',
-      width: 280
+      width: 200
     },
     {
       prop: 'recruiterInfo',
       label: '面试官信息',
-      width: 380,
+//    width: 300,
       align: 'left'
     },
     {
@@ -263,7 +263,6 @@
     }
     
     hiddenPhone () {
-      this.qrCode = ''
       this.$nextTick(() => {
         this.$refs['mobile'].style.display = 'none'
       })
@@ -439,7 +438,6 @@
       margin-right: 10px;
     }
     .btn{
-      overflow: auto;
       float: none;
       position: relative;
       font-size: 15px;

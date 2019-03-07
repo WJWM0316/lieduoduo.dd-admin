@@ -118,7 +118,7 @@
 <script>
   import Vue from 'vue'
   import Component from 'vue-class-component'
-  import { getInviteListApi, getRecruiterCodeUrlApi, getResumeCodeUrlApi, getPositionCodeUrlApi  } from 'API/interview'
+  import { getInviteListApi, getRecruiterCodeUrlApi, getResumeCodeUrlApi, getPositionCodeUrlApi } from 'API/interview'
   import List from '@/components/list'
   @Component({
   name: 'invite',
@@ -133,23 +133,23 @@
     {
       prop: 'interviewId',
       label: '面试ID',
-      width: 150
+      width: 100
     },
     {
       prop: 'jobhunterInfo',
       label: '求职者信息',
-      width: 300,
+//    width: 300,
       align: 'left'
     },
     {
       prop: 'statusDesc',
       label: '状态',
-      width: 280
+      width: 200
     },
     {
       prop: 'recruiterInfo',
       label: '面试官信息',
-      width: 380,
+//    width: 380,
       align: 'left'
     },
     {
@@ -433,7 +433,6 @@
       margin-right: 10px;
     }
     .btn{
-      overflow: auto;
       float: none;
       position: relative;
       font-size: 15px;
