@@ -382,16 +382,18 @@ export default class companyCheck extends Vue {
   }
 }
 .qrCode {
-  width: 212px;
-  height: 164px;
+  width: 250px;
+  height: 240px;
   /*background-color: #CCCCCC;*/
   transform: translateY(-100%) translateX(-50%);
   .Qr{
-    width: 100px;
-    height: 100px;
-    margin-top: 15px;
+    width: 150px;
+    height: 150px;
+    margin-top: 30px;
   }
   .bg{
+    width: 100%;
+    height: 100%;
     max-width: 100%;
     max-height: 100%;
     position: absolute;

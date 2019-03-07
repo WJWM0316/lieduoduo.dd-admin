@@ -26,6 +26,7 @@
             
             <el-form-item class="state" label="状态" prop="status">
               <el-select class="selectState" v-model="form.status" placeholder="全部状态" @change="changeProvince">
+                <el-option label="全部状态" value="0"></el-option>
                 <el-option label="待面试官处理" value="11"></el-option>
                 <el-option label="待求职者确认" value="31"></el-option>
                 <el-option label="待面试官修改" value="32"></el-option>
@@ -168,7 +169,7 @@
     form = {
       searchType: 'id',
       content: '',
-      status: '',
+      status: '0',
       page: 1,
       count: 20
     }
@@ -487,16 +488,18 @@
     }
   }
   .qrCode {
-    width: 212px;
-    height: 164px;
+    width: 250px;
+    height: 240px;
     /*background-color: #CCCCCC;*/
     transform: translateY(-100%) translateX(-50%);
     .Qr{
-      width: 100px;
-      height: 100px;
-      margin-top: 15px;
+      width: 150px;
+      height: 150px;
+      margin-top: 30px;
     }
     .bg{
+      width: 100%;
+      height: 100%;
       max-width: 100%;
       max-height: 100%;
       position: absolute;
