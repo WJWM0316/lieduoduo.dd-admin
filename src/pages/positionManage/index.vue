@@ -175,6 +175,7 @@ export default class companyCheck extends Vue {
     {
       prop: 'op',
       fixed: "right",
+      width: 150,
       label: '操作'
     }
   ]

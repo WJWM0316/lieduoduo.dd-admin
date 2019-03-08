@@ -358,6 +358,7 @@
     .el-input{
       width: 200px;
     }
+    
     &::after {
       content: '';
       display: block;
@@ -384,16 +385,17 @@
     }
   }
   /* 筛选 */
-  
   .inputSelect{
     width: 400px !important;
-    float: left;
-    margin-right: 20px;
-    .selectTitle {
-      box-sizing: border-box;
-      margin-top: 0;
+    background-color: #FFFFFF;
+    .el-select{
       width: 120px;
-      background-color: #FFFFFF;
+      margin-top: -2px;
+      border: none;
+      box-sizing: border-box;
+    }
+    .el-input-group__prepend {
+      background-color: #fff;
     }
   }
   .selectState{

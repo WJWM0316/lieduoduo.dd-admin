@@ -78,6 +78,13 @@
                 <span>{{props.scope.row.id}}</span>
               </div>
             </div>
+            <!-- 申请信息 -->
+            <div class="btn-container" v-else-if="props.scope.column.property === 'companyName'">
+              <div style="text-align: left; display: flex;align-items: center;">
+                <img style="width: 56px;height: 56px;border-radius: 5px;margin-right: 5px;" :src="props.scope.row.logoInfo.middleUrl"/>
+                <span>{{props.scope.row.companyName}}</span>
+              </div>
+            </div>
             <!--认证状态-->
             <div class="btn-container" v-else-if="props.scope.column.property === 'status' || props.scope.column.property === 'authStatus'" style="height: 48px;">
               <div>
@@ -145,7 +152,7 @@ export default class indexPage extends Vue {
     {
       prop: 'companyName',
       label: '申请信息',
-      width: 250
+      width: 300
 //    align: 'left'
     },
     {

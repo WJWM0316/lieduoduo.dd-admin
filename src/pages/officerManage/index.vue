@@ -175,6 +175,7 @@ export default class officerManage extends Vue{
     {
       prop: 'id',
       fixed: "right",
+      width: 150,
       label: '操作'
     }
   ]

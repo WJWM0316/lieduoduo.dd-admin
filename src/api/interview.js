@@ -22,6 +22,7 @@ export const getResumeCodeUrlApi = data => request({
   url: '/resume/get_resume_code_url',
   type: 'get',
   data
+//noGlobalLoading: true //不需要loading
 })
 
 /* 获取招聘官主页小程序码 */

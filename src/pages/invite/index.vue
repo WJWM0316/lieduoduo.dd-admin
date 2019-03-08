@@ -381,17 +381,14 @@
     }
   }
   /* 筛选 */
-  
   .inputSelect{
-    height: auto;
     width: 400px !important;
-    float: left;
-    margin-right: 20px;
-    .selectTitle {
-      box-sizing: border-box;
-      margin-top: 0;
+    background-color: #FFFFFF;
+    .el-select{
       width: 120px;
-      background-color: #FFFFFF;
+      margin-top: -2px;
+      border: none;
+      box-sizing: border-box;
     }
   }
   .selectState{

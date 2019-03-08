@@ -8,9 +8,11 @@
         <el-step title="填写身份信息"></el-step>
         <el-step title="录入完成"></el-step>
       </el-steps>
-      <el-button @click.stop="last" v-show="active === 1">返回上一步</el-button>
-      <el-button @click.stop="next" v-show="active === 0">保存，下一步</el-button>
-      <el-button @click.stop="next" v-show="active === 1">保存并审核</el-button>
+      <div>
+      	<el-button @click.stop="last" v-show="active === 1">返回上一步</el-button>
+        <el-button @click.stop="next" v-show="active === 0">保存，下一步</el-button>
+        <el-button @click.stop="next" v-show="active === 1">保存并审核</el-button>
+      </div>
     </div>
      <!--公司信息表格-->
     <div class="companyInfo" v-if="active === 0">

@@ -15,8 +15,7 @@ axios.defaults.baseURL = API_ROOT
 // 请求拦截器
 axios.interceptors.request.use(
   config => {
-    loadingInstance = Loading.service({})
-//  config.headers.Cookie = getAccessToken()
+//  loadingInstance = Loading.service({})
     config.headers.common['Authorization-Admin'] = getAccessToken()
     return config
   },
@@ -42,10 +41,11 @@ axios.interceptors.response.use(
   }
 )
 
-export const request = ({type = 'post', url, data = {}, config = {}} = {}) => {
-  if (data.globalLoading) {
+export const request = ({type = 'post', url, data = {}, noGlobalLoading, config = {}} = {}) => {
+  if (noGlobalLoading) {
+    console.log('不需要loading')
+  } else {
     loadingInstance = Loading.service({})
-    delete params.globalLoading
   }
   return axios[type](url, type === 'get' ? { params: data } : data)
   .catch(err => {
