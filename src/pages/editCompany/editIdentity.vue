@@ -27,9 +27,9 @@
           <el-input v-model="personalInfo.user_email" placeholder="请输入公司邮箱" :disabled="true" :maxlength="30" style="width: 400px;"></el-input>
         </el-form-item>
         
-        <!--<el-form-item label="手机号码" prop="title">
-          <el-input v-model="personalInfo.mobile" placeholder="请输入手机号码" :maxlength="30" style="width: 400px;"></el-input>
-        </el-form-item>-->
+        <el-form-item label="手机号码" prop="title">
+          <el-input v-model="personalInfo.mobile" placeholder="请输入手机号码" :disabled="true" :maxlength="30" style="width: 400px;"></el-input>
+        </el-form-item>
         
         <h3>身份信息</h3>
         <el-form-item label="真实姓名" prop="title">
