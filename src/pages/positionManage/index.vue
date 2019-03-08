@@ -169,8 +169,8 @@ export default class companyCheck extends Vue {
     },
     {
       prop: 'status',
-      label: '审核状态',
-      width: 150
+      label: '审核状态'
+//    width: 150
     },
     {
       prop: 'op',

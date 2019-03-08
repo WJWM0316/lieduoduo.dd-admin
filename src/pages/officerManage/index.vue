@@ -169,8 +169,8 @@ export default class officerManage extends Vue{
     },
     {
       prop: 'authStatus',
-      label: '身份认证状态',
-      width: 150
+      label: '身份认证状态'
+//    width: 150
     },
     {
       prop: 'id',
