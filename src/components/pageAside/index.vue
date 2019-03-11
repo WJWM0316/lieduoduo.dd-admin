@@ -10,7 +10,7 @@
           <li><router-link to="/companyCheck"><i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>公司审核管理</router-link></li>
           <li><router-link to="/recruitmentOfficer"><i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>招聘官管理</router-link></li>
           <li><router-link to="/positionManage"><i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>职位管理</router-link></li>
-          <li @click.stop="tabSwitch"><router-link to="/interview" active-class="interviewActive"><i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>面试管理<i class="icon iconfont iconloeft_down" :class="{ turnUp: !isCLick, turnDowm: isCLick }"></i></router-link></li>
+          <li @click.stop="tabSwitch"><router-link to="/interview" active-class="interviewActive"><i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>面试管理<i class="icon iconfont iconloeft_down" style="color: #FFFFFF;" :class="{ turnUp: isCLick, turnDowm: !isCLick }"></i></router-link></li>
           <!--<li @click.stop="tabSwitch"><a style="display: inline-block;"><i style="margin-right: 16px;" :class="" class="icon iconfont icongongneng"></i>面试管理</a><i class="icon iconfont iconloeft_down" :class="{ turnUp: !isCLick, turnDowm: isCLick }"></i></li>-->
           <div class="interviewBox" :class="{expand: isCLick, collapse: !isCLick}">
             <li><router-link to="/interview" exact>申请列表</router-link></li>
@@ -111,6 +111,7 @@ export default class PageAside extends Vue {
     margin-bottom: 150px;
   }
   li {
+    font-weight: 300;
     color: #fff;
     height: 60px;
     line-height: 60px;
@@ -138,13 +139,14 @@ export default class PageAside extends Vue {
       display: block;
       /*padding-left: 50px;*/
       .iconfont{
-        color: #929292;
+        color: #513E5F;
       }
     }
   }
   .router-link-active,
   .interviewActive,
   .filter-tree {
+    font-weight: 500;
     background:rgba(255,226,102,0.12);
     position: relative;
     color: #fff;
@@ -174,6 +176,9 @@ export default class PageAside extends Vue {
       display: block;
       content: '';
     }
+  }
+  .interviewActive{
+    background: none;
   }
   .interviewActive:before{
     display: none;
