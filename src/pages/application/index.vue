@@ -71,7 +71,7 @@
             </div>
             <!-- 状态 -->
             <div class="jobhunter" v-else-if="props.scope.column.property === 'statusDesc'">
-              <div class="name arrow">
+              <div class="name arrow" v-if="props.scope.row.status !== 51">
                 <i class="icon iconfont iconjiantouzuo" v-if="props.scope.row.status === 31 || props.scope.row.status === 52"></i>
                 <i class="icon iconfont iconjiantou" v-else></i>
               </div>

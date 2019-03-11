@@ -6,13 +6,14 @@
           <!--<img src="~IMAGES/logo.png" class="avatar">-->
         </div>
         <ul>
-          <li><router-link to="/index">公司库</router-link></li>
-          <li><router-link to="/companyCheck">公司审核管理</router-link></li>
-          <li><router-link to="/recruitmentOfficer">招聘官管理</router-link></li>
-          <li><router-link to="/positionManage">职位管理</router-link></li>
-          <li @click.stop="tabSwitch"><a style="display: inline-block;">面试管理</a><i class="icon iconfont iconloeft_down" :class="{ turnUp: !isCLick, turnDowm: isCLick }"></i></li>
+          <li><router-link to="/index"><i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>公司库</router-link></li>
+          <li><router-link to="/companyCheck"><i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>公司审核管理</router-link></li>
+          <li><router-link to="/recruitmentOfficer"><i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>招聘官管理</router-link></li>
+          <li><router-link to="/positionManage"><i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>职位管理</router-link></li>
+          <li @click.stop="tabSwitch"><router-link to="/interview" active-class="interviewActive"><i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>面试管理<i class="icon iconfont iconloeft_down" :class="{ turnUp: !isCLick, turnDowm: isCLick }"></i></router-link></li>
+          <!--<li @click.stop="tabSwitch"><a style="display: inline-block;"><i style="margin-right: 16px;" :class="" class="icon iconfont icongongneng"></i>面试管理</a><i class="icon iconfont iconloeft_down" :class="{ turnUp: !isCLick, turnDowm: isCLick }"></i></li>-->
           <div class="interviewBox" :class="{expand: isCLick, collapse: !isCLick}">
-            <li><router-link to="/interview/application">申请列表</router-link></li>
+            <li><router-link to="/interview" exact>申请列表</router-link></li>
             <li><router-link to="/interview/invite">邀请列表</router-link></li>
           </div>
         </ul>
@@ -143,14 +144,13 @@ export default class PageAside extends Vue {
     }
   }
   .router-link-active,
+  .interviewActive,
   .filter-tree {
     background:rgba(255,226,102,0.12);
     position: relative;
-    a {
-      color: #fff;
-      .iconfont{
-        color: #fff;
-      }
+    color: #fff;
+    .iconfont{
+      color: #FFFFFF;
     }
     &:before {
       background: #FFE266;
@@ -176,10 +176,21 @@ export default class PageAside extends Vue {
       content: '';
     }
   }
+  .interviewActive:before{
+    display: none;
+  }
+  .interviewActive:after{
+    display: none;
+  }
   .interviewBox{
     height: 0px;
     transition: 0.5s ease;
     overflow: hidden;
+    li {
+      a {
+        padding-left: 78px;
+      }
+    }
   }
   .expand{
     height: 120px;

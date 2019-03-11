@@ -64,11 +64,11 @@
               </div>
             </div>
             <!-- 序号 -->
-            <div class="btn-container" v-else-if="props.scope.column.property === 'index'">
+            <!--<div class="btn-container" v-else-if="props.scope.column.property === 'index'">
               <div>
                 <span>{{props.scope.$index +1}}</span>
               </div>
-            </div>
+            </div>-->
             <!-- 提交人 -->
             <div class="btn-container" v-else-if="props.scope.column.property === 'realName'" style="justify-content: flex-start;">
               <span style="text-align: left;">
@@ -131,11 +131,11 @@ export default class companyCheck extends Vue {
           count: 20
         }
   fields = [
-    {
-      prop: 'index',
-      label: '序号',
-      width: 80
-    },
+//  {
+//    prop: 'index',
+//    label: '序号',
+//    width: 80
+//  },
     {
       prop: 'companyName',
       label: '申请信息',

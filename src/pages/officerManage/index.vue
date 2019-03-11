@@ -69,11 +69,11 @@
               <div style="width: 100%; cursor: pointer; color: #652791;" @click.stop="creatLink($event, props.scope.row, props.scope.$index)">查看招聘官</div>
             </div>
             <!-- 序号 -->
-            <div class="btn-container" v-else-if="props.scope.column.property === 'index'">
+            <!--<div class="btn-container" v-else-if="props.scope.column.property === 'index'">
               <div>
                 <span>{{props.scope.$index +1}}</span>
               </div>
-            </div>
+            </div>-->
             <!--认证状态-->
             <div class="btn-container" v-else-if="props.scope.column.property === 'status' || props.scope.column.property === 'authStatus'" style="height: 48px;">
               <div>
@@ -138,11 +138,11 @@ export default class officerManage extends Vue{
     count: 20
   }
   fields = [
-    {
-      prop: 'index',
-      label: '序号',
-      width: 80
-    },
+//  {
+//    prop: 'index',
+//    label: '序号',
+//    width: 80
+//  },
     {
       prop: 'realName',
       label: '申请信息',
