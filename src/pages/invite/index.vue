@@ -96,9 +96,9 @@
               <div class="name" v-if="props.scope.row.positionName">职位：<span class="btn positionName" @click.stop="creatLink($event, props.scope.row.positionId, props.scope.$index, 3)">{{props.scope.row.positionName}}</span><span style="display: inline-block;">{{props.scope.row.emolument}}</span></div>
               <div class="name" v-else><span>职位：直接约面</span></div>
               <div class="info" @mouseover="showAddress"><span>地址：{{props.scope.row.address || '未设置面试地址'}}</span></div>
-              <div class="addressBox">
+              <!--<div class="addressBox">
                 {{props.scope.row.address || '未设置面试地址'}}
-              </div>
+              </div>-->
               <div class="btn" v-if="props.scope.row.arrangementInfo && props.scope.row.arrangementInfo.appointmentTime">时间：{{props.scope.row.arrangementInfo.appointmentTime *1000 | date}}</div>
             </div>
             <template v-else><span :class="{'row-delete': props.scope.row.status !== 1}">{{props.scope.row[props.scope.column.property]}}</span></template>
