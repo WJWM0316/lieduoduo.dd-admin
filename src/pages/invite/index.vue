@@ -34,7 +34,7 @@
                 <el-option label="已确定面试日程" value="41"></el-option>
                 <el-option label="不合适" value="52"></el-option>
                 <el-option label="求职者暂不考虑" value="54"></el-option>
-                <el-option label="已结束" value="51"></el-option>
+                <el-option label="面试已结束" value="51"></el-option>
               </el-select>
             </el-form-item>
             
