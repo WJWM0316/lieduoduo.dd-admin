@@ -37,5 +37,6 @@ export const getRecruiterCodeUrlApi = data => request({
 export const getPositionCodeUrlApi = data => request({
   url: '/get_position_code_url',
   type: 'get',
-  data
+  data,
+  noGlobalLoading: true
 })

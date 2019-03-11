@@ -10,7 +10,7 @@
           <li><router-link to="/companyCheck">公司审核管理</router-link></li>
           <li><router-link to="/recruitmentOfficer">招聘官管理</router-link></li>
           <li><router-link to="/positionManage">职位管理</router-link></li>
-          <li @click.stop="tabSwitch">面试管理<i class="icon iconfont iconloeft_down" :class="{ turnUp: !isCLick, turnDowm: isCLick }"></i></li>
+          <li @click.stop="tabSwitch"><a style="display: inline-block;">面试管理</a><i class="icon iconfont iconloeft_down" :class="{ turnUp: !isCLick, turnDowm: isCLick }"></i></li>
           <div class="interviewBox" :class="{expand: isCLick, collapse: !isCLick}">
             <li><router-link to="/interview/application">申请列表</router-link></li>
             <li><router-link to="/interview/invite">邀请列表</router-link></li>
@@ -117,6 +117,7 @@ export default class PageAside extends Vue {
     cursor: pointer;
     transition: all ease .4s;
     font-size: 14px;
+    text-align: left;
     &:hover {
       background:rgba(255,226,102,0.12);
     }
@@ -130,6 +131,8 @@ export default class PageAside extends Vue {
       transition: 0.5s ease;
     }
     a {
+      padding-left: 46px;
+      box-sizing: border-box;
       text-decoration: none;
       color: #EDEDED;
       display: block;

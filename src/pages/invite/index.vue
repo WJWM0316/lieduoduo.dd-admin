@@ -110,9 +110,14 @@
     <!--小程序码展示框-->
     <div class="qrCode" ref="qrCode">
       <img class="bg" src="../../assets/code_bg.png"/>
-      <img v-if="!qrCode" class="Qr" src="../../assets/loading.gif"/>
-      <img v-else class="Qr" :src="qrCode"/>
-      <div class="txt">微信扫码，打开小程序查看</div>
+      <div style="height: 100%;display: flex; align-items: center;flex-direction: column;justify-content: center;" v-if="!qrCode">
+        <img style="height: 38px;width: 38px;" src="../../assets/loading.gif"/>
+        <div class="txt">正在加载中…</div>
+      </div>
+      <div v-else>
+        <img class="Qr" :src="qrCode"/>
+        <div class="txt">微信扫码，打开小程序查看</div>
+      </div>
     </div>
   </div>
 </template>
