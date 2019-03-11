@@ -21,15 +21,16 @@ export const getInviteListApi = data => request({
 export const getResumeCodeUrlApi = data => request({
   url: '/resume/get_resume_code_url',
   type: 'get',
-  data
-//noGlobalLoading: true //不需要loading
+  data,
+  noGlobalLoading: true //不需要loading
 })
 
 /* 获取招聘官主页小程序码 */
 export const getRecruiterCodeUrlApi = data => request({
   url: '/applyjoin/get_recruiter_code_url',
   type: 'get',
-  data
+  data,
+  noGlobalLoading: true
 })
 
 /* 获取职位详情小程序码 */

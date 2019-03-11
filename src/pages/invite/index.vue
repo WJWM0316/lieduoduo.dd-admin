@@ -34,6 +34,7 @@
                 <el-option label="已确定面试日程" value="41"></el-option>
                 <el-option label="不合适" value="52"></el-option>
                 <el-option label="求职者暂不考虑" value="54"></el-option>
+                <el-option label="已结束" value="51"></el-option>
               </el-select>
             </el-form-item>
             
@@ -109,7 +110,8 @@
     <!--小程序码展示框-->
     <div class="qrCode" ref="qrCode">
       <img class="bg" src="../../assets/code_bg.png"/>
-      <img class="Qr" :src="qrCode"/>
+      <img v-if="!qrCode" class="Qr" src="../../assets/loading.gif"/>
+      <img v-else class="Qr" :src="qrCode"/>
       <div class="txt">微信扫码，打开小程序查看</div>
     </div>
   </div>
@@ -205,6 +207,7 @@
     
     /* 生成小程序码 */
     async creatLink (e, uid, index, type) {
+      this.qrCode = ''
       // 是否已经加载过二维码
       if (this.list[index].qrCode && type === 1) {
         this.qrCode = this.list[index].qrCode
@@ -232,6 +235,11 @@
         return
       }
       
+      this.$nextTick(() => {
+        this.$refs['qrCode'].style.display = 'block'
+        this.$refs['qrCode'].style.left = e.clientX + 'px'
+        this.$refs['qrCode'].style.top = e.clientY + window.scrollY + 'px'
+      })
       let res = await this.getQr(type, uid)
       if (type === 1) {
         this.qrCode = res.data.data.qrCodeUrl
@@ -243,11 +251,11 @@
         this.qrCode = res.data.data.qrCodeUrl
         this.list[index].jobQrCode = res.data.data.qrCodeUrl
       }
-      this.$nextTick(() => {
-        this.$refs['qrCode'].style.display = 'block'
-        this.$refs['qrCode'].style.left = e.clientX + 'px'
-        this.$refs['qrCode'].style.top = e.clientY + window.scrollY + 'px'
-      })
+//    this.$nextTick(() => {
+//      this.$refs['qrCode'].style.display = 'block'
+//      this.$refs['qrCode'].style.left = e.clientX + 'px'
+//      this.$refs['qrCode'].style.top = e.clientY + window.scrollY + 'px'
+//    })
     }
     
     /* 生成二维码 */
@@ -280,6 +288,7 @@
     /* 关闭浮窗 */
     closeTopic () {
       this.$nextTick(() => {
+        this.qrCode = ''
         this.$refs['mobile'].style.display = 'none'
         this.$refs['qrCode'].style.display = 'none'
       })

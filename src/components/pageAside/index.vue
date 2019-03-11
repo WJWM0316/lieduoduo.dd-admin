@@ -10,8 +10,11 @@
           <li><router-link to="/companyCheck">公司审核管理</router-link></li>
           <li><router-link to="/recruitmentOfficer">招聘官管理</router-link></li>
           <li><router-link to="/positionManage">职位管理</router-link></li>
-          <li><router-link to="/interview/application">申请列表</router-link></li>
-          <li><router-link to="/interview/invite">邀请列表</router-link></li>
+          <li @click.stop="tabSwitch">面试管理<i class="icon iconfont iconloeft_down" :class="{ turnUp: !isCLick, turnDowm: isCLick }"></i></li>
+          <div class="interviewBox" :class="{expand: isCLick, collapse: !isCLick}">
+            <li><router-link to="/interview/application">申请列表</router-link></li>
+            <li><router-link to="/interview/invite">邀请列表</router-link></li>
+          </div>
         </ul>
       </div>
     </section>
@@ -60,43 +63,12 @@ import { routes } from '@/router/routes'
 })
 export default class PageAside extends Vue {
   routes = null
-  data2 = [{
-    id: 1,
-    label: '一级 1',
-    children: [{
-      id: 4,
-      label: '二级 1-1',
-      children: [{
-        id: 9,
-        label: '三级 1-1-1'
-      }, {
-        id: 10,
-        label: '三级 1-1-2'
-      }]
-    }]
-  }, {
-    id: 2,
-    label: '一级 2',
-    children: [{
-      id: 5,
-      label: '二级 2-1'
-    }, {
-      id: 6,
-      label: '二级 2-2'
-    }]
-  }, {
-    id: 3,
-    label: '一级 3',
-    children: [{
-      id: 7,
-      label: '二级 3-1'
-    }, {
-      id: 8,
-      label: '二级 3-2'
-    }]
-  }]
+  isCLick = true
   handleNodeClick(data) {
     console.log(data)
+  }
+  tabSwitch () {
+    this.isCLick = !this.isCLick
   }
 }
 </script>
@@ -151,6 +123,12 @@ export default class PageAside extends Vue {
     .zike-icon {
       margin-right: 10px;
     }
+    .iconfont {
+      margin-left: 5px;
+    }
+    .iconfont::before {
+      transition: 0.5s ease;
+    }
     a {
       text-decoration: none;
       color: #EDEDED;
@@ -194,6 +172,27 @@ export default class PageAside extends Vue {
       display: block;
       content: '';
     }
+  }
+  .interviewBox{
+    height: 0px;
+    transition: 0.5s ease;
+    overflow: hidden;
+  }
+  .expand{
+    height: 120px;
+  }
+  .collapse{
+    height: 0px;
+  }
+  .turnUp::before{
+    display: inline-block;
+    transition: 0.5s ease;
+    transform: rotateZ(-180deg);
+  }
+  .turnDowm::before{
+    display: inline-block;
+    transition: 0.5s ease;
+    transform: rotateZ(0deg);
   }
 }
 </style>

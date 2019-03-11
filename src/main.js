@@ -7,6 +7,7 @@ import router from './router'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css'; 
 import VuePhotoZoomPro from 'vue-photo-zoom-pro'
+import './style/iconfont.less'
 // 引入vue实例扩展函数库
 //import './util'
 
