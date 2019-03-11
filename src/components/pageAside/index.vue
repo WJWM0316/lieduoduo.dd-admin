@@ -3,7 +3,7 @@
     <section>
       <div>
         <div class="logo">
-          <!--<img src="~IMAGES/logo.png" class="avatar">-->
+          <img src="../../assets/lieduoduo.png" class="avatar">
         </div>
         <ul>
           <li><router-link to="/index"><i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>公司库</router-link></li>
@@ -102,7 +102,6 @@ export default class PageAside extends Vue {
       position: relative;
       z-index: 1;
       width:124px;
-      margin-left: 34px;
     }
   }
   ul {
