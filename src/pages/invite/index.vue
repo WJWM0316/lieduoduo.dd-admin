@@ -537,8 +537,10 @@
   }
   /* 地址弹窗  */
   .addressBox{
+    text-align: left;
     position: absolute;
-    line-height: 17px;
+    padding: 6px 8px;
+    line-height: 20px;
     max-width: 300px;
     transform: translateX(-50%);
     top: 0;
