@@ -97,7 +97,7 @@
             <div class="jobhunter" v-else-if="props.scope.column.property === 'interviewInfo'">
               <div class="name" v-if="props.scope.row.positionName">职位：<span class="btn positionName" @click.stop="creatLink($event, props.scope.row.positionId, props.scope.$index, 3)">{{props.scope.row.positionName}}</span><span style="display: inline-block;">{{props.scope.row.emolument}}</span></div>
               <div class="name" v-else><span>职位：直接约面</span></div>
-              <div class="info"><span style="position: relative;">地址：{{props.scope.row.address || '未设置面试地址'}} <span class="addre"></span></span></div>
+              <div class="info"><span style="position: relative;" @mousemove="showAddress($event, props.scope.row.address)" @mouseout="debounce(100)">地址：{{props.scope.row.address || '未设置面试地址'}} <span class="addre"></span></span></div>
               <div class="btn" v-if="props.scope.row.arrangementInfo && props.scope.row.arrangementInfo.appointmentTime">时间：{{props.scope.row.arrangementInfo.appointmentTime*1000 | date}}</div>
             </div>
             <template v-else><span :class="{'row-delete': props.scope.row.status !== 1}">{{props.scope.row[props.scope.column.property]}}</span></template>
@@ -120,6 +120,10 @@
         <img class="Qr" :src="qrCode"/>
         <div class="txt">微信扫码，打开小程序查看</div>
       </div>
+    </div>
+    <!--地址弹窗-->
+    <div class="addressBox" ref="address">
+      {{address}}
     </div>
   </div>
 </template>
@@ -184,6 +188,7 @@
     pageCount = 0 // 请求回的数据共几页
     mobile = '' // 当前查看的手机号码
     qrCode = ''
+    address = ''
     created () {
       this.init()
     }
@@ -209,6 +214,23 @@
         this.$refs['mobile'].style.display = 'block'
         this.$refs['mobile'].style.left = e.clientX + 'px'
         this.$refs['mobile'].style.top = e.clientY + window.scrollY + 'px'
+      })
+    }
+    
+    /* 展示地址 */
+    showAddress (e, address) {
+      if(this.timeout !== null) clearTimeout(this.timeout)
+      this.address = address
+      this.$nextTick(() => {
+        this.$refs['address'].style.display = 'block'
+        this.$refs['address'].style.left = e.clientX + 'px'
+        this.$refs['address'].style.top = e.clientY + 20 + window.scrollY +  'px'
+      })
+    }
+    hideAdress () {
+      this.address = ''
+      this.$nextTick(() => {
+        this.$refs['address'].style.display = 'none'
       })
     }
     
@@ -326,7 +348,7 @@
     debounce (wait) {
       let that = this
       if(this.timeout !== null) clearTimeout(that.timeout)
-      this.timeout = setTimeout(that.hiddenPhone, wait)
+      this.timeout = setTimeout(that.hideAdress, wait)
     }
   }
 </script>
@@ -526,6 +548,20 @@
       color: #5C565D;
       margin-top: 5px;
     }
+  }
+  /* 地址弹窗  */
+  .addressBox{
+    position: absolute;
+    line-height: 17px;
+    max-width: 300px;
+    transform: translateX(-50%);
+    top: 0;
+    left: 0;
+    color: #354048;
+    background-color: #F8F8F8;
+    box-shadow:0px 6px 8px 0px rgba(0,0,0,0.24);
+    border:1px solid rgba(237,237,237,1);
+    z-index: 999;
   }
 }
 </style>

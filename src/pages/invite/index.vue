@@ -539,12 +539,14 @@
   .addressBox{
     position: absolute;
     line-height: 17px;
-    width: 200px;
+    max-width: 300px;
     transform: translateX(-50%);
     top: 0;
     left: 0;
-    color: #BCBCBC;
-    background-color: #FFFFFF;
+    color: #354048;
+    background-color: #F8F8F8;
+    box-shadow:0px 6px 8px 0px rgba(0,0,0,0.24);
+    border:1px solid rgba(237,237,237,1);
     z-index: 999;
   }
 }
