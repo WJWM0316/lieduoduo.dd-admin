@@ -79,21 +79,21 @@ export const routes = [
     path: '/index/createCompany',
     name: 'createCompany',
     meta: {title: '创建公司', haveParent: true, parentPath: '/index', parentName: '公司库'},
-    component: resolve => require(['@/pages/createCompany/index.vue'], resolve),
+    component: resolve => require(['@/pages/createCompany/index.vue'], resolve)
   },
   /* 编辑公司信息 */
   {
     path: '/index/editCompany',
     name: 'editCompany',
     meta: {title: '编辑公司信息', haveParent: true, parentPath: '/index', parentName: '公司库'},
-    component: resolve => require(['@/pages/editCompany/editCompanyInfo.vue'], resolve),
+    component: resolve => require(['@/pages/editCompany/editCompanyInfo.vue'], resolve)
   },
   /* 编辑身份信息 */
   {
     path: '/index/editIdentity',
     name: 'editIdentity',
     meta: {title: '编辑身份信息', haveParent: true, parentPath: '/index', parentName: '公司库'},
-    component: resolve => require(['@/pages/editCompany/editIdentity.vue'], resolve),
+    component: resolve => require(['@/pages/editCompany/editIdentity.vue'], resolve)
   },
   /* 面试申请列表 */
   {
