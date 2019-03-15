@@ -24,11 +24,11 @@
 					  </el-dropdown-menu>
 					</el-dropdown>-->
 				<!--</li>-->
-				<li style="position: relative;">
+				<li style="position: relative; cursor: pointer;" @click.stop="showExit">
 				  <img v-if="avar" :src="avar" class="avar" />
 				  <span>欢迎登陆猎多多，{{userName}}</span>
-				  <i class="icon iconfont iconloeft_down" :class="{hide: !isShow, show: isShow}" @click.stop="showExit"></i>
-				  <span class="exit" @click="toLogin" :class="{hideBox: !isShow, showBox: isShow}">退出登录</span>
+				  <i class="icon iconfont iconloeft_down" :class="{hide: !isShow, show: isShow}"></i>
+				  <span class="exit" @click.stop="toLogin" :class="{hideBox: !isShow, showBox: isShow}">退出登录</span>
 				</li>
 			</ul>
 	</header>

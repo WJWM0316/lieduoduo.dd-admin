@@ -279,11 +279,6 @@
         this.qrCode = res.data.data.qrCodeUrl
         this.list[index].jobQrCode = res.data.data.qrCodeUrl
       }
-//    this.$nextTick(() => {
-//      this.$refs['qrCode'].style.display = 'block'
-//      this.$refs['qrCode'].style.left = e.clientX + 'px'
-//      this.$refs['qrCode'].style.top = e.clientY + window.scrollY + 'px'
-//    })
     }
     
     /* 生成二维码 */
