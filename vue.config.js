@@ -4,7 +4,6 @@ const resolve  = dir => { return path.join(__dirname, dir) }
 
 module.exports = {
   lintOnSave: false,
-  // baseUrl: process.env.NODE_ENV === 'development' ? '/' : '',
   configureWebpack: {
     entry: {
       vendors: [
@@ -13,7 +12,6 @@ module.exports = {
         'axios',
         'vuex'
       ],
-      //eleui: [ resolve('src/eleui/index.js') ]
     },
     resolve: {
       alias: {
@@ -39,13 +37,7 @@ module.exports = {
       })
     ]
   },
-  css: {
-    /*loaderOptions: {
-      sass: {
-        data: `@import "@/variables.scss";`
-      }
-    }*/
-  },
+  css: {},
   chainWebpack: config => {
     config.plugins.delete('prefetch')
   }

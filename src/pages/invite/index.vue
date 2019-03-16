@@ -17,8 +17,13 @@
                   <el-option label="求职者" value="jobhunter"></el-option>
                   <el-option label="面试官" value="recruiter"></el-option>
                   <el-option label="职位" value="position"></el-option>
+                  <!--<el-option label="公司名称" value="company"></el-option>-->
                 </el-select>
               </el-input>
+            </el-form-item>
+            
+            <el-form-item class="state" label="公司名称" prop="searchType">
+              <el-input v-model="form.companyName" placeholder="请输公司名字"></el-input>
             </el-form-item>
             
             <el-form-item class="state" label-width="0" prop="searchType">
@@ -179,6 +184,7 @@
       searchType: 'id',
       content: '',
       status: '0',
+      companyName: '',
       page: 1,
       count: 20
     }

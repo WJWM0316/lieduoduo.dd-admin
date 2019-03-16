@@ -9,7 +9,7 @@
         <!--筛选-->
         <div class="selectionBox" @keyup.enter="onSubmit">
           <el-form ref="form" :model="form" label-width="80px" validate="validate">
-            
+
             <el-form-item class="content" prop="content" label-width="0">
               <el-input type='text' placeholder="请输入内容" v-model="form.content" class="inputSelect">
                 <el-select class="selectTitle" v-model="form.searchType" slot="prepend" placeholder="请选择" @change="changeProvince">
@@ -17,13 +17,15 @@
                   <el-option label="求职者" value="jobhunter"></el-option>
                   <el-option label="面试官" value="recruiter"></el-option>
                   <el-option label="职位" value="position"></el-option>
+                  <!--<el-option label="公司名称" value="company"></el-option>-->
                 </el-select>
               </el-input>
             </el-form-item>
-            
-            <el-form-item class="state" label-width="0" prop="searchType">
+
+            <el-form-item class="state" label="公司名称" prop="searchType">
+              <el-input v-model="form.companyName" placeholder="请输公司名字"></el-input>
             </el-form-item>
-            
+
             <el-form-item class="state" label="状态" prop="status">
               <el-select class="selectState" v-model="form.status" placeholder="全部状态" @change="changeProvince">
                 <el-option label="全部状态" value="0"></el-option>
@@ -36,7 +38,7 @@
                 <el-option label="面试已结束" value="51"></el-option>
               </el-select>
             </el-form-item>
-            
+
             <el-form-item class="btn">
               <el-button class="inquire" @click="onSubmit">查询</el-button>
               <el-button @click.stop="resetForm('form')">重置</el-button>
@@ -181,6 +183,7 @@
       searchType: 'id',
       content: '',
       status: '0',
+      companyName: '',
       page: 1,
       count: 20
     }
