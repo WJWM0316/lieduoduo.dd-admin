@@ -8,6 +8,7 @@
         <ul>
           <li><router-link to="/index"><i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>公司库</router-link></li>
           <li><router-link to="/companyCheck"><i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>公司审核管理</router-link></li>
+          <li><router-link to="/user"><i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>用户管理</router-link></li>
           <li><router-link to="/recruitmentOfficer"><i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>招聘官管理</router-link></li>
           <li><router-link to="/positionManage"><i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>职位管理</router-link></li>
           <li @click.stop="tabSwitch"><router-link to="/interview" active-class="interviewActive"><i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>面试管理<i class="icon iconfont iconloeft_down" style="color: #FFFFFF;" :class="{ turnUp: isCLick, turnDowm: !isCLick }"></i></router-link></li>

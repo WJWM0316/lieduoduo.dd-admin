@@ -108,5 +108,19 @@ export const routes = [
     name: 'invite',
     meta: {title: '邀请列表管理', haveParent: false, keepAlive: true},
     component: resolve => require(['@/pages/invite/index.vue'], resolve)
+  },
+  /* 用户列表 */
+  {
+    path: '/user',
+    name: 'user',
+    meta: {title: '用户管理', haveParent: false, keepAlive: true},
+    component: resolve => require(['@/pages/user/index.vue'], resolve)
+  },
+  /* 添加用户 */
+  {
+    path: '/user/addUser',
+    name: 'addUser',
+    meta: {title: '用户管理', haveParent: false, keepAlive: true},
+    component: resolve => require(['@/pages/user/addUser.vue'], resolve)
   }
 ]

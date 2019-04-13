@@ -21,3 +21,10 @@ export const loginApi = data => request({
   type: 'post',
   data
 })
+
+/* 上传身份证信息 */
+export const uploadIdcardApi = data => request({
+  url: '/attaches/idcard',
+  type: 'post',
+  data
+})

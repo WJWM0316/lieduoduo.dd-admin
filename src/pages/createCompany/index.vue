@@ -3,15 +3,19 @@
  
   <div class="createCompany">
     <div class="header">
-      <el-steps :space="200" :active="active" finish-status="success">
+      <div class="creatTab" @click.stop="tab">
+        <div class="Info" :class="{'active': active === 0 }">公司信息</div>
+        <div class="userInfo" :class="{'active': active === 1 }">账户设置</div>
+      </div>
+      <!-- <el-steps :space="200" :active="active" finish-status="success">
         <el-step title="填写公司信息"></el-step>
         <el-step title="填写身份信息"></el-step>
         <el-step title="录入完成"></el-step>
-      </el-steps>
+      </el-steps> -->
       <div>
-      	<el-button @click.stop="last" v-show="active === 1">返回上一步</el-button>
-        <el-button @click.stop="next" v-show="active === 0">保存，下一步</el-button>
-        <el-button @click.stop="next" v-show="active === 1">保存并审核</el-button>
+      	<!-- <el-button @click.stop="last" v-show="active === 1">返回上一步</el-button>
+        <el-button @click.stop="next" v-show="active === 0">保存，下一步</el-button> -->
+        <el-button @click.stop="createdCompany">保存并通过</el-button>
       </div>
     </div>
      <!--公司信息表格-->
@@ -53,6 +57,15 @@
             <el-option v-for="item in employees":label="item.name":value="item.id" :key="item.id" />
           </el-select> 
         </el-form-item>
+
+        <el-form-item label="公司地址" prop="address_id" style="width: 380px;">
+          <span class="addAdress" @click.stop="changeAdress"><i class="el-icon-circle-plus" style="color: #67C23A;"></i>点击添加公司地址</span>
+          <!--公司地址列表-->
+          <span class="AdressList" v-for="(item, index) in adressList">
+            <i @click.stop="delAdress(index)" class="el-icon-remove" style="color: rgb(245, 108, 108);"></i>
+            {{`${item.address}${item.doorplate}`}}
+          </span>
+        </el-form-item>
         
         <el-form-item class="" label="公司简介" style="width: 640px;">
           <el-input
@@ -63,6 +76,15 @@
             v-model="companyInfo.intro">
           </el-input>
         </el-form-item>
+
+        <el-form-item class="" label="公司官网" style="width: 640px;">
+          <el-input
+            placeholder="请输入官网"
+            :maxlength="5000"
+            v-model="companyInfo.website">
+          </el-input>
+        </el-form-item>
+
         <h3>资质信息</h3>
         <el-form-item class="full" label="营业执照" prop="icon">
           <image-uploader :width="iconUploader.width"
@@ -81,10 +103,25 @@
                           v-model="form.icon2"
                           @loaded="handleIconLoaded"/>
         </el-form-item>
+        <!-- 邮箱验证 -->
+        <el-form-item class="email" label="公司邮箱" prop="icon">
+          <span>验证邮箱</span>
+        </el-form-item>
+      </el-form>
+    </div>
+    <!-- 跟进销售设置 -->
+    <div class="sales"  v-if="active === 1">
+      <h3>跟进销售</h3>
+      <el-form>
+        <el-form-item label="跟进人">
+          <el-select style="width: 400px;" ref="salesList" v-model="companyInfo.adminUid" placeholder="请选择跟进人">
+            <el-option v-for="item in salesList" :label="item.realname" :value="item.id" :key="item.id" />
+          </el-select> 
+        </el-form-item>
       </el-form>
     </div>
     <!--身份信息表格-->
-    <div class="personalInfo" v-if="active === 1">
+    <div class="personalInfo" v-if="active === 2">
       <div class="point">上传工牌/名片/在职证明等信息需要与身份信息保持一致</div>
       <el-form class="edit-form" ref="personalInfo" :rules="personalInfoRules" :model="personalInfo" label-width="150px" label-suffix="：">
         <h3>个人信息</h3>
@@ -154,6 +191,17 @@
     <div class="personalInfo" v-if="active === 3">
       创建成功
     </div>
+    <!--添加新公司地址弹窗-->
+    <div class="pop" v-show="pop.isShow">
+      <map-search
+       @popCancel="popCancel"
+       @addAdress="addAdress">
+      </map-search>
+    </div>
+    <!-- 添加邮箱 -->
+    <div class="emailBox" v-show="email.isShow">
+      <email-check></email-check>
+    </div>
   </div>
 </template>
 
@@ -161,16 +209,28 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import ImageUploader from '@/components/imageUploader'
+import emailCheck from '@/components/email/email'
 import { fieldApi, uploadApi } from 'API/commont'
-import { setCompanyInfoApi, setIdentityInfoApi } from 'API/company'
+import { setCompanyInfoApi, setIdentityInfoApi, addCompanyAddressApi, delCompanyAddressApi, getSalerListApi } from 'API/company'
+import mapSearch from '@/components/map'
 @Component({
   name: 'createCompany',
   components: {
-    ImageUploader
+    ImageUploader,
+    mapSearch,
+    emailCheck
   }
 })
 export default class createCompany extends Vue {
   active = 0
+  adressList = [] // 地址列表
+  pop = {
+    isShow: false,
+    type: 'position'
+  }
+  email = {
+    isShow: true
+  }
   /* 公司信息 */
   companyInfo = {
     company_name: '', // 公司名称
@@ -181,7 +241,11 @@ export default class createCompany extends Vue {
     intro: '', // 公司简介
     business_license: '', // 营业执照
     on_job: '', // 在职证明
-    logo: ''
+    logo: '',
+    website: '', // 公司官网
+    address: [], // 公司地址
+    email: '',
+    adminUid: '' //跟进人员
   }
   /* 身份信息 */
   personalInfo = {
@@ -219,6 +283,8 @@ export default class createCompany extends Vue {
     {name: '1000-9999人', id: 5},
     {name: '10000人以上', id: 6}
   ]
+  /* 销售人员名单 */
+  salesList = []
   /* 所属行业 */
   industry = []
   iconUploader = {
@@ -271,9 +337,24 @@ export default class createCompany extends Vue {
       { required: true, message: '请输入真实姓名', trigger: 'blur' },
     ]
   }
+  /* 切换tab */
+  tab (e) {
+    if (e.target.className === 'userInfo') {
+      this.active = 1
+      getSalerListApi().then(res => {
+        this.salesList = res.data.data
+      })
+    } else {
+      this.active = 0
+    }
+  }
   
   last () {
     this.active--
+  }
+  /* 创建公司 */
+  createdCompany () {
+    console.log(this.companyInfo)
   }
   
   async next() {
@@ -336,7 +417,6 @@ export default class createCompany extends Vue {
         this.personalInfo.handheld_passport = res.data.data[0].id
       }
     })
-//  this.$refs.form.validateField('icon')
   }
   /* 所属行业标签 */
   getfieldList () {
@@ -344,6 +424,31 @@ export default class createCompany extends Vue {
       this.industry = res.data.data
     })
   }
+
+  /* 工作地点选择 */
+  changeAdress (e) {
+    this.pop = {
+      isShow: true,
+      type: 'addAdress'
+    }
+  }
+  /* 关闭地址选择 */
+  popCancel () {
+    this.pop = {
+      isShow: false,
+      type: 'addAdress'
+    }
+  }
+  /* 添加地址 */
+  addAdress (address) {
+    this.adressList.push(address.data)
+  }
+  /* 删除地址 */
+  delAdress (index) {
+    this.adressList.splice(index, 1)
+    this.companyInfo.address = this.adressList
+  }
+
   created () {
     this.getfieldList()
   }
@@ -355,22 +460,39 @@ export default class createCompany extends Vue {
   margin-left: 200px;
   padding: 22px;
   .header{
-    padding: 20px;
+    padding-right: 20px;
     box-sizing: border-box;
     border-radius: 4px 4px 0 0;
-    height: 100px;
+    height: 80px;
     border: 1px solid #CCCCCC;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    .el-steps{
-      text-align: left;
-      width: 500px;
+    .creatTab{
+      height: 100%;
+      >div{
+        cursor: pointer;
+        line-height: 80px;
+        border: 1px solid #cccccc;
+        width: 100px;
+        height: 100%;
+        display: inline-block;
+        &.active{
+          background-color: #652791;
+          border: none;
+          color: #FFFFFF;
+        }
+      }
     }
+    // .el-steps{
+    //   text-align: left;
+    //   width: 500px;
+    // }
   }
   /*公司信息*/
   .companyInfo,
-  .personalInfo{
+  .personalInfo,
+  .sales{
     padding: 0 32px;
     text-align: left;
     border: 1px solid #CCCCCC;
@@ -383,6 +505,16 @@ export default class createCompany extends Vue {
       margin-bottom: 30px;
       margin-left: -32px;
       margin-right: -32px;
+    }
+  }
+  .sales{
+    border-radius: 4px;
+    padding: 30px 32px;
+    h3{
+      font-size: 25px;
+      font-weight: 500;
+      color: #652791;
+      margin-bottom: 20px;
     }
   }
   .companyInfo,
@@ -398,5 +530,31 @@ export default class createCompany extends Vue {
       margin-bottom: 32px;
     }
   }
+  .addAdress{
+    cursor: pointer;
+  }
+  .AdressList{
+    cursor: pointer;
+    white-space: nowrap;
+    i{
+      margin-right: 5px;
+      cursor: pointer;
+    }
+    display: block;
+  }
+  .email{
+    color: #652791;
+    cursor: pointer;
+  }
+}
+.emailBox{
+  color: #FFFFFF;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 9999;
 }
 </style>

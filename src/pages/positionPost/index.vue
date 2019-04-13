@@ -83,6 +83,8 @@
           </el-option>
         </el-select>
       </el-form-item>
+      <el-form-item prop="emolument_max" style="width: 0; text-align: left; margin:0;">
+      </el-form-item>
 
       <el-form-item label="技能要求" prop="labels" style="width: 450px;">
         <el-select
@@ -139,7 +141,7 @@
             </ul>
 
             <ul class="open_jobs" v-if="thirdPositionList.length>0">
-              <li  v-for="item,index in thirdPositionList" @click="thirdSecondPosition(item)"> {{item.name}}</li>
+              <li v-for="item,index in thirdPositionList" @click="thirdSecondPosition(item)"> {{item.name}}</li>
             </ul>
           </div>
         </div>

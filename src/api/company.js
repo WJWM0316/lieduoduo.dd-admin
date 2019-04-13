@@ -152,3 +152,8 @@ export const getCityApi = () => request({
   url: `/area?level=3`,
   type: 'get'
 })
+/* 获取销售人员名单 */
+export const getSalerListApi = () => request({
+  url: `/company/admin_user_list`,
+  type: 'get'
+})
