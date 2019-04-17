@@ -3,42 +3,40 @@
   <div class="officerManage" @click="closeTopic">
     <el-container class="container" style="border: 1px solid #eee">
       <el-header class="header" style="text-align: right; font-size: 15px">
-        <div class="title">招聘官管理({{total}})</div>
+        <div class="title">用户管理({{total}})</div>
+        <el-button @click.stop="addUser" class="btn-limit-width">+ 添加用户</el-button>
       </el-header>
       <el-main>
         <!--筛选-->
-        <div class="selectionBox" @keyup.enter="search">
+        <div class="selectionBox" @keyup.enter="onSubmit">
           <el-form ref="form" :model="form" label-width="80px" validate="validate">
-            <el-form-item label="关键词" prop="keyword">
-              <el-input v-model="form.keyword" placeholder="请输入姓名/职务/加入公司"></el-input>
-            </el-form-item>
-            <el-form-item label="申请时间" prop="start">
-              <el-col :span="11">
-                <el-date-picker type="date" placeholder="选择日期" value-format="yyyy-MM-dd" v-model="form.start" style="width: 100%;"></el-date-picker>
-              </el-col>
-              <el-col class="line" :span="2">-</el-col>
-              <el-col :span="11">
-                <el-date-picker type="date" placeholder="选择日期" value-format="yyyy-MM-dd" v-model="form.end" style="width: 100%;"></el-date-picker>
-              </el-col>
+            
+            <el-form-item class="content" prop="content" label-width="0">
+              <el-input type='text' placeholder="请输入内容" v-model="form.content" class="inputSelect">
+                <el-select class="selectTitle" v-model="form.searchType" slot="prepend" placeholder="请选择" @change="changeProvince">
+                  <el-option v-for="item in keyword" :label="item.label" :value="item.value"></el-option>
+                </el-select>
+              </el-input>
             </el-form-item>
             
-            <!--用于代替清除结束时间-->
-            <el-form-item label-width="1px" label="" prop="end">
+            <el-form-item class="state" label="公司名称" prop="companyName">
+              <el-input v-model="form.companyName" placeholder="请输公司名字"></el-input>
             </el-form-item>
-        
-            <el-form-item label-width="120px" label="管理员处理状态" prop="status">
-              <el-select v-model="form.status" placeholder="全部状态">
-                <el-option label="待审核" value="0"></el-option>
-                <el-option label="已通过" value="1"></el-option>
-                <el-option label="未通过" value="2"></el-option>
-              </el-select>
+            
+            <el-form-item class="state" label-width="0" prop="searchType">
             </el-form-item>
-            <el-form-item label-width="120px" label="身份认证状态" prop="auth_status">
-              <el-select v-model="form.auth_status" placeholder="全部状态 ">
-                <el-option label="已提交" value="0"></el-option>
-                <el-option label="已通过" value="1"></el-option>
-                <el-option label="未通过" value="2"></el-option>
-                <el-option label="未提交" value="3"></el-option>
+            
+            <el-form-item class="state" label="状态" prop="status">
+              <el-select class="selectState" v-model="form.status" placeholder="全部状态" @change="changeProvince">
+                <el-option label="全部状态" value="0"></el-option>
+                <el-option label="待求职者接受邀请" value="12"></el-option>
+                <el-option label="待面试官安排时间" value="21"></el-option>
+                <el-option label="待求职者确认" value="31"></el-option>
+                <el-option label="待面试官修改" value="32"></el-option>
+                <el-option label="已确定面试日程" value="41"></el-option>
+                <el-option label="不合适" value="52"></el-option>
+                <el-option label="求职者暂不考虑" value="54"></el-option>
+                <el-option label="面试已结束" value="51"></el-option>
               </el-select>
             </el-form-item>
             
@@ -46,10 +44,6 @@
               <el-button class="inquire" @click="onSubmit">查询</el-button>
               <el-button @click.stop="resetForm('form')">重置</el-button>
             </el-form-item>
-            <!--<el-form-item class="btn" label-width="50px">
-              <el-button class="inquire" @click="onSubmit">查询</el-button>
-              <span @click.stop="resetForm('form')">重置</span>
-            </el-form-item>-->
           </el-form>
         </div>
         <!--筛选-->
@@ -69,11 +63,36 @@
               <div style="width: 100%; cursor: pointer; color: #652791;" @click.stop="creatLink($event, props.scope.row, props.scope.$index)">查看招聘官</div>
             </div>
             <!-- 序号 -->
-            <!--<div class="btn-container" v-else-if="props.scope.column.property === 'index'">
+            <div class="btn-container" v-else-if="props.scope.column.property === 'index'">
               <div>
                 <span>{{props.scope.$index +1}}</span>
               </div>
-            </div>-->
+            </div>
+            <!-- 所属公司 -->
+            <div class="btn-container companyName" v-else-if="props.scope.column.property === 'companyName'">
+              <div v-if="props.scope.row.isRecruiter">
+                <span>{{props.scope.row[props.scope.column.property]}}</span>
+                <p v-if="props.scope.row.isAdmin === 1">管理员</p>
+                <p v-else>招聘官</p>
+              </div>
+            </div>
+            <!-- 发布职位权益 -->
+            <div class="btn-container" v-else-if="props.scope.column.property === 'createPositionRight'">
+              <div>
+                <span v-if="props.scope.row.createPositionRight === 0">无</span>
+                <span v-else-if="props.scope.row.createPositionRight === 1">是</span>
+                <span v-else>---</span>
+              </div>
+            </div>
+            <!-- 身份认证状态 -->
+            <div class="btn-container" v-else-if="props.scope.column.property === 'identityAuth'">
+              <div>
+                <span v-if="props.scope.row.identityAuth === 0">已提交</span>
+                <span v-else-if="props.scope.row.identityAuth === 1">已通过</span>
+                <span v-else-if="props.scope.row.identityAuth === 2">未通过</span>
+                <span v-else>未提交</span>
+              </div>
+            </div>
             <!--认证状态-->
             <div class="btn-container" v-else-if="props.scope.column.property === 'status' || props.scope.column.property === 'authStatus'" style="height: 48px;">
               <div>
@@ -116,15 +135,15 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import List from '@/components/list'
-import { getRecruiterListApi } from 'API/recruiter'
+import { getUserListApi } from 'API/recruiter'
 import { getRecruiterCodeUrlApi } from 'API/interview'
 @Component({
-  name: 'officerManage',
+  name: 'userList',
   components: {
     List
   }
 })
-export default class officerManage extends Vue{
+export default class user extends Vue{
   total = 0
   pageCount = 0
   qrCode = ''
@@ -137,60 +156,60 @@ export default class officerManage extends Vue{
     page: 1,
     count: 20
   }
+  /* 搜索关键字 */
+  keyword = [
+    {label: '公司名字', value: 'companyName'},
+    {label: '手机号', value: 'phone'},
+    {label: '人名', value: 'name'}
+  ]
   fields = [
-//  {
-//    prop: 'index',
-//    label: '序号',
-//    width: 80
-//  },
     {
-      prop: 'realName',
-      label: '申请信息',
-      width: 150
+      prop: 'index',
+      label: '序号',
+      width: 80
     },
     {
-      prop: 'userEmail',
-      label: '邮箱',
-      width: 220
-    },
-    {
-      prop: 'userPosition',
-      label: '公司职务',
-      width: 150
+      prop: 'name',
+      label: '个人信息',
+      width: 200
     },
     {
       prop: 'companyName',
-      label: '加入公司',
+      label: '所属公司',
+      align: 'left',
+      width: 300
+    },
+    {
+      prop: 'createPositionRight',
+      label: '发布职位权益',
+      width: 150
+    },
+    {
+      prop: 'identityAuth',
+      label: '身份认证状态',
       width: 220
     },
     {
-      prop: 'status',
-      label: '加入审核状态',
-      width: 150
-    },
-    {
-      prop: 'authStatus',
-      label: '身份认证状态',
-      width: 150
-    },
-    {
-      prop: 'authStatus',
-      label: '身份审核模式',
-      width: 150
-    },
-    {
       prop: 'createdAt',
-      label: '申请时间',
+      label: '创建时间',
       width: 200
     },
     {
       prop: 'id',
       fixed: "right",
-      width: 150,
       label: '操作'
     }
   ]
   list = []
+  /* 添加用户 */
+  addUser () {
+    console.log('添加用户')
+    this.$router.push({path: '/user/addUser'})
+  }
+  /* 选择变更 */
+    changeProvince (e) {
+      console.log(this.nowSelect)
+    }
   onSubmit (e) {
     this.form.page = 1
     this.getRecruiterList()
@@ -205,7 +224,7 @@ export default class officerManage extends Vue{
   }
   /* 请求招聘官审核列表 */
   getRecruiterList () {
-    getRecruiterListApi(this.form).then(res => {
+    getUserListApi(this.form).then(res => {
       this.list = res.data.data
       this.total = res.data.meta.total
       this.pageCount = res.data.meta.lastPage
@@ -229,8 +248,9 @@ export default class officerManage extends Vue{
   /* 生成职位详情小程序码 */
   async creatLink (e, data, index) {
     this.qrCode = ''
-    if (data.status !== 1) {
-      this.$message.error(`招聘官未通过审核,暂无招聘官页`);
+    if (data.isRecruiter !== 1) {
+      this.$refs['qrCode'].style.display = 'none'
+      this.$message.error(`该用户不是招聘官,暂无招聘官主页`);
       return
     }
     // 是否已经加载过二维码
@@ -252,12 +272,6 @@ export default class officerManage extends Vue{
     let res = await this.getQr(data.uid)
     this.qrCode = res.data.data.qrCodeUrl
     this.list[index].qrCode = res.data.data.qrCodeUrl
-    
-//  this.$nextTick(() => {
-//    this.$refs['qrCode'].style.display = 'block'
-//    this.$refs['qrCode'].style.left = e.clientX + 'px'
-//    this.$refs['qrCode'].style.top = e.clientY + window.scrollY + 'px'
-//  })
   }
   
   /* 生成二维码 */
@@ -362,6 +376,10 @@ export default class officerManage extends Vue{
       cursor: pointer;
     }
   }
+  .companyName{
+    justify-content: flex-start;
+    text-align: left;
+  }
 }
 .inquire{
   background-color: #652791;
@@ -411,6 +429,17 @@ export default class officerManage extends Vue{
       line-height: normal;
       color: #5C565D;
       margin-top: 5px;
+    }
+  }
+  /* 筛选 */
+  .inputSelect{
+    width: 400px !important;
+    background-color: #FFFFFF;
+    .el-select{
+      width: 120px;
+      margin-top: -2px;
+      border: none;
+      box-sizing: border-box;
     }
   }
 </style>

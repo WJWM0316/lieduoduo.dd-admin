@@ -152,3 +152,20 @@ export const getCityApi = () => request({
   url: `/area?level=3`,
   type: 'get'
 })
+/* 校验公司名称是否被使用 */
+export const checkCompanyNameApi = (data) => request({
+  url: `/company/exist/${data}`,
+  type: 'get'
+})
+/* 发送验证码到企业邮箱 */
+export const sendEmailApi = (data) => request({
+  url: `/company/mail`,
+  type: 'post',
+  data
+})
+/* 验证企业邮箱 */
+export const verifyEmailApi = (data) => request({
+  url: `/company/verify`,
+  type: 'post',
+  data
+})

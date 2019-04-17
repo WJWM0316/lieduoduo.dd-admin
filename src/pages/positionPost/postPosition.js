@@ -163,6 +163,9 @@ export default class CommunityEdit extends Vue {
     emolument_min: [
       { required: true, message: '请选择薪资范围', trigger: 'blur' },
     ],
+    emolument_max: [
+      { required: true, message: '请选择薪资范围', trigger: 'blur' },
+    ],
     labels: [
       { required: true, message: '请选择技能要求', trigger: 'blur' },
     ],

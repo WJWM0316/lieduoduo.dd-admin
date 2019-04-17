@@ -25,83 +25,53 @@
         <h3>公司信息</h3>
         <!--工牌/名片/在职证明-->
         <el-form-item class="full" label="公司LOGO" prop="icon">
-          <image-uploader :width="iconUploader.width"
-                          :height="iconUploader.height"
-                          type="logo"
-                          v-model="form.logo"
-                          @loaded="handleIconLoaded"/>
+          <img :src="companyInfo.logoInfo.smallUrl" alt="">
         </el-form-item>
         
         <el-form-item label="公司全称" prop="company_name">
-          <el-input v-model="companyInfo.company_name" placeholder="请输入名称" :minlength="2" :maxlength="50" style="width: 400px;"></el-input>
+          <span>{{companyInfo.companyName}}</span>
         </el-form-item>
         
         <el-form-item label="公司简称" prop="company_shortname">
-          <el-input v-model="companyInfo.company_shortname" placeholder="请输入名称" :maxlength="10" style="width: 400px;"></el-input>
+          <span>{{companyInfo.companyShortname}}</span>
         </el-form-item>
         
         <el-form-item label="所属行业" prop="industry_id">
-          <el-select style="width: 400px;" ref="tagSelector" v-model="companyInfo.industry_id" placeholder="请选择所属行业">
-            <el-option v-for="item in industry":label="item.name":value="item.labelId" :key="item.id" />
-          </el-select> 
+          <span>{{companyInfo.industry}}</span>
         </el-form-item>
         
         <el-form-item label="融资阶段" prop="financing">
-          <el-select style="width: 400px;" ref="tagSelector" v-model="companyInfo.financing" placeholder="请选择融资阶段">
-            <el-option v-for="item in financing":label="item.name":value="item.id" :key="item.id" />
-          </el-select> 
+          <span>{{companyInfo.financingInfo}}</span>
         </el-form-item>
         
         <el-form-item label="人员规模" prop="employees">
-          <el-select style="width: 400px;" ref="tagSelector" v-model="companyInfo.employees" placeholder="请选择人员规模">
-            <el-option v-for="item in employees":label="item.name":value="item.id" :key="item.id" />
-          </el-select> 
+          <span>{{companyInfo.employeesInfo}}</span>
         </el-form-item>
 
         <el-form-item label="公司地址" prop="address_id" style="width: 380px;">
-          <span class="addAdress" @click.stop="changeAdress"><i class="el-icon-circle-plus" style="color: #67C23A;"></i>点击添加公司地址</span>
+          <!-- <span class="addAdress" @click.stop="changeAdress"><i class="el-icon-circle-plus" style="color: #67C23A;"></i>点击添加公司地址</span> -->
           <!--公司地址列表-->
-          <span class="AdressList" v-for="(item, index) in adressList">
-            <i @click.stop="delAdress(index)" class="el-icon-remove" style="color: rgb(245, 108, 108);"></i>
+          <span class="AdressList" v-for="(item, index) in companyInfo.address">
+            <!-- <i @click.stop="delAdress(index)" class="el-icon-remove" style="color: rgb(245, 108, 108);"></i> -->
             {{`${item.address}${item.doorplate}`}}
           </span>
         </el-form-item>
         
         <el-form-item class="" label="公司简介" style="width: 640px;">
-          <el-input
-            type="textarea"
-            :rows="6"
-            placeholder="请输入内容"
-            :maxlength="5000"
-            v-model="companyInfo.intro">
-          </el-input>
+          <span>{{companyInfo.intro}}</span>
         </el-form-item>
 
         <el-form-item class="" label="公司官网" style="width: 640px;">
-          <el-input
-            placeholder="请输入官网"
-            :maxlength="5000"
-            v-model="companyInfo.website">
-          </el-input>
+          <span>{{companyInfo.email}}</span>
         </el-form-item>
 
         <h3>资质信息</h3>
         <el-form-item class="full" label="营业执照" prop="icon">
-          <image-uploader :width="iconUploader.width"
-                          :height="iconUploader.height"
-                          :tips="iconUploader.tips"
-                          type="business_license"
-                          v-model="form.icon1"
-                          @loaded="handleIconLoaded"/>
+          <img :src="companyInfo.businessLicenseInfo.smallUrl" alt="">
         </el-form-item>
         <!--工牌/名片/在职证明-->
         <el-form-item class="full" label="工牌/名片/在职证明(三选一)" prop="icon">
-          <image-uploader :width="iconUploader.width"
-                          :height="iconUploader.height"
-                          :tips="iconUploader.tips"
-                          type="on_job"
-                          v-model="form.icon2"
-                          @loaded="handleIconLoaded"/>
+          <img :src="companyInfo.onJobInfo.smallUrl" alt="">
         </el-form-item>
         <!-- 邮箱验证 -->
         <el-form-item class="email" label="公司邮箱" prop="icon" v-show="companyInfo.company_name">
@@ -117,73 +87,6 @@
           <el-select style="width: 400px;" ref="salesList" v-model="companyInfo.adminUid" placeholder="请选择跟进人">
             <el-option v-for="item in salesList" :label="item.realname" :value="item.id" :key="item.id" />
           </el-select> 
-        </el-form-item>
-      </el-form>
-    </div>
-    <!--身份信息表格-->
-    <div class="personalInfo" v-if="active === 2">
-      <div class="point">上传工牌/名片/在职证明等信息需要与身份信息保持一致</div>
-      <el-form class="edit-form" ref="personalInfo" :rules="personalInfoRules" :model="personalInfo" label-width="150px" label-suffix="：">
-        <h3>个人信息</h3>
-        <el-form-item label="姓名" prop="name">
-          <el-input v-model="personalInfo.name" placeholder="请输入姓名" :maxlength="20" style="width: 400px;"></el-input>
-        </el-form-item>
-        
-        <el-form-item label="公司职务" prop="user_position">
-          <el-input v-model="personalInfo.user_position " placeholder="请输入公司职务" style="width: 400px;"></el-input>
-        </el-form-item>
-        
-        <el-form-item label="公司邮箱" prop="user_email">
-          <el-input v-model="personalInfo.user_email" placeholder="请输入邮箱" style="width: 400px;"></el-input>
-        </el-form-item>
-        
-        <el-form-item label="手机号码" prop="mobile">
-          <el-input v-model="personalInfo.mobile" placeholder="请输入手机号码" :maxlength="11" style="width: 400px;"></el-input>
-        </el-form-item>
-        
-        <h3>身份信息</h3>
-        <el-form-item label="真实姓名" prop="real_name">
-          <el-input v-model="personalInfo.real_name" placeholder="请输入真实姓名" :maxlength="20" style="width: 400px;"></el-input>
-        </el-form-item>
-        
-        <el-form-item label="身份证号码" prop="identity_num">
-          <el-input v-model="personalInfo.identity_num" placeholder="请输入身份证号码" :maxlength="18" style="width: 400px;"></el-input>
-        </el-form-item>
-        
-        <el-form-item label="身份证有效期开始" prop="validity_start">
-          <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="选择日期" v-model="personalInfo.validity_start" style="width: 100%;"></el-date-picker>
-        </el-form-item>
-        <!--有效期结束-->
-        <el-form-item label="身份证有效期结束" prop="validity_end">
-          <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="选择日期" v-model="personalInfo.validity_end" style="width: 100%;"></el-date-picker>
-        </el-form-item>
-        
-        <!--身份证正面-->
-        <el-form-item class="full" label="身份证正面" prop="icon">
-          <image-uploader :width="iconUploader.width"
-                          :height="iconUploader.height"
-                          :tips="iconUploader.tips"
-                          type="front"
-                          v-model="form.icon3"
-                          @loaded="handleIconLoaded"/>
-        </el-form-item>
-        <!--身份证背面-->
-        <el-form-item class="full" label="身份证反面" prop="icon">
-          <image-uploader :width="iconUploader.width"
-                          :height="iconUploader.height"
-                          :tips="iconUploader.tips"
-                          type="reverse"
-                          v-model="form.icon4"
-                          @loaded="handleIconLoaded"/>
-        </el-form-item>
-        <!--手持身份证照-->
-        <el-form-item class="full" label="手持身份证照" prop="icon">
-          <image-uploader :width="iconUploader.width"
-                          :height="iconUploader.height"
-                          :tips="iconUploader.tips"
-                          type="handheld"
-                          v-model="form.icon5"
-                          @loaded="handleIconLoaded"/>
         </el-form-item>
       </el-form>
     </div>
@@ -215,7 +118,7 @@ import Component from 'vue-class-component'
 import ImageUploader from '@/components/imageUploader'
 import emailCheck from '@/components/email/email'
 import { fieldApi, uploadApi, getSalerListApi } from 'API/commont'
-import { setCompanyInfoApi, setIdentityInfoApi, addCompanyAddressApi, delCompanyAddressApi, verifyEmailApi, checkCompanyNameApi } from 'API/company'
+import { setCompanyInfoApi, setIdentityInfoApi, addCompanyAddressApi, delCompanyAddressApi, verifyEmailApi, checkCompanyNameApi, getCompanyInfoApi } from 'API/company'
 import mapSearch from '@/components/map'
 @Component({
   name: 'createCompany',
@@ -236,21 +139,7 @@ export default class createCompany extends Vue {
     isShow: false
   }
   /* 公司信息 */
-  companyInfo = {
-    company_name: '', // 公司名称
-    company_shortname: '', // 公司简称
-    industry_id: '', // 所属行业
-    financing: '', // 融资
-    employees: '', // 规模
-    intro: '', // 公司简介
-    business_license: '', // 营业执照
-    on_job: '', // 在职证明
-    logo: '',
-    website: '', // 公司官网
-    address: [], // 公司地址
-    email: '',
-    adminUid: '' //跟进人员
-  }
+  companyInfo = {}
   /* 身份信息 */
   personalInfo = {
     name: '', // 姓名
@@ -496,8 +385,15 @@ export default class createCompany extends Vue {
     this.email.isShow = false
   }
 
+  /* 获取公司信息 */
+  async getCompanyInfo () {
+    const { id } = this.$route.query
+    let res = await getCompanyInfoApi(id)
+    this.companyInfo = res.data.data.companyInfo
+  }
+
   created () {
-    this.getfieldList()
+    this.getCompanyInfo()
   }
 }
 </script>

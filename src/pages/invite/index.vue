@@ -22,7 +22,7 @@
               </el-input>
             </el-form-item>
             
-            <el-form-item class="state" label="公司名称" prop="companyName">
+            <el-form-item class="state" label="公司名称" prop="searchType">
               <el-input v-model="form.companyName" placeholder="请输公司名字"></el-input>
             </el-form-item>
             

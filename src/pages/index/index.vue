@@ -9,9 +9,7 @@
   	  <!--筛选-->
       <div class="selectionBox" @keyup.enter="search">
         <el-form ref="form" :model="form" label-width="80px" validate="validate">
-          <el-form-item label="关键词" prop="keyword">
-            <el-input v-model="form.keyword" placeholder="请输公司名字"></el-input>
-          </el-form-item>
+          
           <!--地区筛选-->
           <el-form-item class="area" label="地区筛选" prop="area">
             <el-select v-model="form.firstAreaId" placeholder="请选择省份" @change="changeProvince" style="margin-right: 10px;">
@@ -31,12 +29,25 @@
               </el-option>
             </el-select>
           </el-form-item>
+          
+          <!-- 权益筛选 -->
+          <el-form-item class="area" label="权益筛选" prop="equity">
+            <el-select v-model="form.equity" placeholder="请选择权益" style="margin-right: 10px;">
+              <el-option label="全部权益" value="0"></el-option>
+              <el-option
+                v-for="item in rightList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
 
-          <el-form-item class="time" label="申请时间" prop="start">
+          <el-form-item class="time" label="权益截止时间" prop="start" label-width="100px">
             <el-col :span="11">
               <el-date-picker type="date" placeholder="选择日期" value-format="yyyy-MM-dd" v-model="form.start" style="width: 100%;"></el-date-picker>
             </el-col>
-            <el-col class="line" :span="2">-</el-col>
+            <el-col class="line" :span="1">—</el-col>
             <el-col :span="11">
               <el-date-picker type="date" placeholder="选择日期" value-format="yyyy-MM-dd" v-model="form.end" style="width: 100%;"></el-date-picker>
             </el-col>
@@ -44,11 +55,51 @@
           <!--用于代替清除结束时间-->
           <el-form-item label-width="1px" label="" prop="end">
           </el-form-item>
-          
+
+          <!-- 状态筛选 -->
+          <el-form-item class="area" label="状态" prop="status" label-width="50px">
+            <el-select v-model="form.status" placeholder="请选择状态" style="margin-right: 10px;">
+              <el-option label="上线" value="1"></el-option>
+              <el-option label="下线" value="0"></el-option>
+            </el-select>
+          </el-form-item>
+
+          <!-- 跟进人筛选 -->
+          <el-form-item class="area" label="跟进人" prop="adminUid" label-width="70px">
+            <el-select v-model="form.adminUid" placeholder="请选择" style="margin-right: 10px;">
+              <el-option
+                v-for="item in salerLis"
+                :key="item.id"
+                :label="item.realname"
+                :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <!-- 筛选条件1 -->
+          <el-form-item prop="keyword" label-width="20px" class="searchTab">
+            <el-input type='text' placeholder="请输入内容" v-model="searchType.keyword1" class="inputSelect">
+              <el-select class="selectTitle" v-model="searchType.condition1" slot="prepend" placeholder="请选择" @change="changeProvince">
+                <el-option label="公司名" value="keyword" v-show="searchType.condition2 !== 'keyword'"></el-option>
+                <el-option label="手机号码" value="mobile" v-show="searchType.condition2 !== 'mobile'"></el-option>
+                <el-option label="公司ID" value="companyId" v-show="searchType.condition2 !== 'companyId'"></el-option>
+              </el-select>
+            </el-input>
+          </el-form-item>
+          <!-- 筛选条件2 -->
+          <el-form-item prop="keyword" label-width="20px" class="searchTab">
+            <el-input type='text' placeholder="请输入内容" v-model="searchType.keyword2" class="inputSelect">
+              <el-select class="selectTitle" v-model="searchType.condition2" slot="prepend" placeholder="请选择" @change="changeProvince">
+                <el-option label="公司名" value="keyword" v-show="searchType.condition1 !== 'keyword'"></el-option>
+                <el-option label="手机号码" value="mobile" v-show="searchType.condition1 !== 'mobile'"></el-option>
+                <el-option label="公司ID" value="companyId" v-show="searchType.condition1 !== 'companyId'"></el-option>
+              </el-select>
+            </el-input>
+          </el-form-item>
           <el-form-item class="btn">
             <el-button class="inquire" @click="onSubmit">查询</el-button>
             <el-button @click.stop="resetForm('form')">重置</el-button>
           </el-form-item>
+          
         </el-form>
       </div>
       <!--筛选-->
@@ -69,7 +120,7 @@
             <!-- 地址列 -->
             <div class="btn-container" v-else-if="props.scope.column.property === 'address'">
               <div>
-                <span>{{props.scope.row.address.address || '公司未设置地址'}}</span>
+                <span>{{props.scope.row.address.city || '公司未设置地址'}}</span>
               </div>
             </div>
             <!-- 序号 -->
@@ -82,9 +133,19 @@
             <div class="btn-container" v-else-if="props.scope.column.property === 'companyName'">
               <div style="text-align: left; display: flex;align-items: center;">
                 <img style="width: 56px;height: 56px;border-radius: 5px;margin-right: 5px;" :src="props.scope.row.logoInfo.middleUrl"/>
-                <span>{{props.scope.row.companyName}}</span>
+                <div>
+                  <span>{{props.scope.row.companyName}}</span>
+                  <P class="label"><span class="industry">{{props.scope.row.industry}}</span> <span class="capital">{{props.scope.row.financingInfo}}</span> <span class="extent">{{props.scope.row.employeesInfo}}</span></P>
+                </div>
               </div>
             </div>
+            <!-- <div class="btn-container" v-else-if="props.scope.column.property === 'companyName'" style="height: 48px;">
+              <div class="companyName">
+                <img style="width: 56px;height: 56px;border-radius: 5px;margin-right: 5px;" :src="props.scope.row.logoInfo.middleUrl"/>
+                <div class="name">{{props.scope.row.companyName}}</div>
+                <div class="label"><span class="industry">{{props.scope.row.industry}}</span> <span class="capital">{{props.scope.row.financingInfo}}</span> <span class="extent">{{props.scope.row.employeesInfo}}</span></div>
+              </div>
+            </div> -->
             <!--认证状态-->
             <div class="btn-container" v-else-if="props.scope.column.property === 'status' || props.scope.column.property === 'authStatus'" style="height: 48px;">
               <div>
@@ -114,6 +175,7 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import { getCompanyListApi, getCityApi } from 'API/company'
+import { rightInfoApi, getSalerListApi } from 'API/commont'
 import List from '@/components/list'
 Component.registerHooks([
   'beforeRouteEnter',
@@ -131,14 +193,24 @@ export default class indexPage extends Vue {
   total = 0 // 筛查结果数量
   pageCount = 0 // 请求回的数据共几页
   form =  {
-    keyword: '',
     start: '',
     end: '',
     page: 1,
     count: 20,
     area_id: '',
-    firstAreaId: ''
+    firstAreaId: '',
+    equity: '',
+    status: '',
+    adminUid: ''
   }
+  searchType = {
+    condition1: '公司名',
+    condition2: '手机号码',
+    keyword1:'',
+    keyword2: ''
+  }
+  rightList = [] // 权益列表
+  salerLis = [] // 销售人员列表
 //firstAreaId = ''
   firstAreaIdList = []
   cityLable = []
@@ -152,33 +224,33 @@ export default class indexPage extends Vue {
     {
       prop: 'companyName',
       label: '申请信息',
-      width: 300
+      width: 350
 //    align: 'left'
     },
     {
-      prop: 'industry',
-      label: '行业',
+      prop: 'address',
+      label: '地区',
       width: 150
     },
     {
-      prop: 'employeesInfo',
-      label: '规模',
+      prop: 'rtVersionName',
+      label: '权益类型',
       width: 150
     },
     {
-      prop: 'financingInfo',
-      label: '融资情况',
-      width: 150
-    },
-    {
-      prop: 'createdAt',
-      label: '申请时间',
+      prop: 'expiredDesc',
+      label: '权益截止时间',
       width: 200
     },
     {
-      prop: 'address',
-      label: '公司地址',
-      width: 300
+      prop: 'adminName',
+      label: '跟进人',
+      width: 150
+    },
+    {
+      prop: 'statusDesc',
+      label: '状态',
+      width: 200
     },
     {
       prop: 'id',
@@ -196,13 +268,13 @@ export default class indexPage extends Vue {
     }
     
   }
-  getCompanyList () {
+  getCompanyList (newForm) {
     if (this.form.firstAreaId !== '' && this.form.area_id === '') {
       this.$message.error("请选择城市")
       return
     }
 //  delete this.form.firstAreaId
-    getCompanyListApi(this.form).then(res => {
+    getCompanyListApi(newForm || this.form).then(res => {
       this.list = res.data.data
       this.pageCount = res.data.meta.lastPage
       this.total = res.data.meta.total
@@ -223,7 +295,11 @@ export default class indexPage extends Vue {
   }
   onSubmit () {
     this.form.page = 1
-    this.getCompanyList()
+    let searchCondition = {}
+    if (this.searchType.condition1 && this.searchType.keyword1) searchCondition[this.searchType.condition1] = this.searchType.keyword1
+    if (this.searchType.condition2 && this.searchType.keyword2) searchCondition[this.searchType.condition2] = this.searchType.keyword2
+    let searchForm = Object.assign({}, this.form, searchCondition)
+    this.getCompanyList(searchForm)
   }
   // 搜索公司
   search () {
@@ -238,6 +314,16 @@ export default class indexPage extends Vue {
       console.log(this.cityLable)
     })
   }
+  // 获取权益列表
+  async getRightList () {
+    let res = await rightInfoApi({pageCount: 50})
+    this.rightList = res.data.data
+  }
+  // 获取销售人员名单
+  async getSalerList () {
+    let res =  await getSalerListApi({pageCount: 50})
+    this.salerLis = res.data.data
+  }
   /* 选择省 */
   changeProvince () {
     this.firstAreaIdList.map(item => {
@@ -250,6 +336,13 @@ export default class indexPage extends Vue {
   /* 清除列表选项 */
   resetForm (name) {
     this.$refs[name].resetFields()
+    // 清除筛选条件数据
+    this.searchType = {
+      condition1: '',
+      condition2: '',
+      keyword1:'',
+      keyword2: ''
+    }
     // 清除地区数据
     this.form.firstAreaId = ''
     this.form.area_id = ''
@@ -258,13 +351,15 @@ export default class indexPage extends Vue {
   check (id) {
     this.$route.meta.scrollY = window.scrollY
     this.$router.push({
-      path: '/index/verify',
-      query: {id: id, isEdit: true}
+      path: '/index/companyInfo',
+      query: {id: id}
     })
   }
   created () {
-    this.getCity()
     this.getCompanyList()
+    this.getCity()
+    this.getRightList()
+    this.getSalerList()
   }
   activated () {
     let that = this
@@ -311,6 +406,18 @@ export default class indexPage extends Vue {
     .el-form{
       /*display: flex;*/
       /*align-items: center;*/
+      /* 筛选 */
+      .inputSelect{
+        line-height: 20px !important;
+        width: 400px !important;
+        background-color: #FFFFFF;
+        .el-select{
+          width: 120px;
+          margin-top: -2px;
+          border: none;
+          box-sizing: border-box;
+        }
+      }
       .el-input{
         width: 200px;
       }
@@ -346,5 +453,19 @@ export default class indexPage extends Vue {
   line-height: 48px;
   color: #652791;
   cursor: pointer;
+}
+.btn-container{
+  .label{
+    white-space: nowrap;
+    text-align: left;
+    width: 100%;
+    span{
+      display: inline-block;
+      background-color: #F8F8F8;
+      padding: 0 4px;
+      border-radius: 3px;
+      margin-right: 10px;
+    }
+  }
 }
 </style>
