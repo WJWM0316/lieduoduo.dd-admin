@@ -58,7 +58,7 @@
             <!-- 操作列 -->
             <div style="flex-wrap: wrap;" class="btn-container" v-if="props.scope.column.property === 'id'">
               <div>
-                <span class="check" @click="check(props.scope.row[props.scope.column.property])">查看</span>
+                <span class="check" @click="check(props.scope.row.uid)">查看</span>
               </div>
               <div style="width: 100%; cursor: pointer; color: #652791;" @click.stop="creatLink($event, props.scope.row, props.scope.$index)">查看招聘官</div>
             </div>
@@ -241,8 +241,7 @@ export default class user extends Vue{
   check (id) {
     this.$route.meta.scrollY = window.scrollY
     this.$router.push({
-      path: '/recruitmentOfficer/reviewDetails',
-      query: {id: id}
+      path: `/user/userInfo/${id}`
     })
   }
   /* 生成职位详情小程序码 */

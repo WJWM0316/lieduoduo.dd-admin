@@ -14,10 +14,10 @@
         <div class="editBox" v-if="!isEdit">
           <el-button class="inquire" @click.stop="Review(companyInfo.id, 'company')" v-show="companyInfo.status === 0">审核</el-button>
           <el-button type="info" disabled v-show="companyInfo.status !== 0">审核</el-button>
+          <el-button class="inquire" @click.stop="toEdit">编辑</el-button>
         </div>
         <div class="editBox" v-else>
           <el-button class="inquire" @click.stop="edit('editCompany')">编辑</el-button>
-          <el-button class="inquire" @click.stop="bindAdmin">绑定管理员</el-button>
         </div>
       </div>
       <!--内容-->
@@ -255,6 +255,10 @@ export default class checkPage extends Vue {
       path: `/index/editIdentity`,
       query: {id: uid}
     })
+  }
+  /* 去编辑公司信息 */
+  toEdit () {
+    this.$router.push({path: `/index/editCompany/${this.$route.query.id}`})
   }
   /* 点击审核按钮 */
   Review (id, type) {

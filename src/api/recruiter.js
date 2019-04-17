@@ -38,5 +38,10 @@ export const getUserListApi = data => request({
   type: 'get',
   data
 })
+/* 获取用户详情 */
+export const getUserInfoApi = data => request({
+  url: `/usermanage/user/detail/${data}`,
+  type: 'get'
+})
 
 

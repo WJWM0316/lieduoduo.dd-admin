@@ -122,5 +122,12 @@ export const routes = [
     name: 'addUser',
     meta: {title: '用户管理', haveParent: false, keepAlive: true},
     component: resolve => require(['@/pages/user/addUser.vue'], resolve)
+  },
+  /* 查看用户 */
+  {
+    path: '/user/userInfo/:id',
+    name: 'userInfo',
+    meta: {title: '查看用户详情', haveParent: false, keepAlive: true},
+    component: resolve => require(['@/pages/user/userInfo.vue'], resolve)
   }
 ]

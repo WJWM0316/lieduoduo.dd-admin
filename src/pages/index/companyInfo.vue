@@ -11,6 +11,8 @@
       	<!-- <el-button @click.stop="last" v-show="active === 1">返回上一步</el-button>
         <el-button @click.stop="next" v-show="active === 0">保存，下一步</el-button> -->
         <el-button @click.stop="toEdit">编辑</el-button>
+        <el-button @click.stop="toEdit" v-if="companyInfo.adminUid === 0">绑定管理员</el-button>
+        <el-button @click.stop="toEdit" v-else>移除管理员</el-button>
       </div>
     </div>
      <!--公司信息表格-->
