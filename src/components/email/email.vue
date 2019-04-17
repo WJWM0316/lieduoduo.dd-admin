@@ -2,11 +2,11 @@
     <div class="email">
         <div class="header">验证公司邮箱</div>
         <el-form>
-            <el-form-item label-width="100px" label-position="left" label="公司邮箱" style="width: 400px;">
+            <el-form-item label-width="100px" label-position="left" label="公司邮箱" style="width: 400px;" prop="email">
                 <el-input v-model="form.email" style="width: 300px;"></el-input>
             </el-form-item>
 
-            <el-form-item label-width="100px" label-position="left" label="邮箱验证码" style="width: 400px;">
+            <el-form-item label-width="100px" label-position="left" label="邮箱验证码" style="width: 400px;" prop="code">
                 <el-input v-model="form.code" style="width: 300px;"></el-input>
             </el-form-item>
         </el-form>
@@ -21,13 +21,48 @@
 <script>
 import Vue from 'vue'
 import Component from 'vue-class-component'
+import { sendEmailApi } from 'API/company'
 @Component({
-    name: 'email'
+    name: 'email',
+    props: {
+        companyName: {
+            type: String
+        }
+    }
 })
 export default class emailCheck extends Vue {
     form = {
         email: '',
-        code: ''
+        code: '',
+        company_id: 0
+    }
+    rule = {
+        email: [
+            { required: true, message: '请输入邮箱', trigger: 'blur' }
+        ]
+    }
+    save () {
+        if (!this.form.email || !this.form.code) return
+        let param = Object.assign({}, this.form, {company_name: this.companyName})
+        this.$emit('save', param)
+    }
+    cancel () {
+        this.$emit('close')
+    }
+    /* 发送校验 */
+    sendEmail () {
+        if (!this.form.email) return
+        let param = {
+            email: this.form.email,
+            company_id: this.form.company_id,
+            company_name: this.companyName
+        }
+        sendEmailApi(param).then(res => {
+            this.$message({
+              message: '邮件已发送到邮箱，请登录邮箱查看',
+              type: 'success'
+            })
+        })
     }
 }
 </script>

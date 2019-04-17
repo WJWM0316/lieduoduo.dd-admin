@@ -7,12 +7,16 @@
         </div>
         <ul>
           <li><router-link to="/index"><i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>公司库</router-link></li>
-          <li><router-link to="/companyCheck"><i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>公司审核管理</router-link></li>
           <li><router-link to="/user"><i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>用户管理</router-link></li>
-          <li><router-link to="/recruitmentOfficer"><i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>招聘官管理</router-link></li>
           <li><router-link to="/positionManage"><i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>职位管理</router-link></li>
+          <!-- 审核管理列 -->
+          <li><router-link to="/companyCheck" active-class="interviewActive"><i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>审核管理</router-link></li>
+          <div class="verify">
+            <li><router-link to="/companyCheck">公司审核管理</router-link></li>
+            <li><router-link to="/recruitmentOfficer">招聘官审核</router-link></li>
+          </div>
+          <!-- 面试管理列 -->
           <li @click.stop="tabSwitch"><router-link to="/interview" active-class="interviewActive"><i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>面试管理<i class="icon iconfont iconloeft_down" style="color: #FFFFFF;" :class="{ turnUp: isCLick, turnDowm: !isCLick }"></i></router-link></li>
-          <!--<li @click.stop="tabSwitch"><a style="display: inline-block;"><i style="margin-right: 16px;" :class="" class="icon iconfont icongongneng"></i>面试管理</a><i class="icon iconfont iconloeft_down" :class="{ turnUp: !isCLick, turnDowm: isCLick }"></i></li>-->
           <div class="interviewBox" :class="{expand: isCLick, collapse: !isCLick}">
             <li><router-link to="/interview" exact>申请列表</router-link></li>
             <li><router-link to="/interview/invite">邀请列表</router-link></li>
@@ -191,6 +195,19 @@ export default class PageAside extends Vue {
     height: 0px;
     transition: 0.5s ease;
     overflow: hidden;
+    li {
+      a {
+        padding-left: 78px;
+      }
+    }
+  }
+  .verifyTab{
+    color: #EDEDED;
+    padding-left: 46px;
+  }
+  .verify{
+    width: 100%;
+    display: inline-block;
     li {
       a {
         padding-left: 78px;

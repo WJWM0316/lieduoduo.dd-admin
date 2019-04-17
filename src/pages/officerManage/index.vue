@@ -164,19 +164,24 @@ export default class officerManage extends Vue{
       width: 220
     },
     {
-      prop: 'createdAt',
-      label: '申请时间',
-      width: 200
-    },
-    {
       prop: 'status',
-      label: '管理员处理状态',
+      label: '加入审核状态',
       width: 150
     },
     {
       prop: 'authStatus',
-      label: '身份认证状态'
-//    width: 150
+      label: '身份认证状态',
+      width: 150
+    },
+    {
+      prop: 'authStatus',
+      label: '身份审核模式',
+      width: 150
+    },
+    {
+      prop: 'createdAt',
+      label: '申请时间',
+      width: 200
     },
     {
       prop: 'id',

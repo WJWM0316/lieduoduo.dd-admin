@@ -28,3 +28,14 @@ export const uploadIdcardApi = data => request({
   type: 'post',
   data
 })
+/* 获取权益信息 */
+export const rightInfoApi = data => request({
+  url: '/rights',
+  type: 'get',
+  data
+})
+/* 获取销售人员名单 */
+export const getSalerListApi = () => request({
+  url: `/company/admin_user_list`,
+  type: 'get'
+})

@@ -3,7 +3,7 @@
   <div class="officerManage" @click="closeTopic">
     <el-container class="container" style="border: 1px solid #eee">
       <el-header class="header" style="text-align: right; font-size: 15px">
-        <div class="title">招聘官管理({{total}})</div>
+        <div class="title">用户管理({{total}})</div>
         <el-button @click.stop="addUser" class="btn-limit-width">+ 添加用户</el-button>
       </el-header>
       <el-main>
@@ -63,11 +63,36 @@
               <div style="width: 100%; cursor: pointer; color: #652791;" @click.stop="creatLink($event, props.scope.row, props.scope.$index)">查看招聘官</div>
             </div>
             <!-- 序号 -->
-            <!--<div class="btn-container" v-else-if="props.scope.column.property === 'index'">
+            <div class="btn-container" v-else-if="props.scope.column.property === 'index'">
               <div>
                 <span>{{props.scope.$index +1}}</span>
               </div>
-            </div>-->
+            </div>
+            <!-- 所属公司 -->
+            <div class="btn-container companyName" v-else-if="props.scope.column.property === 'companyName'">
+              <div v-if="props.scope.row.isRecruiter">
+                <span>{{props.scope.row[props.scope.column.property]}}</span>
+                <p v-if="props.scope.row.isAdmin === 1">管理员</p>
+                <p v-else>招聘官</p>
+              </div>
+            </div>
+            <!-- 发布职位权益 -->
+            <div class="btn-container" v-else-if="props.scope.column.property === 'createPositionRight'">
+              <div>
+                <span v-if="props.scope.row.createPositionRight === 0">无</span>
+                <span v-else-if="props.scope.row.createPositionRight === 1">是</span>
+                <span v-else>---</span>
+              </div>
+            </div>
+            <!-- 身份认证状态 -->
+            <div class="btn-container" v-else-if="props.scope.column.property === 'identityAuth'">
+              <div>
+                <span v-if="props.scope.row.identityAuth === 0">已提交</span>
+                <span v-else-if="props.scope.row.identityAuth === 1">已通过</span>
+                <span v-else-if="props.scope.row.identityAuth === 2">未通过</span>
+                <span v-else>未提交</span>
+              </div>
+            </div>
             <!--认证状态-->
             <div class="btn-container" v-else-if="props.scope.column.property === 'status' || props.scope.column.property === 'authStatus'" style="height: 48px;">
               <div>
@@ -91,6 +116,18 @@
         </list>
       </el-main>
     </el-container>
+    <!--小程序码展示框-->
+    <div class="qrCode" ref="qrCode">
+      <img class="bg" src="../../assets/code_bg.png"/>
+      <div style="height: 100%;display: flex; align-items: center;flex-direction: column;justify-content: center;" v-if="!qrCode">
+        <img style="height: 38px;width: 38px;" src="../../assets/loading.gif"/>
+        <div class="txt">正在加载中…</div>
+      </div>
+      <div v-else>
+        <img class="Qr" :src="qrCode"/>
+        <div class="txt">微信扫码，打开小程序查看</div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -98,7 +135,7 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import List from '@/components/list'
-import { getRecruiterListApi } from 'API/recruiter'
+import { getUserListApi } from 'API/recruiter'
 import { getRecruiterCodeUrlApi } from 'API/interview'
 @Component({
   name: 'userList',
@@ -126,50 +163,40 @@ export default class user extends Vue{
     {label: '人名', value: 'name'}
   ]
   fields = [
-//  {
-//    prop: 'index',
-//    label: '序号',
-//    width: 80
-//  },
     {
-      prop: 'realName',
-      label: '申请信息',
-      width: 150
+      prop: 'index',
+      label: '序号',
+      width: 80
     },
     {
-      prop: 'userEmail',
-      label: '邮箱',
-      width: 220
-    },
-    {
-      prop: 'userPosition',
-      label: '公司职务',
-      width: 150
+      prop: 'name',
+      label: '个人信息',
+      width: 200
     },
     {
       prop: 'companyName',
-      label: '加入公司',
+      label: '所属公司',
+      align: 'left',
+      width: 300
+    },
+    {
+      prop: 'createPositionRight',
+      label: '发布职位权益',
+      width: 150
+    },
+    {
+      prop: 'identityAuth',
+      label: '身份认证状态',
       width: 220
     },
     {
       prop: 'createdAt',
-      label: '申请时间',
+      label: '创建时间',
       width: 200
-    },
-    {
-      prop: 'status',
-      label: '管理员处理状态',
-      width: 150
-    },
-    {
-      prop: 'authStatus',
-      label: '身份认证状态'
-//    width: 150
     },
     {
       prop: 'id',
       fixed: "right",
-      width: 150,
       label: '操作'
     }
   ]
@@ -197,7 +224,7 @@ export default class user extends Vue{
   }
   /* 请求招聘官审核列表 */
   getRecruiterList () {
-    getRecruiterListApi(this.form).then(res => {
+    getUserListApi(this.form).then(res => {
       this.list = res.data.data
       this.total = res.data.meta.total
       this.pageCount = res.data.meta.lastPage
@@ -221,8 +248,9 @@ export default class user extends Vue{
   /* 生成职位详情小程序码 */
   async creatLink (e, data, index) {
     this.qrCode = ''
-    if (data.status !== 1) {
-      this.$message.error(`招聘官未通过审核,暂无招聘官页`);
+    if (data.isRecruiter !== 1) {
+      this.$refs['qrCode'].style.display = 'none'
+      this.$message.error(`该用户不是招聘官,暂无招聘官主页`);
       return
     }
     // 是否已经加载过二维码
@@ -244,12 +272,6 @@ export default class user extends Vue{
     let res = await this.getQr(data.uid)
     this.qrCode = res.data.data.qrCodeUrl
     this.list[index].qrCode = res.data.data.qrCodeUrl
-    
-//  this.$nextTick(() => {
-//    this.$refs['qrCode'].style.display = 'block'
-//    this.$refs['qrCode'].style.left = e.clientX + 'px'
-//    this.$refs['qrCode'].style.top = e.clientY + window.scrollY + 'px'
-//  })
   }
   
   /* 生成二维码 */
@@ -353,6 +375,10 @@ export default class user extends Vue{
       color: #652791;
       cursor: pointer;
     }
+  }
+  .companyName{
+    justify-content: flex-start;
+    text-align: left;
   }
 }
 .inquire{

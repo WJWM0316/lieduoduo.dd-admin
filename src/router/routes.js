@@ -27,10 +27,10 @@ export const routes = [
   },
   /* 公司录入详情 */
   {
-    path: '/index/verify',
-    name: 'verify',
-    meta: {title: '公司详情', haveParent: true, parentPath: '/companyCheck', parentName: '公司审核管理'},
-    component: resolve => require(['@/pages/companyCheck/verify.vue'], resolve),
+    path: '/index/companyInfo',
+    name: 'companyInfo',
+    meta: {title: '公司详情', haveParent: true, parentPath: '/index', parentName: '公司库'},
+    component: resolve => require(['@/pages/index/companyInfo.vue'], resolve),
   },
   /* 公司审核 */
   {

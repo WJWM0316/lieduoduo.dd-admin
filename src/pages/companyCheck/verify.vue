@@ -17,17 +17,30 @@
         </div>
         <div class="editBox" v-else>
           <el-button class="inquire" @click.stop="edit('editCompany')">编辑</el-button>
+          <el-button class="inquire" @click.stop="bindAdmin">绑定管理员</el-button>
         </div>
       </div>
       <!--内容-->
       <div class="content">
-        <div class="title">基本信息</div>
+        <div class="title">公司信息</div>
         <div class="item companyName"><span class="lable">公司全称：</span> {{companyInfo.companyName}}</div>
         <div class="item"><span class="lable">公司简称：</span> {{companyInfo.companyShortname}}</div>
         <div class="item"><span class="lable">所属行业：</span> {{companyInfo.industry}}</div>
         <div class="item"><span class="lable">融资阶段：</span> {{companyInfo.financingInfo}}</div>
         <div class="item"><span class="lable">人员规模：</span> {{companyInfo.employeesInfo}}</div>
-        <div class="title">资质信息</div>
+        <div>
+          <template v-if="companyInfo.address && companyInfo.address.length">
+            <div class="item" v-for="(item, index) in companyInfo.address" :key="index"><span class="lable">公司地址{{index+1}}：</span> {{item.address}}{{item.doorplate}}</div>
+          </template>
+          <template v-else>
+            <div class="item"><span class="lable">公司地址1：</span> 还未设置</div>
+          </template>
+        </div>
+        <div class="item"><span class="lable">公司简介：</span></div>
+        <pre class="describe"> {{companyInfo.intro}} </pre>
+        <div class="item"><span class="lable">公司官网：</span> {{companyInfo.website || "未设置官网"}}</div>
+        <div class="item"><span class="lable">公司邮箱：</span> {{companyInfo.email || "未绑定邮箱"}}</div>
+        <div class="title">认证信息</div>
         <div class="item"><span class="lable">上传资质：</span> </div>
         <div class="item">
           <div class="imgBox" v-if="companyInfo.businessLicenseInfo">
@@ -47,15 +60,10 @@
             </div>
           </div>
         </div>
-        <div class="title">其他信息</div>
-        <template v-if="companyInfo.address && companyInfo.address.length">
-          <div class="item" v-for="(item, index) in companyInfo.address"><span class="lable">公司地址{{index+1}}：</span> {{item.address}}{{item.doorplate}}</div>
-        </template>
-        <template v-else>
-          <div class="item"><span class="lable">公司地址1：</span> 还未设置</div>
-        </template>
+        <!-- <div class="title">其他信息</div> -->
       </div>
     </div>
+    
     <!--人员认证信息-->
     <div class="commont companyInfo">
       <!--头部-->
@@ -237,6 +245,10 @@ export default class checkPage extends Vue {
       query: {id: this.companyInfo.id}
     })
   }
+  /* 绑定管理员 */
+  bindAdmin () {
+    
+  }
   /* 编辑身份信息 */
   editIdentity (uid) {
     this.$router.push({
@@ -377,6 +389,7 @@ img{
       font-weight: 700;
     }
     .item{
+      padding-left: 30px;
       line-height: 30px;
       .lable{
         margin-right: 10px;
@@ -414,6 +427,14 @@ img{
         bottom: 5px;
         right: 5px;
       }
+    }
+    .describe{
+      box-sizing: border-box;
+      width: 100%;
+      white-space: pre-wrap;
+      text-align: left;
+      padding: 0 50px;
+      line-height: 20px;
     }
   }
 }

@@ -32,4 +32,11 @@ export const createdUserApi = data => request({
   type: 'post',
   data
 })
+/* 获取用户列表 */
+export const getUserListApi = data => request({
+  url: `/usermanage/users/search`,
+  type: 'get',
+  data
+})
+
 
