@@ -83,10 +83,10 @@ export const routes = [
   },
   /* 编辑公司信息 */
   {
-    path: '/index/editCompany',
+    path: '/index/editCompany/:id',
     name: 'editCompany',
     meta: {title: '编辑公司信息', haveParent: true, parentPath: '/index', parentName: '公司库'},
-    component: resolve => require(['@/pages/editCompany/editCompanyInfo.vue'], resolve)
+    component: resolve => require(['@/pages/createCompany/index.vue'], resolve)
   },
   /* 编辑身份信息 */
   {
