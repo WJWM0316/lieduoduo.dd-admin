@@ -12,8 +12,8 @@
           <span class="status" v-show="companyInfo.status === 2"><i class="el-icon-error" style="color: #F56C6C;"></i> 未通过</span>
         </div>
         <div class="editBox" v-if="!isEdit">
-          <el-button class="inquire" @click.stop="Review(companyInfo.id, 'company')" v-show="companyInfo.status === 0">审核</el-button>
-          <el-button type="info" disabled v-show="companyInfo.status !== 0">审核</el-button>
+          <el-button class="inquire" @click.stop="Review(companyInfo.id, 'company')" v-show="companyInfo.step !== 0">审核</el-button>
+          <el-button type="info" disabled v-show="companyInfo.step === 0">审核</el-button>
           <el-button class="inquire" @click.stop="toEdit">编辑</el-button>
         </div>
         <div class="editBox" v-else>
@@ -76,8 +76,9 @@
           <span class="status" v-show="!personalInfo.status && personalInfo.status !== 0"><i class="el-icon-error" style="color: #F56C6C;"></i> 相关信息未提交</span>
         </div>
         <div class="editBox" v-if="!isEdit">
-          <el-button class="inquire" @click.stop="Review(personalInfo.uid, 'identity')" v-show="personalInfo.status === 0">审核</el-button>
-          <el-button type="info" disabled v-show="personalInfo.status !== 0">审核</el-button>
+          <el-button class="inquire" @click.stop="editIdentity(companyInfo.createdUid)">编辑</el-button>
+          <!-- <el-button class="inquire" @click.stop="Review(personalInfo.uid, 'identity')" v-show="personalInfo.status === 0">审核</el-button>
+          <el-button type="info" disabled v-show="personalInfo.status !== 0">审核</el-button> -->
         </div>
         <div class="editBox" v-else>
           <el-button class="inquire" @click.stop="editIdentity(personalInfo.uid)">编辑</el-button>
@@ -85,15 +86,14 @@
       </div>
       <!--内容-->
       <div class="content">
-        <div class="title">个人信息</div>
+        <div class="title">账号资料</div>
+        <div class="item"><span class="lable">手机号码：</span> {{personalInfo.mobile || '未设置手机'}}</div>
+        <div class="title">个人资料</div>
         <div class="item"><span class="lable">姓名：</span> {{companyInfo.realName}}</div>
-        <div class="item"><span class="lable">公司职务：</span> {{companyInfo.userPosition}}</div>
-        <div class="item"><span class="lable">公司邮箱：</span> {{companyInfo.userEmail}}</div>
-        <div class="item"><span class="lable">手机号码：</span> {{personalInfo.mobile}}</div>
-        <div class="title">身份信息</div>
+        <div class="item"><span class="lable">性别：</span> {{companyInfo.gender === 1? '男' : '女'}}</div>
+        <div class="title">认证资料</div>
         <div class="item"><span class="lable">真实姓名：</span> {{personalInfo.realName}}</div>
         <div class="item"><span class="lable">身份证号码：</span> {{personalInfo.identityNum}}</div>
-        <div class="item"><span class="lable">有效期：</span> {{personalInfo.validityStart}} 至 {{personalInfo.validityEnd}}</div>
         <div class="title">认证材料</div>
         <div class="item">
           <div class="imgBox" v-if="personalInfo.passportFrontInfo">
@@ -104,22 +104,22 @@
               查看大图
             </div>
           </div>
-          <div class="imgBox" v-if="personalInfo.passportReverseInfo">
+          <!-- <div class="imgBox" v-if="personalInfo.passportReverseInfo">
             <div class="imgNote">身份证（反面）</div>
             <img :src="personalInfo.passportReverseInfo.middleUrl"/>
             <div class="zoomBox" @click.stop="showImg(personalInfo.passportReverseInfo.url)">
               <i class="el-icon-zoom-in"></i>
               查看大图
             </div>
-          </div>
-          <div class="imgBox" v-if="personalInfo.handheldPassportInfo">
+          </div> -->
+          <!-- <div class="imgBox" v-if="personalInfo.handheldPassportInfo">
             <div class="imgNote">手持身份照</div>
             <img :src="personalInfo.handheldPassportInfo.middleUrl"/>
             <div class="zoomBox" @click.stop="showImg(personalInfo.handheldPassportInfo.url)">
               <i class="el-icon-zoom-in"></i>
               查看大图
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -252,13 +252,13 @@ export default class checkPage extends Vue {
   /* 编辑身份信息 */
   editIdentity (uid) {
     this.$router.push({
-      path: `/index/editIdentity`,
-      query: {id: uid}
+      path: `/user/editUser/${uid}`
     })
   }
   /* 去编辑公司信息 */
   toEdit () {
-    this.$router.push({path: `/index/editCompany/${this.$route.query.id}`})
+    let checkId = this.$route.query.id
+    this.$router.push({path: `/companyCheck/${checkId}`})
   }
   /* 点击审核按钮 */
   Review (id, type) {

@@ -5,7 +5,8 @@
       <div class="creatTab" @click.stop="tab">
         <div class="userInfo active">基本信息</div>
       </div>
-        <el-button @click.stop="saveUser">保存并通过</el-button>
+        <el-button @click.stop="saveUser" v-if="!isEdit">保存并通过</el-button>
+        <el-button @click.stop="saveUser" v-else>保存编辑</el-button>
     </div>
     <!--身份信息表格-->
     <div class="personalInfo">
@@ -13,7 +14,8 @@
       <el-form class="edit-form" ref="mobile" :rules="mobile" :model="phone" label-width="150px" label-suffix="：">
         <h3>账号信息</h3>
         <el-form-item label="手机号码" prop="mobile">
-          <el-input v-model="phone.mobile" placeholder="请输入手机号码" :maxlength="11" style="width: 250px;"></el-input>
+          <el-input v-model="phone.mobile" placeholder="请输入手机号码" :maxlength="11" style="width: 250px;" v-if="!isEdit"></el-input>
+          <el-input v-model="phone.mobile" disabled placeholder="请输入手机号码" :maxlength="11" style="width: 250px;"v-else></el-input>
         </el-form-item>
       </el-form>
 
@@ -59,7 +61,7 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import ImageUploader from '@/components/imageUploader'
 import { fieldApi, uploadIdcardApi } from 'API/commont'
-import { detectionMobileApi, checkUserauthApi, createdUserApi } from 'API/recruiter'
+import { detectionMobileApi, checkUserauthApi, createdUserApi, getUserInfoApi, editUserauthApi, editUserApi } from 'API/recruiter'
 import { setCompanyInfoApi, setIdentityInfoApi, addCompanyAddressApi, delCompanyAddressApi } from 'API/company'
 @Component({
   name: 'addUser',
@@ -68,6 +70,7 @@ import { setCompanyInfoApi, setIdentityInfoApi, addCompanyAddressApi, delCompany
   }
 })
 export default class addUser extends Vue {
+  isEdit = false // 是否编辑用户，默认为创建用户
   pop = {
     isShow: false,
     type: 'position'
@@ -122,7 +125,16 @@ export default class addUser extends Vue {
       { required: true, message: '请选择性别', trigger: 'blur' }
     ]
   }
-  /* 创建用户 */
+  /* 调用创建或编辑 */
+  editOrCreat (userInfo) {
+    if (this.isEdit) {
+      const uid = this.$route.params.id
+      return editUserApi(uid, userInfo)
+    } else {
+      return createdUserApi(userInfo)
+    }
+  }
+  /* 创建或编辑用户 */
   saveUser () {
     let newUser = {}
     if (this.isDetection) {
@@ -135,9 +147,9 @@ export default class addUser extends Vue {
       newUser = Object.assign({}, param, this.phone)
     }
     console.log(newUser)
-    createdUserApi(newUser).then(res => {
+    this.editOrCreat(newUser).then(res => {
       this.$message({
-        message: '用户创建成功',
+        message: this.isEdit? '编辑成功' : '用户创建成功',
         type: 'success'
       })
       this.$router.push({path: '/user'})
@@ -159,8 +171,17 @@ export default class addUser extends Vue {
     })
   }
 
+  checkUserauth (param) {
+    if (this.isEdit) {
+      let uid = this.$route.params.id
+      return editUserauthApi(uid, param)
+    } else {
+      return checkUserauthApi(param)
+    }
+  }
+
   /* 身份证信息校验 */
-  detectionInfo () {
+  async detectionInfo () {
     if (!this.personalInfo.passportFront) {
       this.$message.error(`请上传正确清晰的身份证图片`)
       return
@@ -170,10 +191,9 @@ export default class addUser extends Vue {
       idNum: this.personalInfo.idNum,
       passportFront: this.personalInfo.passportFront
     }
-    checkUserauthApi(param).then(res => {
-      console.log(res.data.data.pass)
+    let res = await this.checkUserauth(param)
       if (res.data.data.pass) {
-        this.isDetection = true
+        if (!this.isEdit) this.isDetection = true
         this.$message({
           message: '身份证信息校验成功，校验有效时间为15分钟，请及时提交创建',
           type: 'success'
@@ -181,10 +201,30 @@ export default class addUser extends Vue {
       } else {
         this.$message.error(`信息校验失败，请确认上传信息无误`)
       }
-    })
+  }
+  /*获取编辑用户的信息 */
+  async getUserInfo () {
+    let res = await getUserInfoApi(this.$route.params.id)
+    let eidtUser = res.data.data
+    console.log(res.data.data, '7785458558')
+    /* 手机号码 */
+    this.phone.mobile = eidtUser.mobile
+    /* 身份信息 */
+    this.personalInfo = {
+      name: eidtUser.name, // 姓名
+      gender: String(eidtUser.gender),
+      realname : eidtUser.realname, // 真实姓名
+      idNum : eidtUser.identityNum, // 身份证号码
+      passportFront : eidtUser.passportFrontId, // 身份证正面照片
+    }
+    this.form.icon3 = eidtUser.passportFront? eidtUser.passportFront.url : ''
   }
 
-  created () {}
+  created () {
+    if (!this.$route.params.id) return;
+    this.isEdit = true;
+    this.getUserInfo()
+  }
 }
 </script>
 
@@ -217,10 +257,6 @@ export default class addUser extends Vue {
         }
       }
     }
-    // .el-steps{
-    //   text-align: left;
-    //   width: 500px;
-    // }
   }
   /*公司信息*/
   .companyInfo,

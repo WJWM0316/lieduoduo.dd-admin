@@ -1,6 +1,6 @@
 <!--招聘官管理-->
 <template>
-  <div class="officerManage" @click="closeTopic">
+  <div class="officerManage" @click.stop="closeTopic">
     <el-container class="container" style="border: 1px solid #eee">
       <el-header class="header" style="text-align: right; font-size: 15px">
         <div class="title">用户管理({{total}})</div>
@@ -41,7 +41,7 @@
             </el-form-item>
             
             <el-form-item class="btn">
-              <el-button class="inquire" @click="onSubmit">查询</el-button>
+              <el-button class="inquire" @click.stop="onSubmit">查询</el-button>
               <el-button @click.stop="resetForm('form')">重置</el-button>
             </el-form-item>
           </el-form>
@@ -58,7 +58,7 @@
             <!-- 操作列 -->
             <div style="flex-wrap: wrap;" class="btn-container" v-if="props.scope.column.property === 'id'">
               <div>
-                <span class="check" @click="check(props.scope.row.uid)">查看</span>
+                <span class="check" @click.stop="check(props.scope.row.uid)">查看</span>
               </div>
               <div style="width: 100%; cursor: pointer; color: #652791;" @click.stop="creatLink($event, props.scope.row, props.scope.$index)">查看招聘官</div>
             </div>
@@ -87,9 +87,9 @@
             <!-- 身份认证状态 -->
             <div class="btn-container" v-else-if="props.scope.column.property === 'identityAuth'">
               <div>
-                <span v-if="props.scope.row.identityAuth === 0">已提交</span>
-                <span v-else-if="props.scope.row.identityAuth === 1">已通过</span>
-                <span v-else-if="props.scope.row.identityAuth === 2">未通过</span>
+                <span v-if="props.scope.row.identityAuthStatus === 0">已提交</span>
+                <span v-else-if="props.scope.row.identityAuthStatus === 1">已通过</span>
+                <span v-else-if="props.scope.row.identityAuthStatus === 2">未通过</span>
                 <span v-else>未提交</span>
               </div>
             </div>

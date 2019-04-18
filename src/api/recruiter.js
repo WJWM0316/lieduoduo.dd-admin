@@ -26,10 +26,22 @@ export const checkUserauthApi = data => request({
   type: 'post',
   data
 })
+/* 身份证信息编辑并校验 */
+export const editUserauthApi = (uid, data) => request({
+  url: `/usermanage/userauth/${uid}`,
+  type: 'post',
+  data
+})
 /* 创建用户 */
 export const createdUserApi = data => request({
   url: `/usermanage/user`,
   type: 'post',
+  data
+})
+/* 编辑用户 */
+export const editUserApi = (uid, data) => request({
+  url: `/usermanage/user/${uid}`,
+  type: 'put',
   data
 })
 /* 获取用户列表 */

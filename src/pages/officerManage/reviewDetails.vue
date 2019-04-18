@@ -4,6 +4,7 @@
     <!--加入公司审核-->
     <div class="companyCheck">
       <div class="companyName"><span class="label">加入公司</span>{{personalInfo.companyName}}</div>
+      <div class="companyName" v-if="personalInfo.adminInfo"><span class="label">加入方式</span>{{personalInfo.statusDesc || ''}}</div>
       <div class="companyName" v-if="personalInfo.adminInfo"><span class="label">管理员</span>{{personalInfo.adminInfo.name || ''}}</div>
       <div class="checkStatus">
         <div v-show="personalInfo.status === 0">审核中 <i class="el-icon-warning" style="color: #E6A23C;"></i></div>
