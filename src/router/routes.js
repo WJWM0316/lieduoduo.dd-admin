@@ -46,6 +46,13 @@ export const routes = [
     meta: {title: '招聘官管理', keepAlive: true},
     component: resolve => require(['@/pages/officerManage/index.vue'], resolve),
   },
+  /* 编辑申请招聘官用户信息 */
+  {
+    path: '/recruitmentOfficer/editUser/:id',
+    name: 'editOfficerUser',
+    meta: {title: '编辑招聘官信息', haveParent: true, parentPath: '/recruitmentOfficer', parentName: '招聘官审核'},
+    component: resolve => require(['@/pages/user/addUser.vue'], resolve)
+  },
   /* 招聘官审核详情 */
   {
     path: '/recruitmentOfficer/reviewDetails',
@@ -83,10 +90,17 @@ export const routes = [
   },
   /* 编辑公司信息 */
   {
-    path: '/index/editCompany',
+    path: '/index/editCompany/:id',
     name: 'editCompany',
     meta: {title: '编辑公司信息', haveParent: true, parentPath: '/index', parentName: '公司库'},
-    component: resolve => require(['@/pages/editCompany/editCompanyInfo.vue'], resolve)
+    component: resolve => require(['@/pages/createCompany/index.vue'], resolve)
+  },
+  /* 编辑审核公司信息 */
+  {
+    path: '/companyCheck/:checkId',
+    name: 'editCheckCompany',
+    meta: {title: '编辑公司信息', haveParent: true, parentPath: '/companyCheck', parentName: '公司审核管理'},
+    component: resolve => require(['@/pages/createCompany/index.vue'], resolve)
   },
   /* 编辑身份信息 */
   {
@@ -113,14 +127,28 @@ export const routes = [
   {
     path: '/user',
     name: 'user',
-    meta: {title: '用户管理', haveParent: false, keepAlive: true},
+    meta: {title: '用户管理', haveParent: false},
     component: resolve => require(['@/pages/user/index.vue'], resolve)
   },
   /* 添加用户 */
   {
     path: '/user/addUser',
     name: 'addUser',
-    meta: {title: '用户管理', haveParent: false, keepAlive: true},
+    meta: {title: '添加用户', haveParent: true, parentPath: '/user', parentName: '用户管理'},
     component: resolve => require(['@/pages/user/addUser.vue'], resolve)
+  },
+  /* 编辑用户 */
+  {
+    path: '/user/editUser/:id',
+    name: 'editUser',
+    meta: {title: '编辑用户信息', haveParent: true, parentPath: '/user', parentName: '用户管理'},
+    component: resolve => require(['@/pages/user/addUser.vue'], resolve)
+  },
+  /* 查看用户 */
+  {
+    path: '/user/userInfo/:id',
+    name: 'userInfo',
+    meta: {title: '查看用户详情', haveParent: true, parentPath: '/user', parentName: '用户管理'},
+    component: resolve => require(['@/pages/user/userInfo.vue'], resolve)
   }
 ]

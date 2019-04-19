@@ -169,3 +169,15 @@ export const verifyEmailApi = (data) => request({
   type: 'post',
   data
 })
+/* 获取审核公司详情 */
+export const getCheckCompanyInfoApi = (data) => request({
+  url: `/company/temp/${data}`,
+  type: 'get'
+})
+/* 编辑审核公司 */
+export const editCheckCompanyInfoApi = (checkId, data) => request({
+  url: `/company/edit_temp_company/${checkId}`,
+  type: 'put',
+  data
+})
+

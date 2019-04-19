@@ -8,6 +8,7 @@ const router = new Router({
   mode: 'history',
   routes,
   scrollBehavior(to, from, savedPosition) {
+    console.log(savedPosition, '我是savedPosition')
     if (to.hash) {
       return {
         selector: to.hash

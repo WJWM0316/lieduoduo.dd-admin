@@ -9,9 +9,20 @@
         <!--筛选-->
         <div class="selectionBox" @keyup.enter="search">
           <el-form ref="form" :model="form" label-width="80px" validate="validate">
-            <el-form-item label="关键词" prop="keyword">
-              <el-input v-model="form.keyword" placeholder="请输入姓名/职务/加入公司"></el-input>
-            </el-form-item>
+            <div class="content">
+              <el-input type='text' placeholder="请输入内容" v-model="searchType.keyword1" class="inputSelect">
+                <el-select class="selectTitle" v-model="searchType.condition1" slot="prepend" placeholder="请选择">
+                  <el-option v-for="item in keyword" :label="item.label" :value="item.value"></el-option>
+                </el-select>
+              </el-input>
+            </div>
+            <div class="content">
+              <el-input type='text' placeholder="请输入内容" v-model="searchType.keyword2" class="inputSelect">
+                <el-select class="selectTitle" v-model="searchType.condition2" slot="prepend" placeholder="请选择">
+                  <el-option v-for="item in keyword" :label="item.label" :value="item.value"></el-option>
+                </el-select>
+              </el-input>
+            </div>
             <el-form-item label="申请时间" prop="start">
               <el-col :span="11">
                 <el-date-picker type="date" placeholder="选择日期" value-format="yyyy-MM-dd" v-model="form.start" style="width: 100%;"></el-date-picker>
@@ -26,19 +37,26 @@
             <el-form-item label-width="1px" label="" prop="end">
             </el-form-item>
         
-            <el-form-item label-width="120px" label="管理员处理状态" prop="status">
+            <el-form-item label-width="120px" label="加入审核状态" prop="status">
               <el-select v-model="form.status" placeholder="全部状态">
-                <el-option label="待审核" value="0"></el-option>
-                <el-option label="已通过" value="1"></el-option>
-                <el-option label="未通过" value="2"></el-option>
+                <el-option label="管理员-审核中" value="0"></el-option>
+                <el-option label="管理员-审核通过" value="1"></el-option>
+                <el-option label="管理员-审核失败" value="2"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label-width="120px" label="身份认证状态" prop="auth_status">
               <el-select v-model="form.auth_status" placeholder="全部状态 ">
-                <el-option label="已提交" value="0"></el-option>
+                <el-option label="待审核" value="0"></el-option>
                 <el-option label="已通过" value="1"></el-option>
                 <el-option label="未通过" value="2"></el-option>
-                <el-option label="未提交" value="3"></el-option>
+                <el-option label="未提交" value="-1"></el-option>
+              </el-select>
+            </el-form-item>
+
+            <el-form-item label-width="120px" label="身份审核模式" prop="audit_mode">
+              <el-select v-model="form.audit_mode" placeholder="全部状态 ">
+                <el-option label="自动" value="1"></el-option>
+                <el-option label="人工" value="2"></el-option>
               </el-select>
             </el-form-item>
             
@@ -46,10 +64,6 @@
               <el-button class="inquire" @click="onSubmit">查询</el-button>
               <el-button @click.stop="resetForm('form')">重置</el-button>
             </el-form-item>
-            <!--<el-form-item class="btn" label-width="50px">
-              <el-button class="inquire" @click="onSubmit">查询</el-button>
-              <span @click.stop="resetForm('form')">重置</span>
-            </el-form-item>-->
           </el-form>
         </div>
         <!--筛选-->
@@ -69,25 +83,33 @@
               <div style="width: 100%; cursor: pointer; color: #652791;" @click.stop="creatLink($event, props.scope.row, props.scope.$index)">查看招聘官</div>
             </div>
             <!-- 序号 -->
-            <!--<div class="btn-container" v-else-if="props.scope.column.property === 'index'">
+            <div class="btn-container" v-else-if="props.scope.column.property === 'index'">
               <div>
                 <span>{{props.scope.$index +1}}</span>
               </div>
-            </div>-->
-            <!--认证状态-->
-            <div class="btn-container" v-else-if="props.scope.column.property === 'status' || props.scope.column.property === 'authStatus'" style="height: 48px;">
+            </div>
+            <!-- 审核模式 -->
+            <div class="btn-container" v-else-if="props.scope.column.property === 'auditMode'" style="height: 48px;">
+              <span v-show="props.scope.row.auditMode === 1">
+                自动
+              </span>
+              <span v-show="props.scope.row.auditMode === 2">
+                人工
+              </span>
+            </div>
+            <!--身份认证状态-->
+            <div class="btn-container" v-else-if="props.scope.column.property === 'authStatus'" style="height: 48px;">
               <div>
-                <span :class="{'row-delete': props.scope.row.status !== 1}" v-show="!props.scope.row[props.scope.column.property] && props.scope.row[props.scope.column.property] !== 0">
+                <span v-show="props.scope.row.authStatus === -1">
                   未提交 <i class="el-icon-warning" style="color: #E6A23C;"></i>
                 </span>
-                <span :class="{'row-delete': props.scope.row.status !== 1}" v-show="props.scope.row[props.scope.column.property] === 0">
-                  <span v-if="props.scope.column.property === 'status'">待审核 <i class="el-icon-warning" style="color: #E6A23C;"></i></span>
-                  <span v-else>已提交 <i class="el-icon-warning" style="color: #E6A23C;"></i></span>
+                <span v-show="props.scope.row.authStatus === 0">
+                  <span>待审核 <i class="el-icon-warning" style="color: #E6A23C;"></i></span>
                 </span>
-                <span :class="{'row-delete': props.scope.row.status !== 1}" v-show="props.scope.row[props.scope.column.property] === 1">
+                <span v-show="props.scope.row.authStatus === 1">
                   已通过 <i class="el-icon-success" style="color: #67C23A;"></i>
                 </span>
-                <span :class="{'row-delete': props.scope.row.status !== 1}" v-show="props.scope.row[props.scope.column.property] === 2">
+                <span v-show="props.scope.row.authStatus === 2">
                   未通过 <i class="el-icon-error" style="color: #F56C6C;"></i>
                 </span>
               </div>
@@ -134,15 +156,31 @@ export default class officerManage extends Vue{
     auth_status: '',
     start: '',
     end: '',
+    mobile: '',
+    company_name: '',
+    real_name: '',
+    audit_mode: '',
     page: 1,
     count: 20
   }
+  searchType = {
+    condition1: 'company_name',
+    condition2: 'mobile',
+    keyword1:'',
+    keyword2: ''
+  }
+  /* 搜索关键字 */
+  keyword = [
+    {label: '公司名字', value: 'company_name'},
+    {label: '手机号', value: 'mobile'},
+    {label: '人名', value: 'real_name'}
+  ]
   fields = [
-//  {
-//    prop: 'index',
-//    label: '序号',
-//    width: 80
-//  },
+    {
+      prop: 'index',
+      label: '序号',
+      width: 60
+    },
     {
       prop: 'realName',
       label: '申请信息',
@@ -164,7 +202,7 @@ export default class officerManage extends Vue{
       width: 220
     },
     {
-      prop: 'status',
+      prop: 'statusDesc',
       label: '加入审核状态',
       width: 150
     },
@@ -174,7 +212,7 @@ export default class officerManage extends Vue{
       width: 150
     },
     {
-      prop: 'authStatus',
+      prop: 'auditMode',
       label: '身份审核模式',
       width: 150
     },
@@ -193,7 +231,11 @@ export default class officerManage extends Vue{
   list = []
   onSubmit (e) {
     this.form.page = 1
-    this.getRecruiterList()
+    let searchCondition = {}
+    if (this.searchType.condition1 && this.searchType.keyword1) searchCondition[this.searchType.condition1] = this.searchType.keyword1
+    if (this.searchType.condition2 && this.searchType.keyword2) searchCondition[this.searchType.condition2] = this.searchType.keyword2
+    let searchForm = Object.assign({}, this.form, searchCondition)
+    this.getRecruiterList(searchForm)
   }
   // 搜索地址
   search () {
@@ -201,11 +243,17 @@ export default class officerManage extends Vue{
   }
   /* 重置筛选 */
   resetForm (name) {
+    this.searchType = {
+      condition1: 'company_name',
+      condition2: 'mobile',
+      keyword1:'',
+      keyword2: ''
+    }
     this.$refs[name].resetFields()
   }
   /* 请求招聘官审核列表 */
-  getRecruiterList () {
-    getRecruiterListApi(this.form).then(res => {
+  getRecruiterList (newForm) {
+    getRecruiterListApi(newForm || this.form).then(res => {
       this.list = res.data.data
       this.total = res.data.meta.total
       this.pageCount = res.data.meta.lastPage
@@ -325,6 +373,20 @@ export default class officerManage extends Vue{
     }
   }
   .el-form{
+    /* 筛选 */
+    .inputSelect{
+      float: left;
+      margin-left: 10px;
+      margin-bottom: 22px;
+      width: 400px !important;
+      background-color: #FFFFFF;
+      .el-select{
+        width: 120px;
+        margin-top: -2px;
+        border: none;
+        box-sizing: border-box;
+      }
+    }
     .el-input{
       width: 200px;
     }

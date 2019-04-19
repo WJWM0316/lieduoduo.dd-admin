@@ -1,6 +1,6 @@
 <!--招聘官管理-->
 <template>
-  <div class="officerManage" @click="closeTopic">
+  <div class="officerManage" @click.stop="closeTopic">
     <el-container class="container" style="border: 1px solid #eee">
       <el-header class="header" style="text-align: right; font-size: 15px">
         <div class="title">用户管理({{total}})</div>
@@ -10,38 +10,63 @@
         <!--筛选-->
         <div class="selectionBox" @keyup.enter="onSubmit">
           <el-form ref="form" :model="form" label-width="80px" validate="validate">
-            
-            <el-form-item class="content" prop="content" label-width="0">
-              <el-input type='text' placeholder="请输入内容" v-model="form.content" class="inputSelect">
-                <el-select class="selectTitle" v-model="form.searchType" slot="prepend" placeholder="请选择" @change="changeProvince">
+            <!-- 筛选条件1 -->
+            <div class="content">
+              <el-input type='text' placeholder="请输入内容" v-model="searchType.keyword1" class="inputSelect">
+                <el-select class="selectTitle" v-model="searchType.condition1" slot="prepend" placeholder="请选择" @change="changeProvince">
                   <el-option v-for="item in keyword" :label="item.label" :value="item.value"></el-option>
                 </el-select>
               </el-input>
+            </div>
+            <!-- 筛选条件2 -->
+            <div class="content">
+              <el-input type='text' placeholder="请输入内容" v-model="searchType.keyword2" class="inputSelect">
+                <el-select class="selectTitle" v-model="searchType.condition2" slot="prepend" placeholder="请选择" @change="changeProvince">
+                  <el-option v-for="item in keyword" :label="item.label" :value="item.value"></el-option>
+                </el-select>
+              </el-input>
+            </div>
+            
+            <el-form-item class="time" label="创建时间" prop="createTimeStart" label-width="100px">
+              <el-col :span="11">
+                <el-date-picker type="date" placeholder="选择日期" value-format="yyyy-MM-dd" v-model="form.createTimeStart" style="width: 100%;"></el-date-picker>
+              </el-col>
+              <el-col class="line" :span="1">—</el-col>
+              <el-col :span="11">
+                <el-date-picker type="date" placeholder="选择日期" value-format="yyyy-MM-dd" v-model="form.createTimeEnd" style="width: 100%;"></el-date-picker>
+              </el-col>
             </el-form-item>
             
-            <el-form-item class="state" label="公司名称" prop="companyName">
-              <el-input v-model="form.companyName" placeholder="请输公司名字"></el-input>
+            <el-form-item class="state" label="身份类型" prop="role">
+              <el-select class="selectState" v-model="form.role" placeholder="全部状态" @change="changeProvince">
+                <el-option label="全部" value="99"></el-option>
+                <el-option label="无身份" value="0"></el-option>
+                <el-option label="招聘官" value="2"></el-option>
+                <el-option label="管理员" value="3"></el-option>
+              </el-select>
             </el-form-item>
-            
-            <el-form-item class="state" label-width="0" prop="searchType">
+
+            <el-form-item class="state" label="发布职位权益" label-width="120px" prop="createPositionRight">
+              <el-select class="selectState" v-model="form.createPositionRight" placeholder="全部状态" @change="changeProvince">
+                <el-option label="全部" value="99"></el-option>
+                <el-option label="无" value="-1"></el-option>
+                <el-option label="否" value="0"></el-option>
+                <el-option label="是" value="1"></el-option>
+              </el-select>
             </el-form-item>
-            
-            <el-form-item class="state" label="状态" prop="status">
-              <el-select class="selectState" v-model="form.status" placeholder="全部状态" @change="changeProvince">
-                <el-option label="全部状态" value="0"></el-option>
-                <el-option label="待求职者接受邀请" value="12"></el-option>
-                <el-option label="待面试官安排时间" value="21"></el-option>
-                <el-option label="待求职者确认" value="31"></el-option>
-                <el-option label="待面试官修改" value="32"></el-option>
-                <el-option label="已确定面试日程" value="41"></el-option>
-                <el-option label="不合适" value="52"></el-option>
-                <el-option label="求职者暂不考虑" value="54"></el-option>
-                <el-option label="面试已结束" value="51"></el-option>
+
+            <el-form-item class="state" label="身份认证状态" label-width="120px" prop="idAuth">
+              <el-select class="selectState" v-model="form.idAuth" placeholder="全部状态" @change="changeProvince">
+                <el-option label="全部" value="99"></el-option>
+                <el-option label="未提交" value="-1"></el-option>
+                <el-option label="待审核" value="0"></el-option>
+                <el-option label="已通过" value="1"></el-option>
+                <el-option label="未通过" value="2"></el-option>
               </el-select>
             </el-form-item>
             
             <el-form-item class="btn">
-              <el-button class="inquire" @click="onSubmit">查询</el-button>
+              <el-button class="inquire" @click.stop="onSubmit">查询</el-button>
               <el-button @click.stop="resetForm('form')">重置</el-button>
             </el-form-item>
           </el-form>
@@ -58,7 +83,7 @@
             <!-- 操作列 -->
             <div style="flex-wrap: wrap;" class="btn-container" v-if="props.scope.column.property === 'id'">
               <div>
-                <span class="check" @click="check(props.scope.row[props.scope.column.property])">查看</span>
+                <span class="check" @click.stop="check(props.scope.row.uid)">查看</span>
               </div>
               <div style="width: 100%; cursor: pointer; color: #652791;" @click.stop="creatLink($event, props.scope.row, props.scope.$index)">查看招聘官</div>
             </div>
@@ -87,9 +112,9 @@
             <!-- 身份认证状态 -->
             <div class="btn-container" v-else-if="props.scope.column.property === 'identityAuth'">
               <div>
-                <span v-if="props.scope.row.identityAuth === 0">已提交</span>
-                <span v-else-if="props.scope.row.identityAuth === 1">已通过</span>
-                <span v-else-if="props.scope.row.identityAuth === 2">未通过</span>
+                <span v-if="props.scope.row.identityAuthStatus === 0">待审核</span>
+                <span v-else-if="props.scope.row.identityAuthStatus === 1">已通过</span>
+                <span v-else-if="props.scope.row.identityAuthStatus === 2">未通过</span>
                 <span v-else>未提交</span>
               </div>
             </div>
@@ -151,15 +176,27 @@ export default class user extends Vue{
     keyword: '',
     status: '',
     auth_status: '',
-    start: '',
-    end: '',
+    createTimeStart: '',
+    createTimeEnd: '',
+    role: '99',
+    createPositionRight: '99', // 发布职位权益
+    idAuth: '99',
+    companyName: '',
+    mobile: '',
+    name: '',
     page: 1,
     count: 20
+  }
+  searchType = {
+    condition1: 'companyName',
+    condition2: 'mobile',
+    keyword1:'',
+    keyword2: ''
   }
   /* 搜索关键字 */
   keyword = [
     {label: '公司名字', value: 'companyName'},
-    {label: '手机号', value: 'phone'},
+    {label: '手机号', value: 'mobile'},
     {label: '人名', value: 'name'}
   ]
   fields = [
@@ -212,7 +249,11 @@ export default class user extends Vue{
     }
   onSubmit (e) {
     this.form.page = 1
-    this.getRecruiterList()
+    let searchCondition = {}
+    if (this.searchType.condition1 && this.searchType.keyword1) searchCondition[this.searchType.condition1] = this.searchType.keyword1
+    if (this.searchType.condition2 && this.searchType.keyword2) searchCondition[this.searchType.condition2] = this.searchType.keyword2
+    let searchForm = Object.assign({}, this.form, searchCondition)
+    this.getRecruiterList(searchForm)
   }
   // 搜索地址
   search () {
@@ -220,11 +261,18 @@ export default class user extends Vue{
   }
   /* 重置筛选 */
   resetForm (name) {
+    this.searchType = {
+      condition1: 'companyName',
+      condition2: 'mobile',
+      keyword1:'',
+      keyword2: ''
+    }
+    this.form.createTimeEnd = ''
     this.$refs[name].resetFields()
   }
   /* 请求招聘官审核列表 */
-  getRecruiterList () {
-    getUserListApi(this.form).then(res => {
+  getRecruiterList (newForm) {
+    getUserListApi(newForm || this.form).then(res => {
       this.list = res.data.data
       this.total = res.data.meta.total
       this.pageCount = res.data.meta.lastPage
@@ -241,8 +289,7 @@ export default class user extends Vue{
   check (id) {
     this.$route.meta.scrollY = window.scrollY
     this.$router.push({
-      path: '/recruitmentOfficer/reviewDetails',
-      query: {id: id}
+      path: `/user/userInfo/${id}`
     })
   }
   /* 生成职位详情小程序码 */
@@ -349,7 +396,10 @@ export default class user extends Vue{
       clear: both;
     }
   }
-  .el-form-item{
+  .el-form-item,
+  .content{
+    margin-bottom: 22px;
+    margin-left: 5px;
     float: left;
   }
   .btn{

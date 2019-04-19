@@ -7,15 +7,9 @@
         <div class="Info" :class="{'active': active === 0 }">公司信息</div>
         <div class="userInfo" :class="{'active': active === 1 }">账户设置</div>
       </div>
-      <!-- <el-steps :space="200" :active="active" finish-status="success">
-        <el-step title="填写公司信息"></el-step>
-        <el-step title="填写身份信息"></el-step>
-        <el-step title="录入完成"></el-step>
-      </el-steps> -->
       <div>
-      	<!-- <el-button @click.stop="last" v-show="active === 1">返回上一步</el-button>
-        <el-button @click.stop="next" v-show="active === 0">保存，下一步</el-button> -->
-        <el-button @click.stop="createdCompany" v-show="active === 0">保存并通过</el-button>
+        <el-button @click.stop="createdCompany" v-show="active === 0 && !isEdit">保存并通过</el-button>
+        <el-button @click.stop="createdCompany" v-show="active === 0 && isEdit">保存编辑</el-button>
       </div>
     </div>
      <!--公司信息表格-->
@@ -33,7 +27,8 @@
         </el-form-item>
         
         <el-form-item label="公司全称" prop="company_name">
-          <el-input v-model="companyInfo.company_name" placeholder="请输入名称" :minlength="2" :maxlength="50" style="width: 400px;"></el-input>
+          <el-input v-model="companyInfo.company_name" placeholder="请输入名称" :minlength="2" :maxlength="50" style="width: 400px;" v-if="!isEdit"></el-input>
+          <el-input v-model="companyInfo.company_name" placeholder="请输入名称" :minlength="2" disabled :maxlength="50" style="width: 400px;" v-if="isEdit"></el-input>
         </el-form-item>
         
         <el-form-item label="公司简称" prop="company_shortname">
@@ -42,7 +37,7 @@
         
         <el-form-item label="所属行业" prop="industry_id">
           <el-select style="width: 400px;" ref="tagSelector" v-model="companyInfo.industry_id" placeholder="请选择所属行业">
-            <el-option v-for="item in industry":label="item.name":value="item.labelId" :key="item.id" />
+            <el-option v-for="item in industry" :label="item.name" :value="item.labelId" :key="item.id" />
           </el-select> 
         </el-form-item>
         
@@ -58,7 +53,7 @@
           </el-select> 
         </el-form-item>
 
-        <el-form-item label="公司地址" prop="address_id" style="width: 380px;">
+        <el-form-item label="公司地址" prop="address_id" style="width: 380px;" v-if="!$route.params.checkId">
           <span class="addAdress" @click.stop="changeAdress"><i class="el-icon-circle-plus" style="color: #67C23A;"></i>点击添加公司地址</span>
           <!--公司地址列表-->
           <span class="AdressList" v-for="(item, index) in adressList">
@@ -114,7 +109,8 @@
       <h3>跟进销售</h3>
       <el-form>
         <el-form-item label="跟进人">
-          <el-select style="width: 400px;" ref="salesList" v-model="companyInfo.adminUid" placeholder="请选择跟进人">
+          <el-select style="width: 400px;" ref="salesList" v-model="companyInfo.admin_uid" placeholder="请选择跟进人">
+            <el-option label="无" :value="0" />
             <el-option v-for="item in salesList" :label="item.realname" :value="item.id" :key="item.id" />
           </el-select> 
         </el-form-item>
@@ -187,10 +183,6 @@
         </el-form-item>
       </el-form>
     </div>
-    <!--新建通过-->
-    <div class="personalInfo" v-if="active === 3">
-      创建成功
-    </div>
     <!--添加新公司地址弹窗-->
     <div class="pop" v-show="pop.isShow">
       <map-search
@@ -215,7 +207,7 @@ import Component from 'vue-class-component'
 import ImageUploader from '@/components/imageUploader'
 import emailCheck from '@/components/email/email'
 import { fieldApi, uploadApi, getSalerListApi } from 'API/commont'
-import { setCompanyInfoApi, setIdentityInfoApi, addCompanyAddressApi, delCompanyAddressApi, verifyEmailApi, checkCompanyNameApi } from 'API/company'
+import { setCompanyInfoApi, addCompanyAddressApi, delCompanyAddressApi, verifyEmailApi, checkCompanyNameApi, getCompanyInfoApi, editCompanyApi, getCheckCompanyInfoApi, editCheckCompanyInfoApi } from 'API/company'
 import mapSearch from '@/components/map'
 @Component({
   name: 'createCompany',
@@ -223,9 +215,17 @@ import mapSearch from '@/components/map'
     ImageUploader,
     mapSearch,
     emailCheck
-  }
+  },
+  // watch: {
+  //   companyInfo: {
+  //     handler(){},
+  //     immediatea: true,
+  //     deep: true
+  //   }
+  // }
 })
 export default class createCompany extends Vue {
+  isEdit = false
   active = 0
   adressList = [] // 地址列表
   pop = {
@@ -234,6 +234,17 @@ export default class createCompany extends Vue {
   }
   email = {
     isShow: false
+  }
+  /* 自定义公司名称校验规则 */
+  companyNameRule = (rule, value, callback) => {
+    console.log(this.companyInfo, '88888888888888888888')
+    checkCompanyNameApi(value).then(res => {
+      if (res.data.data.exist) {
+        callback(new Error('公司名称已被注册，请重新输入'))
+      } else {
+        callback()
+      }
+    })
   }
   /* 公司信息 */
   companyInfo = {
@@ -249,7 +260,7 @@ export default class createCompany extends Vue {
     website: '', // 公司官网
     address: [], // 公司地址
     email: '',
-    adminUid: '' //跟进人员
+    admin_uid: '' //跟进人员
   }
   /* 身份信息 */
   personalInfo = {
@@ -305,17 +316,6 @@ export default class createCompany extends Vue {
     icon4: '', // 身份证反面
     icon5: '' // 手持身份证照
   }
-  /* 自定义公司名称校验规则 */
-  companyNameRule = (rule, value, callback) => {
-    console.log(rule)
-    checkCompanyNameApi(this.companyInfo.company_name).then(res => {
-      if (res.data.data.exist) {
-        callback(new Error('公司名称已被注册，请重新输入'))
-      } else {
-        callback()
-      }
-    })
-  }
   // 公司表单验证规则
   companyInfoRules = {
     company_name: [
@@ -370,63 +370,40 @@ export default class createCompany extends Vue {
     this.active--
   }
   /* 创建公司 */
-  createdCompany () {
+  async createdCompany () {
+    console.log(this.companyInfo.company_name , 111111)
     this.companyInfo.address = this.adressList
-    this.$refs['companyInfo'].validate((valid) => {
+    this.$refs['companyInfo'].validate(async (valid) => {
       if (valid) {
-        setCompanyInfoApi(this.companyInfo).then(res => {
-          this.$message({
-            message: '公司创建成功',
-            type: 'success'
-          })
-          this.$router.push({path: '/index'})
+        const { id, checkId } = this.$route.params
+        if (this.isEdit) {
+          // 编辑公司
+          console.log(id, checkId , 6666)
+          if (id) {
+            await editCompanyApi(id, this.companyInfo)
+          } else {
+            await editCheckCompanyInfoApi(checkId, this.companyInfo)
+          }
+        } else {
+          // 新建公司
+          await setCompanyInfoApi(this.companyInfo)
+        }
+        this.$message({
+          message: this.isEdit ? '编辑成功' : '公司创建成功',
+          type: 'success'
         })
+        if (checkId) {
+          this.$router.push({path: `/companyCheck/verify?id=${checkId}`})
+        } else {
+          this.$router.push({path: '/index'})
+        }
+
       } else {
         return false;
       }
     })
   }
-  
-  async next() {
-    if (this.active >= 2 ) {
-      return
-    }
-    if (this.active === 0) {
-      this.$refs['companyInfo'].validate((valid) => {
-        if (valid) {
-          this.active++
-        } else {
-          return false;
-        }
-      })
-    } else {
-      this.$refs['personalInfo'].validate(async (valid) => {
-        if (valid) {
-          try {
-            let res = await setCompanyInfoApi(this.companyInfo)
-            this.personalInfo.company_id = res.data.data.companyId
-            await setIdentityInfoApi(this.personalInfo)
-            this.active+=2
-            this.$message({
-              message: '恭喜你，信息录入完成',
-              type: 'success'
-            })
-            let that = this
-            setTimeout(function () {
-              that.$router.push({
-                path: '/index'
-              })
-            }, 1000)
-          } catch (err) {
-            this.$message.error(`${err.data.msg}`)
-          }
-        } else {
-          return false;
-        }
-      })
-    }
-  }
-  
+
   handleIconLoaded (e) {
     console.log(e, 999)
     let formData = new FormData()
@@ -448,6 +425,7 @@ export default class createCompany extends Vue {
       }
     })
   }
+
   /* 所属行业标签 */
   getfieldList () {
     fieldApi().then(res => {
@@ -474,7 +452,8 @@ export default class createCompany extends Vue {
     this.adressList.push(address.data)
   }
   /* 删除地址 */
-  delAdress (index) {
+  async delAdress (index) {
+    await delCompanyAddressApi(this.adressList[index].id)
     this.adressList.splice(index, 1)
     this.companyInfo.address = this.adressList
   }
@@ -496,7 +475,59 @@ export default class createCompany extends Vue {
     this.email.isShow = false
   }
 
+  /* 获取编辑公司信息 */
+  async getCompanyInfo () {
+    const { id } = this.$route.params
+    let res = await getCompanyInfoApi(id)
+    let newCompanyInfo = res.data.data.companyInfo
+    this.setCompanyInfo(newCompanyInfo)
+  }
+
+  /* 获取审核公司信息 */
+  async getCheckCompanyInfo () {
+    const { checkId } = this.$route.params
+    let res = await getCheckCompanyInfoApi(checkId)
+    let newCompanyInfo = res.data.data.companyInfo
+    this.setCompanyInfo(newCompanyInfo)
+  }
+
+  /* 填充原公司数据 */
+  setCompanyInfo (newCompanyInfo) {
+    this.companyInfo = {
+      company_name: newCompanyInfo.companyName, // 公司名称
+      company_shortname: newCompanyInfo.companyShortname, // 公司简称
+      industry_id: newCompanyInfo.industryId? newCompanyInfo.industryId : '', // 所属行业
+      financing: newCompanyInfo.financing? parseInt(newCompanyInfo.financing) : '', // 融资
+      employees: newCompanyInfo.employees? parseInt(newCompanyInfo.employees) : '', // 规模
+      intro: newCompanyInfo.intro, // 公司简介
+      business_license: newCompanyInfo.businessLicenseInfo.id || '', // 营业执照
+      on_job: newCompanyInfo.onJobInfo.id || '', // 在职证明
+      logo: newCompanyInfo.logoInfo.id || '',
+      website: newCompanyInfo.website, // 公司官网
+      address: newCompanyInfo.address? newCompanyInfo.address : [], // 公司地址
+      email: newCompanyInfo.email,
+      admin_uid: parseInt(newCompanyInfo.adminUid) //跟进人员
+    }
+    // 上传证件信息
+    this.form = {
+      logo: newCompanyInfo.logoInfo.smallUrl || '', // logo
+      icon1: newCompanyInfo.businessLicenseInfo.smallUrl || '', // 营业执照
+      icon2: newCompanyInfo.onJobInfo.smallUrl || '' // 工牌/名片/在职证明
+    }
+    this.adressList = newCompanyInfo.address? newCompanyInfo.address : []
+  }
+
   created () {
+    const { id, checkId } = this.$route.params
+    if (id || checkId) { // 是否编辑公司信息
+      this.isEdit = true
+      this.companyInfoRules.company_name.splice(1,1)
+      if (id) {
+        this.getCompanyInfo()
+      } else {
+        this.getCheckCompanyInfo()
+      }
+    }
     this.getfieldList()
   }
 }
