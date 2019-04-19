@@ -147,12 +147,18 @@ export default class addUser extends Vue {
       newUser = Object.assign({}, param, this.phone)
     }
     console.log(newUser)
-    this.editOrCreat(newUser).then(res => {
-      this.$message({
-        message: this.isEdit? '编辑成功' : '用户创建成功',
-        type: 'success'
-      })
-      this.$router.push({path: '/user'})
+    this.$refs['personalInfo'].validate(async (valid) => {
+      if (valid) {
+        this.editOrCreat(newUser).then(res => {
+          this.$message({
+            message: this.isEdit? '编辑成功' : '用户创建成功',
+            type: 'success'
+          })
+          this.$router.go(-1)
+        })
+      } else {
+        return false
+      }
     })
   }
 

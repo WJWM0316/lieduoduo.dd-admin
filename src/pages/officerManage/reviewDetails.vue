@@ -3,14 +3,25 @@
   <div class="reviewDetail">
     <!--加入公司审核-->
     <div class="companyCheck">
-      <div class="companyName"><span class="label">加入公司</span>{{personalInfo.companyName}}</div>
-      <div class="companyName" v-if="personalInfo.adminInfo"><span class="label">加入方式</span>{{personalInfo.statusDesc || ''}}</div>
-      <div class="companyName" v-if="personalInfo.adminInfo"><span class="label">管理员</span>{{personalInfo.adminInfo.name || ''}}</div>
+      <div class="companyName"><span class="label">加入公司</span><div>{{personalInfo.companyName}}</div></div>
+      <div class="companyName"><span class="label">加入方式</span>
+        <div v-show="personalInfo.joinType === 0">未选择</div>
+        <div v-show="personalInfo.joinType === 1">管理员认证</div>
+        <div v-show="personalInfo.joinType === 2">邮箱认证</div>
+      </div>
       <div class="checkStatus">
+        <span class="label">加入审核状态</span>
         <div v-show="personalInfo.status === 0">审核中 <i class="el-icon-warning" style="color: #E6A23C;"></i></div>
         <div v-show="personalInfo.status === 1">已通过 <i class="el-icon-success" style="color: #67C23A;"></i></div>
         <div v-show="personalInfo.status === 2">未通过 <i class="el-icon-error" style="color: #F56C6C;"></i></div>
       </div>
+      <div class="companyName" v-if="personalInfo.adminInfo"><span class="label">管理员</span><div>{{personalInfo.adminInfo.name || ''}}</div></div>
+      <div class="companyName" v-if="identityInfo.mobile"><span class="label">联系方式</span><div>{{identityInfo.mobile || ''}}</div></div>
+    </div>
+    <div class="companyCheck">
+      <div class="companyName"><span class="label">担任职务</span>{{recruiterInfo.position || '无'}}</div>
+      <div class="companyName"><span class="label">接收简历邮箱</span>{{recruiterInfo.email || '无'}}</div>
+      <div class="companyName"><span class="label">公司认证邮箱</span>{{recruiterInfo.companyEmail || '无'}}</div>
     </div>
     <!--人员认证信息-->
     <div class="commont companyInfo">
@@ -25,7 +36,8 @@
         </div>
         <div class="editBox">
           <el-button class="inquire" @click.stop="Review(personalInfo.uid)" v-show="identityInfo.status === 0">审核</el-button>
-          <el-button type="info" disabled v-show="identityInfo.status !== 0">审核</el-button>
+          <el-button type="info" disabled v-show="identityInfo.status !== 0">{{identityInfo.status === 1? '已通过' : '审核'}}</el-button>
+          <el-button class="inquire" @click.stop="toEdit(personalInfo.uid)">编辑</el-button>
         </div>
       </div>
       <!--内容-->
@@ -33,37 +45,19 @@
         用户还未上传身份认证信息
       </div>
       <div class="content" v-else>
+        <div class="title">账号信息</div>
+        <div class="item"><span class="lable">手机号码：</span> {{identityInfo.mobile}}</div>
         <div class="title">个人信息</div>
         <div class="item"><span class="lable">姓名：</span> {{personalInfo.realName}}</div>
-        <div class="item"><span class="lable">公司职务：</span> {{personalInfo.userPosition}}</div>
-        <div class="item"><span class="lable">公司邮箱：</span> {{personalInfo.userEmail}}</div>
-        <div class="item"><span class="lable">手机号码：</span> {{identityInfo.mobile}}</div>
+        <div class="item"><span class="lable">性别：</span> {{identityInfo.genderDesc}}</div>
         <div class="title">身份信息</div>
         <div class="item"><span class="lable">真实姓名：</span> {{identityInfo.realName}}</div>
         <div class="item"><span class="lable">身份证号码：</span> {{identityInfo.identityNum}}</div>
-        <div class="item"><span class="lable">有效期：</span> {{identityInfo.validityStart}} 至 {{identityInfo.validityEnd}}</div>
-        <div class="title">认证材料</div>
         <div class="item">
           <div class="imgBox" v-if="identityInfo.passportFrontInfo">
-            <div class="imgNote">身份证（正面）</div>
+            <span class="lable">身份证(正面)：</span>
             <img :src="identityInfo.passportFrontInfo.middleUrl"/>
             <div class="zoomBox" @click.stop="showImg(identityInfo.passportFrontInfo.url)">
-              <i class="el-icon-zoom-in"></i>
-              查看大图
-            </div>
-          </div>
-          <div class="imgBox" v-if="identityInfo.passportReverseInfo">
-            <div class="imgNote">身份证（反面）</div>
-            <img :src="identityInfo.passportReverseInfo.middleUrl"/>
-            <div class="zoomBox" @click.stop="showImg(identityInfo.passportReverseInfo.url)">
-              <i class="el-icon-zoom-in"></i>
-              查看大图
-            </div>
-          </div>
-          <div class="imgBox" v-if="identityInfo.handheldPassportInfo">
-            <div class="imgNote">手持身份照</div>
-            <img :src="identityInfo.handheldPassportInfo.middleUrl"/>
-            <div class="zoomBox" @click.stop="showImg(identityInfo.handheldPassportInfo.url)">
               <i class="el-icon-zoom-in"></i>
               查看大图
             </div>
@@ -123,6 +117,7 @@ import { identityPassApi, identityFailApi } from 'API/company'
 export default class reviewDetails extends Vue {
   personalInfo = ''
   identityInfo = ''
+  recruiterInfo = ''
   nowImg = ''
   isCheck = false
   needReason = '' //是否需要审核原因
@@ -136,6 +131,7 @@ export default class reviewDetails extends Vue {
     getReviewDetailsApi(id).then(res => {
       this.personalInfo = res.data.data.applyInfo
       this.identityInfo = res.data.data.identityInfo
+      this.recruiterInfo = res.data.data.recruiterInfo
     })
   }
   /* 查看大图 */
@@ -149,6 +145,10 @@ export default class reviewDetails extends Vue {
   Review (id) {
     this.isCheck = true
     this.checkId = id
+  }
+  /* 去编辑身份证信息 */
+  toEdit (uid) {
+    this.$router.push({path: `/recruitmentOfficer/editUser/${uid}`})
   }
   /*设置审核结果 */
   setResult () {

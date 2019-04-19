@@ -9,7 +9,32 @@
   	  <!--筛选-->
       <div class="selectionBox" @keyup.enter="search">
         <el-form ref="form" :model="form" label-width="80px" validate="validate">
-          
+          <!-- 筛选条件1 -->
+          <div class="searchTab">
+            <el-input type='text' placeholder="请输入内容" v-model="searchType.keyword1" class="inputSelect">
+              <el-select class="selectTitle" v-model="searchType.condition1" slot="prepend" placeholder="请选择" @change="changeProvince">
+                <el-option label="公司名" value="keyword" v-show="searchType.condition2 !== 'keyword'"></el-option>
+                <el-option label="手机号码" value="mobile" v-show="searchType.condition2 !== 'mobile'"></el-option>
+                <el-option label="公司ID" value="companyId" v-show="searchType.condition2 !== 'companyId'"></el-option>
+              </el-select>
+            </el-input>
+          </div>
+          <!-- <el-form-item prop="keyword" label-width="20px" class="searchTab">
+            
+          </el-form-item> -->
+          <!-- 筛选条件2 -->
+          <div class="searchTab">
+            <el-input type='text' placeholder="请输入内容" v-model="searchType.keyword2" class="inputSelect">
+              <el-select class="selectTitle" v-model="searchType.condition2" slot="prepend" placeholder="请选择" @change="changeProvince">
+                <el-option label="公司名" value="keyword" v-show="searchType.condition1 !== 'keyword'"></el-option>
+                <el-option label="手机号码" value="mobile" v-show="searchType.condition1 !== 'mobile'"></el-option>
+                <el-option label="公司ID" value="companyId" v-show="searchType.condition1 !== 'companyId'"></el-option>
+              </el-select>
+            </el-input>
+          </div>
+          <!-- <el-form-item prop="keyword" label-width="20px" class="searchTab">
+            
+          </el-form-item> -->
           <!--地区筛选-->
           <el-form-item class="area" label="地区筛选" prop="area">
             <el-select v-model="form.firstAreaId" placeholder="请选择省份" @change="changeProvince" style="margin-right: 10px;">
@@ -75,26 +100,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <!-- 筛选条件1 -->
-          <el-form-item prop="keyword" label-width="20px" class="searchTab">
-            <el-input type='text' placeholder="请输入内容" v-model="searchType.keyword1" class="inputSelect">
-              <el-select class="selectTitle" v-model="searchType.condition1" slot="prepend" placeholder="请选择" @change="changeProvince">
-                <el-option label="公司名" value="keyword" v-show="searchType.condition2 !== 'keyword'"></el-option>
-                <el-option label="手机号码" value="mobile" v-show="searchType.condition2 !== 'mobile'"></el-option>
-                <el-option label="公司ID" value="companyId" v-show="searchType.condition2 !== 'companyId'"></el-option>
-              </el-select>
-            </el-input>
-          </el-form-item>
-          <!-- 筛选条件2 -->
-          <el-form-item prop="keyword" label-width="20px" class="searchTab">
-            <el-input type='text' placeholder="请输入内容" v-model="searchType.keyword2" class="inputSelect">
-              <el-select class="selectTitle" v-model="searchType.condition2" slot="prepend" placeholder="请选择" @change="changeProvince">
-                <el-option label="公司名" value="keyword" v-show="searchType.condition1 !== 'keyword'"></el-option>
-                <el-option label="手机号码" value="mobile" v-show="searchType.condition1 !== 'mobile'"></el-option>
-                <el-option label="公司ID" value="companyId" v-show="searchType.condition1 !== 'companyId'"></el-option>
-              </el-select>
-            </el-input>
-          </el-form-item>
+          
           <el-form-item class="btn">
             <el-button class="inquire" @click="onSubmit">查询</el-button>
             <el-button @click.stop="resetForm('form')">重置</el-button>
@@ -139,13 +145,6 @@
                 </div>
               </div>
             </div>
-            <!-- <div class="btn-container" v-else-if="props.scope.column.property === 'companyName'" style="height: 48px;">
-              <div class="companyName">
-                <img style="width: 56px;height: 56px;border-radius: 5px;margin-right: 5px;" :src="props.scope.row.logoInfo.middleUrl"/>
-                <div class="name">{{props.scope.row.companyName}}</div>
-                <div class="label"><span class="industry">{{props.scope.row.industry}}</span> <span class="capital">{{props.scope.row.financingInfo}}</span> <span class="extent">{{props.scope.row.employeesInfo}}</span></div>
-              </div>
-            </div> -->
             <!--认证状态-->
             <div class="btn-container" v-else-if="props.scope.column.property === 'status' || props.scope.column.property === 'authStatus'" style="height: 48px;">
               <div>
@@ -204,8 +203,8 @@ export default class indexPage extends Vue {
     adminUid: ''
   }
   searchType = {
-    condition1: '公司名',
-    condition2: '手机号码',
+    condition1: 'keyword',
+    condition2: 'mobile',
     keyword1:'',
     keyword2: ''
   }
@@ -428,7 +427,10 @@ export default class indexPage extends Vue {
         clear: both;
       }
     }
-    .el-form-item{
+    .el-form-item,
+    .searchTab{
+      margin-bottom: 22px;
+      margin-left: 5px;
       float: left;
     }
     .area{

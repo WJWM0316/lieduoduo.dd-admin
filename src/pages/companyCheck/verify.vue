@@ -90,7 +90,7 @@
         <div class="item"><span class="lable">手机号码：</span> {{personalInfo.mobile || '未设置手机'}}</div>
         <div class="title">个人资料</div>
         <div class="item"><span class="lable">姓名：</span> {{companyInfo.realName}}</div>
-        <div class="item"><span class="lable">性别：</span> {{companyInfo.gender === 1? '男' : '女'}}</div>
+        <div class="item"><span class="lable">性别：</span> {{personalInfo.genderDesc}}</div>
         <div class="title">认证资料</div>
         <div class="item"><span class="lable">真实姓名：</span> {{personalInfo.realName}}</div>
         <div class="item"><span class="lable">身份证号码：</span> {{personalInfo.identityNum}}</div>
@@ -104,22 +104,6 @@
               查看大图
             </div>
           </div>
-          <!-- <div class="imgBox" v-if="personalInfo.passportReverseInfo">
-            <div class="imgNote">身份证（反面）</div>
-            <img :src="personalInfo.passportReverseInfo.middleUrl"/>
-            <div class="zoomBox" @click.stop="showImg(personalInfo.passportReverseInfo.url)">
-              <i class="el-icon-zoom-in"></i>
-              查看大图
-            </div>
-          </div> -->
-          <!-- <div class="imgBox" v-if="personalInfo.handheldPassportInfo">
-            <div class="imgNote">手持身份照</div>
-            <img :src="personalInfo.handheldPassportInfo.middleUrl"/>
-            <div class="zoomBox" @click.stop="showImg(personalInfo.handheldPassportInfo.url)">
-              <i class="el-icon-zoom-in"></i>
-              查看大图
-            </div>
-          </div> -->
         </div>
       </div>
     </div>

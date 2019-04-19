@@ -46,6 +46,13 @@ export const routes = [
     meta: {title: '招聘官管理', keepAlive: true},
     component: resolve => require(['@/pages/officerManage/index.vue'], resolve),
   },
+  /* 编辑申请招聘官用户信息 */
+  {
+    path: '/recruitmentOfficer/editUser/:id',
+    name: 'editOfficerUser',
+    meta: {title: '编辑招聘官信息', haveParent: true, parentPath: '/recruitmentOfficer', parentName: '招聘官审核'},
+    component: resolve => require(['@/pages/user/addUser.vue'], resolve)
+  },
   /* 招聘官审核详情 */
   {
     path: '/recruitmentOfficer/reviewDetails',

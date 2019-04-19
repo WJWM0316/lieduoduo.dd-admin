@@ -3,7 +3,7 @@ import { request } from './index.js'
 
 /* 招聘官审核列表 */
 export const getRecruiterListApi = data => request({
-  url: '/applyjoin/list',
+  url: '/applyjoin/newList',
   type: 'get',
   data
 })
