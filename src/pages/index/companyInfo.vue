@@ -11,8 +11,8 @@
       	<!-- <el-button @click.stop="last" v-show="active === 1">返回上一步</el-button>
         <el-button @click.stop="next" v-show="active === 0">保存，下一步</el-button> -->
         <el-button @click.stop="toEdit">编辑</el-button>
-        <el-button @click.stop="bindAdmin" v-if="companyInfo.adminUid === 0">绑定管理员</el-button>
-        <el-button @click.stop="untiedAdmin" v-else>移除管理员</el-button>
+        <el-button @click.stop="bindAdmin" v-if="companyInfo.createdUid === 0">绑定管理员</el-button>
+        <el-button @click.stop="bindAdmin" v-else>移除管理员</el-button>
       </div>
     </div>
      <!--公司信息表格-->
@@ -109,26 +109,35 @@
       </el-form>
     </div>
     <!-- 绑定与解绑模块 -->
-    <div></div>
+    <div v-if="showAdminWindow" class="bindAdminWindo">
+      <admin-control
+        @closeAdminWindow="close"
+        :isBindAdmin = "companyInfo.createdUid? true : false"
+        :companyName = "companyInfo.companyName"
+        :nextAdmin = "nextAdmin"
+      ></admin-control>
+    </div>
   </div>
 </template>
 
 <script>
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import ImageUploader from '@/components/imageUploader'
-import emailCheck from '@/components/email/email'
+import adminControl from '@/components/adminControl/index'
 import { fieldApi, uploadApi, getSalerListApi } from 'API/commont'
-import { setCompanyInfoApi, setIdentityInfoApi, addCompanyAddressApi, delCompanyAddressApi, verifyEmailApi, checkCompanyNameApi, getCompanyInfoApi } from 'API/company'
+import { setCompanyInfoApi, setIdentityInfoApi, addCompanyAddressApi, delCompanyAddressApi, verifyEmailApi, checkCompanyNameApi, getCompanyInfoApi, getRecruitersListApi } from 'API/company'
 import mapSearch from '@/components/map'
 @Component({
   name: 'companyInfo',
-  components: {}
+  components: {
+    adminControl
+  }
 })
 export default class createCompany extends Vue {
   active = 0
   adressList = [] // 地址列表
   showAdminWindow = false
+  nextAdmin = '' // 公司下一个管理员的信息
   pop = {
     isShow: false,
     type: 'position'
@@ -165,12 +174,24 @@ export default class createCompany extends Vue {
   }
 
   /* 绑定管理员 */
-  bindAdmin () {
-    this.$message({
-      type: 'success',
-      message: '功能还在开发中，敬请期待'
-    })
-    // alert('功能还在开发中，敬请期待')
+  async bindAdmin () {
+    this.showAdminWindow = true
+    if (this.companyInfo.createdUid) {
+        let param = {
+            page: 1,
+            count: 2
+        }
+        let res = await getRecruitersListApi(this.$route.query.id, param)
+        res.data.data.forEach(item => {
+          if (this.companyInfo.createdUid !== item.uid) {
+            this.nextAdmin = item
+            console.log(item.uid)
+          }
+        });
+    }
+  }
+  close () {
+    this.showAdminWindow = false
   }
 
   created () {
@@ -280,5 +301,14 @@ export default class createCompany extends Vue {
   height: 100%;
   background: rgba(0, 0, 0, 0.7);
   z-index: 9999;
+}
+.bindAdminWindo{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 99999;
 }
 </style>

@@ -155,7 +155,8 @@ export const getCityApi = () => request({
 /* 校验公司名称是否被使用 */
 export const checkCompanyNameApi = (data) => request({
   url: `/company/exist/${data}`,
-  type: 'get'
+  type: 'get',
+  noGlobalLoading: true
 })
 /* 发送验证码到企业邮箱 */
 export const sendEmailApi = (data) => request({
@@ -180,4 +181,21 @@ export const editCheckCompanyInfoApi = (checkId, data) => request({
   type: 'put',
   data
 })
-
+/* 检测手机号码绑定账号的身份 */
+export const checkIdentityApi = (phone) => request({
+  url: `/company/is_admin/${phone}`,
+  type: 'get',
+  noGlobalLoading: true
+})
+/* 公司绑定用户 */
+export const bindCompanyApi = (companyId, data) => request({
+  url: `/company/recruiter/bind/${companyId}`,
+  type: 'post',
+  data
+})
+/* 获取公司招聘官团队 */
+export const getRecruitersListApi = (companyId, data) => request({
+  url: `/company/recruiters/${companyId}`,
+  type: 'get',
+  data
+})

@@ -237,7 +237,6 @@ export default class createCompany extends Vue {
   }
   /* 自定义公司名称校验规则 */
   companyNameRule = (rule, value, callback) => {
-    console.log(this.companyInfo, '88888888888888888888')
     checkCompanyNameApi(value).then(res => {
       if (res.data.data.exist) {
         callback(new Error('公司名称已被注册，请重新输入'))

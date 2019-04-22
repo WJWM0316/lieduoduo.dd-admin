@@ -18,7 +18,8 @@ export const getReviewDetailsApi = data => request({
 export const detectionMobileApi = data => request({
   url: `/usermanage/is_existed/mobile`,
   type: 'post',
-  data
+  data,
+  noGlobalLoading: true
 })
 /* 身份证信息校验 */
 export const checkUserauthApi = data => request({

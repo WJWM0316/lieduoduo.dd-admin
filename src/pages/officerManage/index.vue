@@ -312,12 +312,6 @@ export default class officerManage extends Vue{
   getQr ( id) {
     return getRecruiterCodeUrlApi({id: id})
   }
-  /* 关闭二维码弹窗 */
-//hiddenQr () {
-//  this.$nextTick(() => {
-//    this.$refs['qrCode'].style.display = 'none'
-//  })
-//}
   /* 关闭浮窗 */
   closeTopic () {
     this.$nextTick(() => {
