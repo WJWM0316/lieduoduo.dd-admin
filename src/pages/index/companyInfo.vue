@@ -108,6 +108,8 @@
         </el-form-item>
       </el-form>
     </div>
+    <!-- 绑定与解绑模块 -->
+    <div></div>
   </div>
 </template>
 
@@ -126,6 +128,7 @@ import mapSearch from '@/components/map'
 export default class createCompany extends Vue {
   active = 0
   adressList = [] // 地址列表
+  showAdminWindow = false
   pop = {
     isShow: false,
     type: 'position'
@@ -159,6 +162,15 @@ export default class createCompany extends Vue {
     let res = await getCompanyInfoApi(id)
     this.companyInfo = res.data.data.companyInfo
     this.rightInfo = res.data.data.rtInfo
+  }
+
+  /* 绑定管理员 */
+  bindAdmin () {
+    this.$message({
+      type: 'success',
+      message: '功能还在开发中，敬请期待'
+    })
+    // alert('功能还在开发中，敬请期待')
   }
 
   created () {
