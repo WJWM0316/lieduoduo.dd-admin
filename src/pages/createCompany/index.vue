@@ -452,7 +452,8 @@ export default class createCompany extends Vue {
   }
   /* 删除地址 */
   async delAdress (index) {
-    await delCompanyAddressApi(this.adressList[index].id)
+    console.log(index, this.adressList)
+    if (this.adressList[index].id) await delCompanyAddressApi(this.adressList[index].id)
     this.adressList.splice(index, 1)
     this.companyInfo.address = this.adressList
   }
