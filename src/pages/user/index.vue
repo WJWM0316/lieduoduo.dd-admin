@@ -234,6 +234,7 @@ export default class user extends Vue{
     {
       prop: 'id',
       fixed: "right",
+      width: 150,
       label: '操作'
     }
   ]

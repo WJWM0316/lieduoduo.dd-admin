@@ -137,7 +137,7 @@ export default class createCompany extends Vue {
   active = 0
   adressList = [] // 地址列表
   showAdminWindow = false
-  nextAdmin = '' // 公司下一个管理员的信息
+  nextAdmin = null // 公司下一个管理员的信息
   pop = {
     isShow: false,
     type: 'position'
@@ -185,13 +185,13 @@ export default class createCompany extends Vue {
         res.data.data.forEach(item => {
           if (this.companyInfo.createdUid !== item.uid) {
             this.nextAdmin = item
-            console.log(item.uid)
           }
         });
     }
   }
-  close () {
+  close (e) {
     this.showAdminWindow = false
+    if (e.needLoad) this.getCompanyInfo()
   }
 
   created () {

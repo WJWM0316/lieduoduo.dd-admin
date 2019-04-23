@@ -370,7 +370,6 @@ export default class createCompany extends Vue {
   }
   /* 创建公司 */
   async createdCompany () {
-    console.log(this.companyInfo.company_name , 111111)
     this.companyInfo.address = this.adressList
     this.$refs['companyInfo'].validate(async (valid) => {
       if (valid) {
@@ -394,7 +393,8 @@ export default class createCompany extends Vue {
         if (checkId) {
           this.$router.push({path: `/companyCheck/verify?id=${checkId}`})
         } else {
-          this.$router.push({path: '/index'})
+          this.$router.go(-1)
+          // this.$router.push({path: '/index'})
         }
 
       } else {

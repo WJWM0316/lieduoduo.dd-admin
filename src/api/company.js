@@ -199,3 +199,9 @@ export const getRecruitersListApi = (companyId, data) => request({
   type: 'get',
   data
 })
+/* 解绑管理员 */
+export const deleteAdminApi = (companyId, data) => request({
+  url: `/company/admin/bind/${companyId}`,
+  type: 'delete',
+  data
+})

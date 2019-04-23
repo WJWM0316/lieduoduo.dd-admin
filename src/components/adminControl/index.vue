@@ -46,8 +46,8 @@
             </ul>
             <div class="nextAdmin" v-if="nextAdmin">
                 <p>管理员身份和权限将自动更换到该公司所属以下招聘官</p>
-                <img class="nextAvar" src="" alt="">
-                <span class="nextName">名字</span>
+                <img class="nextAvar" :src="nextAdmin.avatar.smallUrl" alt="">
+                <span class="nextName">{{nextAdmin.name}}</span>
             </div>
             <el-button class="btn done" @click.stop="removeAdmin">确定</el-button>
             <el-button class="btn" @click.stop="cancel">取消</el-button>
@@ -60,7 +60,7 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import ImageUploader from '@/components/imageUploader'
-import { checkIdentityApi, bindCompanyApi } from 'API/company'
+import { checkIdentityApi, bindCompanyApi, deleteAdminApi } from 'API/company'
 @Component({
     name: 'adminBox',
     props: {
@@ -72,8 +72,7 @@ import { checkIdentityApi, bindCompanyApi } from 'API/company'
             default: ''
         },
         nextAdmin: {
-            type: Object,
-            default: ''
+            type: Object
         }
     },
     components: {
@@ -122,10 +121,13 @@ export default class adminBox extends Vue {
             { required: true, message: '请输入邮箱', trigger: 'blur' }
         ],
     }
+    /* 绑定管理员 */
     async done () {
         this.$refs['form'].validate(async (valid) => {
             if (valid) {
                 let res = await bindCompanyApi(this.$route.query.id, this.bindForm)
+                this.$message({type: 'success', message: '管理员绑定成功'})
+                this.$emit('closeAdminWindow', {needLoad: true})
             } else {
                 return false
             }
@@ -163,8 +165,16 @@ export default class adminBox extends Vue {
         this.$router.push({path: '/user/addUser'})
     }
     /* 移除管理员 */
-    removeAdmin () {
-        console.log("移除")
+    async removeAdmin () {
+        let param = {
+            newAdmin: this.nextAdmin? this.nextAdmin.uid : 0
+        }
+        await deleteAdminApi (this.$route.query.id, param)
+        this.$message({
+            type: 'success',
+            message: '管理员已移除'
+        })
+        this.$emit('closeAdminWindow', {needLoad: true})
     }
     created () {}
 }

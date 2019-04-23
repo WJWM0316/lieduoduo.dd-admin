@@ -118,9 +118,12 @@
           @page-change="handlePageChange">
           <template slot-scope="props" slot="columns">
             <!-- 操作列 -->
-            <div class="btn-container" v-if="props.scope.column.property === 'id'" style="height: 48px;">
+            <div class="btn-container" v-if="props.scope.column.property === 'id'">
               <div>
                 <span class="check" @click="check(props.scope.row[props.scope.column.property])">查看</span>
+              </div>
+              <div>
+                <span class="check" @click="toUser(props.scope.row.createdUid)" v-if="props.scope.row.createdUid">查看招聘官</span>
               </div>
             </div>
             <!-- 地址列 -->
@@ -254,6 +257,7 @@ export default class indexPage extends Vue {
     {
       prop: 'id',
       fixed: "right",
+      width: 180,
       label: '操作',
     }
   ]
@@ -353,6 +357,9 @@ export default class indexPage extends Vue {
       path: '/index/companyInfo',
       query: {id: id}
     })
+  }
+  toUser (uid) {
+    this.$router.push({path: `/user/userInfo/${uid}`})
   }
   created () {
     this.getCompanyList()
