@@ -376,7 +376,6 @@ export default class createCompany extends Vue {
         const { id, checkId } = this.$route.params
         if (this.isEdit) {
           // 编辑公司
-          console.log(id, checkId , 6666)
           if (id) {
             await editCompanyApi(id, this.companyInfo)
           } else {
@@ -458,11 +457,9 @@ export default class createCompany extends Vue {
   }
   /* 邮箱弹窗 */
   save (param) {
-    console.log(param, '保存')
     verifyEmailApi(param).then(res => {
       this.email.isShow = false
       this.companyInfo.email = param.email
-      console.log(this.companyInfo.email)
       this.$message({
         type: 'success',
         message: "邮箱验证成功"
@@ -470,7 +467,6 @@ export default class createCompany extends Vue {
     })
   }
   close () {
-    console.log('关闭')
     this.email.isShow = false
   }
 
