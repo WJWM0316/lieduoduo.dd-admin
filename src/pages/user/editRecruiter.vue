@@ -46,7 +46,7 @@
         </el-form-item>
       </el-form>
     </div>
-    <div class="companyMessage" v-if="userInfo.companyId">
+    <div class="companyMessage">
       <div>所属公司</div>
       <div class="companyName" v-show="companyInfo"><span class="label">公司全称</span><div>{{companyInfo.companyName}}</div></div>
       <div class="companyName" v-show="companyInfo"><span class="label">身份类型</span><div>{{companyInfo.isAdmin === 1? '管理员' : '招聘官'}}</div></div>
@@ -58,12 +58,8 @@
       </div>
       <div class="companyName" v-show="companyInfo">移出公司</div>
     </div>
-    <div class="companyMessage" v-else>
-      <div>所属公司</div>
-      <div class="companyName">绑定公司</div>
-    </div>
     <div class="officerInfo">
-      <div class="title"><span>招聘官信息</span><div class="editOfficer" v-if="false"><i class="el-icon-edit"></i>编辑</div></div>
+      <div class="title"><span>招聘官信息</span><div class="editOfficer"><i class="el-icon-edit"></i>编辑</div></div>
       <el-form label-suffix="：">
         <el-form-item label-width="150px" label="担任职务" style="width: 500px">
           {{userInfo.position}}
@@ -90,12 +86,12 @@ import { fieldApi, uploadIdcardApi } from 'API/commont'
 import { detectionMobileApi, checkUserauthApi, createdUserApi, getUserInfoApi, onCreatedRightApi, offCreatedRightApi } from 'API/recruiter'
 import { setCompanyInfoApi, setIdentityInfoApi, addCompanyAddressApi, delCompanyAddressApi } from 'API/company'
 @Component({
-  name: 'addUser',
+  name: 'editRecruiter',
   components: {
     ImageUploader
   }
 })
-export default class addUser extends Vue {
+export default class editRecruiter extends Vue {
   pop = {
     isShow: false,
     type: 'position'

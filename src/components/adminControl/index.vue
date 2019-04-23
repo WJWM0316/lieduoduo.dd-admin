@@ -127,7 +127,7 @@ export default class adminBox extends Vue {
             if (valid) {
                 let res = await bindCompanyApi(this.$route.query.id, this.bindForm)
                 this.$message({type: 'success', message: '管理员绑定成功'})
-                this.$emit('closeAdminWindow', {needLoad: true})
+                this.$emit('closeAdminWindow', {'needLoad': true})
             } else {
                 return false
             }
@@ -174,7 +174,7 @@ export default class adminBox extends Vue {
             type: 'success',
             message: '管理员已移除'
         })
-        this.$emit('closeAdminWindow', {needLoad: true})
+        this.$emit('closeAdminWindow', {'needLoad': true})
     }
     created () {}
 }

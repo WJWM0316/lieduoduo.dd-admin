@@ -59,7 +59,7 @@
         </el-form-item>
 
         <el-form-item class="" label="公司官网" style="width: 640px;">
-          <span>{{companyInfo.email}}</span>
+          <span>{{companyInfo.website}}</span>
         </el-form-item>
 
         <h3>资质信息</h3>
@@ -191,7 +191,7 @@ export default class createCompany extends Vue {
   }
   close (e) {
     this.showAdminWindow = false
-    if (e.needLoad) this.getCompanyInfo()
+    if (e && e.needLoad) this.getCompanyInfo()
   }
 
   created () {

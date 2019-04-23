@@ -379,6 +379,7 @@ export default class createCompany extends Vue {
           if (id) {
             await editCompanyApi(id, this.companyInfo)
           } else {
+            
             await editCheckCompanyInfoApi(checkId, this.companyInfo)
           }
         } else {

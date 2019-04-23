@@ -197,7 +197,8 @@ export const bindCompanyApi = (companyId, data) => request({
 export const getRecruitersListApi = (companyId, data) => request({
   url: `/company/recruiters/${companyId}`,
   type: 'get',
-  data
+  data,
+  noGlobalLoading: true
 })
 /* 解绑管理员 */
 export const deleteAdminApi = (companyId, data) => request({
