@@ -56,5 +56,13 @@ export const getUserInfoApi = data => request({
   url: `/usermanage/user/detail/${data}`,
   type: 'get'
 })
-
-
+/* 开启招聘官发布职位权限 */
+export const onCreatedRightApi = data => request({
+  url: `/usermanage/create_position/block/${data}`,
+  type: 'delete'
+})
+/* 关闭招聘官发布职位权限 */
+export const offCreatedRightApi = data => request({
+  url: `/usermanage/create_position/block/${data}`,
+  type: 'post'
+})

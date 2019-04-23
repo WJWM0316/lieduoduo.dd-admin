@@ -14,7 +14,6 @@
         <h3>账号信息</h3>
         <el-form-item label="手机号码" prop="mobile">
           <span>{{phone.mobile}}</span>
-          <!-- <el-input v-model="phone.mobile" placeholder="请输入手机号码" :maxlength="11" style="width: 250px;"></el-input> -->
         </el-form-item>
       </el-form>
 
@@ -22,16 +21,11 @@
         <h3>个人信息</h3>
         <el-form-item label="姓名" prop="name">
           <span>{{personalInfo.name}}</span>
-          <!-- <el-input v-model="personalInfo.name" placeholder="请输入姓名" :maxlength="20" style="width: 215px;"></el-input> -->
         </el-form-item>
 
         <el-form-item label="性别" prop="gender">
           <span v-if="personalInfo.gender === 1">男</span>
           <span v-else>女</span>
-          <!-- <el-select class="selectState" v-model="personalInfo.gender" placeholder="请选择性别">
-            <el-option label="男" value="1"></el-option>
-            <el-option label="女" value="2"></el-option>
-          </el-select> -->
         </el-form-item>
         
         <h3>身份信息
@@ -40,25 +34,45 @@
         </h3>
         <el-form-item label="真实姓名" prop="realname">
           <span>{{personalInfo.realname}}</span>
-          <!-- <el-input v-model="personalInfo.realname" placeholder="请输入真实姓名" :maxlength="20" style="width: 400px;"></el-input> -->
         </el-form-item>
         
         <el-form-item label="身份证号码" prop="idNum">
           <span>{{personalInfo.idNum}}</span>
-          <!-- <el-input v-model="personalInfo.idNum" placeholder="请输入身份证号码" :maxlength="18" style="width: 400px;"></el-input> -->
         </el-form-item>
         
         <!--身份证正面-->
         <el-form-item class="full" label="身份证正面" prop="icon">
           <img class="frontImg" :src="personalInfo.passportFront" alt="">
-          <!-- <image-uploader :width="iconUploader.width"
-                          :height="iconUploader.height"
-                          :tips="iconUploader.tips"
-                          type="front"
-                          v-model="form.icon3"
-                          @loaded="handleIconLoaded"/> -->
         </el-form-item>
-        <!-- <el-button class="detection" type="danger" round @click.stop="detectionInfo">提交校验身份证信息</el-button> -->
+      </el-form>
+    </div>
+    <div class="companyMessage">
+      <div>所属公司</div>
+      <div class="companyName" v-show="companyInfo"><span class="label">公司全称</span><div>{{companyInfo.companyName}}</div></div>
+      <div class="companyName" v-show="companyInfo"><span class="label">身份类型</span><div>{{companyInfo.isAdmin === 1? '管理员' : '招聘官'}}</div></div>
+      <div class="companyName" v-show="companyInfo"><span class="label">是否可以发布职位</span>
+        <el-switch
+          v-model="createPositionRight"
+          @change="changeRight">
+        </el-switch>
+      </div>
+      <div class="companyName" v-show="companyInfo">移出公司</div>
+    </div>
+    <div class="officerInfo">
+      <div class="title"><span>招聘官信息</span><div class="editOfficer" v-if="false"><i class="el-icon-edit"></i>编辑</div></div>
+      <el-form label-suffix="：">
+        <el-form-item label-width="150px" label="担任职务" style="width: 500px">
+          {{userInfo.position}}
+        </el-form-item>
+        <el-form-item label-width="150px" label="接收简历邮箱" style="width: 500px">
+          {{userInfo.email}}
+        </el-form-item>
+        <el-form-item label-width="150px" label="公司认证邮箱" style="width: 500px">
+          {{userInfo.companyEmail}}
+        </el-form-item>
+        <el-form-item label-width="150px" label="招聘官头像" style="width: 500px">
+          <img class="avar" v-for="item in userInfo.avatars" :src="item.smallUrl">
+        </el-form-item>
       </el-form>
     </div>
   </div>
@@ -69,7 +83,7 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import ImageUploader from '@/components/imageUploader'
 import { fieldApi, uploadIdcardApi } from 'API/commont'
-import { detectionMobileApi, checkUserauthApi, createdUserApi, getUserInfoApi } from 'API/recruiter'
+import { detectionMobileApi, checkUserauthApi, createdUserApi, getUserInfoApi, onCreatedRightApi, offCreatedRightApi } from 'API/recruiter'
 import { setCompanyInfoApi, setIdentityInfoApi, addCompanyAddressApi, delCompanyAddressApi } from 'API/company'
 @Component({
   name: 'addUser',
@@ -82,6 +96,8 @@ export default class addUser extends Vue {
     isShow: false,
     type: 'position'
   }
+  userInfo = '' // 请求回来的所有用户信息
+  createPositionRight = false // 是否有职位发布权限
   isDetection = false // 是否已校验身份证信息
   /* 身份证信息对象 */
   iDCard = {}
@@ -97,6 +113,7 @@ export default class addUser extends Vue {
     idNum : '', // 身份证号码
     passportFront : '', // 身份证正面照片
   }
+  companyInfo = {}
   iconUploader = {
     point: '',
     width: 400,
@@ -115,6 +132,9 @@ export default class addUser extends Vue {
   async getUserInfo () {
     let res = await getUserInfoApi(this.$route.params.id)
     let userInfo = res.data.data
+    this.userInfo = userInfo
+    this.companyInfo = userInfo.companyInfo
+    this.createPositionRight = userInfo.createPositionRight
     this.phone = {
       mobile: userInfo.mobile
     }
@@ -127,6 +147,25 @@ export default class addUser extends Vue {
       passportFront : userInfo.passportFront ? userInfo.passportFront.middleUrl : '', // 身份证正面照片
       identityAuth: userInfo.identityAuth
     }
+  }
+  /* 改变招聘官发布职位权限 */
+  changeRight () {
+    if (!this.createPositionRight) {
+      // 关闭
+      offCreatedRightApi(this.$route.params.id).then(res => {
+        this.$message({type: 'warning', message: '关闭发布权限成功'})
+      }).catch(res => {
+        this.createPositionRight = true
+      })
+    } else {
+      // 开启
+      onCreatedRightApi(this.$route.params.id).then(res => {
+        this.$message({type: 'success', message: '开启发布权限成功'})
+      }).catch(res => {
+        this.createPositionRight = false
+      })
+    }
+    console.log(this.createPositionRight)
   }
 
   created () {
@@ -164,10 +203,6 @@ export default class addUser extends Vue {
         }
       }
     }
-    // .el-steps{
-    //   text-align: left;
-    //   width: 500px;
-    // }
   }
   /*公司信息*/
   .companyInfo,
@@ -232,6 +267,44 @@ export default class addUser extends Vue {
   .status{
     font-size: 15px;
     padding-left: 10px;
+  }
+  .companyMessage {
+    border: 1px solid #CCCCCC;
+    border-radius: 4px;
+    padding: 22px;
+    display: flex;
+    justify-content: space-between;
+    font-weight: 700;
+    .label{
+      margin-right: 10px;
+      font-weight: 300;
+      color: #909399;
+    }
+  }
+  .officerInfo {
+    padding: 22px;
+    text-align: left;
+    border: 1px solid #CCCCCC;
+    border-radius: 4px;
+    .title {
+      border-bottom: 1px solid #cccccc;
+      padding-bottom: 10px;
+      margin-bottom: 10px;
+      >span {
+        font-weight: 700;
+        font-size: 18px;
+      }
+      .editOfficer {
+        float: right;
+        cursor: pointer;
+      }
+    }
+    .avar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin-left: 10px;
+    }
   }
 }
 </style>
