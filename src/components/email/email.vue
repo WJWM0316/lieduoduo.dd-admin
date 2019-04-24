@@ -1,7 +1,7 @@
 <template>
     <div class="email">
         <div class="header">验证公司邮箱</div>
-        <el-form>
+        <el-form :rules="rule" :model="form">
             <el-form-item label-width="100px" label-position="left" label="公司邮箱" style="width: 400px;" prop="email">
                 <el-input v-model="form.email" style="width: 300px;"></el-input>
             </el-form-item>

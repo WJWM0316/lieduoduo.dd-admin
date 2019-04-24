@@ -14,7 +14,8 @@
         <div class="editBox" v-if="!isEdit">
           <el-button class="inquire" @click.stop="Review(companyInfo.id, 'company')" v-show="companyInfo.step !== 0">审核</el-button>
           <el-button type="info" disabled v-show="companyInfo.step === 0">审核</el-button>
-          <el-button class="inquire" @click.stop="toEdit">编辑</el-button>
+          <el-button class="inquire" @click.stop="toEdit" v-show="companyInfo.status !== 1">编辑</el-button>
+          <el-button type="info" disabled v-show="companyInfo.status === 1">编辑</el-button>
         </div>
         <div class="editBox" v-else>
           <el-button class="inquire" @click.stop="edit('editCompany')">编辑</el-button>
@@ -28,14 +29,14 @@
         <div class="item"><span class="lable">所属行业：</span> {{companyInfo.industry}}</div>
         <div class="item"><span class="lable">融资阶段：</span> {{companyInfo.financingInfo}}</div>
         <div class="item"><span class="lable">人员规模：</span> {{companyInfo.employeesInfo}}</div>
-        <div>
+        <!-- <div>
           <template v-if="companyInfo.address && companyInfo.address.length">
             <div class="item" v-for="(item, index) in companyInfo.address" :key="index"><span class="lable">公司地址{{index+1}}：</span> {{item.address}}{{item.doorplate}}</div>
           </template>
           <template v-else>
             <div class="item"><span class="lable">公司地址1：</span> 还未设置</div>
           </template>
-        </div>
+        </div> -->
         <div class="item"><span class="lable">公司简介：</span></div>
         <pre class="describe"> {{companyInfo.intro}} </pre>
         <div class="item"><span class="lable">公司官网：</span> {{companyInfo.website || "未设置官网"}}</div>

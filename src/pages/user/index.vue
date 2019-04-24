@@ -96,7 +96,7 @@
             <!-- 所属公司 -->
             <div class="btn-container companyName" v-else-if="props.scope.column.property === 'companyName'">
               <div v-if="props.scope.row.isRecruiter">
-                <span>{{props.scope.row[props.scope.column.property]}}</span>
+                <span class="toCompany" @click.stop="toCompany(props.scope.row.companyId)">{{props.scope.row[props.scope.column.property]}}</span>
                 <p v-if="props.scope.row.isAdmin === 1">管理员</p>
                 <p v-else>招聘官</p>
               </div>
@@ -245,9 +245,12 @@ export default class user extends Vue{
     this.$router.push({path: '/user/addUser'})
   }
   /* 选择变更 */
-    changeProvince (e) {
-      console.log(this.nowSelect)
-    }
+  changeProvince (e) {
+    console.log(this.nowSelect)
+  }
+  toCompany (companyId) {
+    this.$router.push({path: `/index/companyInfo?id=${companyId}`})
+  }
   onSubmit (e) {
     this.form.page = 1
     let searchCondition = {}
@@ -430,6 +433,10 @@ export default class user extends Vue{
   .companyName{
     justify-content: flex-start;
     text-align: left;
+    .toCompany {
+      color: #652791;
+      cursor: pointer;
+    }
   }
 }
 .inquire{
