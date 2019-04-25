@@ -91,7 +91,7 @@
         <div class="item"><span class="lable">手机号码：</span> {{personalInfo.mobile || '未设置手机'}}</div>
         <div class="title">个人资料</div>
         <div class="item"><span class="lable">姓名：</span> {{companyInfo.realName}}</div>
-        <div class="item"><span class="lable">性别：</span> {{personalInfo.genderDesc}}</div>
+        <div class="item"><span class="lable">性别：</span> {{personalInfo.gender === 1? "男" : "女"}}</div>
         <div class="title">认证资料</div>
         <div class="item"><span class="lable">真实姓名：</span> {{personalInfo.realName}}</div>
         <div class="item"><span class="lable">身份证号码：</span> {{personalInfo.identityNum}}</div>

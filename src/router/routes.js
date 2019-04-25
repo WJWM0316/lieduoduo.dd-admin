@@ -150,5 +150,12 @@ export const routes = [
     name: 'userInfo',
     meta: {title: '查看用户详情', haveParent: true, parentPath: '/user', parentName: '用户管理'},
     component: resolve => require(['@/pages/user/userInfo.vue'], resolve)
+  },
+  /* 编辑招聘官信息 */
+  {
+    path: '/user/editRecruiter/:id',
+    name: 'editRecruiter',
+    meta: {title: '查看用户详情', haveParent: true, parentPath: '/user', parentName: '用户管理'},
+    component: resolve => require(['@/pages/user/editRecruiter.vue'], resolve)
   }
 ]

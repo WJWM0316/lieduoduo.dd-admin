@@ -56,14 +56,14 @@
           @change="changeRight">
         </el-switch>
       </div>
-      <div class="companyName" v-show="companyInfo">移出公司</div>
+      <!-- <div class="companyName" v-show="companyInfo">移出公司</div> -->
     </div>
     <div class="companyMessage" v-else>
       <div>所属公司</div>
-      <div class="companyName">绑定公司</div>
+      <!-- <div class="companyName">绑定公司</div> -->
     </div>
     <div class="officerInfo" v-if="userInfo.companyId">
-      <div class="title"><span>招聘官信息</span><div class="editOfficer" v-if="false"><i class="el-icon-edit"></i>编辑</div></div>
+      <div class="title"><span>招聘官信息</span><div class="editOfficer" v-if="false"><i class="el-icon-edit" @click.stop="toEditRecruiter"></i>编辑</div></div>
       <el-form label-suffix="：">
         <el-form-item label-width="150px" label="担任职务" style="width: 500px">
           {{userInfo.position}}

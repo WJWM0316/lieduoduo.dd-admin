@@ -1,74 +1,17 @@
 <!--创建公司-->
 <template>
-<div class="createCompany">
-    <div class="header">
-      <div class="creatTab" @click.stop="tab">
-        <div class="userInfo active">基本信息</div>
-      </div>
-        <el-button @click.stop="toEdit">编辑</el-button>
-    </div>
-    <!--身份信息表格-->
-    <div class="personalInfo">
-      <div class="point">上传工牌/名片/在职证明等信息需要与身份信息保持一致</div>
-      <el-form class="edit-form" ref="mobile" :model="phone" label-width="150px" label-suffix="：">
-        <h3>账号信息</h3>
-        <el-form-item label="手机号码" prop="mobile">
-          <span>{{phone.mobile}}</span>
-        </el-form-item>
-      </el-form>
-
-      <el-form class="edit-form" ref="personalInfo" :model="personalInfo" label-width="150px" label-suffix="：">
-        <h3>个人信息</h3>
-        <el-form-item label="姓名" prop="name">
-          <span>{{personalInfo.name}}</span>
-        </el-form-item>
-
-        <el-form-item label="性别" prop="gender">
-          <span v-if="personalInfo.gender === 1">男</span>
-          <span v-else>女</span>
-        </el-form-item>
-        
-        <h3>身份信息
-          <span class="status" v-show="personalInfo.identityAuth === 1"><i class="el-icon-success" style="color: #67C23A;"></i> 验证通过</span>
-          <span class="status" v-show="personalInfo.identityAuth === 0"><i class="el-icon-error" style="color: #F56C6C;"></i> 验证失败</span>
-        </h3>
-        <el-form-item label="真实姓名" prop="realname">
-          <span>{{personalInfo.realname}}</span>
-        </el-form-item>
-        
-        <el-form-item label="身份证号码" prop="idNum">
-          <span>{{personalInfo.idNum}}</span>
-        </el-form-item>
-        
-        <!--身份证正面-->
-        <el-form-item class="full" label="身份证正面" prop="icon">
-          <img class="frontImg" :src="personalInfo.passportFront" alt="">
-        </el-form-item>
-      </el-form>
-    </div>
-    <div class="companyMessage">
-      <div>所属公司</div>
-      <div class="companyName" v-show="companyInfo"><span class="label">公司全称</span><div>{{companyInfo.companyName}}</div></div>
-      <div class="companyName" v-show="companyInfo"><span class="label">身份类型</span><div>{{companyInfo.isAdmin === 1? '管理员' : '招聘官'}}</div></div>
-      <div class="companyName" v-show="companyInfo"><span class="label">是否可以发布职位</span>
-        <el-switch
-          v-model="createPositionRight"
-          @change="changeRight">
-        </el-switch>
-      </div>
-      <div class="companyName" v-show="companyInfo">移出公司</div>
-    </div>
+  <div class="createCompany">
     <div class="officerInfo">
       <div class="title"><span>招聘官信息</span><div class="editOfficer"><i class="el-icon-edit"></i>编辑</div></div>
       <el-form label-suffix="：">
         <el-form-item label-width="150px" label="担任职务" style="width: 500px">
-          {{userInfo.position}}
+          <el-input v-model="userInfo.position" placeholder="请输入担任职务" :maxlength="20" style="width: 400px;"></el-input>
         </el-form-item>
         <el-form-item label-width="150px" label="接收简历邮箱" style="width: 500px">
-          {{userInfo.email}}
+          <el-input v-model="userInfo.email" placeholder="请输入简历接收邮箱" :maxlength="20" style="width: 400px;"></el-input>
         </el-form-item>
         <el-form-item label-width="150px" label="公司认证邮箱" style="width: 500px">
-          {{userInfo.companyEmail}}
+          <el-input v-model="userInfo.companyEmail" placeholder="请输入公司邮箱" :maxlength="20" style="width: 400px;"></el-input>
         </el-form-item>
         <el-form-item label-width="150px" label="招聘官头像" style="width: 500px">
           <img class="avar" v-for="item in userInfo.avatars" :src="item.smallUrl">
@@ -81,91 +24,41 @@
 <script>
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import ImageUploader from '@/components/imageUploader'
-import { fieldApi, uploadIdcardApi } from 'API/commont'
-import { detectionMobileApi, checkUserauthApi, createdUserApi, getUserInfoApi, onCreatedRightApi, offCreatedRightApi } from 'API/recruiter'
-import { setCompanyInfoApi, setIdentityInfoApi, addCompanyAddressApi, delCompanyAddressApi } from 'API/company'
+import { getUserInfoApi } from 'API/recruiter'
 @Component({
-  name: 'editRecruiter',
-  components: {
-    ImageUploader
-  }
+  name: 'editRecruiter'
 })
 export default class editRecruiter extends Vue {
   pop = {
     isShow: false,
     type: 'position'
   }
-  userInfo = '' // 请求回来的所有用户信息
-  createPositionRight = false // 是否有职位发布权限
-  isDetection = false // 是否已校验身份证信息
-  /* 身份证信息对象 */
-  iDCard = {}
-  /* 手机号码 */
-  phone = {
-    mobile: ''
+  userInfo = {
+    uid: '',
+    position: '',
+    email: '',
+    companyEmail: '',
+    avatars: ''
   }
-  /* 身份信息 */
-  personalInfo = {
-    name: '', // 姓名
-    gender: '',
-    realname : '', // 真实姓名
-    idNum : '', // 身份证号码
-    passportFront : '', // 身份证正面照片
-  }
-  companyInfo = {}
+  avatarsList = []
   iconUploader = {
     point: '',
     width: 400,
     height: '',
     tips: '建议尺寸400X400px，JPG、PNG格式，图片小于5M。'
   }
-  form = {
-    icon3: '', // 身份证正面
-  }
-  /* 去编辑用户信息 */
-  toEdit () {
-    this.$router.push({path: `/user/editUser/${this.$route.params.id}`})
-  }
 
   /* 获取用户信息 */
   async getUserInfo () {
     let res = await getUserInfoApi(this.$route.params.id)
     let userInfo = res.data.data
-    this.userInfo = userInfo
-    this.companyInfo = userInfo.companyInfo
-    this.createPositionRight = userInfo.createPositionRight
-    this.phone = {
-      mobile: userInfo.mobile
+    this.userInfo = {
+      uid: this.$route.params.id,
+      position: userInfo.position,
+      email: userInfo.email,
+      companyEmail: userInfo.companyEmail,
+      avatars: userInfo.avatars
     }
-    /* 身份信息 */
-    this.personalInfo = {
-      name: userInfo.name, // 姓名
-      gender: userInfo.gender,
-      realname : userInfo.realname || '', // 真实姓名
-      idNum : userInfo.identityNum || '', // 身份证号码
-      passportFront : userInfo.passportFront ? userInfo.passportFront.middleUrl : '', // 身份证正面照片
-      identityAuth: userInfo.identityAuth
-    }
-  }
-  /* 改变招聘官发布职位权限 */
-  changeRight () {
-    if (!this.createPositionRight) {
-      // 关闭
-      offCreatedRightApi(this.$route.params.id).then(res => {
-        this.$message({type: 'warning', message: '关闭发布权限成功'})
-      }).catch(res => {
-        this.createPositionRight = true
-      })
-    } else {
-      // 开启
-      onCreatedRightApi(this.$route.params.id).then(res => {
-        this.$message({type: 'success', message: '开启发布权限成功'})
-      }).catch(res => {
-        this.createPositionRight = false
-      })
-    }
-    console.log(this.createPositionRight)
   }
 
   created () {

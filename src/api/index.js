@@ -50,8 +50,8 @@ export const request = ({type = 'post', url, data = {}, noGlobalLoading, config 
   return axios[type](url, type === 'get' ? { params: data } : data)
   .catch(err => {
     /* 通用的错误捕获可以在这里操作 */
-    Message.error(`啊，好像出错了，数据跑到银河系外面去了。`)
-  //  Message.error(`${err.data.msg}`)
+    // Message.error(`啊，好像出错了，数据跑到银河系外面去了。`)
+   Message.error(`${err.data.msg}`)
    return Promise.reject(err)
   })
 }

@@ -90,7 +90,7 @@
                           @loaded="handleIconLoaded"/>
         </el-form-item>
         <!--工牌/名片/在职证明-->
-        <el-form-item class="full" label="工牌/名片/在职证明(三选一)" prop="icon">
+        <el-form-item class="full" label="工牌/名片/在职证明" prop="icon">
           <image-uploader :width="iconUploader.width"
                           :height="iconUploader.height"
                           :tips="iconUploader.tips"
@@ -630,6 +630,6 @@ export default class createCompany extends Vue {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.7);
-  z-index: 9999;
+  z-index: 999;
 }
 </style>

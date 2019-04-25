@@ -162,7 +162,8 @@ export const checkCompanyNameApi = (data) => request({
 export const sendEmailApi = (data) => request({
   url: `/company/mail`,
   type: 'post',
-  data
+  data,
+  noGlobalLoading: true
 })
 /* 验证企业邮箱 */
 export const verifyEmailApi = (data) => request({

@@ -10,7 +10,8 @@
                 <el-input v-model="form.code" style="width: 300px;"></el-input>
             </el-form-item>
         </el-form>
-        <div class="sendEmail" @click.stop="sendEmail">发送验证码到对方邮箱</div>
+        <div class="sendEmail" @click.stop="sendEmail" v-if="!isSend">发送验证码到对方邮箱</div>
+        <div class="sendEmail isSend" v-else>发送验证码到对方邮箱 <span class="countdown">{{countdown}}</span></div>
         <div class="btn">
             <el-button class="define" @click.stop="save">确定</el-button>
             <el-button @click.stop="cancel">取消</el-button>
@@ -31,6 +32,9 @@ import { sendEmailApi } from 'API/company'
     }
 })
 export default class emailCheck extends Vue {
+    timer = null // 倒计时定时器
+    countdown = 60
+    isSend = false
     form = {
         email: '',
         code: '',
@@ -51,17 +55,34 @@ export default class emailCheck extends Vue {
     }
     /* 发送校验 */
     sendEmail () {
-        if (!this.form.email) return
+        if (!this.form.email) {
+            this.$message({
+                type: 'error',
+                message: '请输入有效邮箱'
+            })
+            return
+        }
         let param = {
             email: this.form.email,
             company_id: this.form.company_id,
             company_name: this.companyName
         }
         sendEmailApi(param).then(res => {
+            this.isSend = true
             this.$message({
-              message: '邮件已发送到邮箱，请登录邮箱查看',
+              message: '邮件已发送到邮箱，邮件有效期为10分钟，请及时登陆查看',
               type: 'success'
             })
+            let that = this
+            this.timer = setInterval(function () {
+                console.log(that.countdown)
+                --that.countdown
+                if (that.countdown <= 0) {
+                    that.countdown = 60
+                    that.isSend = false
+                    clearInterval(that.timer)
+                }
+            }, 1000)
         })
     }
 }
@@ -92,6 +113,14 @@ export default class emailCheck extends Vue {
         text-align: left;
         padding-left: 100px;
         color: #652791;
+        .countdown {
+            padding-left: 10px;
+            color: #652791;
+        }
+    }
+    .isSend {
+        color: #cccccc;
+        cursor: default;
     }
     .btn{
         margin-top: 30px;
