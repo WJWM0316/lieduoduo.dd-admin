@@ -7,6 +7,7 @@
 <script>
 import Vue from 'vue'
 import Component from 'vue-class-component'
+import { uploadApi } from 'API/commont'
 @Component({
   name: 'avarBox',
   props: {
@@ -55,9 +56,9 @@ export default class avarUploader extends Vue {
           file.preview = url
           file.uploadType = this.type
           this.previewSrc = url
-          this.$emit('input', this.previewSrc)
-          this.$emit('loaded', file)
-          console.log(file)
+          // this.$emit('input', this.previewSrc)
+          // this.$emit('loaded', file)
+          this.handleIconLoaded(file)
           // this.clearFileInput(event.target)
         }).catch(e => {
           console.log('获取图片文件报错', e)
@@ -85,18 +86,14 @@ export default class avarUploader extends Vue {
     })
   }
 
-  /* 上传身份证图片 */
   handleIconLoaded (e) {
+    console.log(e, 999)
     let formData = new FormData()
     formData.append('attach_type', 'img')
     formData.append('img', e)
-    uploadIdcardApi(formData).then(res => {
-      let { idCardInfo, file } = res.data.data[0]
-      this.personalInfo.realname = idCardInfo.name
-      this.personalInfo.idNum = idCardInfo.num
-      this.personalInfo.passportFront = file.id
-    }).catch (err => {
-      this.form.icon3 = ''
+    uploadApi(formData).then(res => {
+      this.$emit('getImg', res.data.data)
+      // console.log(res.data.data, '77777777777777777')
     })
   }
 

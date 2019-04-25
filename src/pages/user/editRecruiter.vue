@@ -15,11 +15,15 @@
           <el-input v-model="userInfo.companyEmail" placeholder="请输入公司邮箱" style="width: 400px;"></el-input>
         </el-form-item>
         <el-form-item label-width="150px" label="招聘官头像" style="width: 700px">
-          <img class="avar" v-for="item in avatarsList" :src="item.smallUrl">
+          <div class="avar" v-for="(item, index) in avatarsList">
+            <i class="el-icon-circle-close delIcon" @click.stop="delAvar(index)"></i>
+            <img :src="item.smallUrl">
+          </div>
           <avar-uploader
             class="avarBox"
             :width="80"
-            :height="80">
+            :height="80"
+            @getImg="getImg">
           </avar-uploader>
         </el-form-item>
         
@@ -67,17 +71,30 @@ export default class editRecruiter extends Vue {
       uid: this.$route.params.id,
       position: userInfo.position,
       email: userInfo.email,
-      companyEmail: userInfo.companyEmail
+      companyEmail: userInfo.companyEmail,
+      avatars: userInfo.avatarIds 
     }
     this.avatarsList = userInfo.avatars
   }
+  getImg (data) {
+    console.log(data, '1111111111111111')
+    this.userInfo.avatars.push(data[0].id)
+    this.avatarsList.push(data[0])
+  }
+
+  delAvar (index) {
+    this.avatarsList.splice(index, 1)
+    this.userInfo.avatars.splice(index, 1)
+  }
   save () {
+    this.userInfo.avatars = this.userInfo.avatars.join()
     console.log(this.userInfo)
     editOffCreatedApi(this.userInfo.uid, this.userInfo).then(res => {
       this.$message({
         type: 'success',
         message: '编辑成功'
       })
+      this.$router.go(-1)
     })
   }
 
@@ -215,11 +232,23 @@ export default class editRecruiter extends Vue {
       }
     }
     .avar {
+      position: relative;
       float: left;
       width: 80px;
       height: 80px;
-      border-radius: 50%;
       margin-left: 10px;
+      img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+      }
+      .delIcon {
+        cursor: pointer;
+        font-size: 20px;
+        position: absolute;
+        top: 0;
+        right: 10px;
+      }
     }
     .avarBox {
       float: left;
