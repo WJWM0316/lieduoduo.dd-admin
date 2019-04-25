@@ -2,20 +2,27 @@
 <template>
   <div class="createCompany">
     <div class="officerInfo">
-      <div class="title"><span>招聘官信息</span><div class="editOfficer"><i class="el-icon-edit"></i>编辑</div></div>
+      <div class="title"><span>招聘官信息</span><div class="editOfficer"><el-button @click.stop="save">保存</el-button></div></div>
+      
       <el-form label-suffix="：">
         <el-form-item label-width="150px" label="担任职务" style="width: 500px">
-          <el-input v-model="userInfo.position" placeholder="请输入担任职务" :maxlength="20" style="width: 400px;"></el-input>
+          <el-input v-model="userInfo.position" placeholder="请输入担任职务" style="width: 400px;"></el-input>
         </el-form-item>
         <el-form-item label-width="150px" label="接收简历邮箱" style="width: 500px">
-          <el-input v-model="userInfo.email" placeholder="请输入简历接收邮箱" :maxlength="20" style="width: 400px;"></el-input>
+          <el-input v-model="userInfo.email" placeholder="请输入简历接收邮箱" style="width: 400px;"></el-input>
         </el-form-item>
         <el-form-item label-width="150px" label="公司认证邮箱" style="width: 500px">
-          <el-input v-model="userInfo.companyEmail" placeholder="请输入公司邮箱" :maxlength="20" style="width: 400px;"></el-input>
+          <el-input v-model="userInfo.companyEmail" placeholder="请输入公司邮箱" style="width: 400px;"></el-input>
         </el-form-item>
-        <el-form-item label-width="150px" label="招聘官头像" style="width: 500px">
-          <img class="avar" v-for="item in userInfo.avatars" :src="item.smallUrl">
+        <el-form-item label-width="150px" label="招聘官头像" style="width: 700px">
+          <img class="avar" v-for="item in avatarsList" :src="item.smallUrl">
+          <avar-uploader
+            class="avarBox"
+            :width="80"
+            :height="80">
+          </avar-uploader>
         </el-form-item>
+        
       </el-form>
     </div>
   </div>
@@ -24,9 +31,13 @@
 <script>
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { getUserInfoApi } from 'API/recruiter'
+import avarUploader from '@/components/avarUploader/avarUploader'
+import { getUserInfoApi, editOffCreatedApi } from 'API/recruiter'
 @Component({
-  name: 'editRecruiter'
+  name: 'editRecruiter',
+  components: {
+    avarUploader
+  }
 })
 export default class editRecruiter extends Vue {
   pop = {
@@ -56,9 +67,18 @@ export default class editRecruiter extends Vue {
       uid: this.$route.params.id,
       position: userInfo.position,
       email: userInfo.email,
-      companyEmail: userInfo.companyEmail,
-      avatars: userInfo.avatars
+      companyEmail: userInfo.companyEmail
     }
+    this.avatarsList = userInfo.avatars
+  }
+  save () {
+    console.log(this.userInfo)
+    editOffCreatedApi(this.userInfo.uid, this.userInfo).then(res => {
+      this.$message({
+        type: 'success',
+        message: '编辑成功'
+      })
+    })
   }
 
   created () {
@@ -180,6 +200,9 @@ export default class editRecruiter extends Vue {
     border: 1px solid #CCCCCC;
     border-radius: 4px;
     .title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       border-bottom: 1px solid #cccccc;
       padding-bottom: 10px;
       margin-bottom: 10px;
@@ -188,14 +211,18 @@ export default class editRecruiter extends Vue {
         font-size: 18px;
       }
       .editOfficer {
-        float: right;
-        cursor: pointer;
+        display: inline-block;
       }
     }
     .avar {
+      float: left;
       width: 80px;
       height: 80px;
       border-radius: 50%;
+      margin-left: 10px;
+    }
+    .avarBox {
+      float: left;
       margin-left: 10px;
     }
   }

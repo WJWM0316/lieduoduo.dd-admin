@@ -66,3 +66,9 @@ export const offCreatedRightApi = data => request({
   url: `/usermanage/create_position/block/${data}`,
   type: 'post'
 })
+/* 编辑招聘官信息 */
+export const editOffCreatedApi = (uid, data) => request({
+  url: `/usermanage/recruiter/${uid}`,
+  type: 'post',
+  data
+})

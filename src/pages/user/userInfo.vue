@@ -138,7 +138,7 @@ export default class addUser extends Vue {
     let userInfo = res.data.data
     this.userInfo = userInfo
     this.companyInfo = userInfo.companyInfo
-    this.createPositionRight = userInfo.createPositionRight
+    this.createPositionRight = !!userInfo.createPositionRight
     this.phone = {
       mobile: userInfo.mobile
     }
