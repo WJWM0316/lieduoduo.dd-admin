@@ -19,8 +19,8 @@
       <div class="companyName" v-if="personalInfo.adminInfo"><span class="label">联系方式</span><div>{{personalInfo.adminInfo.mobile || ''}}</div></div>
     </div>
     <div class="companyCheck">
-      <div class="companyName"><span class="label">担任职务</span>{{recruiterInfo.position || '无'}}</div>
-      <div class="companyName"><span class="label">接收简历邮箱</span>{{recruiterInfo.email || '无'}}</div>
+      <div class="companyName"><span class="label">担任职务</span>{{personalInfo.userPosition || '无'}}</div>
+      <div class="companyName"><span class="label">接收简历邮箱</span>{{personalInfo.userEmail || '无'}}</div>
       <div class="companyName"><span class="label">公司认证邮箱</span>{{recruiterInfo.companyEmail || '无'}}</div>
     </div>
     <!--人员认证信息-->
