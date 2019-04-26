@@ -37,7 +37,7 @@
         <div class="editBox">
           <el-button class="inquire" @click.stop="Review(personalInfo.uid)" v-show="identityInfo.status === 0">审核</el-button>
           <el-button type="info" disabled v-show="identityInfo.status !== 0">{{identityInfo.status === 1? '已通过' : '审核'}}</el-button>
-          <el-button class="inquire" @click.stop="toEdit(personalInfo.uid)">编辑</el-button>
+          <!-- <el-button class="inquire" @click.stop="toEdit(personalInfo.uid)">编辑</el-button> -->
         </div>
       </div>
       <!--内容-->

@@ -7,7 +7,7 @@
                 <el-input v-model="bindForm.adminUser" @blur.stop="checkUser"></el-input>
             </el-form-item>
             <p v-if="toCretedUser"><i class="el-icon-warning" style="color: #E6A23C;"></i> 该用户不存在，请先 <span class="addUser" @click.stop="addUser">添加用户</span></p>
-            <div v-if="isNewUser">
+            <div v-if="isNewUser && !toCretedUser">
                 <el-form-item label="姓名">
                     <p>{{newUserInfo.name}}</p>
                 </el-form-item>
