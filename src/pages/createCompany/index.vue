@@ -237,13 +237,19 @@ export default class createCompany extends Vue {
   }
   /* 自定义公司名称校验规则 */
   companyNameRule = (rule, value, callback) => {
-    checkCompanyNameApi(value).then(res => {
-      if (res.data.data.exist) {
-        callback(new Error('公司名称已被注册，请重新输入'))
-      } else {
-        callback()
-      }
-    })
+    let reg = /\d+/g
+    let arr = value.match(reg)
+    if (arr) {
+      callback(new Error('公司名称不能使用阿拉伯数字'))
+    } else {
+      checkCompanyNameApi(value).then(res => {
+        if (res.data.data.exist) {
+          callback(new Error('公司名称已被注册，请重新输入'))
+        } else {
+          callback()
+        }
+      })
+    }
   }
   /* 公司信息 */
   companyInfo = {

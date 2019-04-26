@@ -127,7 +127,7 @@ export const routes = [
   {
     path: '/user',
     name: 'user',
-    meta: {title: '用户管理', haveParent: false},
+    meta: {title: '用户管理', haveParent: false,  keepAlive: true},
     component: resolve => require(['@/pages/user/index.vue'], resolve)
   },
   /* 添加用户 */
