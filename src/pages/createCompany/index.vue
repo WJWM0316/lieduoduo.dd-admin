@@ -325,13 +325,13 @@ export default class createCompany extends Vue {
       { required: true, message: '公司简称必填，要求1-10个字', trigger: 'blur', min: 1, max: 10 }
     ],
     industry_id: [
-      { required: true, message: '所属行业必选', trigger: 'blur' },
+      { required: true, message: '所属行业必选', trigger: 'change' },
     ],
     financing: [
-      { required: true, message: '融资情况必选', trigger: 'blur' },
+      { required: true, message: '融资情况必选', trigger: 'change' },
     ],
     employees: [
-      { required: true, message: '人员规模必选', trigger: 'blur' },
+      { required: true, message: '人员规模必选', trigger: 'change' },
     ]
   }
   // 身份信息表单验证

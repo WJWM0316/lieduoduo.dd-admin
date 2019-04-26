@@ -4,11 +4,11 @@
     <div class="officerInfo">
       <div class="title"><span>招聘官信息</span><div class="editOfficer"><el-button @click.stop="save">保存</el-button></div></div>
       
-      <el-form label-suffix="：">
-        <el-form-item label-width="150px" label="担任职务" style="width: 500px">
+      <el-form ref="officerInfo" label-suffix="：" :rules="rule">
+        <el-form-item label-width="150px" label="担任职务" style="width: 500px" prop="position">
           <el-input v-model="userInfo.position" placeholder="请输入担任职务" style="width: 400px;"></el-input>
         </el-form-item>
-        <el-form-item label-width="150px" label="接收简历邮箱" style="width: 500px">
+        <el-form-item label-width="150px" label="接收简历邮箱" style="width: 500px" prop="email">
           <el-input v-model="userInfo.email" placeholder="请输入简历接收邮箱" style="width: 400px;"></el-input>
         </el-form-item>
         <el-form-item label-width="150px" label="公司认证邮箱" style="width: 500px">
@@ -62,6 +62,14 @@ export default class editRecruiter extends Vue {
     height: '',
     tips: '建议尺寸400X400px，JPG、PNG格式，图片小于5M。'
   }
+  rule = {
+    position: [
+      { required: true, message: '请输入担任职务', trigger: 'blur' }
+    ],
+    email: [
+      { required: true, message: '请输入简历接收邮箱', trigger: 'blur' }
+    ]
+  }
 
   /* 获取用户信息 */
   async getUserInfo () {
@@ -77,7 +85,6 @@ export default class editRecruiter extends Vue {
     this.avatarsList = userInfo.avatars
   }
   getImg (data) {
-    console.log(data, '1111111111111111')
     this.userInfo.avatars.push(data[0].id)
     this.avatarsList.push(data[0])
   }
@@ -86,15 +93,22 @@ export default class editRecruiter extends Vue {
     this.avatarsList.splice(index, 1)
     this.userInfo.avatars.splice(index, 1)
   }
+
   save () {
-    this.userInfo.avatars = this.userInfo.avatars.join()
-    console.log(this.userInfo)
-    editOffCreatedApi(this.userInfo.uid, this.userInfo).then(res => {
-      this.$message({
-        type: 'success',
-        message: '编辑成功'
-      })
-      this.$router.go(-1)
+    this.$refs['officerInfo'].validate(async (valid) => {
+      if (valid) {
+        this.userInfo.avatars = this.userInfo.avatars.join()
+        console.log(this.userInfo)
+        editOffCreatedApi(this.userInfo.uid, this.userInfo).then(res => {
+          this.$message({
+            type: 'success',
+            message: '编辑成功'
+          })
+          this.$router.go(-1)
+        })
+      } else {
+        return false
+      }
     })
   }
 

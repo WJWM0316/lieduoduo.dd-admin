@@ -84,6 +84,7 @@
           <!-- 状态筛选 -->
           <el-form-item class="area" label="状态" prop="status" label-width="50px">
             <el-select v-model="form.status" placeholder="请选择状态" style="margin-right: 10px;">
+              <el-option label="全部" value=""></el-option>
               <el-option label="上线" value="1"></el-option>
               <el-option label="下线" value="0"></el-option>
             </el-select>
@@ -118,9 +119,9 @@
           @page-change="handlePageChange">
           <template slot-scope="props" slot="columns">
             <!-- 操作列 -->
-            <div class="btn-container" v-if="props.scope.column.property === 'id'">
+            <div class="btn-container" v-if="props.scope.column.property === 'check'">
               <div>
-                <span class="check" @click="check(props.scope.row[props.scope.column.property])">查看</span>
+                <span class="check" @click="check(props.scope.row.id)">查看</span>
               </div>
               <div>
                 <span class="check" @click="toUser(props.scope.row.createdUid)" v-if="props.scope.row.createdUid">查看招聘官</span>
@@ -219,8 +220,8 @@ export default class indexPage extends Vue {
   list = []
   fields = [
     {
-      prop: 'index',
-      label: '序号',
+      prop: 'id',
+      label: '公司ID',
       width: 80
     },
     {
@@ -255,7 +256,7 @@ export default class indexPage extends Vue {
       width: 200
     },
     {
-      prop: 'id',
+      prop: 'check',
       fixed: "right",
       width: 180,
       label: '操作',
