@@ -14,7 +14,7 @@
             <div class="content">
               <el-input type='text' placeholder="请输入内容" v-model="searchType.keyword1" class="inputSelect">
                 <el-select class="selectTitle" v-model="searchType.condition1" slot="prepend" placeholder="请选择" @change="changeProvince">
-                  <el-option v-for="item in keyword" :label="item.label" :value="item.value"></el-option>
+                  <el-option v-for="item in keyword" :label="item.label" :value="item.value" v-show="searchType.condition2 !== item.value"></el-option>
                 </el-select>
               </el-input>
             </div>
@@ -22,7 +22,7 @@
             <div class="content">
               <el-input type='text' placeholder="请输入内容" v-model="searchType.keyword2" class="inputSelect">
                 <el-select class="selectTitle" v-model="searchType.condition2" slot="prepend" placeholder="请选择" @change="changeProvince">
-                  <el-option v-for="item in keyword" :label="item.label" :value="item.value"></el-option>
+                  <el-option v-for="item in keyword" :label="item.label" :value="item.value" v-show="searchType.condition1 !== item.value"></el-option>
                 </el-select>
               </el-input>
             </div>
@@ -197,7 +197,7 @@ export default class user extends Vue{
   keyword = [
     {label: '公司名字', value: 'companyName'},
     {label: '手机号', value: 'mobile'},
-    {label: '人名', value: 'name'}
+    {label: '人名', value: 'userName'}
   ]
   fields = [
     {

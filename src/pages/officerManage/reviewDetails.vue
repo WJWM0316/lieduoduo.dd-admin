@@ -16,7 +16,7 @@
         <div v-show="personalInfo.status === 2">未通过 <i class="el-icon-error" style="color: #F56C6C;"></i></div>
       </div>
       <div class="companyName" v-if="personalInfo.adminInfo"><span class="label">管理员</span><div>{{personalInfo.adminInfo.name || ''}}</div></div>
-      <div class="companyName" v-if="identityInfo.mobile"><span class="label">联系方式</span><div>{{identityInfo.mobile || ''}}</div></div>
+      <div class="companyName" v-if="personalInfo.adminInfo"><span class="label">联系方式</span><div>{{personalInfo.adminInfo.mobile || ''}}</div></div>
     </div>
     <div class="companyCheck">
       <div class="companyName"><span class="label">担任职务</span>{{recruiterInfo.position || '无'}}</div>
