@@ -62,6 +62,10 @@
           <span>{{companyInfo.website}}</span>
         </el-form-item>
 
+        <el-form-item class="" label="公司邮箱" style="width: 640px;">
+          <span>{{companyInfo.email}}</span>
+        </el-form-item>
+
         <h3>资质信息</h3>
         <el-form-item class="full" label="营业执照" prop="icon" v-if="companyInfo.businessLicenseInfo">
           <img :src="companyInfo.businessLicenseInfo.smallUrl" alt="">

@@ -105,7 +105,7 @@
             <div class="btn-container" v-else-if="props.scope.column.property === 'createPositionRight'">
               <div>
                 <span v-if="props.scope.row.createPositionRight === 0">无</span>
-                <span v-else-if="props.scope.row.createPositionRight === 1">是</span>
+                <span v-else-if="props.scope.row.createPositionRight === 1 && props.scope.row.companyId">是</span>
                 <span v-else>---</span>
               </div>
             </div>
@@ -241,7 +241,7 @@ export default class user extends Vue{
   list = []
   /* 添加用户 */
   addUser () {
-    console.log('添加用户')
+    console.log(this.$route, '添加用户')
     this.$router.push({path: '/user/addUser'})
   }
   /* 选择变更 */
