@@ -17,7 +17,7 @@
         </el-form-item>
       </el-form>
 
-      <el-form class="edit-form" ref="personalInfo" :model="personalInfo" label-width="150px" label-suffix="：">
+      <el-form class="edit-form" ref="personalInfo" :model="personalInfo" label-width="160px" label-suffix="：">
         <h3>个人信息</h3>
         <el-form-item label="姓名" prop="name">
           <span>{{personalInfo.name}}</span>
@@ -32,6 +32,12 @@
           <span class="status" v-show="personalInfo.identityAuth === 1"><i class="el-icon-success" style="color: #67C23A;"></i> 验证通过</span>
           <span class="status" v-show="personalInfo.identityAuth === 0"><i class="el-icon-error" style="color: #F56C6C;"></i> 验证失败</span>
         </h3>
+        <!-- <el-form-item label="不需要身份认证" prop="realname">
+          <el-switch
+            v-model="isDetection"
+            @change="changeRight">
+          </el-switch>
+        </el-form-item> -->
         <el-form-item label="真实姓名" prop="realname">
           <span>{{personalInfo.realname}}</span>
         </el-form-item>
@@ -102,7 +108,7 @@ export default class addUser extends Vue {
   }
   userInfo = '' // 请求回来的所有用户信息
   createPositionRight = false // 是否有职位发布权限
-  isDetection = false // 是否已校验身份证信息
+  isDetection = true // 是否已校验身份证信息
   /* 身份证信息对象 */
   iDCard = {}
   /* 手机号码 */
