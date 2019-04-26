@@ -104,7 +104,7 @@
             <!-- 发布职位权益 -->
             <div class="btn-container" v-else-if="props.scope.column.property === 'createPositionRight'">
               <div>
-                <span v-if="props.scope.row.createPositionRight === 0">无</span>
+                <span v-if="props.scope.row.createPositionRight === 0">否</span>
                 <span v-else-if="props.scope.row.createPositionRight === 1 && props.scope.row.companyId">是</span>
                 <span v-else>---</span>
               </div>
