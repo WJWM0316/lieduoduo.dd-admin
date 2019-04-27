@@ -32,12 +32,12 @@
           <span class="status" v-show="personalInfo.identityAuth === 1"><i class="el-icon-success" style="color: #67C23A;"></i> 验证通过</span>
           <span class="status" v-show="personalInfo.identityAuth === 0"><i class="el-icon-error" style="color: #F56C6C;"></i> 验证失败</span>
         </h3>
-        <!-- <el-form-item label="不需要身份认证" prop="realname">
+        <el-form-item label="不需要身份认证" prop="realname" v-if="userInfo.companyId">
           <el-switch
             v-model="isDetection"
-            @change="changeRight">
+            @change="changeDemand">
           </el-switch>
-        </el-form-item> -->
+        </el-form-item>
         <el-form-item label="真实姓名" prop="realname">
           <span>{{personalInfo.realname}}</span>
         </el-form-item>
@@ -52,7 +52,7 @@
         </el-form-item>
       </el-form>
     </div>
-    <div class="companyMessage" v-if="userInfo.companyId">
+    <div class="companyMessage" v-if="userInfo.companyInfo">
       <div>所属公司</div>
       <div class="companyName" v-show="companyInfo"><span class="label">公司全称</span><div>{{companyInfo.companyName}}</div></div>
       <div class="companyName" v-show="companyInfo"><span class="label">身份类型</span><div>{{companyInfo.isAdmin === 1? '管理员' : '招聘官'}}</div></div>
@@ -93,7 +93,7 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import ImageUploader from '@/components/imageUploader'
 import { fieldApi, uploadIdcardApi } from 'API/commont'
-import { detectionMobileApi, checkUserauthApi, createdUserApi, getUserInfoApi, onCreatedRightApi, offCreatedRightApi } from 'API/recruiter'
+import { detectionMobileApi, checkUserauthApi, createdUserApi, getUserInfoApi, onCreatedRightApi, offCreatedRightApi, setDemandIdentityApi, delDemandIdentityApi } from 'API/recruiter'
 import { setCompanyInfoApi, setIdentityInfoApi, addCompanyAddressApi, delCompanyAddressApi } from 'API/company'
 @Component({
   name: 'addUser',
@@ -108,7 +108,7 @@ export default class addUser extends Vue {
   }
   userInfo = '' // 请求回来的所有用户信息
   createPositionRight = false // 是否有职位发布权限
-  isDetection = true // 是否已校验身份证信息
+  isDetection = '' // 是否已校验身份证信息
   /* 身份证信息对象 */
   iDCard = {}
   /* 手机号码 */
@@ -143,6 +143,8 @@ export default class addUser extends Vue {
     let res = await getUserInfoApi(this.$route.params.id)
     let userInfo = res.data.data
     this.userInfo = userInfo
+    this.isDetection = !userInfo.needRealNameAuth
+    console.log(this.isDetection, '000000000000')
     this.companyInfo = userInfo.companyInfo
     this.createPositionRight = !!userInfo.createPositionRight
     this.phone = {
@@ -156,6 +158,20 @@ export default class addUser extends Vue {
       idNum : userInfo.identityNum || '', // 身份证号码
       passportFront : userInfo.passportFront ? userInfo.passportFront.middleUrl : '', // 身份证正面照片
       identityAuth: userInfo.identityAuth
+    }
+  }
+  /* 是否需要校验身份信息 */
+  async changeDemand () {
+    try {
+      if (!this.isDetection) {
+        await setDemandIdentityApi (this.$route.params.id)
+        console.log('3333333333')
+      } else {
+        await delDemandIdentityApi (this.$route.params.id)
+        console.log('4444444444')
+      }
+    } catch (err) {
+      this.isDetection = !this.isDetection
     }
   }
   /* 改变招聘官发布职位权限 */

@@ -46,11 +46,9 @@
         </el-form-item>
 
         <el-form-item label="公司地址" prop="address_id" style="width: 380px;">
-          <!-- <span class="addAdress" @click.stop="changeAdress"><i class="el-icon-circle-plus" style="color: #67C23A;"></i>点击添加公司地址</span> -->
           <!--公司地址列表-->
           <span class="AdressList" v-for="(item, index) in companyInfo.address">
-            <!-- <i @click.stop="delAdress(index)" class="el-icon-remove" style="color: rgb(245, 108, 108);"></i> -->
-            {{`${item.address}${item.doorplate}`}}
+            {{`${index+1}、${item.address}${item.doorplate}`}}
           </span>
         </el-form-item>
         

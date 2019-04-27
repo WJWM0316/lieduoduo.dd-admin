@@ -32,25 +32,44 @@
           </el-select>
         </el-form-item>
         
-        <h3>身份信息</h3>
-        <el-form-item label="真实姓名" prop="realname">
-          <el-input v-model="personalInfo.realname" placeholder="请输入真实姓名" :maxlength="20" style="width: 400px;"></el-input>
-        </el-form-item>
-        
-        <el-form-item label="身份证号码" prop="idNum">
-          <el-input v-model="personalInfo.idNum" placeholder="请输入身份证号码" :maxlength="18" style="width: 400px;"></el-input>
-        </el-form-item>
-        
-        <!--身份证正面-->
-        <el-form-item class="full" label="身份证正面" prop="icon">
-          <image-uploader :width="iconUploader.width"
-                          :height="iconUploader.height"
-                          :tips="iconUploader.tips"
-                          type="front"
-                          v-model="form.icon3"
-                          @loaded="handleIconLoaded"/>
-        </el-form-item>
-        <el-button class="detection" type="danger" round @click.stop="detectionInfo">提交校验身份证信息</el-button>
+        <template  v-if="editIdentityAuth !== 1">
+          <h3>身份信息</h3>
+          <el-form-item label="真实姓名" prop="realname">
+            <el-input v-model="personalInfo.realname" placeholder="请输入真实姓名" :maxlength="20" style="width: 400px;"></el-input>
+          </el-form-item>
+          
+          <el-form-item label="身份证号码" prop="idNum">
+            <el-input v-model="personalInfo.idNum" placeholder="请输入身份证号码" :maxlength="18" style="width: 400px;"></el-input>
+          </el-form-item>
+          
+          <!--身份证正面-->
+          <el-form-item class="full" label="身份证正面" prop="icon">
+            <image-uploader :width="iconUploader.width"
+                            :height="iconUploader.height"
+                            :tips="iconUploader.tips"
+                            type="front"
+                            v-model="form.icon3"
+                            @loaded="handleIconLoaded"/>
+          </el-form-item>
+          <el-button class="detection" type="danger" round @click.stop="detectionInfo">提交校验身份证信息</el-button>
+        </template>
+        <template v-else>
+          <h3>身份信息
+            <span class="status" v-show="editIdentityAuth === 1"><i class="el-icon-success" style="color: #67C23A;"></i> 验证通过</span>
+          </h3>
+          <el-form-item label="真实姓名" prop="realname">
+            <span>{{personalInfo.realname}}</span>
+          </el-form-item>
+          
+          <el-form-item label="身份证号码" prop="idNum">
+            <span>{{personalInfo.idNum}}</span>
+          </el-form-item>
+          
+          <!--身份证正面-->
+          <el-form-item class="full" label="身份证正面" prop="icon">
+            <img class="frontImg" :src="personalInfo.passportFront" alt="">
+          </el-form-item>
+        </template>
       </el-form>
     </div>
   </div>
@@ -71,6 +90,7 @@ import { setCompanyInfoApi, setIdentityInfoApi, addCompanyAddressApi, delCompany
 })
 export default class addUser extends Vue {
   isEdit = false // 是否编辑用户，默认为创建用户
+  editIdentityAuth = 0 // 编辑用户的身份验证状态，默认未提交
   pop = {
     isShow: false,
     type: 'position'
@@ -214,6 +234,7 @@ export default class addUser extends Vue {
     let res = await getUserInfoApi(this.$route.params.id)
     let eidtUser = res.data.data
     console.log(res.data.data, '7785458558')
+    this.editIdentityAuth = eidtUser.identityAuth
     /* 手机号码 */
     this.phone.mobile = eidtUser.mobile
     /* 身份信息 */

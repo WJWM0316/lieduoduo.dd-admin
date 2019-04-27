@@ -72,3 +72,13 @@ export const editOffCreatedApi = (uid, data) => request({
   type: 'post',
   data
 })
+/* 设置为需要身份认证 */
+export const setDemandIdentityApi = (uid) => request({
+  url: `/usermanage/real_name/demand/${uid}`,
+  type: 'delete'
+})
+/* 设置不需要身份认证 */
+export const delDemandIdentityApi = (uid) => request({
+  url: `/usermanage/real_name/demand/${uid}`,
+  type: 'post'
+})

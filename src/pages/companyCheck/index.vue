@@ -31,6 +31,7 @@
                 <el-option label="待审核" value="0"></el-option>
                 <el-option label="已通过" value="1"></el-option>
                 <el-option label="未通过" value="2"></el-option>
+                <el-option label="未提交" value="3"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label-width="100px" label="身份认证状态" prop="auth_status" style="margin-left: 20px;">
@@ -96,6 +97,10 @@
                 </span>
                 <span :class="{'row-delete': props.scope.row.status !== 1}" v-show="props.scope.row[props.scope.column.property] === 2">
                   未通过 <i class="el-icon-error" style="color: #F56C6C;"></i>
+                </span>
+                <!-- 公司认证状态的未提交 -->
+                <span :class="{'row-delete': props.scope.row.status !== 1}" v-show="props.scope.row[props.scope.column.property] === 3">
+                  未提交 <i class="el-icon-error" style="color: #F56C6C;"></i>
                 </span>
               </div>
             </div>
@@ -294,6 +299,7 @@ export default class companyCheck extends Vue {
         line-height: 30px;
       }
       .label{
+        white-space: nowrap;
         text-align: left;
         width: 100%;
         span{
