@@ -207,3 +207,8 @@ export const deleteAdminApi = (companyId, data) => request({
   type: 'delete',
   data
 })
+/* 解绑招聘官 */
+export const deleteRecruiterApi = (companyId, uid) => request({
+  url: `/company/recruiter/bind/${companyId}?uid=${uid}`,
+  type: 'delete'
+})

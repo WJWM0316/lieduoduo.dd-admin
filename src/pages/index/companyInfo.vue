@@ -12,7 +12,7 @@
         <el-button @click.stop="next" v-show="active === 0">保存，下一步</el-button> -->
         <el-button @click.stop="toEdit">编辑</el-button>
         <el-button @click.stop="bindAdmin" v-if="companyInfo.createdUid === 0">绑定管理员</el-button>
-        <!-- <el-button @click.stop="bindAdmin" v-else>移除管理员</el-button> -->
+        <el-button @click.stop="bindAdmin" v-else>移除管理员</el-button>
       </div>
     </div>
      <!--公司信息表格-->
@@ -175,7 +175,7 @@ export default class createCompany extends Vue {
     this.rightInfo = res.data.data.rtInfo
   }
 
-  /* 绑定管理员 */
+  /* 绑定和解绑管理员 */
   async bindAdmin () {
     this.showAdminWindow = true
     if (this.companyInfo.createdUid) {

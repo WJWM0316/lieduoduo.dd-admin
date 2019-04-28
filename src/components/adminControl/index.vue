@@ -20,13 +20,6 @@
                 <el-form-item label="接收简历邮箱" prop="email">
                     <el-input v-model="bindForm.email"></el-input>
                 </el-form-item>
-                <!-- <el-form-item class="avar" label="招聘官头像">
-                    <image-uploader :width="iconUploader.width"
-                                    :height="iconUploader.height"
-                                    type="avar"
-                                    v-model="bindForm.avar"
-                                    @loaded="handleIconLoaded"/>
-                </el-form-item> -->
             </div>
             <el-button class="btn done" @click.stop="done" v-show="isNewUser">确定</el-button>
             <el-button class="btn" type="info" disabled v-show="!isNewUser">确定</el-button>
@@ -34,9 +27,11 @@
         </el-form>
       </div>
       <div v-else>
-        <header>移除并更换管理员</header>
+        <header v-if="!!isAdmin || !isFromUser">移除并更换管理员</header>
+        <header v-else>移除招聘官</header>
         <div class="removeAdmin">
-            <h2>确定将<span class="companyName">【{{companyName}}】</span>移除该管理员并更换?</h2>
+            <h2 v-if="!!isAdmin || !isFromUser">确定将<span class="companyName">【{{companyName}}】</span>移除该管理员并更换?</h2>
+            <h2 v-else>确定将<span class="companyName">【{{userName}}】</span>招聘官从<span class="companyName">【{{companyName}}】</span>移出吗?</h2>
             <p>解绑所属公司后，在平台上关联内容将如下处理，且数据永久保留</p>
             <ul>
                 <li>关闭与公司已绑定的所有职位</li>
@@ -60,14 +55,32 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import ImageUploader from '@/components/imageUploader'
-import { checkIdentityApi, bindCompanyApi, deleteAdminApi } from 'API/company'
+import { checkIdentityApi, bindCompanyApi, deleteAdminApi, deleteRecruiterApi } from 'API/company'
 @Component({
     name: 'adminBox',
     props: {
         isBindAdmin: {
             type: Boolean
         },
+        /* 是否在用户详情编辑 */
+        isFromUser: {
+            type: Boolean,
+            default: false
+        },
+        /* 用户当前身份 */
+        isAdmin: {
+            type: Number,
+            default: 0
+        },
+        companyId: {
+            type: Number,
+            default: 0
+        },
         companyName: {
+            type: String,
+            default: ''
+        },
+        userName: {
             type: String,
             default: ''
         },
@@ -173,14 +186,28 @@ export default class adminBox extends Vue {
     }
     /* 移除管理员 */
     async removeAdmin () {
-        let param = {
-            newAdmin: this.nextAdmin? this.nextAdmin.uid : 0
+        if (!this.isFromUser || !!this.isAdmin) {
+            // 从公司信息入口编辑或编辑管理员
+            let param = {
+                newAdmin: this.nextAdmin? this.nextAdmin.uid : 0
+            }
+            let nowCompanyId = this.isFromUser? this.companyId : this.$route.query.id
+            await deleteAdminApi (nowCompanyId, param)
+            this.$message({
+                type: 'success',
+                message: '管理员已移除'
+            })
+        } else {
+            // 从用户入口编辑
+            let param = {
+                uid: this.$route.params.id
+            }
+            await deleteRecruiterApi(this.companyId, this.$route.params.id)
+            this.$message({
+                type: 'success',
+                message: '招聘官已移除'
+            })
         }
-        await deleteAdminApi (this.$route.query.id, param)
-        this.$message({
-            type: 'success',
-            message: '管理员已移除'
-        })
         this.$emit('closeAdminWindow', {'needLoad': true})
     }
     created () {}

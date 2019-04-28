@@ -56,17 +56,19 @@
       <div>所属公司</div>
       <div class="companyName" v-show="companyInfo"><span class="label">公司全称</span><div>{{companyInfo.companyName}}</div></div>
       <div class="companyName" v-show="companyInfo"><span class="label">身份类型</span><div>{{companyInfo.isAdmin === 1? '管理员' : '招聘官'}}</div></div>
-      <div class="companyName" v-show="companyInfo"><span class="label">是否可以发布职位</span>
+      <div class="companyName" v-show="companyInfo && userInfo.companyId"><span class="label">是否可以发布职位</span>
         <el-switch
           v-model="createPositionRight"
           @change="changeRight">
         </el-switch>
       </div>
-      <!-- <div class="companyName" v-show="companyInfo">移出公司</div> -->
+      <div class="companyName" v-show="companyInfo && companyInfo.applyType"><span class="label">申请类型</span><div>创建公司类型</div></div>
+      <div class="companyName" v-show="companyInfo && companyInfo.applyType"><div class="btn" @click.stop="toCheckCompany(companyInfo.id)">去查看审核</div></div>
+      <div class="companyName btn" v-show="userInfo.companyId" @click.stop="removeUser">移出公司</div>
     </div>
     <div class="companyMessage" v-else>
       <div>所属公司</div>
-      <!-- <div class="companyName">绑定公司</div> -->
+      <div class="companyName btn" @click.stop="bindCompany">绑定公司</div>
     </div>
     <div class="officerInfo" v-if="userInfo.companyId">
       <div class="title"><span>招聘官信息</span><div class="editOfficer" v-if="true" @click.stop="toEditRecruiter"><i class="el-icon-edit"></i>编辑</div></div>
@@ -85,6 +87,19 @@
         </el-form-item>
       </el-form>
     </div>
+    <!-- 绑定与解绑模块 -->
+    <div v-if="showAdminWindow" class="bindAdminWindo">
+      <admin-control
+        @closeAdminWindow="close"
+        :isBindAdmin = "isRemove"
+        :userName = "personalInfo.name"
+        :companyName = "companyInfo? companyInfo.companyName : ''"
+        :nextAdmin = "nextAdmin"
+        :isFromUser = "true"
+        :isAdmin = "companyInfo.isAdmin"
+        :companyId = "companyInfo? companyInfo.id : 0"
+      ></admin-control>
+    </div>
   </div>
 </template>
 
@@ -92,13 +107,15 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import ImageUploader from '@/components/imageUploader'
+import adminControl from '@/components/adminControl/index'
 import { fieldApi, uploadIdcardApi } from 'API/commont'
 import { detectionMobileApi, checkUserauthApi, createdUserApi, getUserInfoApi, onCreatedRightApi, offCreatedRightApi, setDemandIdentityApi, delDemandIdentityApi } from 'API/recruiter'
-import { setCompanyInfoApi, setIdentityInfoApi, addCompanyAddressApi, delCompanyAddressApi } from 'API/company'
+import { setCompanyInfoApi, setIdentityInfoApi, addCompanyAddressApi, delCompanyAddressApi, getRecruitersListApi } from 'API/company'
 @Component({
   name: 'addUser',
   components: {
-    ImageUploader
+    ImageUploader,
+    adminControl
   }
 })
 export default class addUser extends Vue {
@@ -106,9 +123,12 @@ export default class addUser extends Vue {
     isShow: false,
     type: 'position'
   }
+  showAdminWindow = false // 是否显示招聘官弹窗
+  nextAdmin = null // 公司下一个管理员的信息
   userInfo = '' // 请求回来的所有用户信息
   createPositionRight = false // 是否有职位发布权限
   isDetection = '' // 是否已校验身份证信息
+  isRemove = false
   /* 身份证信息对象 */
   iDCard = {}
   /* 手机号码 */
@@ -137,6 +157,37 @@ export default class addUser extends Vue {
   toEdit () {
     this.$router.push({path: `/user/editUser/${this.$route.params.id}`})
   }
+  /* 去查看公司审核 */
+  toCheckCompany (companyId) {
+    this.$router.push({path: `/companyCheck/verify?id=${companyId}`})
+  }
+  /* 移出公司 */
+  async removeUser () {
+    this.isRemove = true
+    this.showAdminWindow = true
+    if (!!this.companyInfo.isAdmin) {
+        let param = {
+            page: 1,
+            count: 2
+        }
+        let res = await getRecruitersListApi(this.companyInfo.id, param)
+        res.data.data.forEach(item => {
+          if (this.userInfo.uid !== item.uid) {
+            this.nextAdmin = item
+          }
+        });
+    }
+  }
+  /* 绑定公司 */
+  bindCompany () {
+    this.isRemove = false
+    this.showAdminWindow = true
+  }
+  /* 关闭弹窗 */
+  close (e) {
+    this.showAdminWindow = false
+    if (e && e.needLoad) this.getUserInfo()
+  }
 
   /* 获取用户信息 */
   async getUserInfo () {
@@ -144,7 +195,6 @@ export default class addUser extends Vue {
     let userInfo = res.data.data
     this.userInfo = userInfo
     this.isDetection = !userInfo.needRealNameAuth
-    console.log(this.isDetection, '000000000000')
     this.companyInfo = userInfo.companyInfo
     this.createPositionRight = !!userInfo.createPositionRight
     this.phone = {
@@ -165,10 +215,8 @@ export default class addUser extends Vue {
     try {
       if (!this.isDetection) {
         await setDemandIdentityApi (this.$route.params.id)
-        console.log('3333333333')
       } else {
         await delDemandIdentityApi (this.$route.params.id)
-        console.log('4444444444')
       }
     } catch (err) {
       this.isDetection = !this.isDetection
@@ -304,11 +352,16 @@ export default class addUser extends Vue {
     padding: 22px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     font-weight: 700;
     .label{
       margin-right: 10px;
       font-weight: 300;
       color: #909399;
+    }
+    .btn {
+      cursor: pointer;
+      color: #652791;
     }
   }
   .officerInfo {
@@ -335,6 +388,15 @@ export default class addUser extends Vue {
       border-radius: 50%;
       margin-left: 10px;
     }
+  }
+  .bindAdminWindo{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 100;
   }
 }
 </style>

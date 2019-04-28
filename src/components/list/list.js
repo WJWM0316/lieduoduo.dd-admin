@@ -189,7 +189,6 @@ export default class List extends Vue {
     if (this.list.length === 0) {
       return
     }
-    // console.log(this.list.length, rowIndex, row, '99999999999999999999999')
     if (rowIndex === 2) {
       return 'warning-row'
     }
