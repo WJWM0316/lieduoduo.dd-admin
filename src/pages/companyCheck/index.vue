@@ -76,6 +76,13 @@
                 {{props.scope.row[props.scope.column.property]}}
               </span>
             </div>
+            <!-- 跟进人 -->
+            <div class="btn-container" v-else-if="props.scope.column.property === 'adminName'" style="justify-content: flex-start;">
+              <span style="text-align: left;">
+                <span v-if="props.scope.row.adminUid">{{props.scope.row.adminName}}</span>
+                <span v-else class="btn" @click.stop="toEditSaller">去选择跟进人</span>
+              </span>
+            </div>
             <!-- 申请信息列 -->
             <div class="btn-container" v-else-if="props.scope.column.property === 'companyName'" style="height: 48px;">
               <div class="companyName">
@@ -149,7 +156,13 @@ export default class companyCheck extends Vue {
     {
       prop: 'realName',
       label: '提交人',
-      width: 200,
+      width: 150,
+      align: 'left'
+    },
+    {
+      prop: 'adminName',
+      label: '跟进人',
+      width: 150,
       align: 'left'
     },
     {
@@ -213,6 +226,10 @@ export default class companyCheck extends Vue {
   /* 清除列表选项 */
   resetForm (name) {
     this.$refs[name].resetFields()
+  }
+  /* 去选择跟进人 */
+  toEditSaller () {
+    this.$router.push({path: '/companyCheck/641', query: {isEditSaller: true}})
   }
   created () {
     this.getTemplist()
@@ -317,6 +334,10 @@ export default class companyCheck extends Vue {
       justify-content: center;
       .check{
         line-height: 48px;
+        color: #652791;
+        cursor: pointer;
+      }
+      .btn {
         color: #652791;
         cursor: pointer;
       }

@@ -10,6 +10,7 @@
       <div>
         <el-button @click.stop="createdCompany" v-show="active === 0 && !isEdit">保存并通过</el-button>
         <el-button @click.stop="createdCompany" v-show="active === 0 && isEdit">保存编辑</el-button>
+        <el-button @click.stop="saveSaller" v-show="active === 1 && isEdit">保存跟进人</el-button>
       </div>
     </div>
      <!--公司信息表格-->
@@ -207,7 +208,7 @@ import Component from 'vue-class-component'
 import ImageUploader from '@/components/imageUploader'
 import emailCheck from '@/components/email/email'
 import { fieldApi, uploadApi, getSalerListApi } from 'API/commont'
-import { setCompanyInfoApi, addCompanyAddressApi, delCompanyAddressApi, verifyEmailApi, checkCompanyNameApi, getCompanyInfoApi, editCompanyApi, getCheckCompanyInfoApi, editCheckCompanyInfoApi } from 'API/company'
+import { setCompanyInfoApi, addCompanyAddressApi, delCompanyAddressApi, verifyEmailApi, checkCompanyNameApi, getCompanyInfoApi, editCompanyApi, getCheckCompanyInfoApi, editCheckCompanyInfoApi, editCheckCompanyFollowUserApi, editCompanyFollowUserApi } from 'API/company'
 import mapSearch from '@/components/map'
 @Component({
   name: 'createCompany',
@@ -385,7 +386,6 @@ export default class createCompany extends Vue {
           if (id) {
             await editCompanyApi(id, this.companyInfo)
           } else {
-            
             await editCheckCompanyInfoApi(checkId, this.companyInfo)
           }
         } else {
@@ -407,6 +407,21 @@ export default class createCompany extends Vue {
         return false;
       }
     })
+  }
+
+  /* 保存跟进人 */
+  async saveSaller () {
+    const { id, checkId } = this.$route.params
+    if (id) {
+      await editCompanyFollowUserApi(id, this.companyInfo.admin_uid)
+    } else {
+      await editCheckCompanyFollowUserApi(checkId, this.companyInfo.admin_uid)
+    }
+    this.$message({
+      type: 'success',
+      message: "跟进人编辑成功"
+    })
+    this.$router.go(-1)
   }
 
   handleIconLoaded (e) {
@@ -520,7 +535,8 @@ export default class createCompany extends Vue {
     this.adressList = newCompanyInfo.address? newCompanyInfo.address : []
   }
 
-  created () {
+  init () {
+    const { isEditSaller } = this.$route.query
     const { id, checkId } = this.$route.params
     if (id || checkId) { // 是否编辑公司信息
       this.isEdit = true
@@ -532,6 +548,17 @@ export default class createCompany extends Vue {
       }
     }
     this.getfieldList()
+    // 编辑跟进人
+    if (isEditSaller) {
+      this.active = 1
+      getSalerListApi().then(res => {
+        this.salesList = res.data.data
+      })
+    }
+  }
+
+  created () {
+    this.init()
   }
 }
 </script>

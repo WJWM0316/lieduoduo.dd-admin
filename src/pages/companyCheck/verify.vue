@@ -266,11 +266,13 @@ export default class checkPage extends Vue {
       //审核公司信息
       if (this.form.result === 'true') {
         temppassApi(this.checkId).then(res => {
-          this.companyInfo.status = 1
+          this.companyInfo.status = 0
+          this.companyInfo.step = 0
           this.isCheck = false
         })
       } else {
         tempfailApi(this.checkId, param).then(res => {
+          this.companyInfo.step = 0
           this.companyInfo.status = 2
           this.isCheck = false
         })

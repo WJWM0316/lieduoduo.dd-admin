@@ -12,7 +12,7 @@
         <el-button @click.stop="next" v-show="active === 0">保存，下一步</el-button> -->
         <el-button @click.stop="toEdit">编辑</el-button>
         <el-button @click.stop="bindAdmin" v-if="companyInfo.createdUid === 0">绑定管理员</el-button>
-        <el-button @click.stop="bindAdmin" v-else>移除管理员</el-button>
+        <!-- <el-button @click.stop="bindAdmin" v-else>移除管理员</el-button> -->
       </div>
     </div>
      <!--公司信息表格-->
@@ -127,7 +127,7 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import adminControl from '@/components/adminControl/index'
 import { fieldApi, uploadApi, getSalerListApi } from 'API/commont'
-import { setCompanyInfoApi, setIdentityInfoApi, addCompanyAddressApi, delCompanyAddressApi, verifyEmailApi, checkCompanyNameApi, getCompanyInfoApi, getRecruitersListApi } from 'API/company'
+import { setCompanyInfoApi, setIdentityInfoApi, addCompanyAddressApi, delCompanyAddressApi, verifyEmailApi, getCompanyInfoApi, getRecruitersListApi } from 'API/company'
 import mapSearch from '@/components/map'
 @Component({
   name: 'companyInfo',

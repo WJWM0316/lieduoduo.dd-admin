@@ -1,30 +1,57 @@
 <template>
   <div class="adminBox">
       <div v-if="!isBindAdmin">
-        <header>绑定管理员</header>
-        <el-form ref="form" :model="bindForm" :rules="bindRules" class="bindForm" label-width="120px" label-suffix="：" @keyup.enter="done">
-            <el-form-item label="管理员账号" prop="adminUser">
-                <el-input v-model="bindForm.adminUser" @blur.stop="checkUser"></el-input>
-            </el-form-item>
-            <p v-if="toCretedUser"><i class="el-icon-warning" style="color: #E6A23C;"></i> 该用户不存在，请先 <span class="addUser" @click.stop="addUser">添加用户</span></p>
-            <div v-if="isNewUser && !toCretedUser">
-                <el-form-item label="姓名">
-                    <p>{{newUserInfo.name}}</p>
+        <div v-if="!isFromUser">
+            <header>绑定管理员</header>
+            <el-form ref="form" :model="bindForm" :rules="bindRules" class="bindForm" label-width="120px" label-suffix="：" @keyup.enter="done">
+                <el-form-item label="管理员账号" prop="adminUser">
+                    <el-input v-model="bindForm.adminUser" @blur.stop="checkUser"></el-input>
                 </el-form-item>
-                <el-form-item label="性别">
-                    <P>{{newUserInfo.gender}}</p>
+                <p v-if="toCretedUser"><i class="el-icon-warning" style="color: #E6A23C;"></i> 该用户不存在，请先 <span class="addUser" @click.stop="addUser">添加用户</span></p>
+                <div v-if="isNewUser && !toCretedUser">
+                    <el-form-item label="姓名">
+                        <p>{{newUserInfo.name}}</p>
+                    </el-form-item>
+                    <el-form-item label="性别">
+                        <P>{{newUserInfo.gender}}</p>
+                    </el-form-item>
+                    <el-form-item label="担任职务" prop="position">
+                        <el-input v-model="bindForm.position"></el-input>
+                    </el-form-item>
+                    <el-form-item label="接收简历邮箱" prop="email">
+                        <el-input v-model="bindForm.email"></el-input>
+                    </el-form-item>
+                </div>
+                <el-button class="btn done" @click.stop="done" v-show="isNewUser">确定</el-button>
+                <el-button class="btn" type="info" disabled v-show="!isNewUser">确定</el-button>
+                <el-button class="btn" @click.stop="cancel">取消</el-button>
+            </el-form>
+        </div>
+        <div v-else>
+            <header>绑定公司</header>
+            <el-form ref="bindCompanyForm" :model="bindCompanyForm" :rules="companyRules" class="bindForm" label-width="120px" label-suffix="：" @keyup.enter="done">
+                <el-form-item label="绑定公司名称" prop="name">
+                    <el-input v-model="bindCompanyForm.name" @blur.stop="checkCompany"></el-input>
                 </el-form-item>
-                <el-form-item label="担任职务" prop="position">
-                    <el-input v-model="bindForm.position"></el-input>
-                </el-form-item>
-                <el-form-item label="接收简历邮箱" prop="email">
-                    <el-input v-model="bindForm.email"></el-input>
-                </el-form-item>
-            </div>
-            <el-button class="btn done" @click.stop="done" v-show="isNewUser">确定</el-button>
-            <el-button class="btn" type="info" disabled v-show="!isNewUser">确定</el-button>
-            <el-button class="btn" @click.stop="cancel">取消</el-button>
-        </el-form>
+                <div v-if="bindCompanyId">
+                    <el-form-item label="选择身份类型" prop="is_admin">
+                        <el-select class="selectState" v-model="bindCompanyForm.is_admin" placeholder="请选择身份">
+                            <el-option label="招聘官" value=0></el-option>
+                            <el-option label="管理员" value=1></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="担任职务" prop="position">
+                        <el-input v-model="bindCompanyForm.position"></el-input>
+                    </el-form-item>
+                    <el-form-item label="接收简历邮箱" prop="email">
+                        <el-input v-model="bindCompanyForm.email"></el-input>
+                    </el-form-item>
+                </div>
+                <el-button class="btn done" @click.stop="done" v-show="bindCompanyId">确定</el-button>
+                <el-button class="btn" type="info" disabled v-show="!bindCompanyId">确定</el-button>
+                <el-button class="btn" @click.stop="cancel">取消</el-button>
+            </el-form>
+        </div>
       </div>
       <div v-else>
         <header v-if="!!isAdmin || !isFromUser">移除并更换管理员</header>
@@ -55,7 +82,7 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import ImageUploader from '@/components/imageUploader'
-import { checkIdentityApi, bindCompanyApi, deleteAdminApi, deleteRecruiterApi } from 'API/company'
+import { checkIdentityApi, bindCompanyApi, deleteAdminApi, deleteRecruiterApi, checkCompanyNameApi } from 'API/company'
 @Component({
     name: 'adminBox',
     props: {
@@ -96,12 +123,30 @@ export default class adminBox extends Vue {
     toCretedUser = false
     isNewUser = false
     newUserInfo = ''
+    bindCompanyId = '' // 当前要绑定的公司id
     bindForm = {
-        is_admin: 1,
+        is_admin: '1',
         adminUser: '', // 管理员账号
         position: '', // 担任职务
         email: '',
         avatars: ''
+    }
+    /* 绑定公司 */
+    bindCompanyForm = {
+        name: '',
+        is_admin: '1',
+        uid: '', // 管理员账号
+        position: '', // 担任职务
+        email: ''
+    }
+    nameRule = (rule, value, callback) => {
+        checkCompanyNameApi(value).then(res => {
+            if (res.data.data.exist) {
+                callback()
+            } else {
+                callback(new Error(`公司不存在，请输入完整且正确的公司名字`))
+            }
+        })
     }
     phoneRule = (rule, value, callback) => {
         checkIdentityApi(value).then(res => {
@@ -134,24 +179,43 @@ export default class adminBox extends Vue {
             { required: true, message: '请输入邮箱', trigger: 'blur' }
         ],
     }
+    companyRules = {
+        "name": [
+            { required: true, message: '请输入公司名字', trigger: 'blur' },
+            { validator: this.nameRule, trigger: 'blur' }
+        ],
+        "is_admin": [
+            { required: true, message: '请选择身份', trigger: 'blur' },
+        ],
+        "position": [
+            { required: true, message: '请输入担任职务', trigger: 'blur' },
+        ],
+        "email": [
+            { required: true, message: '请输入接收简历邮箱', trigger: 'blur' },
+        ]
+    }
     /* 绑定管理员 */
     async done () {
-        if (!this.newUserInfo.name) {
+        if (!this.newUserInfo.name && !isFromUser) {
             this.$message({
                 type: 'error',
                 message: '用户信息不完善，请先完善后再绑定！'
             })
             return
         }
-        this.$refs['form'].validate(async (valid) => {
-            if (valid) {
-                let res = await bindCompanyApi(this.$route.query.id, this.bindForm)
-                this.$message({type: 'success', message: '管理员绑定成功'})
-                this.$emit('closeAdminWindow', {'needLoad': true})
-            } else {
-                return false
-            }
-        })
+        if (!isFromUser) {
+            this.$refs['form'].validate(async (valid) => {
+                if (valid) {
+                    let res = await bindCompanyApi(this.$route.query.id, this.bindForm)
+                    this.$message({type: 'success', message: '管理员绑定成功'})
+                    this.$emit('closeAdminWindow', {'needLoad': true})
+                } else {
+                    return false
+                }
+            })
+        } else {
+            
+        }
     }
     cancel () {
         this.$emit('closeAdminWindow')
@@ -174,6 +238,13 @@ export default class adminBox extends Vue {
             } else {
                 this.toCretedUser = true
                 new Error('手机号码尚未注册，请先注册用户')
+            }
+        })
+    }
+    checkCompany () {
+        checkCompanyNameApi(this.bindCompanyForm.name).then(res => {
+            if (res.data.data.exist) {
+                this.bindCompanyId = res.data.data.id
             }
         })
     }
@@ -225,7 +296,6 @@ export default class adminBox extends Vue {
     }
     overflow: hidden;
     width: 500px;
-    // height: 300px;
     background-color: #ffffff;
     border-radius: 5px;
     position: absolute;
@@ -259,6 +329,9 @@ export default class adminBox extends Vue {
                 color: #652791;
                 font-size: 16px;
             }
+        }
+        .selectState {
+            float: left;
         }
     }
     /* 解绑单独样式 */

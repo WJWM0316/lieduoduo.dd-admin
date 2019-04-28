@@ -212,3 +212,13 @@ export const deleteRecruiterApi = (companyId, uid) => request({
   url: `/company/recruiter/bind/${companyId}?uid=${uid}`,
   type: 'delete'
 })
+/* 编辑公司审核表跟进人 */
+export const editCheckCompanyFollowUserApi = (companyId, uid) => request({
+  url: `/company/company_temp_add_to_follow_user/${companyId}?admin_uid=${uid}`,
+  type: 'put'
+})
+/* 编辑公司库表里跟进人 */
+export const editCompanyFollowUserApi = (companyId, uid) => request({
+  url: `/company/company_add_to_follow_user/${companyId}?admin_uid=${uid}`,
+  type: 'put'
+})

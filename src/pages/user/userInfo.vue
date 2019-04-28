@@ -64,11 +64,11 @@
       </div>
       <div class="companyName" v-show="companyInfo && companyInfo.applyType"><span class="label">申请类型</span><div>创建公司类型</div></div>
       <div class="companyName" v-show="companyInfo && companyInfo.applyType"><div class="btn" @click.stop="toCheckCompany(companyInfo.id)">去查看审核</div></div>
-      <div class="companyName btn" v-show="userInfo.companyId" @click.stop="removeUser">移出公司</div>
+      <!-- <div class="companyName btn" v-show="userInfo.companyId" @click.stop="removeUser">移出公司</div> -->
     </div>
     <div class="companyMessage" v-else>
       <div>所属公司</div>
-      <div class="companyName btn" @click.stop="bindCompany">绑定公司</div>
+      <!-- <div class="companyName btn" @click.stop="bindCompany">绑定公司</div> -->
     </div>
     <div class="officerInfo" v-if="userInfo.companyId">
       <div class="title"><span>招聘官信息</span><div class="editOfficer" v-if="true" @click.stop="toEditRecruiter"><i class="el-icon-edit"></i>编辑</div></div>
@@ -96,7 +96,7 @@
         :companyName = "companyInfo? companyInfo.companyName : ''"
         :nextAdmin = "nextAdmin"
         :isFromUser = "true"
-        :isAdmin = "companyInfo.isAdmin"
+        :isAdmin = "companyInfo? companyInfo.isAdmin: 0"
         :companyId = "companyInfo? companyInfo.id : 0"
       ></admin-control>
     </div>
