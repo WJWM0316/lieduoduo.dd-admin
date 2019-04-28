@@ -12,10 +12,10 @@
           <span class="status" v-show="companyInfo.status === 2"><i class="el-icon-error" style="color: #F56C6C;"></i> 未通过</span>
         </div>
         <div class="editBox" v-if="!isEdit">
-          <el-button class="inquire" @click.stop="Review(companyInfo.id, 'company')" v-show="companyInfo.step !== 0">审核</el-button>
-          <el-button type="info" disabled v-show="companyInfo.step === 0">审核</el-button>
-          <el-button class="inquire" @click.stop="toEdit" v-show="companyInfo.status !== 1">编辑</el-button>
-          <el-button type="info" disabled v-show="companyInfo.status === 1">编辑</el-button>
+          <el-button class="inquire" @click.stop="Review(companyInfo.id, 'company')" v-show="companyInfo.status !== 1 && companyInfo.status !== 2">审核</el-button>
+          <el-button type="info" disabled v-show="companyInfo.status === 1 || companyInfo.status === 2">审核</el-button>
+          <el-button class="inquire" @click.stop="toEdit" v-show="companyInfo.status !== 1 && companyInfo.status !== 2">编辑</el-button>
+          <el-button type="info" disabled v-show="companyInfo.status === 1 || companyInfo.status === 2">编辑</el-button>
         </div>
         <div class="editBox" v-else>
           <el-button class="inquire" @click.stop="edit('editCompany')">编辑</el-button>

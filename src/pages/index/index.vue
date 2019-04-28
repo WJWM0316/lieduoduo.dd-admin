@@ -124,7 +124,7 @@
                 <span class="check" @click="check(props.scope.row.id)">查看</span>
               </div>
               <div>
-                <span class="check" @click="toUser(props.scope.row.createdUid)" v-if="props.scope.row.createdUid">查看招聘官</span>
+                <span class="check" @click="toUser(props.scope.row.createdUid)" v-if="props.scope.row.createdUid">查看管理员</span>
               </div>
             </div>
             <!-- 地址列 -->

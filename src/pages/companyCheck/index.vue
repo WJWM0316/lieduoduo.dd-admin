@@ -80,7 +80,7 @@
             <div class="btn-container" v-else-if="props.scope.column.property === 'adminName'" style="justify-content: flex-start;">
               <span style="text-align: left;">
                 <span v-if="props.scope.row.adminUid">{{props.scope.row.adminName}}</span>
-                <span v-else class="btn" @click.stop="toEditSaller(props.scope.row.id)">去选择跟进人</span>
+                <span v-else class="btn" @click.stop="toEditSaller(props.scope.row.id)">添加跟进人</span>
               </span>
             </div>
             <!-- 申请信息列 -->
@@ -234,8 +234,8 @@ export default class companyCheck extends Vue {
   created () {
     this.getTemplist()
   }
-  activated () {
-    this.getTemplist()
+  async activated () {
+    await this.getTemplist()
     let that = this
     setTimeout(function () {
       window.scrollTo(0, that.$route.meta.scrollY)

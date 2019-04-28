@@ -64,7 +64,7 @@
       </div>
       <div class="companyName" v-show="companyInfo && companyInfo.applyType"><span class="label">申请类型</span><div>创建公司类型</div></div>
       <div class="companyName" v-show="companyInfo && companyInfo.applyType"><div class="btn" @click.stop="toCheckCompany(companyInfo.id)">去查看审核</div></div>
-      <div class="companyName btn" v-show="userInfo.companyId" @click.stop="removeUser">移出公司</div>
+      <!-- <div class="companyName btn" v-show="userInfo.companyId" @click.stop="removeUser">移出公司</div> -->
     </div>
     <div class="companyMessage" v-else>
       <div>所属公司</div>
