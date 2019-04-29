@@ -345,11 +345,7 @@ export default class user extends Vue{
     this.getRecruiterList()
   }
   activated () {
-    const isNeedLoad =this.$route.query.isNeedLoad
-    console.log(isNeedLoad)
-    if (isNeedLoad) {
-      this.getRecruiterList()
-    }
+    this.getRecruiterList()
     let that = this
     setTimeout(function () {
       window.scrollTo(0, that.$route.meta.scrollY)
