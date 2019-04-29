@@ -87,13 +87,11 @@ export default class avarUploader extends Vue {
   }
 
   handleIconLoaded (e) {
-    console.log(e, 999)
     let formData = new FormData()
     formData.append('attach_type', 'img')
     formData.append('img', e)
     uploadApi(formData).then(res => {
       this.$emit('getImg', res.data.data)
-      // console.log(res.data.data, '77777777777777777')
     })
   }
 

@@ -98,7 +98,6 @@ export default class editRecruiter extends Vue {
     this.$refs['userInfo'].validate(async (valid) => {
       if (valid) {
         this.userInfo.avatars = this.userInfo.avatars.join()
-        console.log(this.userInfo)
         editOffCreatedApi(this.userInfo.uid, this.userInfo).then(res => {
           this.$message({
             type: 'success',

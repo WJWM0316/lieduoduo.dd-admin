@@ -244,9 +244,7 @@ export default class user extends Vue{
     this.$router.push({path: '/user/addUser'})
   }
   /* 选择变更 */
-  changeProvince (e) {
-    console.log(this.nowSelect)
-  }
+  changeProvince (e) {}
   toCompany (companyId) {
     this.$router.push({path: `/index/companyInfo?id=${companyId}`})
   }

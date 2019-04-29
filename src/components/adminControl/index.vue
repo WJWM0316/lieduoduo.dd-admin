@@ -216,7 +216,6 @@ export default class adminBox extends Vue {
         } else {
             this.$refs['bindCompanyForm'].validate(async (valid) => {
                 if (valid) {
-                    console.log('999999999999999999999')
                     this.bindCompanyForm.uid = this.$route.params.id
                     let res = await bindCompanyApi(this.bindCompanyId, this.bindCompanyForm)
                     this.$message({type: 'success', message: '绑定成功'})
@@ -258,9 +257,7 @@ export default class adminBox extends Vue {
             }
         })
     }
-    handleIconLoaded (e) {
-        console.log(e)
-    }
+    handleIconLoaded (e) {}
     /* 添加用户 */
     addUser () {
         this.$router.push({path: '/user/addUser'})

@@ -166,7 +166,6 @@ export default class addUser extends Vue {
       }
       newUser = Object.assign({}, param, this.phone)
     }
-    console.log(newUser)
     this.$refs['personalInfo'].validate(async (valid) => {
       if (valid) {
         this.editOrCreat(newUser).then(res => {

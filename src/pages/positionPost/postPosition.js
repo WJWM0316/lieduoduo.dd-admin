@@ -84,7 +84,7 @@ export default class CommunityEdit extends Vue {
   	},
   	{
   		value: '2',
-  		label: '应届生'
+  		label: '暂无经历'
   	},
   	{
   		value: '3',
@@ -132,7 +132,7 @@ export default class CommunityEdit extends Vue {
     labels: '', // 技能标签json数组[{’id’:1,’is_diy’:0},{’d’:12,’is_diy’:1}]
     emolument_min: '', // 薪资范围起点
 		emolument_max: '', // 薪资范围终点
-    work_experience: '', // integer(formData)	经验要求,1:不限, 2:应届生 , 3:一年以内, 4:1-3年, 5:3-5年, 6:5-10年, 7 10年以上
+    work_experience: '', // integer(formData)	经验要求,1:不限, 2:暂无经历 , 3:一年以内, 4:1-3年, 5:3-5年, 6:5-10年, 7 10年以上
     education: '', // 学历要求,5 ：初中及以下，10： 中专 ，15：高中, 20: 大专, 25: 本科， 30: 硕士, 35：博士
     describe: '', // 职位描述
   }
@@ -230,9 +230,7 @@ export default class CommunityEdit extends Vue {
     addCompanyAdressApi(data).then(res => {
       this.form.address_id = ''
       this.getAdressList()
-      console.log(res)
     }).catch(e=>{
-      console.log('===',e)
       this.$message.error(e.data.msg)
     })
   }
@@ -314,8 +312,6 @@ export default class CommunityEdit extends Vue {
 
         this.getAdressList()
 
-        console.log(this.form)
-        //this.form = $.extend(true, {}, this.form, form)
       } else {
         // const res = await getCreateCommunityData({
         //   globalLoading: true
@@ -523,7 +519,6 @@ export default class CommunityEdit extends Vue {
   }
 
   thirdSecondPosition (item) {
-    console.log(item)
     this.pop.isShow = false
     this.selectPositionItem = {
       name: item.name,
@@ -531,7 +526,6 @@ export default class CommunityEdit extends Vue {
       topPid: item.topPid,
     }
 
-    console.log(item.topPid)
     this.form.labels = []
     this.form.type = item.labelId
     this.setSkillsList()
@@ -564,8 +558,6 @@ export default class CommunityEdit extends Vue {
 
   // 工作地点选择 
   changeAdress (e) {
-    console.log(this.form.mobile, '招聘官手机')
-    console.log(this.form.address_id, '地址id')
     if(!this.form.mobile || this.form.mobile.length<1){
       this.form.address_id = ''
       this.$message.error('需要先填写手机号')
@@ -600,10 +592,8 @@ export default class CommunityEdit extends Vue {
    * @param {*} form
    */
   transformData (form) {
-    console.log(form, '33333333333333')
     const newForm = {...form}
     // 分类标签
-    console.log(newForm)
     if(newForm.labels && newForm.labels.length>0){
       let labels = []
       newForm.labels.map(item=>{
@@ -613,8 +603,7 @@ export default class CommunityEdit extends Vue {
         })
       })
       //var jsObject = JSON.parse(jsonString); //转换为json对象
-      newForm.labels = JSON.stringify(labels); //转换为json类型的字符串　　
-      console.log(newForm.labels)
+      newForm.labels = JSON.stringify(labels); //转换为json类型的字符串
     }else {
       delete newForm.labels
     }
@@ -623,7 +612,6 @@ export default class CommunityEdit extends Vue {
 
   /* 点击提交 */
   handleSubmit () {
-    console.log(this.form, '-*****-***--*-*-')
     this.$refs.form.validate(valid => {
       if (valid) {
         let data = this.form

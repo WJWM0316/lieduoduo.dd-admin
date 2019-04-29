@@ -101,7 +101,6 @@ export default class List extends Vue {
     if (!$table) {
       this.$nextTick(() => {
         this.init()
-       console.log(this.list)
       })
     } else {
       this.$table = $table

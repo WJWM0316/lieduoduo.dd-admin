@@ -298,13 +298,11 @@ export default class checkPage extends Vue {
       this.editCompanyID = id
       this.isEdit = isEdit
       getCompanyInfoApi(id).then(res => {
-        console.log(res.data.data)
         this.companyInfo = res.data.data.companyInfo
         this.personalInfo = res.data.data.identityInfo
       })
     } else {
       getCompanyInfo(id).then(res => {
-        console.log(res.data.data)
         this.companyInfo = res.data.data.companyInfo
         this.personalInfo = res.data.data.identityInfo
       })

@@ -43,7 +43,6 @@ axios.interceptors.response.use(
 
 export const request = ({type = 'post', url, data = {}, noGlobalLoading, config = {}} = {}) => {
   if (noGlobalLoading) {
-    console.log('不需要loading')
   } else {
     loadingInstance = Loading.service({})
   }

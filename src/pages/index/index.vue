@@ -316,7 +316,6 @@ export default class indexPage extends Vue {
       res.data.data.map(item => {
         this.firstAreaIdList.push(item)
       })
-      console.log(this.cityLable)
     })
   }
   // 获取权益列表

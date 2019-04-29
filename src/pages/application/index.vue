@@ -326,9 +326,7 @@
       this.getInterviewList()
     }
     /* 选择变更 */
-    changeProvince (e) {
-      console.log(this.nowSelect)
-    }
+    changeProvince (e) {}
     
     /* 清除列表选项 */
     resetForm (name) {

@@ -101,7 +101,8 @@
         </el-form-item>
         <!-- 邮箱验证 -->
         <el-form-item class="email" label="公司邮箱" prop="icon" v-show="companyInfo.company_name">
-          <span @click.stop="email.isShow = true">验证邮箱</span>
+          <span @click.stop="email.isShow = true" v-if="companyInfo.email">{{companyInfo.email}} 更改邮箱<i class="el-icon-edit"></i></span>
+          <span @click.stop="email.isShow = true" v-else>验证邮箱</span>
         </el-form-item>
       </el-form>
     </div>
@@ -425,7 +426,6 @@ export default class createCompany extends Vue {
   }
 
   handleIconLoaded (e) {
-    console.log(e, 999)
     let formData = new FormData()
     formData.append('attach_type', 'img')
     formData.append('img', e)
@@ -473,7 +473,6 @@ export default class createCompany extends Vue {
   }
   /* 删除地址 */
   async delAdress (index) {
-    console.log(index, this.adressList)
     if (this.adressList[index].id) await delCompanyAddressApi(this.adressList[index].id)
     this.adressList.splice(index, 1)
     this.companyInfo.address = this.adressList

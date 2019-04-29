@@ -107,7 +107,6 @@ export default class checkPage extends Vue {
   }
   /*设置审核结果 */
   setResult () {
-    console.log(this.checkId)
     auditPositionApi({id: this.checkId, action: this.form.result}).then(res => {
       this.$message.success('成功')
       this.isCheck = false
@@ -125,7 +124,6 @@ export default class checkPage extends Vue {
     getPositionApi({
       id: id
     }).then(res => {
-      console.log(res.data.data)
       this.positionData = res.data.data
     })
   }

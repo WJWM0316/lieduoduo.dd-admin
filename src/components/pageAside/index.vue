@@ -37,42 +37,12 @@ import { routes } from '@/router/routes'
     filterText(val) {
       this.$refs.tree.filter(val);
     }
-  },
-//computed: {
-//  ...mapGetters([
-//    'userInfos'
-//  ])
-//},
-//watch: {
-//  'userInfos.roles': {
-//    handler(roles) {
-//      // 确保数据已经回来
-//      if(roles.length) {
-//        const isContentManager = roles.some(field => field <= 3) && !roles.includes(1) && !roles.includes(2)
-//        const contentManagerRoutes = routes.filter(route => route.meta.useNav && ['course', 'broadcast', 'work-zone'].includes(route.name))
-//        // 付费路由
-//        const officialRoute = routes.filter(route => route.meta.useNav)
-//        // 试用路由
-//        const notOfficialRoute = routes.filter(route => route.meta.useNav && route.name !== 'books')
-//        if(!isContentManager && !this.userInfos.company.isTrial) {
-//          this.routes = officialRoute
-//        } else if(!isContentManager && this.userInfos.company.isTrial) {
-//          this.routes = notOfficialRoute
-//        } else {
-//          this.routes = contentManagerRoutes
-//        }
-//      }
-//    },
-//    immediate: true
-//  }
-//}
+  }
 })
 export default class PageAside extends Vue {
   routes = null
   isCLick = true
-  handleNodeClick(data) {
-    console.log(data)
-  }
+  handleNodeClick(data) {}
   tabSwitch () {
     this.isCLick = !this.isCLick
   }

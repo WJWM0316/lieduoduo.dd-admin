@@ -75,7 +75,6 @@ export default class emailCheck extends Vue {
             })
             let that = this
             this.timer = setInterval(function () {
-                console.log(that.countdown)
                 --that.countdown
                 if (that.countdown <= 0) {
                     that.countdown = 60

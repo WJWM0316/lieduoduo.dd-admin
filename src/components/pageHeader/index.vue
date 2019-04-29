@@ -135,7 +135,6 @@ import { getAccessToken, removeAccessToken } from 'API/cacheService'
         this.userName = sessionStorage.getItem('name')
         this.nowLinkName = route.meta.title
         if (route.meta.haveParent) {
-          console.log(route.meta.haveParent, 999)
           this.haveParent = true
           this.parentPath = route.meta.parentPath
           this.parentName = route.meta.parentName

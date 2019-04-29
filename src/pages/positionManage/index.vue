@@ -214,7 +214,6 @@ export default class companyCheck extends Vue {
   handlePageChange (nowPage) {
     this.$route.meta.scrollY = 0
     window.scrollTo(0, 0)
-    console.log(nowPage)
     this.form.page = nowPage
     this.getTemplist()
   }

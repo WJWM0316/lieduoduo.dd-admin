@@ -263,7 +263,6 @@ export default class editCompany extends Vue {
           } else {
             that.nowPosiInfo.addressComponents = result.detail.addressComponents
           }
-//        console.log(that.nowPosiInfo, '搜索后的地址对象')
           let data = {
             mobile: that.form.mobile,
             areaName: result.detail.addressComponents.city || '',
@@ -275,7 +274,6 @@ export default class editCompany extends Vue {
           }
         },//若服务请求失败，则运行以下函数
         error: function(e) {
-          console.log(e)
           that.nowPosiInfo = ''
 //        that.$message.error("地址搜索失败,请确保地址准确且包含城市名")
         }
@@ -370,7 +368,6 @@ export default class editCompany extends Vue {
     let center = new that.qqMapObj.maps.LatLng(39.916527, 116.397128);
     
     this.qqMapObj.maps.event.addListener(that.map, 'click', function(e) {
-      console.log(e, '78787*/*/*/78787')
       // 清除地图上搜索的坐标
       that.markers.map(item => {
         item.setMap(null)
@@ -435,7 +432,6 @@ export default class editCompany extends Vue {
         logo: res.data.data.companyInfo.logoInfo.id
       }
       /* 地址列表 */
-     console.log(res.data)
       this.adressList = res.data.data.companyInfo.address
     })
   }

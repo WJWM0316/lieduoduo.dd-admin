@@ -150,7 +150,6 @@ export default class editCompany extends Vue {
   }
   /* 编辑图片 */
   handleIconLoaded (e) {
-    console.log(e, 999)
     let formData = new FormData()
     formData.append('attach_type', 'img')
     formData.append('img', e)
