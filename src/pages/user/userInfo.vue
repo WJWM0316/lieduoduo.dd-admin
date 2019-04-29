@@ -32,7 +32,7 @@
           <span class="status" v-show="personalInfo.identityAuth === 1"><i class="el-icon-success" style="color: #67C23A;"></i> 验证通过</span>
           <span class="status" v-show="personalInfo.identityAuth === 0"><i class="el-icon-error" style="color: #F56C6C;"></i> 验证失败</span>
         </h3>
-        <el-form-item label="不需要身份认证" prop="realname" v-if="userInfo.companyId">
+        <el-form-item label="不需要身份认证" prop="realname" v-if="userInfo.companyId && personalInfo.identityAuth !== 1">
           <el-switch
             v-model="isDetection"
             @change="changeDemand">

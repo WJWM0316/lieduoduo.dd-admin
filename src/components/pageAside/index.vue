@@ -16,7 +16,6 @@
             <li><router-link to="/recruitmentOfficer">招聘官审核</router-link></li>
           </div>
           <!-- 面试管理列 -->
-          <!-- <li @click.stop="tabSwitch"><router-link to="/interview" active-class="interviewActive"><i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>面试管理<i class="icon iconfont iconloeft_down" style="color: #FFFFFF;" :class="{ turnUp: isCLick, turnDowm: !isCLick }"></i></router-link></li> -->
           <li><router-link to="/interview" active-class="interviewActive"><i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>面试管理</router-link></li>          
           <div class="interviewBox" :class="{expand: isCLick, collapse: !isCLick}">
             <li><router-link to="/interview" exact>申请列表</router-link></li>

@@ -93,6 +93,7 @@
           <!-- 跟进人筛选 -->
           <el-form-item class="area" label="跟进人" prop="adminUid" label-width="70px">
             <el-select v-model="form.adminUid" placeholder="请选择" style="margin-right: 10px;">
+              <el-option label="无" value="0"></el-option>
               <el-option
                 v-for="item in salerLis"
                 :key="item.id"

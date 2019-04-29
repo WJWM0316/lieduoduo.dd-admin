@@ -228,8 +228,7 @@ export default class user extends Vue{
     },
     {
       prop: 'createdAt',
-      label: '创建时间',
-      width: 200
+      label: '创建时间'
     },
     {
       prop: 'id',

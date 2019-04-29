@@ -229,6 +229,7 @@ export default class companyCheck extends Vue {
   }
   /* 去选择跟进人 */
   toEditSaller (id) {
+    this.$route.meta.scrollY = window.scrollY
     this.$router.push({path: `/companyCheck/${id}`, query: {isEditSaller: true}})
   }
   created () {
