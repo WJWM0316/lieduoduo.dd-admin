@@ -240,7 +240,7 @@ export default class user extends Vue{
   list = []
   /* 添加用户 */
   addUser () {
-    console.log(this.$route, '添加用户')
+    this.$route.meta.scrollY = window.scrollY
     this.$router.push({path: '/user/addUser'})
   }
   /* 选择变更 */
@@ -345,6 +345,11 @@ export default class user extends Vue{
     this.getRecruiterList()
   }
   activated () {
+    const isNeedLoad =this.$route.query.isNeedLoad
+    console.log(isNeedLoad)
+    if (isNeedLoad) {
+      this.getRecruiterList()
+    }
     let that = this
     setTimeout(function () {
       window.scrollTo(0, that.$route.meta.scrollY)

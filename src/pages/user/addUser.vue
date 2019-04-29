@@ -67,7 +67,7 @@
           
           <!--身份证正面-->
           <el-form-item class="full" label="身份证正面" prop="icon">
-            <img class="frontImg" :src="personalInfo.passportFront" alt="">
+            <img class="frontImg" :src="form.icon3" alt="">
           </el-form-item>
         </template>
       </el-form>
@@ -174,7 +174,7 @@ export default class addUser extends Vue {
             message: this.isEdit? '编辑成功' : '用户创建成功',
             type: 'success'
           })
-          this.isEdit? this.$router.go(-1) : this.$router.replace({path: `/user`})
+          this.isEdit? this.$router.go(-1) : this.$router.replace({path: `/user`, query: {isNeedLoad: true}})
           // this.$router.go(-1)
         })
       } else {
@@ -233,7 +233,6 @@ export default class addUser extends Vue {
   async getUserInfo () {
     let res = await getUserInfoApi(this.$route.params.id)
     let eidtUser = res.data.data
-    console.log(res.data.data, '7785458558')
     this.editIdentityAuth = eidtUser.identityAuth
     /* 手机号码 */
     this.phone.mobile = eidtUser.mobile
