@@ -4,7 +4,7 @@
     <div class="officerInfo">
       <div class="title"><span>招聘官信息</span><div class="editOfficer"><el-button @click.stop="save">保存</el-button></div></div>
       
-      <el-form ref="officerInfo" label-suffix="：" :rules="rule">
+      <el-form ref="userInfo" :model="userInfo" label-suffix="：" :rules="rule">
         <el-form-item label-width="150px" label="担任职务" style="width: 500px" prop="position">
           <el-input v-model="userInfo.position" placeholder="请输入担任职务" style="width: 400px;"></el-input>
         </el-form-item>
@@ -95,7 +95,7 @@ export default class editRecruiter extends Vue {
   }
 
   save () {
-    this.$refs['officerInfo'].validate(async (valid) => {
+    this.$refs['userInfo'].validate(async (valid) => {
       if (valid) {
         this.userInfo.avatars = this.userInfo.avatars.join()
         console.log(this.userInfo)
