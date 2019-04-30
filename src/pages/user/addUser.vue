@@ -27,6 +27,7 @@
 
         <el-form-item label="性别" prop="gender">
           <el-select class="selectState" v-model="personalInfo.gender" placeholder="请选择性别">
+            <el-option label="未选择" value="0"></el-option>
             <el-option label="男" value="1"></el-option>
             <el-option label="女" value="2"></el-option>
           </el-select>
@@ -81,7 +82,7 @@ import Component from 'vue-class-component'
 import ImageUploader from '@/components/imageUploader'
 import { fieldApi, uploadIdcardApi } from 'API/commont'
 import { detectionMobileApi, checkUserauthApi, createdUserApi, getUserInfoApi, editUserauthApi, editUserApi } from 'API/recruiter'
-import { setCompanyInfoApi, setIdentityInfoApi, addCompanyAddressApi, delCompanyAddressApi } from 'API/company'
+import { setCompanyInfoApi, setIdentityInfoApi, addCompanyAddressApi, delCompanyAddressApi, getApplyUserInfoApi, editApplyUserInfoApi } from 'API/company'
 @Component({
   name: 'addUser',
   components: {
@@ -91,6 +92,7 @@ import { setCompanyInfoApi, setIdentityInfoApi, addCompanyAddressApi, delCompany
 export default class addUser extends Vue {
   isEdit = false // 是否编辑用户，默认为创建用户
   editIdentityAuth = 0 // 编辑用户的身份验证状态，默认未提交
+  checkUid = ''
   pop = {
     isShow: false,
     type: 'position'
@@ -148,8 +150,16 @@ export default class addUser extends Vue {
   /* 调用创建或编辑 */
   editOrCreat (userInfo) {
     if (this.isEdit) {
-      const uid = this.$route.params.id
-      return editUserApi(uid, userInfo)
+      if (this.$route.query.isFromCheck) {
+        let param = {
+          real_name: this.personalInfo.name,
+          gender: this.personalInfo.gender,
+        }
+        return editApplyUserInfoApi(this.$route.params.id, param)
+      } else {
+        const uid = this.$route.params.id
+        return editUserApi(uid, userInfo)
+      }
     } else {
       return createdUserApi(userInfo)
     }
@@ -161,6 +171,7 @@ export default class addUser extends Vue {
       newUser = Object.assign({}, this.personalInfo, this.phone)
     } else {
       let param = {
+        real_name: this.personalInfo.name,
         name: this.personalInfo.name,
         gender: this.personalInfo.gender,
       }
@@ -199,7 +210,12 @@ export default class addUser extends Vue {
 
   checkUserauth (param) {
     if (this.isEdit) {
-      let uid = this.$route.params.id
+      let uid = ''
+      if (this.$route.query.isFromCheck) {
+        uid = this.checkUid
+      } else {
+        uid = this.$route.params.id
+      }
       return editUserauthApi(uid, param)
     } else {
       return checkUserauthApi(param)
@@ -228,28 +244,45 @@ export default class addUser extends Vue {
         this.$message.error(`信息校验失败，请确认上传信息无误`)
       }
   }
+  getApplyUserInfo () {
+    if (this.$route.query.isFromCheck) {
+      return getApplyUserInfoApi(this.$route.params.id)
+    } else {
+      return getUserInfoApi(this.$route.params.id)
+    }
+  }
   /*获取编辑用户的信息 */
   async getUserInfo () {
-    let res = await getUserInfoApi(this.$route.params.id)
+    const isFromCheck = this.$route.query.isFromCheck
+    let res = await this.getApplyUserInfo()
     let eidtUser = res.data.data
-    this.editIdentityAuth = eidtUser.identityAuth
+    this.editIdentityAuth = eidtUser.identityAuth || eidtUser.identityInfo
     /* 手机号码 */
     this.phone.mobile = eidtUser.mobile
     /* 身份信息 */
     this.personalInfo = {
-      name: eidtUser.name, // 姓名
+      name: eidtUser.name || eidtUser.realName, // 姓名
       gender: String(eidtUser.gender),
-      realname : eidtUser.realname, // 真实姓名
-      idNum : eidtUser.identityNum, // 身份证号码
-      passportFront : eidtUser.passportFrontId, // 身份证正面照片
+      realname: !isFromCheck ? eidtUser.realname : eidtUser.identityInfo.realName, // 真实姓名
+      idNum : !isFromCheck ? eidtUser.identityNum : eidtUser.identityInfo.identityNum, // 身份证号码
+      passportFront : !isFromCheck ? eidtUser.passportFrontId : eidtUser.passportFront, // 身份证正面照片
     }
-    this.form.icon3 = eidtUser.passportFront? eidtUser.passportFront.url : ''
+    if (this.$route.query.isFromCheck) {
+      this.checkUid = eidtUser.uid
+      this.form.icon3 = eidtUser.identityInfo.passportFrontInfo? eidtUser.identityInfo.passportFrontInfo.url : ''
+    } else {
+      this.form.icon3 = eidtUser.passportFront? eidtUser.passportFront.url : ''
+    }
   }
 
   created () {
     if (!this.$route.params.id) return;
     this.isEdit = true;
-    this.getUserInfo()
+    if (this.$route.query.isFromCheck) {
+      this.getUserInfo()
+    } else {
+      this.getUserInfo()
+    }
   }
 }
 </script>

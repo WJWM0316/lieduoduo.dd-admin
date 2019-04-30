@@ -270,7 +270,7 @@ export default class officerManage extends Vue{
   check (id) {
     this.$route.meta.scrollY = window.scrollY
     this.$router.push({
-      path: '/recruitmentOfficer/reviewDetails',
+      path: '/check/recruitmentOfficer/reviewDetails',
       query: {id: id}
     })
   }

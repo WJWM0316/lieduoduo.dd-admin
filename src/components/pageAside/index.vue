@@ -10,10 +10,10 @@
           <li><router-link to="/user"><i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>用户管理</router-link></li>
           <li><router-link to="/positionManage"><i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>职位管理</router-link></li>
           <!-- 审核管理列 -->
-          <li><router-link to="/companyCheck" active-class="interviewActive"><i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>审核管理</router-link></li>
+          <li><router-link to="/check" active-class="interviewActive"><i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>审核管理</router-link></li>
           <div class="verify">
-            <li><router-link to="/companyCheck">公司审核管理</router-link></li>
-            <li><router-link to="/recruitmentOfficer">招聘官审核</router-link></li>
+            <li><router-link to="/check/companyCheck">公司审核管理</router-link></li>
+            <li><router-link to="/check/recruitmentOfficer">招聘官审核</router-link></li>
           </div>
           <!-- 面试管理列 -->
           <li><router-link to="/interview" active-class="interviewActive"><i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>面试管理</router-link></li>          

@@ -203,13 +203,12 @@ export const getRecruitersListApi = (companyId, data) => request({
 })
 /* 解绑管理员 */
 export const deleteAdminApi = (companyId, data) => request({
-  url: `/company/admin/bind/${companyId}`,
-  type: 'delete',
-  data
+  url: `/company/admin/bind/${companyId}?newAdmin=${data.newAdmin}`,
+  type: 'delete'
 })
 /* 解绑招聘官 */
 export const deleteRecruiterApi = (companyId, uid) => request({
-  url: `/company/recruiter/bind/${companyId}?uid=${uid}`,
+  url: `/company/recruiter/bind/${companyId}?uid=${id}`,
   type: 'delete'
 })
 /* 编辑公司审核表跟进人 */
@@ -221,4 +220,15 @@ export const editCheckCompanyFollowUserApi = (companyId, uid) => request({
 export const editCompanyFollowUserApi = (companyId, uid) => request({
   url: `/company/company_add_to_follow_user/${companyId}?admin_uid=${uid}`,
   type: 'put'
+})
+/* 获取审核表里的人员申请信息 */
+export const getApplyUserInfoApi = (uid) => request({
+  url: `/company/detail_company_apply_user_info/${uid}`,
+  type: 'get'
+})
+/* 获取审核表里的人员申请信息 */
+export const editApplyUserInfoApi = (uid,data) => request({
+  url: `/company/update_company_apply_user_info/${uid}`,
+  type: 'put',
+  data
 })

@@ -20,7 +20,7 @@ export const routes = [
   },
   /* 公司审核管理 */
   {
-    path: '/companyCheck',
+    path: '/check/companyCheck',
     name: 'companyCheck',
     meta: {title: '公司审核管理', keepAlive: true},
     component: resolve => require(['@/pages/companyCheck/index.vue'], resolve),
@@ -34,30 +34,37 @@ export const routes = [
   },
   /* 公司审核 */
   {
-    path: '/companyCheck/verify',
+    path: '/check/companyCheck/verify',
     name: 'companyCheckverify',
-    meta: {title: '公司审核', haveParent: true, parentPath: '/companyCheck', parentName: '公司审核管理'},
+    meta: {title: '公司审核', haveParent: true, parentPath: '/check/companyCheck', parentName: '公司审核管理'},
     component: resolve => require(['@/pages/companyCheck/verify.vue'], resolve),
+  },
+  /* 编辑公司审核里的用户信息 */
+  {
+    path: '/check/companyCheck/editUser/:id',
+    name: 'editUser',
+    meta: {title: '编辑用户信息', haveParent: true, parentPath: '/check/companyCheck', parentName: '公司审核管理'},
+    component: resolve => require(['@/pages/user/addUser.vue'], resolve)
   },
   /* 招聘官管理 */
   {
-    path: '/recruitmentOfficer',
+    path: '/check/recruitmentOfficer',
     name: 'recruitmentOfficer',
     meta: {title: '招聘官管理', keepAlive: true},
     component: resolve => require(['@/pages/officerManage/index.vue'], resolve),
   },
   /* 编辑申请招聘官用户信息 */
   {
-    path: '/recruitmentOfficer/editUser/:id',
+    path: '/check/recruitmentOfficer/editUser/:id',
     name: 'editOfficerUser',
-    meta: {title: '编辑招聘官信息', haveParent: true, parentPath: '/recruitmentOfficer', parentName: '招聘官审核'},
+    meta: {title: '编辑招聘官信息', haveParent: true, parentPath: '/check/recruitmentOfficer', parentName: '招聘官审核'},
     component: resolve => require(['@/pages/user/addUser.vue'], resolve)
   },
   /* 招聘官审核详情 */
   {
-    path: '/recruitmentOfficer/reviewDetails',
+    path: '/check/recruitmentOfficer/reviewDetails',
     name: 'reviewDetails',
-    meta: {title: '招聘官审核详情', haveParent: true, parentPath: '/recruitmentOfficer', parentName: '招聘官管理'},
+    meta: {title: '招聘官审核详情', haveParent: true, parentPath: '/check/recruitmentOfficer', parentName: '招聘官管理'},
     component: resolve => require(['@/pages/officerManage/reviewDetails.vue'], resolve),
   },
   /* 职位管理 */
@@ -97,9 +104,9 @@ export const routes = [
   },
   /* 编辑审核公司信息 */
   {
-    path: '/companyCheck/:checkId',
+    path: '/check/companyCheck/:checkId',
     name: 'editCheckCompany',
-    meta: {title: '编辑公司信息', haveParent: true, parentPath: '/companyCheck', parentName: '公司审核管理'},
+    meta: {title: '编辑公司信息', haveParent: true, parentPath: '/check/companyCheck', parentName: '公司审核管理'},
     component: resolve => require(['@/pages/createCompany/index.vue'], resolve)
   },
   /* 编辑身份信息 */

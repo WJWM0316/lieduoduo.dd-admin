@@ -204,7 +204,7 @@ export default class companyCheck extends Vue {
   check (id) {
     this.$route.meta.scrollY = window.scrollY
     this.$router.push({
-      path: '/companyCheck/verify',
+      path: '/check/companyCheck/verify',
       query: {id: id}
     })
   }

@@ -159,7 +159,7 @@ export default class addUser extends Vue {
   }
   /* 去查看公司审核 */
   toCheckCompany (companyId) {
-    this.$router.push({path: `/companyCheck/verify?id=${companyId}`})
+    this.$router.push({path: `/check/companyCheck/verify?id=${companyId}`})
   }
   /* 移出公司 */
   async removeUser () {

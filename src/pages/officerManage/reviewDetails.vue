@@ -41,15 +41,17 @@
         </div>
       </div>
       <!--内容-->
-      <div class="content noData" v-if="!identityInfo.status && identityInfo.status !== 0">
-        用户还未上传身份认证信息
-      </div>
-      <div class="content" v-else>
+      <div class="content">
         <div class="title">账号信息</div>
         <div class="item"><span class="lable">手机号码：</span> {{identityInfo.mobile}}</div>
         <div class="title">个人信息</div>
         <div class="item"><span class="lable">姓名：</span> {{personalInfo.realName}}</div>
         <div class="item"><span class="lable">性别：</span> {{identityInfo.genderDesc}}</div>
+      </div>
+      <div class="content noData" v-if="!identityInfo.status && identityInfo.status !== 0">
+        用户还未上传身份认证信息
+      </div>
+      <div class="content" v-else>
         <div class="title">身份信息</div>
         <div class="item"><span class="lable">真实姓名：</span> {{identityInfo.realName}}</div>
         <div class="item"><span class="lable">身份证号码：</span> {{identityInfo.identityNum}}</div>
@@ -148,7 +150,7 @@ export default class reviewDetails extends Vue {
   }
   /* 去编辑身份证信息 */
   toEdit (uid) {
-    this.$router.push({path: `/recruitmentOfficer/editUser/${uid}`})
+    this.$router.push({path: `/check/recruitmentOfficer/editUser/${uid}`})
   }
   /*设置审核结果 */
   setResult () {

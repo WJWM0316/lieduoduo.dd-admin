@@ -95,10 +95,9 @@
         <div class="title">认证资料</div>
         <div class="item"><span class="lable">真实姓名：</span> {{personalInfo.realName}}</div>
         <div class="item"><span class="lable">身份证号码：</span> {{personalInfo.identityNum}}</div>
-        <div class="title">认证材料</div>
         <div class="item">
           <div class="imgBox" v-if="personalInfo.passportFrontInfo">
-            <div class="imgNote">身份证（正面）</div>
+            <div class="imgNote">身份证（正面）：</div>
             <img :src="personalInfo.passportFrontInfo.middleUrl"/>
             <div class="zoomBox" @click.stop="showImg(personalInfo.passportFrontInfo.url)">
               <i class="el-icon-zoom-in"></i>
@@ -197,7 +196,7 @@ export default class checkPage extends Vue {
     } else {
       from.meta.parentName = "公司审核管理"
       from.meta.title = "公司审核详情"
-      from.meta.parentPath = "/companyCheck"
+      from.meta.parentPath = "/check/companyCheck"
     }
     next()
   }
@@ -236,14 +235,15 @@ export default class checkPage extends Vue {
   }
   /* 编辑身份信息 */
   editIdentity (uid) {
+    let checkId = this.$route.query.id
     this.$router.push({
-      path: `/user/editUser/${uid}`
+      path: `/check/companyCheck/editUser/${checkId}?isFromCheck=true`
     })
   }
   /* 去编辑公司信息 */
   toEdit () {
     let checkId = this.$route.query.id
-    this.$router.push({path: `/companyCheck/${checkId}`})
+    this.$router.push({path: `/check/companyCheck/${checkId}`})
   }
   /* 点击审核按钮 */
   Review (id, type) {
@@ -415,6 +415,10 @@ img{
         position: absolute;
         bottom: 5px;
         right: 5px;
+      }
+      .imgNote {
+        text-align: left;
+        color: #909399;
       }
     }
     .describe{

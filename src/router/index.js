@@ -22,7 +22,11 @@ router.beforeEach((to, from, next) => {
   if (from.name !== to.name) {
     window.scrollTo(0, 0)
   }
-  next(true)
+  if (to.path === '/check') {
+    next('/check/companyCheck')
+  } else {
+    next(true)
+  }
 })
 
 export default router

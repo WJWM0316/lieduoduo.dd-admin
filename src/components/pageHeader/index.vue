@@ -6,24 +6,6 @@
       </el-breadcrumb>
       
 			<ul class="navigation">
-				<!--	<li>
-					<i class="el-icon-bell"></i>
-				</li> -->
-				<!--<li @click="toLogin">-->
-				  <!--登录-->
-					<!--<el-dropdown trigger="hover" @command="todoAction" placement="bottom">
-					  <div class="el-dropdown-link" style="color:#354048">
-					  	<img :src="userInfos.avatarInfo.middleUrl" alt="" v-if="userInfos.avatarInfo">
-					    <span style="margin-left: 10px;">欢迎登录，&nbsp;&nbsp;{{userInfos.realname}}</span>
-					    <i class="el-icon-caret-bottom el-icon--right"></i>
-					  </div>
-					  <el-dropdown-menu slot="dropdown">
-					  	<el-dropdown-item command="switch">切换员工端</el-dropdown-item>
-					    <el-dropdown-item command="modify">修改密码</el-dropdown-item>
-					    <el-dropdown-item command="out">退出登录</el-dropdown-item>
-					  </el-dropdown-menu>
-					</el-dropdown>-->
-				<!--</li>-->
 				<li style="position: relative; cursor: pointer;" @click.stop="showExit">
 				  <img v-if="avar" :src="avar" class="avar" />
 				  <span>欢迎登陆猎多多，{{userName}}</span>
@@ -145,14 +127,6 @@ import { getAccessToken, removeAccessToken } from 'API/cacheService'
       immediate: true
     }
   }
-//	methods: {
-//  ...mapActions(['logoutApi'])
-//},
-//computed: {
-//  ...mapGetters([
-//    'userInfos'
-//  ])
-//}
 })
 export default class ComponentHeader extends Vue {
   nowLinkName = ''
@@ -163,7 +137,8 @@ export default class ComponentHeader extends Vue {
   userName = ''
   isShow = false
   toLogin () {
-    removeAccessToken()
+		removeAccessToken()
+		this.isShow = false
     this.$router.push({
       path: '/login'
     })
@@ -171,21 +146,5 @@ export default class ComponentHeader extends Vue {
   showExit () {
     this.isShow = !this.isShow
   }
-//	todoAction(command) {
-//		const company = process.env.NODE_ENV === 'development' ? process.env.VUE_APP__TEST_COMPANY : Cookies.get('code')
-//		switch(command) {
-//			case 'out':
-//				this.logoutApi({code : Cookies.get('code')})
-//				break
-//			case 'modify':
-//				this.$router.push({name: 'editMember',query: {user_id: this.userInfos.id } })
-//				break
-//			case 'switch':
-//				window.location.replace(`${process.env.VUE_APP_STAFF_URL}/${company}/index`)
-//				break
-//			default:
-//				break
-//		}
-//	}
 }
 </script>

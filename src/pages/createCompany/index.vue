@@ -290,10 +290,9 @@ export default class createCompany extends Vue {
           type: 'success'
         })
         if (checkId) {
-          this.$router.push({path: `/companyCheck/verify?id=${checkId}`})
+          this.$router.push({path: `/check/companyCheck/verify?id=${checkId}`})
         } else {
           this.$router.go(-1)
-          // this.$router.push({path: '/index'})
         }
 
       } else {

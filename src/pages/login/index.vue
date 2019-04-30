@@ -54,7 +54,7 @@ export default class login extends Vue{
         type: 'success'
       })
       this.$router.push({
-        path: '/companyCheck'
+        path: '/index'
       })
     }).catch(err => {
       this.$message.error(`用户账号或密码错误`);

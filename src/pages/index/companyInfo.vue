@@ -179,16 +179,18 @@ export default class createCompany extends Vue {
   async bindAdmin () {
     this.showAdminWindow = true
     if (this.companyInfo.createdUid) {
-        let param = {
-            page: 1,
-            count: 2
+      let param = {
+          page: 1,
+          count: 2
+      }
+      let res = await getRecruitersListApi(this.$route.query.id, param)
+      res.data.data.forEach(item => {
+        if (this.companyInfo.createdUid !== item.uid) {
+          this.nextAdmin = item
+        } else {
+          this.nextAdmin = null
         }
-        let res = await getRecruitersListApi(this.$route.query.id, param)
-        res.data.data.forEach(item => {
-          if (this.companyInfo.createdUid !== item.uid) {
-            this.nextAdmin = item
-          }
-        });
+      });
     }
   }
   close (e) {
@@ -238,12 +240,11 @@ export default class createCompany extends Vue {
   }
   /*公司信息*/
   .companyInfo,
-  .personalInfo,
-  .sales{
+  .sales {
     padding: 0 32px;
     text-align: left;
     border: 1px solid #CCCCCC;
-    .point{
+    .point {
       font-size: 14px;
       color: #FFFFFF;
       background-color: #652791;
@@ -254,7 +255,7 @@ export default class createCompany extends Vue {
       margin-right: -32px;
     }
   }
-  .sales{
+  .sales {
     border-radius: 4px;
     padding: 30px 32px;
     h3{
@@ -264,8 +265,7 @@ export default class createCompany extends Vue {
       margin-bottom: 20px;
     }
   }
-  .companyInfo,
-  .personalInfo{
+  .companyInfo {
     border: 1px solid #CCCCCC;
     border-radius: 4px;
     h3{
