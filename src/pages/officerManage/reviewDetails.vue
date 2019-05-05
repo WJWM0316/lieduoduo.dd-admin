@@ -162,11 +162,13 @@ export default class reviewDetails extends Vue {
       identityPassApi(this.checkId).then(res => {
         this.identityInfo.status = 1
         this.isCheck = false
+        this.$message({type: 'success', message: '审核成功'})
       })
     } else {
       identityFailApi(this.checkId, param).then(res => {
         this.identityInfo.status = 2
         this.isCheck = false
+        this.$message({type: 'error', message: '信息驳回成功'})
       })
     }
   }

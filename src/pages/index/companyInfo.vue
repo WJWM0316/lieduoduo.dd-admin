@@ -184,11 +184,13 @@ export default class createCompany extends Vue {
           count: 2
       }
       let res = await getRecruitersListApi(this.$route.query.id, param)
-      res.data.data.forEach(item => {
+      res.data.data.forEach((item, index) => {
         if (this.companyInfo.createdUid !== item.uid) {
           this.nextAdmin = item
         } else {
-          this.nextAdmin = null
+          if (index === 0) {
+            this.nextAdmin = null
+          }
         }
       });
     }
