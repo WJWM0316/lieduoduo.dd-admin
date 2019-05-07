@@ -13,7 +13,7 @@ import './style/iconfont.less'
 
 Vue.use(ElementUI);
 Vue.config.productionTip = false
-Vue.use(VuePhotoZoomPro)
+Vue.use(VuePhotoZoomPro)   //预览图片库
 
 new Vue({
   router,

@@ -6,33 +6,67 @@
           <img src="../../assets/lieduoduo.png" class="avatar">
         </div>
         <ul>
-          <li><router-link to="/index"><i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>公司库</router-link></li>
-          <li><router-link to="/user"><i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>用户管理</router-link></li>
-          <li><router-link to="/positionManage"><i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>职位管理</router-link></li>
+          <li>
+            <router-link to="/index">
+              <i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>公司库
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/user">
+              <i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>用户管理
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/positionManage">
+              <i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>职位管理
+            </router-link>
+          </li>
           <!-- 审核管理列 -->
-          <li><router-link to="/check" active-class="interviewActive"><i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>审核管理</router-link></li>
+          <li>
+            <router-link to="/check" active-class="interviewActive">
+              <i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>审核管理
+            </router-link>
+          </li>
           <div class="verify">
-            <li><router-link to="/check/companyCheck">公司审核管理</router-link></li>
-            <li><router-link to="/check/recruitmentOfficer">招聘官审核</router-link></li>
+            <li>
+              <router-link to="/check/companyCheck">公司审核管理</router-link>
+            </li>
+            <li>
+              <router-link to="/check/recruitmentOfficer">招聘官审核</router-link>
+            </li>
           </div>
           <!-- 面试管理列 -->
-          <li><router-link to="/interview" active-class="interviewActive"><i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>面试管理</router-link></li>          
+          <li>
+            <router-link to="/interview" active-class="interviewActive">
+              <i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>面试管理
+            </router-link>
+          </li>
           <div class="interviewBox" :class="{expand: isCLick, collapse: !isCLick}">
-            <li><router-link to="/interview" exact>申请列表</router-link></li>
-            <li><router-link to="/interview/invite">邀请列表</router-link></li>
+            <li>
+              <router-link to="/interview" exact>申请列表</router-link>
+            </li>
+            <li>
+              <router-link to="/interview/invite">邀请列表</router-link>
+            </li>
           </div>
+          <!-- 简历库 -->
+          <li>
+            <router-link to="/resumeStore" active-class="interviewActive">
+              <i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>简历库
+            </router-link>
+          </li>
         </ul>
       </div>
     </section>
   </aside>
 </template>
 <script>
-import Vue from 'vue'
-import Component from 'vue-class-component'
-import { routes } from '@/router/routes'
+import Vue from "vue";
+import Component from "vue-class-component";
+import { routes } from "@/router/routes";
 
 @Component({
-  name: 'page-asise',
+  name: "page-asise",
   watched: {
     filterText(val) {
       this.$refs.tree.filter(val);
@@ -40,11 +74,11 @@ import { routes } from '@/router/routes'
   }
 })
 export default class PageAside extends Vue {
-  routes = null
-  isCLick = true
+  routes = null;
+  isCLick = true;
   handleNodeClick(data) {}
-  tabSwitch () {
-    this.isCLick = !this.isCLick
+  tabSwitch() {
+    this.isCLick = !this.isCLick;
   }
 }
 </script>
@@ -52,7 +86,7 @@ export default class PageAside extends Vue {
 #page-aside {
   width: 200px;
   height: 100vh;
-  background: #3E294D;
+  background: #3e294d;
   position: relative;
   position: fixed;
   top: 0;
@@ -76,7 +110,7 @@ export default class PageAside extends Vue {
     .avatar {
       position: relative;
       z-index: 1;
-      width:124px;
+      width: 124px;
     }
   }
   ul {
@@ -91,11 +125,11 @@ export default class PageAside extends Vue {
     height: 60px;
     line-height: 60px;
     cursor: pointer;
-    transition: all ease .4s;
+    transition: all ease 0.4s;
     font-size: 14px;
     text-align: left;
     &:hover {
-      background:rgba(255,226,102,0.12);
+      background: rgba(255, 226, 102, 0.12);
     }
     .zike-icon {
       margin-right: 10px;
@@ -110,11 +144,11 @@ export default class PageAside extends Vue {
       padding-left: 46px;
       box-sizing: border-box;
       text-decoration: none;
-      color: #EDEDED;
+      color: #ededed;
       display: block;
       /*padding-left: 50px;*/
-      .iconfont{
-        color: #513E5F;
+      .iconfont {
+        color: #513e5f;
       }
     }
   }
@@ -122,20 +156,20 @@ export default class PageAside extends Vue {
   .interviewActive,
   .filter-tree {
     font-weight: 500;
-    background:rgba(255,226,102,0.12);
+    background: rgba(255, 226, 102, 0.12);
     position: relative;
     color: #fff;
-    .iconfont{
-      color: #FFFFFF;
+    .iconfont {
+      color: #ffffff;
     }
     &:before {
-      background: #FFE266;
-      content: '';
+      background: #ffe266;
+      content: "";
       display: block;
       left: 0;
       position: absolute;
       height: 100%;
-      width:4px;
+      width: 4px;
     }
     &:after {
       width: 0;
@@ -147,21 +181,21 @@ export default class PageAside extends Vue {
       transform: translateY(-50%);
       border-width: 10px;
       border-style: solid;
-      border-color: transparent transparent transparent #FFE266;
+      border-color: transparent transparent transparent #ffe266;
       display: block;
-      content: '';
+      content: "";
     }
   }
-  .interviewActive{
+  .interviewActive {
     background: none;
   }
-  .interviewActive:before{
+  .interviewActive:before {
     display: none;
   }
-  .interviewActive:after{
+  .interviewActive:after {
     display: none;
   }
-  .interviewBox{
+  .interviewBox {
     height: 0px;
     transition: 0.5s ease;
     overflow: hidden;
@@ -171,11 +205,11 @@ export default class PageAside extends Vue {
       }
     }
   }
-  .verifyTab{
-    color: #EDEDED;
+  .verifyTab {
+    color: #ededed;
     padding-left: 46px;
   }
-  .verify{
+  .verify {
     width: 100%;
     display: inline-block;
     li {
@@ -184,18 +218,18 @@ export default class PageAside extends Vue {
       }
     }
   }
-  .expand{
+  .expand {
     height: 120px;
   }
-  .collapse{
+  .collapse {
     height: 0px;
   }
-  .turnUp::before{
+  .turnUp::before {
     display: inline-block;
     transition: 0.5s ease;
     transform: rotateZ(-180deg);
   }
-  .turnDowm::before{
+  .turnDowm::before {
     display: inline-block;
     transition: 0.5s ease;
     transform: rotateZ(0deg);

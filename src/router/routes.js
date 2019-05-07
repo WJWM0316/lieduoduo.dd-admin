@@ -164,5 +164,19 @@ export const routes = [
     name: 'editRecruiter',
     meta: {title: '查看用户详情', haveParent: true, parentPath: '/user', parentName: '用户管理'},
     component: resolve => require(['@/pages/user/editRecruiter.vue'], resolve)
-  }
+  },
+  /* 简历库 */
+  {
+    path: '/resumeStore',
+    name: 'resumeStore',
+    meta: {title: '简历库', haveParent: false,  keepAlive: true},
+    component: resolve => require(['@/pages/resumeStore/resumeStore.vue'], resolve)
+  },
+  /* 简历详情 */
+  {
+    path: '/resumeDetails',
+    name: 'resumeDetails',
+    meta: {title: '简历详情', haveParent: false,  keepAlive: true},
+    component: resolve => require(['@/pages/resumeDetails/resumeDetails.vue'], resolve)
+  },
 ]

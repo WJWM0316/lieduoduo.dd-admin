@@ -68,7 +68,7 @@
           
           <!--身份证正面-->
           <el-form-item class="full" label="身份证正面" prop="icon">
-            <img class="frontImg" :src="form.icon3" alt="">
+            <img class="frontImg" :src="form.icon3" alt="" style="width:400px;height:300px;">
           </el-form-item>
         </template>
       </el-form>
