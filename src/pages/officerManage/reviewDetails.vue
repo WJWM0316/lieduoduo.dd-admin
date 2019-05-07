@@ -236,7 +236,7 @@ export default class reviewDetails extends Vue {
       margin-right: 20px;
       position: relative;
       img{
-        width: 200px;
+        width: 241px;
         height: 150px;
         background-color: #BCBCBC;
         object-fit: cover;
