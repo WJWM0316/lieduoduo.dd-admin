@@ -448,7 +448,7 @@ export default class companyCheck extends Vue {
     width: 200px;
     height: 200px;
     margin-top: 30px;
-    object-fit: fill;
+    object-fit: contain;
   }
   .bg {
     width: 100%;
