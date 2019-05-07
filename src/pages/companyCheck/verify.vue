@@ -398,8 +398,8 @@ img{
       margin-right: 20px;
       position: relative;
       img{
-        width: 200px;
-        height: 150px;
+        width: 265px;
+        height: 170px;
         max-width: 100%;
         background-color: #BCBCBC;
         object-fit: cover;
