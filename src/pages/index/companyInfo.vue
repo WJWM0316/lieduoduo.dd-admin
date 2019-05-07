@@ -16,7 +16,7 @@
     </div>
     <!--大图蒙层-->
     <div class="mask" v-if="nowImg" @click.stop="hiddenMask">
-      <vue-photo-zoom-pro type="circle" :width="100" :url="nowImg"></vue-photo-zoom-pro>
+      <vue-photo-zoom-pro type="circle" :width="250" :url="nowImg"></vue-photo-zoom-pro>
       <!--<img :src="nowImg"/>-->
     </div>
     <!--公司信息表格-->
@@ -79,7 +79,7 @@
         <el-form-item class="full" label="营业执照" prop="icon" v-if="companyInfo.businessLicenseInfo">
           <div class="seePhoto" v-if="companyInfo.businessLicenseInfo.smallUrl!=null">
             <img :src="companyInfo.businessLicenseInfo.smallUrl" alt>
-            <div class="zoomBox" @click.stop="showImg(companyInfo.businessLicenseInfo.smallUrl)">
+            <div class="zoomBox" @click.stop="showImg(companyInfo.businessLicenseInfo.url)">
               <i class="el-icon-zoom-in"></i>
               查看大图
             </div>
@@ -94,7 +94,7 @@
         >
           <div class="seePhoto" v-if="companyInfo.onJobInfo.smallUrl!=null">
             <img :src="companyInfo.onJobInfo.smallUrl" alt>
-            <div class="zoomBox" @click.stop="showImg(companyInfo.onJobInfo.smallUrl)">
+            <div class="zoomBox" @click.stop="showImg(companyInfo.onJobInfo.url)">
               <i class="el-icon-zoom-in"></i>
               查看大图
             </div>
