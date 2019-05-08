@@ -495,8 +495,8 @@
   }
   .phone,
   .qrCode {
-    width: 150px;
-    height: 70px;
+    width: 300px;
+    height: 300px;
     border-radius: 4px;
     transform: translateY(-90%) translateX(-20%);
     color: #652791;
@@ -514,13 +514,13 @@
     }
   }
   .qrCode {
-    width: 250px;
-    height: 240px;
+    width: 300px;
+    height: 300px;
     /*background-color: #CCCCCC;*/
     transform: translateY(-100%) translateX(-50%);
     .Qr{
-      width: 150px;
-      height: 150px;
+      width: 200px;
+      height: 200px;
       margin-top: 30px;
     }
     .bg{

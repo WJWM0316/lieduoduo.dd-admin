@@ -37,7 +37,7 @@
             </el-form-item>
 
             <el-form-item label-width="100px" label="职位来源" prop="comeFrom">
-              <el-select v-model="form.is_online" placeholder="全部状态">
+              <el-select v-model="form.wherefrom" placeholder="全部状态">
                 <el-option label="全部" value="1"></el-option>
                 <el-option label="后台导入" value="2"></el-option>
                 <el-option label="用户创建" value="3"></el-option>
@@ -180,6 +180,7 @@ export default class companyCheck extends Vue {
   pageCount = 0; // 请求回的数据共几页
   qrCode = "";
   form = {
+    wherefrom:'',//数据来源
     type: "",
     is_online: "", // 状态（1 上线，2 下线)
     status: "", // 状态（0关闭，1开启，审核通过，2审核中，3审核失败）查询多种状态用，号分隔（1,2,3）

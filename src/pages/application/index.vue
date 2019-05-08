@@ -520,13 +520,13 @@
     }
   }
   .qrCode {
-    width: 250px;
-    height: 240px;
+    width: 300px;
+    height: 300px;
     /*background-color: #CCCCCC;*/
     transform: translateY(-100%) translateX(-50%);
     .Qr{
-      width: 150px;
-      height: 150px;
+      width: 200px;
+      height: 200px;
       margin-top: 30px;
     }
     .bg{
