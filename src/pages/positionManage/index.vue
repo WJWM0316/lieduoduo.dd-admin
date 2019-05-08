@@ -36,7 +36,7 @@
               </el-select>
             </el-form-item>
 
-            <el-form-item label-width="100px" label="职位来源" prop="comeFrom">
+            <el-form-item label-width="100px" label="职位来源" prop="wherefrom">
               <el-select v-model="form.wherefrom" placeholder="全部状态">
                 <el-option label="全部" value="0"></el-option>
                 <el-option label="excel导入" value="3"></el-option>
