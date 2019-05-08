@@ -38,9 +38,10 @@
 
             <el-form-item label-width="100px" label="职位来源" prop="comeFrom">
               <el-select v-model="form.wherefrom" placeholder="全部状态">
-                <el-option label="全部" value="1"></el-option>
-                <el-option label="后台导入" value="2"></el-option>
-                <el-option label="用户创建" value="3"></el-option>
+                <el-option label="全部" value="0"></el-option>
+                <el-option label="excel导入" value="3"></el-option>
+                <el-option label="用户创建" value="1"></el-option>
+                <el-option label="后台发布" value="2"></el-option>
               </el-select>
             </el-form-item>
 
@@ -81,7 +82,11 @@
               style="height: 48px;"
             >
               <div class="positionMsg">
-                <div class="job_name">{{props.scope.row.positionName}}</div>
+                
+                <span class="job_name">{{props.scope.row.positionName}}
+                  <span class="execlPut" v-if="props.scope.row.wherefrom==='3'">导</span>
+                </span>
+                
               </div>
             </div>
 
@@ -135,6 +140,14 @@
             >
               <span>{{props.scope.row.isOnline === 2 ? '下线' : '上线'}}</span>
             </div>
+            <!-- 职位信息
+            <div
+              class="btn-container"
+              v-else-if="props.scope.column.property === 'positionMsg'"
+              style="height: 48px;"
+            >
+              <i class="el-icon-error" style="color: #F56C6C;"></i>
+            </div> -->
             <template v-else>
               <span
                 :class="{'row-delete': props.scope.row.status !== 1}"
@@ -180,7 +193,7 @@ export default class companyCheck extends Vue {
   pageCount = 0; // 请求回的数据共几页
   qrCode = "";
   form = {
-    wherefrom:'',//数据来源
+    wherefrom: "", //数据来源
     type: "",
     is_online: "", // 状态（1 上线，2 下线)
     status: "", // 状态（0关闭，1开启，审核通过，2审核中，3审核失败）查询多种状态用，号分隔（1,2,3）
@@ -378,6 +391,9 @@ export default class companyCheck extends Vue {
   }
   .positionMsg {
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     .job_name {
       font-family: PingFang-SC-Medium;
       font-weight: 500;
@@ -390,6 +406,19 @@ export default class companyCheck extends Vue {
       -webkit-line-clamp: 2;
       line-clamp: 2;
       -webkit-box-orient: vertical;
+      display: inline-block;
+      margin-right: 10px;
+      .execlPut{
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 1px solid red;
+        font-size: 12px;
+        color: red;
+        display: inline-block;
+        text-align: center;
+        line-height: 20px;
+      }
     }
     .job_info {
       span {

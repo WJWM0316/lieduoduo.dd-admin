@@ -418,9 +418,9 @@ export default class createCompany extends Vue {
     }
     // 上传证件信息
     this.form = {
-      logo: newCompanyInfo.logoInfo.smallUrl || '', // logo
-      icon1: newCompanyInfo.businessLicenseInfo.smallUrl || '', // 营业执照
-      icon2: newCompanyInfo.onJobInfo.smallUrl || '' // 工牌/名片/在职证明
+      logo: newCompanyInfo.logoInfo.url || '', // logo
+      icon1: newCompanyInfo.businessLicenseInfo.url || '', // 营业执照
+      icon2: newCompanyInfo.onJobInfo.url || '' // 工牌/名片/在职证明
     }
     this.adressList = newCompanyInfo.address? newCompanyInfo.address : []
   }

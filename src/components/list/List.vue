@@ -4,17 +4,18 @@
     <div class="list-main">
       <!-- 可默认插入整个表格内容，也可单独指定columns插槽插入自定义列表内容 -->
       <slot>
-        <el-table 
-                  ref="table"
-                  :height="height || undefined"
-                  :data="list"
-                  :empty-text="emptyText"
-                  :default-sort="defaultSort"
-                  :row-class-name="tableRowClassName"
-                  tooltip-effect="dark"
-                  @sort-change="handleSortChange"
-                  @filter-change="handleFilterChange"
-                  @selection-change="handleSelectionChange">
+        <el-table
+          ref="table"
+          :height="height || undefined"
+          :data="list"
+          :empty-text="emptyText"
+          :default-sort="defaultSort"
+          :row-class-name="tableRowClassName"
+          tooltip-effect="dark"
+          @sort-change="handleSortChange"
+          @filter-change="handleFilterChange"
+          @selection-change="handleSelectionChange"
+        >
           <el-table-column type="selection" width="49" align="center" v-if="selectable"></el-table-column>
           <el-table-column
             :key="field.prop"
@@ -29,7 +30,8 @@
             :filters="field.filters && field.filters.length > 0 ? field.filters : undefined"
             :filter-multiple="field.filterMiltiple || false"
             :show-overflow-tooltip="field.singleLine || undefined"
-            v-for="field in fields">
+            v-for="field in fields"
+          >
             <template slot-scope="scope">
               <slot name="columns" :scope="scope">{{scope.row[scope.column.property]}}</slot>
             </template>
@@ -39,7 +41,13 @@
     </div>
     <slot name="list-bottom">
       <footer class="list-footer" v-if="hasPagination" v-show="total > 0">
-        <el-pagination :layout="paginationLayout" :current-page="page" :page-size="pageSize" :total="total" @current-change="handlePageChange">
+        <el-pagination
+          :layout="paginationLayout"
+          :current-page="page"
+          :page-size="pageSize"
+          :total="total"
+          @current-change="handlePageChange"
+        >
           <span class="total">共 {{pageCount}} 页，{{total}} 条记录</span>
         </el-pagination>
       </footer>
@@ -50,8 +58,8 @@
 </template>
 
 <script>
-import List from './list'
-export default List
+import List from "./list";
+export default List;
 </script>
 
 <style lang="less" scoped>
@@ -74,12 +82,12 @@ export default List
     left: 0;
     bottom: 0;
     padding-left: 200px;
-    padding:8px;
+    padding: 8px;
     padding-left: 52px;
     width: 100%;
-    background-color: #FFFFFF;
-    box-shadow:0px -1px 0px 0px rgba(232,233,235,1);
-    border: 1px solid #E8E9EB;
+    background-color: #ffffff;
+    box-shadow: 0px -1px 0px 0px rgba(232, 233, 235, 1);
+    border: 1px solid #e8e9eb;
   }
 }
 </style>

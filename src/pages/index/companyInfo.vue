@@ -176,7 +176,7 @@ export default class createCompany extends Vue {
   active = 0;
   adressList = []; // 地址列表
   showAdminWindow = false;
-  nowImg='';//预览大图
+  nowImg = ""; //预览大图
   nextAdmin = null; // 公司下一个管理员的信息
   pop = {
     isShow: false,
@@ -206,11 +206,29 @@ export default class createCompany extends Vue {
   }
 
   /* 获取公司信息 */
-  async getCompanyInfo() {
+  getCompanyInfo() {
     const { id } = this.$route.query;
-    let res = await getCompanyInfoApi(id);
-    this.companyInfo = res.data.data.companyInfo;
-    this.rightInfo = res.data.data.rtInfo;
+    getCompanyInfoApi(id)
+      .catch(err => {
+        if (err.data.code === 403) {
+          this.$router.go(-1);
+        }
+        console.log(err);
+      })
+      .then(res => {
+        this.companyInfo = res.data.data.companyInfo;
+        this.rightInfo = res.data.data.rtInfo;
+      });
+    // try {
+    //   const { id } = this.$route.query;
+    //   let res = await getCompanyInfoApi(id);
+    //   console.log('res',res)
+    //   this.companyInfo = res.data.data.companyInfo;
+    //   this.rightInfo = res.data.data.rtInfo;
+    // } catch(e) {
+    //   console.log('gggg')
+    //   console.log(e)
+    // }
   }
 
   /* 绑定和解绑管理员 */
@@ -240,9 +258,9 @@ export default class createCompany extends Vue {
   /* 查看大图 */
   showImg(imgUrl) {
     this.nowImg = imgUrl;
-    console.log(this.nowImg)
+    console.log(this.nowImg);
   }
-   /* 隐藏大图 */
+  /* 隐藏大图 */
   hiddenMask() {
     this.nowImg = "";
   }
@@ -272,7 +290,7 @@ export default class createCompany extends Vue {
     max-height: 90% !important;
   }
 }
-.seePhoto{
+.seePhoto {
   position: relative;
   width: 130px;
   height: 170px;

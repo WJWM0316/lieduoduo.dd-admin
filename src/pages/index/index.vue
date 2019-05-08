@@ -280,6 +280,7 @@ export default class indexPage extends Vue {
     }
 //  delete this.form.firstAreaId
     getCompanyListApi(newForm || this.form).then(res => {
+      console.log('res',res)
       this.list = res.data.data
       this.pageCount = res.data.meta.lastPage
       this.total = res.data.meta.total
