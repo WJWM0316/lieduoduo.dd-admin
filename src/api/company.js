@@ -212,13 +212,13 @@ export const deleteRecruiterApi = (companyId, uid) => request({
   type: 'delete'
 })
 /* 编辑公司审核表跟进人 */
-export const editCheckCompanyFollowUserApi = (companyId, uid) => request({
-  url: `/company/company_temp_add_to_follow_user/${companyId}?admin_uid=${uid}`,
+export const editCheckCompanyFollowUserApi = (companyId, uid,groupId) => request({
+  url: `/company/company_temp_add_to_follow_user/${companyId}?admin_uid=${uid}&groupId=${groupId}`,
   type: 'put'
 })
 /* 编辑公司库表里跟进人 */
-export const editCompanyFollowUserApi = (companyId, uid) => request({
-  url: `/company/company_add_to_follow_user/${companyId}?admin_uid=${uid}`,
+export const editCompanyFollowUserApi = (companyId, uid,groupId) => request({
+  url: `/company/company_add_to_follow_user/${companyId}?admin_uid=${uid}&groupId=${groupId}`,
   type: 'put'
 })
 /* 获取审核表里的人员申请信息 */

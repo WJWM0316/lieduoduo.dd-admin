@@ -12,6 +12,7 @@
       </el-header>
       <slot name="formContent"></slot>
       <slot name="dataList"></slot>
+      <slot name="pageList"></slot>
       <div class="Mark" v-if="isShowMark"></div>
     </section>
   </div>
@@ -54,8 +55,9 @@ export default class lyoutContent extends Vue {}
   .contentStyle {
     margin: 22px;
     padding: 20px;
+    padding-top: 0px;
     border: 1px solid rgb(238, 238, 238);
-
+    height: 100%;
     .header {
       padding: 0px;
       background: #fff;

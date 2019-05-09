@@ -50,11 +50,11 @@
             </li>
           </div>
           <!-- 简历库 -->
-          <!-- <li>
+          <li>
             <router-link to="/resumeStore" active-class="interviewActive">
               <i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>简历库
             </router-link>
-          </li> -->
+          </li>
         </ul>
       </div>
     </section>
