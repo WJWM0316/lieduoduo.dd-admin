@@ -6,11 +6,7 @@
         <div class="userInfo active">基本信息</div>
       </div>
       <div class="editBox">
-        <el-button
-          class="inquire"
-          @click.stop="Review()"
-          v-show="userInfo.status === 0"
-        >审核</el-button>
+        <el-button class="inquire" @click.stop="Review(personalInfo.uid, 'company')" v-show="userInfo.status === 0">审核</el-button>
         <el-button
           type="info"
           disabled
@@ -190,6 +186,7 @@ import Component from "vue-class-component";
 import ImageUploader from "@/components/imageUploader";
 import adminControl from "@/components/adminControl/index";
 import { fieldApi, uploadIdcardApi } from "API/commont";
+import { identityPassApi, identityFailApi } from "API/company";
 import {
   detectionMobileApi,
   checkUserauthApi,
@@ -209,10 +206,10 @@ import {
 } from "API/company";
 @Component({
   name: "userInfo",
-  watch:{
-    'form.result': {
-      handler (tags, oldTags) {
-        this.needReason = tags
+  watch: {
+    "form.result": {
+      handler(tags, oldTags) {
+        this.needReason = tags;
       }
     }
   },
@@ -226,8 +223,8 @@ export default class addUser extends Vue {
     isShow: false,
     type: "position"
   };
-  needReason=''; //审核结果
-  isCheck=false;
+  needReason = ""; //审核结果
+  isCheck = false;
   nowImg = ""; //当前大图预览显示的图片
   userInfo = "";
   showAdminWindow = false; // 是否显示招聘官弹窗
@@ -258,38 +255,44 @@ export default class addUser extends Vue {
     tips: "建议尺寸400X400px，JPG、PNG格式，图片小于5M。"
   };
   form = {
-    icon3: "", // 身份证正面
-    result:'' //原因
+    result: '',
+    reason: '',
+    other: '' // 其他原因
   };
   /*设置审核结果 */
-  setResult () {
+  setResult() {
     let param = {
-      review_note: this.form.reason ? `${this.form.reason};${this.form.other}` : `${this.form.other}`
-    }
+      review_note: this.form.reason
+        ? `${this.form.reason};${this.form.other}`
+        : `${this.form.other}`
+    };
     //审核人员信息
-    if (this.form.result === 'true') {
+    if (this.form.result === "true") {
       identityPassApi(this.checkId).then(res => {
-        this.identityInfo.status = 1
-        this.isCheck = false
-        this.$message({type: 'success', message: '审核成功'})
-      })
+        this.personalInfo.identityAuth = 1;
+        this.isCheck = false;
+        this.$message({ type: "success", message: "审核成功" });
+      });
+      this.isCheck=false
     } else {
       identityFailApi(this.checkId, param).then(res => {
-        this.identityInfo.status = 2
-        this.isCheck = false
-        this.$message({type: 'error', message: '信息驳回成功'})
-      })
+        this.personalInfo.identityAuth = 0;
+        this.isCheck = false;
+        this.$message({ type: "error", message: "信息驳回成功" });
+      });
     }
   }
-   // 点击审核按钮
-  Review(id){
-    this.isCheck=true
+  // 点击审核按钮
+  Review (id, type) {
+    this.type = type
+    this.isCheck = true
+    this.checkId = id
   }
   /* 查看大图 */
   showImg(imgUrl) {
     this.nowImg = imgUrl;
   }
-   /* 隐藏大图 */
+  /* 隐藏大图 */
   hiddenMask() {
     this.nowImg = "";
   }
@@ -340,9 +343,10 @@ export default class addUser extends Vue {
     this.phone = {
       mobile: userInfo.mobile
     };
-    console.log('userInfo',userInfo)
+    console.log("userInfo", userInfo);
     /* 身份信息 */
     this.personalInfo = {
+      uid:userInfo.uid,
       name: userInfo.name, // 姓名
       gender: userInfo.gender,
       realname: userInfo.realname || "", // 真实姓名
@@ -399,7 +403,7 @@ export default class addUser extends Vue {
 </script>
 
 <style lang="less" scoped="scoped">
-.frontImg{
+.frontImg {
   width: 100%;
   height: 100%;
 }
