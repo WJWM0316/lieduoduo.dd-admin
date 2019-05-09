@@ -388,7 +388,7 @@
       <div class="nowResume" v-show="nowCheck==0">
         div.
       </div>
-      <div class="nowResume" v-show="nowCheck==1">2</div>
+      <div class="nowResume" v-show="nowCheck==1">21</div>
       <div class="nowResume" v-show="nowCheck==2">3</div>
     </div>
   </div>
