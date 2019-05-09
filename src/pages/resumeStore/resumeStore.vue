@@ -83,7 +83,22 @@
                 <el-button>查看简历附件</el-button>
               </div>
             </div>
-            <div class="userLabel"></div>
+            <div class="line"></div>
+            <div class="userLabel">
+              <div class="whereFrom">
+                  <span>求职意向:<i>·</i></span>
+                  <span>广州<i>·</i></span>
+                  <span>高级产品经理 <i>·</i></span>
+                  <span> 知识付费<i>·</i></span>
+                  <span>服务<i>·</i></span>
+                  <span>服务<i>·</i></span>
+                  <span>电子产品<i>·</i></span>
+                  <span>6k-9k<i>·</i></span>
+              </div>
+              <div class="iconList">
+                <span>要求16薪水</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>

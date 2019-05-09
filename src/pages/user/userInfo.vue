@@ -8,7 +8,7 @@
       <div class="editBox">
         <el-button
           class="inquire"
-          @click.stop="Review(personalInfo.uid)"
+          @click.stop="Review()"
           v-show="userInfo.status === 0"
         >审核</el-button>
         <el-button
@@ -208,7 +208,14 @@ import {
   getRecruitersListApi
 } from "API/company";
 @Component({
-  name: "addUser",
+  name: "userInfo",
+  watch:{
+    'form.result': {
+      handler (tags, oldTags) {
+        this.needReason = tags
+      }
+    }
+  },
   components: {
     ImageUploader,
     adminControl
@@ -219,6 +226,8 @@ export default class addUser extends Vue {
     isShow: false,
     type: "position"
   };
+  needReason=''; //审核结果
+  isCheck=false;
   nowImg = ""; //当前大图预览显示的图片
   userInfo = "";
   showAdminWindow = false; // 是否显示招聘官弹窗
@@ -249,8 +258,33 @@ export default class addUser extends Vue {
     tips: "建议尺寸400X400px，JPG、PNG格式，图片小于5M。"
   };
   form = {
-    icon3: "" // 身份证正面
+    icon3: "", // 身份证正面
+    result:'' //原因
   };
+  /*设置审核结果 */
+  setResult () {
+    let param = {
+      review_note: this.form.reason ? `${this.form.reason};${this.form.other}` : `${this.form.other}`
+    }
+    //审核人员信息
+    if (this.form.result === 'true') {
+      identityPassApi(this.checkId).then(res => {
+        this.identityInfo.status = 1
+        this.isCheck = false
+        this.$message({type: 'success', message: '审核成功'})
+      })
+    } else {
+      identityFailApi(this.checkId, param).then(res => {
+        this.identityInfo.status = 2
+        this.isCheck = false
+        this.$message({type: 'error', message: '信息驳回成功'})
+      })
+    }
+  }
+   // 点击审核按钮
+  Review(id){
+    this.isCheck=true
+  }
   /* 查看大图 */
   showImg(imgUrl) {
     this.nowImg = imgUrl;
