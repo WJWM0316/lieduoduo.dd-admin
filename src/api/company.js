@@ -232,3 +232,8 @@ export const editApplyUserInfoApi = (uid,data) => request({
   type: 'put',
   data
 })
+/* 审核表跟进人接口 */
+export const companyTempUserList = () => request({
+  url: `/company/company_temp_user_list`,
+  type: 'get',
+})

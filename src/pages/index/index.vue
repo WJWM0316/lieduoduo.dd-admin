@@ -102,7 +102,11 @@
               </el-option>
             </el-select>
           </el-form-item>
-          
+          <el-form-item label-width="77px" label="营业执照" prop="is_license" >
+              <el-select v-model="form.is_license" placeholder="全部状态">
+                <el-option label="无营业执照" value="0"></el-option>
+              </el-select>
+            </el-form-item>
           <el-form-item class="btn">
             <el-button class="inquire" @click="onSubmit">查询</el-button>
             <el-button @click.stop="resetForm('form')">重置</el-button>
@@ -197,6 +201,7 @@ export default class indexPage extends Vue {
   total = 0 // 筛查结果数量
   pageCount = 0 // 请求回的数据共几页
   form =  {
+    is_license:'',
     start: '',
     end: '',
     page: 1,
