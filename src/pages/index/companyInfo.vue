@@ -294,6 +294,7 @@ export default class createCompany extends Vue {
   position: relative;
   width: 130px;
   height: 170px;
+  overflow: hidden;
 }
 .zoomBox {
   background-color: rgba(0, 0, 0, 0.2);

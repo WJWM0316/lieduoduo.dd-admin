@@ -1,6 +1,6 @@
 <template>
   <div class="resumeStore">
-    <lyout-content :leftcontent="leftcontent" :isShowbtn="false" :isShowMark="isShowMark">
+    <lyout-content :leftcontent="leftcontent" :isShowbtn="false" :isShowMark="isShowMark" ref="methods">
       <div class="formSumbit" slot="formContent">
         <div class="formReasult">
           <el-form ref="form" :model="form" class="form">
@@ -46,7 +46,7 @@
         </div>
       </div>
       <div class="resumeList" slot="dataList">
-        <div class="resumeItem">
+        <div class="resumeItem" @click.stop='showMark' >
           <div class="resumeNumber">
             <span>简历编号 cdate0000012X</span>
             <span>2018-08-12 23:00 更新</span>
@@ -365,7 +365,7 @@
       </div>
       <div class="pageList" slot="pageList">
         <!-- v-if="hasPagination" v-show="total > 0" -->
-        <footer class="list-footer">
+        <!-- <footer class="list-footer">
           <el-pagination
             :layout="paginationLayout"
             :current-page="page"
@@ -375,22 +375,58 @@
           >
             <span class="total">共 {{pageCount}} 页，{{total}} 条记录</span>
           </el-pagination>
-        </footer>
+        </footer>-->
       </div>
+      <transition name="el-fade-in-linear" v-show="isShowMark" slot="Mark">
+        <div class="Mask">
+          <div class="swiperList">
+            <div class="arrow">
+              <div class="left comstyle" @click.stop="reduce">
+                <i class="el-icon-caret-left"></i>
+              </div>
+              <div class="right comstyle" @click.stop="add">
+                <i class="el-icon-caret-right"></i>
+              </div>
+            </div>
+            <div class="swipertype">
+              <div
+                class="common"
+                :class="[index==nowCheck?'isCheck':'noCheck']"
+                v-for="(item,index) in typeList"
+                :key="item"
+                @click.stop="check(index,'tab')"
+              >{{item}}</div>
+            </div>
+            <div class="nowResume" v-show="nowCheck==0">
+              <div class="Numbering">
+                <span>简历编号：928de08bB4b99169a</span>
+                <span>2019-03-13 更新</span>
+              </div>
+              <div class="message"></div>
+              <div class="description"></div>
+            </div>
+            <div class="nowResume" v-show="nowCheck==1">21</div>
+            <!-- 历史记录 -->
+            <div class="nowResume" v-show="nowCheck==2">
+              <div class="historyList">
+                <span>
+                  2019-04-25 15:40:04
+                  <i>陈某某</i> 查看 联系方式
+                </span>
+                <span>
+                  2019-04-25 15:40:04
+                  <i>陈某某</i> 查看 联系方式
+                </span>
+                <span>
+                  2019-04-25 15:40:04
+                  <i>陈某某</i> 查看 联系方式
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </transition>
     </lyout-content>
-    <div class="swiperList">
-      <div class="swiperContent">
-
-      </div>
-      <div class="swipertype">
-        <div class="common" :class="[index==nowCheck?'isCheck':'noCheck']" v-for="(item,index) in typeList" :key="item" @click.stop='check(index)'>{{item}}</div>
-      </div>
-      <div class="nowResume" v-show="nowCheck==0">
-        div.
-      </div>
-      <div class="nowResume" v-show="nowCheck==1">21</div>
-      <div class="nowResume" v-show="nowCheck==2">3</div>
-    </div>
   </div>
 </template>
 
@@ -405,7 +441,7 @@ import lyoutContent from "COMPONENTS/Lyout/lyoutContent/lyoutContent.vue";
   }
 })
 export default class resumeStore extends Vue {
-  typeList=['简历详情','附件简历','历史记录'];
+  typeList = ["简历详情", "附件简历", "历史记录"];
   leftcontent = {
     total: 0,
     title: "简历库"
@@ -413,13 +449,26 @@ export default class resumeStore extends Vue {
   form = {
     name: ""
   };
-  nowCheck=''; //当前点击
-  isCheck=0;
+  nowCheck = 0; //当前点击
+  isCheck = 0;
   isShowbtn = true;
   isShowMark = true;
+  showMark(){
+    this.isShowMark=!this.isShowMark
+  }
+  // 右箭头
+  add(index) {
+    if (this.nowCheck === 2) return;
+    this.nowCheck++;
+  }
+  // 左边箭头
+  reduce() {
+    if (this.nowCheck === 0) return;
+    this.nowCheck--;
+  }
   // 点击切换
-  check(index){
-    this.nowCheck=index
+  check(index) {
+    this.nowCheck = index;
   }
 }
 </script>

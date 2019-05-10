@@ -3,17 +3,25 @@
   <div class="lyoutContent">
     <section class="contentStyle">
       <el-header class="header" style="text-align: right; font-size: 15px;">
+        <!-- 标题区域 -->
         <div class="lyoutTitle">
           <span class="title">{{leftcontent.title}}({{leftcontent.total}})</span>
         </div>
+        <!-- 右上角按钮区域 -->
         <div class="slotButton" v-if="isShowbtn">
           <slot name="text"></slot>
         </div>
       </el-header>
+      <!-- 各类搜索条件 -->
       <slot name="formContent"></slot>
+      <!-- 数据table -->
       <slot name="dataList"></slot>
+      <!-- 分页 -->
       <slot name="pageList"></slot>
-      <div class="Mark" v-if="isShowMark"></div>
+      <!-- 遮罩层，如有需要可在遮罩层添加块 -->
+      <div class="Mark" v-if="isShowMark">
+        <slot name='Mark'></slot>
+      </div>
     </section>
   </div>
 </template>
@@ -42,7 +50,9 @@ import Component from "vue-class-component";
     }
   }
 })
-export default class lyoutContent extends Vue {}
+export default class lyoutContent extends Vue {
+  
+}
 </script>
 <style scoped lang="less">
 .lyoutContent {
@@ -104,8 +114,7 @@ export default class lyoutContent extends Vue {}
   bottom: 0;
   left: 0;
   right: 0;
-  background: #000;
-  opacity: 0.7;
+  background: rgba(0,0,0,0.7);
   z-index: 500;
 }
 </style>
