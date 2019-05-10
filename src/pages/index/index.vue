@@ -104,6 +104,7 @@
           </el-form-item>
           <el-form-item label-width="77px" label="营业执照" prop="is_license" >
               <el-select v-model="form.is_license" placeholder="全部状态">
+                <el-option label="全部"></el-option>
                 <el-option label="无营业执照" value="0"></el-option>
               </el-select>
             </el-form-item>

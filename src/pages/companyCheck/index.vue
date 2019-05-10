@@ -65,6 +65,7 @@
             </el-form-item>
             <el-form-item label-width="100px" label="营业执照" prop="is_license">
               <el-select v-model="form.is_license" placeholder="全部状态">
+                <el-option label="全部"></el-option>
                 <el-option label="无营业执照" value="0"></el-option>
               </el-select>
             </el-form-item>
@@ -75,6 +76,7 @@
               style="margin-left: 20px;"
             >
               <el-select v-model="form.admin_uid" placeholder="全部状态">
+                <el-option label="无" value="0"></el-option>
                 <el-option
                   v-for="item in userList"
                   :key="item.id"
@@ -222,7 +224,7 @@ export default class companyCheck extends Vue {
   total = 0; // 筛查结果数量
   pageCount = 0; // 请求回的数据共几页
   form = {
-    is_license:'',
+    is_license: "",
     admin_uid: "",
     keyword: "",
     status: "",
