@@ -79,7 +79,7 @@ export default List;
     box-sizing: border-box;
     z-index: 999;
     position: fixed;
-    left: 0;
+    left: 200px;
     bottom: 0;
     padding-left: 200px;
     padding: 8px;
