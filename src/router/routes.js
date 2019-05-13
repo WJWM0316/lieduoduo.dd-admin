@@ -22,21 +22,21 @@ export const routes = [
   {
     path: '/check/companyCheck',
     name: 'companyCheck',
-    meta: {title: '公司审核管理', keepAlive: true},
+    meta: {title: '公司审核管理', keepAlive: true,flag:'gongsiku'},
     component: resolve => require(['@/pages/companyCheck/index.vue'], resolve),
   },
   /* 公司录入详情 */
   {
     path: '/index/companyInfo',
     name: 'companyInfo',
-    meta: {title: '公司详情', haveParent: true, parentPath: '/index', parentName: '公司库'},
+    meta: {title: '公司详情', haveParent: true, parentPath: '/index', parentName: '公司库', flag:'gongsiku'},
     component: resolve => require(['@/pages/index/companyInfo.vue'], resolve),
   },
   /* 公司审核 */
   {
     path: '/check/companyCheck/verify',
     name: 'companyCheckverify',
-    meta: {title: '公司审核', haveParent: true, parentPath: '/check/companyCheck', parentName: '公司审核管理'},
+    meta: {title: '公司审核', haveParent: true, parentPath: '/check/companyCheck', parentName: '公司审核管理',},
     component: resolve => require(['@/pages/companyCheck/verify.vue'], resolve),
   },
   /* 编辑公司审核里的用户信息 */

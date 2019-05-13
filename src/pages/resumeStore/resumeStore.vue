@@ -399,7 +399,7 @@
                 :class="[index==nowCheck?'isCheck':'noCheck']"
                 v-for="(item,index) in typeList"
                 :key="item"
-                @click.stop="check(index,'tab')"
+                @click.self="check(index,'tab')"
               >{{item}}</div>
             </div>
             <div class="nowResume" v-show="nowCheck==0">
@@ -609,7 +609,7 @@ export default class resumeStore extends Vue {
   nowCheck = 0; //当前点击
   isCheck = 0;
   isShowbtn = true;
-  isShowMark = true;
+  isShowMark = false;
   showMark() {
     this.isShowMark = !this.isShowMark;
   }

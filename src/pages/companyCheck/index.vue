@@ -44,10 +44,10 @@
               style="margin-left: 20px;"
             >
               <el-select v-model="form.status" placeholder="全部状态">
-                <el-option label="待审核" value="0"></el-option>
-                <el-option label="已通过" value="1"></el-option>
-                <el-option label="未通过" value="2"></el-option>
-                <el-option label="未提交" value="3"></el-option>
+                <el-option label="待审核" :value="0"></el-option>
+                <el-option label="已通过" :value="1"></el-option>
+                <el-option label="未通过" :value="2"></el-option>
+                <el-option label="未提交" :value="3"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item
@@ -57,17 +57,17 @@
               style="margin-left: 20px;"
             >
               <el-select v-model="form.auth_status" placeholder="全部状态">
-                <el-option label="待审核" value="0"></el-option>
-                <el-option label="已通过" value="1"></el-option>
-                <el-option label="未通过" value="2"></el-option>
-                <el-option label="未提交" value="3"></el-option>
+                <el-option label="待审核" :value="0"></el-option>
+                <el-option label="已通过" :value="1"></el-option>
+                <el-option label="未通过" :value="2"></el-option>
+                <el-option label="未提交" :value="3"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label-width="100px" label="营业执照" prop="is_license">
               <el-select v-model="form.is_license" placeholder="全部状态">
                 <el-option label="全部"></el-option>
-                <el-option label="无营业执照" value="0"></el-option>
-                <el-option label="有营业执照" value="1"></el-option>
+                <el-option label="无营业执照" :value="0"></el-option>
+                <el-option label="有营业执照" :value="1"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item
