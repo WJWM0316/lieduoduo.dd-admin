@@ -409,9 +409,9 @@ export default class createCompany extends Vue {
           }
         } else {
           // 新建公司
-          console.log('创建成功了一个公司')
-          this.showAdminWindow=true
-          // await setCompanyInfoApi(this.companyInfo);
+          // console.log('创建成功了一个公司')
+          // this.showAdminWindow=true
+          await setCompanyInfoApi(this.companyInfo);
         }
         this.$message({
           message: this.isEdit ? "编辑成功" : "公司创建成功",
