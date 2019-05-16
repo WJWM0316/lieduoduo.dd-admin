@@ -209,6 +209,15 @@
     <div class="emailBox" v-show="email.isShow">
       <email-check :companyName="companyInfo.company_name" @save="save" @close="close"></email-check>
     </div>
+    <!-- 绑定管理员 -->
+    <div v-if="showAdminWindow" class="bindAdminWindo">
+      <admin-control
+        @closeAdminWindow="close"
+        :isBindAdmin="companyInfo.createdUid? true : false"
+        :companyName="companyInfo.companyName"
+        :nextAdmin="nextAdmin"
+      ></admin-control>
+    </div>
   </div>
 </template>
 
@@ -218,6 +227,7 @@ import Component from "vue-class-component";
 import ImageUploader from "@/components/imageUploader";
 import emailCheck from "@/components/email/email";
 import { fieldApi, uploadApi, getSalerListApi } from "API/commont";
+import adminControl from "@/components/adminControl/index";
 import {
   setCompanyInfoApi,
   addCompanyAddressApi,
@@ -235,6 +245,7 @@ import mapSearch from "@/components/map";
 @Component({
   name: "createCompany",
   components: {
+    adminControl,
     ImageUploader,
     mapSearch,
     emailCheck
@@ -260,9 +271,17 @@ export default class createCompany extends Vue {
   email = {
     isShow: false
   };
+  companyInfo = {};
+  nextAdmin = {};
+  showAdminWindow=false //展示绑定管理员
+  // 关闭
+  close(e) {
+    this.showAdminWindow = false;
+    if (e && e.needLoad) this.getCompanyInfo();
+  }
   ground(e) {
     let result = this.salesList.find(field => field.id === e);
-    this.companyInfo.groupId=result.groupId
+    this.companyInfo.groupId = result.groupId;
     console.log(result);
   }
   /* 自定义公司名称校验规则 */
@@ -390,7 +409,9 @@ export default class createCompany extends Vue {
           }
         } else {
           // 新建公司
-          await setCompanyInfoApi(this.companyInfo);
+          console.log('创建成功了一个公司')
+          this.showAdminWindow=true
+          // await setCompanyInfoApi(this.companyInfo);
         }
         this.$message({
           message: this.isEdit ? "编辑成功" : "公司创建成功",
@@ -400,9 +421,10 @@ export default class createCompany extends Vue {
           this.$router.push({
             path: `/check/companyCheck/verify?id=${checkId}`
           });
-        } else {
-          this.$router.go(-1);
-        }
+        } 
+        // else {
+        //   this.$router.go(-1);
+        // }
       } else {
         return false;
       }
@@ -416,9 +438,17 @@ export default class createCompany extends Vue {
     console.log("this.companyInfo", this.companyInfo);
     // return;
     if (id) {
-      await editCompanyFollowUserApi(id, this.companyInfo.admin_uid,this.companyInfo.groupId);
+      await editCompanyFollowUserApi(
+        id,
+        this.companyInfo.admin_uid,
+        this.companyInfo.groupId
+      );
     } else {
-      await editCheckCompanyFollowUserApi(checkId, this.companyInfo.admin_uid,this.companyInfo.groupId);
+      await editCheckCompanyFollowUserApi(
+        checkId,
+        this.companyInfo.admin_uid,
+        this.companyInfo.groupId
+      );
     }
     this.$message({
       type: "success",
@@ -571,6 +601,15 @@ export default class createCompany extends Vue {
 </script>
 
 <style lang="less" scoped="scoped">
+.bindAdminWindo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 100;
+}
 .createCompany {
   margin-left: 200px;
   padding: 22px;

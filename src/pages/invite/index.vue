@@ -502,8 +502,8 @@ export default class invite extends Vue {
     .arrow,
     .status,
     .time {
-      text-align: center;
-      justify-content: center;
+      text-align: start;
+      justify-content: flex-start;
     }
     .status {
       font-weight: 500;

@@ -46,7 +46,6 @@
         <el-form-item label="所属行业" prop="industry_id">
           <span>{{companyInfo.industry}}</span>
         </el-form-item>
-
         <el-form-item label="融资阶段" prop="financing">
           <span>{{companyInfo.financingInfo}}</span>
         </el-form-item>

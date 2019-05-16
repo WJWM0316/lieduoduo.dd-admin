@@ -68,4 +68,9 @@ export default class App extends Vue {
     }
   }
 }
+.el-table{
+  .cell{
+    text-align: left;
+  }
+}
 </style>

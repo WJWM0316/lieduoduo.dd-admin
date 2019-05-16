@@ -4,7 +4,7 @@
     <el-container class="container" style="border: 1px solid #eee">
       <el-header class="header" style="text-align: right; font-size: 15px">
         <div class="title">审核管理({{total}})</div>
-        <!--<el-button @click="addCompany" class="btn-limit-width">+ 新建公司</el-button>-->
+        <el-button @click="addCompany" class="btn-limit-width">+ 新建公司</el-button>
       </el-header>
       <el-main>
         <!--筛选-->
@@ -44,10 +44,10 @@
               style="margin-left: 20px;"
             >
               <el-select v-model="form.status" placeholder="全部状态">
-                <el-option label="待审核" :value="0"></el-option>
-                <el-option label="已通过" :value="1"></el-option>
-                <el-option label="未通过" :value="2"></el-option>
-                <el-option label="未提交" :value="3"></el-option>
+                <el-option label="待审核" value="0"></el-option>
+                <el-option label="已通过" value="1"></el-option>
+                <el-option label="未通过" value="2"></el-option>
+                <el-option label="未提交" value="3"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item
@@ -57,17 +57,17 @@
               style="margin-left: 20px;"
             >
               <el-select v-model="form.auth_status" placeholder="全部状态">
-                <el-option label="待审核" :value="0"></el-option>
-                <el-option label="已通过" :value="1"></el-option>
-                <el-option label="未通过" :value="2"></el-option>
-                <el-option label="未提交" :value="3"></el-option>
+                <el-option label="待审核" value="0"></el-option>
+                <el-option label="已通过" value="1"></el-option>
+                <el-option label="未通过" value="2"></el-option>
+                <el-option label="未提交" value="3"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label-width="100px" label="营业执照" prop="is_license">
               <el-select v-model="form.is_license" placeholder="全部状态">
-                <el-option label="全部"></el-option>
-                <el-option label="无营业执照" :value="0"></el-option>
-                <el-option label="有营业执照" :value="1"></el-option>
+                <el-option label="全部" value></el-option>
+                <el-option label="无营业执照" value="0"></el-option>
+                <el-option label="有营业执照" value="1"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item
@@ -76,8 +76,8 @@
               prop="admin_uid"
               style="margin-left: 20px;"
             >
-              <el-select v-model="form.admin_uid" placeholder="全部状态">
-                <el-option label="无" value="0"></el-option>
+              <el-select v-model="form.admin_uid" placeholder="跟进人">
+                <el-option label="无" value></el-option>
                 <el-option
                   v-for="item in userList"
                   :key="item.id"
@@ -86,7 +86,18 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-
+            <el-form-item
+              label-width="90px"
+              label="公司来源"
+              prop="admin_uid"
+              style="margin-left: 20px;"
+            >
+              <el-select v-model="form.admin_uid" placeholder="公司来源">
+                <el-option label="全部" value></el-option>
+                <el-option label="营业执照" value="0"></el-option>
+                <el-option label="用户创建" value="0"></el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item class="btn">
               <el-button class="inquire" @click="onSubmit">查询</el-button>
               <el-button @click.stop="resetForm('form')">重置</el-button>
@@ -290,7 +301,7 @@ export default class companyCheck extends Vue {
   }
   addCompany() {
     this.$router.push({
-      path: "/createCompany"
+      path: "/index/createCompany"
     });
     console.log("添加公司");
   }
@@ -438,7 +449,7 @@ export default class companyCheck extends Vue {
     .btn-container {
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
       .check {
         line-height: 48px;
         color: #652791;

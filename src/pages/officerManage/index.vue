@@ -12,14 +12,14 @@
             <div class="content">
               <el-input type='text' placeholder="请输入内容" v-model="searchType.keyword1" class="inputSelect">
                 <el-select class="selectTitle" v-model="searchType.condition1" slot="prepend" placeholder="请选择">
-                  <el-option v-for="item in keyword" :label="item.label" :value="item.value" v-show="searchType.condition2 !== item.value"></el-option>
+                  <el-option v-for="item in keyword" :key="item.label" :label="item.label" :value="item.value" v-show="searchType.condition2 !== item.value"></el-option>
                 </el-select>
               </el-input>
             </div>
             <div class="content">
               <el-input type='text' placeholder="请输入内容" v-model="searchType.keyword2" class="inputSelect">
                 <el-select class="selectTitle" v-model="searchType.condition2" slot="prepend" placeholder="请选择">
-                  <el-option v-for="item in keyword" :label="item.label" :value="item.value" v-show="searchType.condition1 !== item.value"></el-option>
+                  <el-option v-for="item in keyword" :key="item.label" :label="item.label" :value="item.value" v-show="searchType.condition1 !== item.value"></el-option>
                 </el-select>
               </el-input>
             </div>
@@ -411,7 +411,7 @@ export default class officerManage extends Vue{
   .btn-container{
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     .check{
       line-height: 48px;
       color: #652791;

@@ -184,7 +184,8 @@ export default class addUser extends Vue {
             message: this.isEdit? '编辑成功' : '用户创建成功',
             type: 'success'
           })
-          this.isEdit? this.$router.go(-1) : this.$router.replace({path: `/user`, query: {isNeedLoad: true}})
+          this.$router.go(-1)
+          // this.isEdit? this.$router.go(-1) : this.$router.replace({path: `/user`, query: {isNeedLoad: true}})
           // this.$router.go(-1)
         })
       } else {

@@ -37,14 +37,34 @@
   li {
     font-weight: 300;
     color: #fff;
-    height: 60px;
-    line-height: 60px;
+    // height: 60px;
+    // line-height: 60px;
     cursor: pointer;
     transition: all ease 0.4s;
     font-size: 14px;
     text-align: left;
+    .verify {
+      width: 100%;
+      display: inline-block;
+      li {
+        a {
+          padding-left: 60px;
+          line-height: 50px;
+        }
+      }
+    }
+    .path{
+      padding-left: 22px;
+      span{
+        line-height: 55px;
+        display: inline-block;
+      }
+    }
     &:hover {
-      background: rgba(255, 226, 102, 0.12);
+      .path{
+        background: rgba(255, 226, 102, 0.12);
+      }
+     
     }
     .zike-icon {
       margin-right: 10px;
@@ -56,7 +76,6 @@
       transition: 0.5s ease;
     }
     a {
-      padding-left: 46px;
       box-sizing: border-box;
       text-decoration: none;
       color: #ededed;
@@ -101,52 +120,5 @@
       content: "";
     }
   }
-  .interviewActive {
-    background: none;
-  }
-  .interviewActive:before {
-    display: none;
-  }
-  .interviewActive:after {
-    display: none;
-  }
-  .interviewBox {
-    height: 0px;
-    transition: 0.5s ease;
-    overflow: hidden;
-    li {
-      a {
-        padding-left: 78px;
-      }
-    }
-  }
-  .verifyTab {
-    color: #ededed;
-    padding-left: 46px;
-  }
-  .verify {
-    width: 100%;
-    display: inline-block;
-    li {
-      a {
-        padding-left: 78px;
-      }
-    }
-  }
-  .expand {
-    height: 120px;
-  }
-  .collapse {
-    height: 0px;
-  }
-  .turnUp::before {
-    display: inline-block;
-    transition: 0.5s ease;
-    transform: rotateZ(-180deg);
-  }
-  .turnDowm::before {
-    display: inline-block;
-    transition: 0.5s ease;
-    transform: rotateZ(0deg);
-  }
+  
 }

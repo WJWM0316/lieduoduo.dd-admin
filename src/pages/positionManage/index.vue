@@ -4,29 +4,24 @@
     <el-container class="container" style="border: 1px solid #eee">
       <el-header class="header" style="text-align: right; font-size: 15px">
         <div class="title">职位管理({{total}})</div>
+        <el-button @click.stop="addPosition" class="btn-limit-width">发布职位</el-button>
       </el-header>
       <el-main>
         <!--筛选-->
         <div class="selectionBox" @keyup.enter="search">
-          <el-button
-            class="inquire"
-            @click="addPosition"
-            style="margin-bottom: 20px;margin-left: 20px;float: right;"
-          >发布职位</el-button>
-
           <el-form ref="form" :model="form" label-width="80px" validate="validate">
             <el-form-item label="职位名称" prop="name">
               <el-input v-model="form.name" placeholder="输入职位/发布者/主体公司"></el-input>
             </el-form-item>
 
-            <el-form-item label-width="100px" label="上线/下线" prop="is_online">
+            <el-form-item label-width="80px" label="上线/下线" prop="is_online">
               <el-select v-model="form.is_online" placeholder="全部状态">
                 <el-option label="上线" value="1"></el-option>
                 <el-option label="下线" value="2"></el-option>
               </el-select>
             </el-form-item>
 
-            <el-form-item label-width="100px" label="审核状态" prop="status">
+            <el-form-item label-width="80px" label="审核状态" prop="status">
               <el-select v-model="form.status" placeholder="全部状态">
                 <el-option label="全部状态" value=" "></el-option>
                 <el-option label="已通过" value="1"></el-option>
@@ -35,8 +30,22 @@
                 <el-option label="未通过" value="4"></el-option>
               </el-select>
             </el-form-item>
+            <!-- 职位来源 -->
+            <el-form-item label-width="80px" label="职位类别" prop="wherefrom">
+              <el-cascader
+                placeholder="职位类别"
+                :options="options"
+                filterable
+                change-on-select
+                :props="{
+                value:'labelId',
+                label:'name',
+                children:'children'
+              }"
+              ></el-cascader>
+            </el-form-item>
 
-            <el-form-item label-width="100px" label="职位来源" prop="wherefrom">
+            <el-form-item label-width="80px" label="职位来源" prop="wherefrom">
               <el-select v-model="form.wherefrom" placeholder="全部状态">
                 <el-option label="全部" value="0"></el-option>
                 <el-option label="excel导入" value="3"></el-option>
@@ -44,12 +53,11 @@
                 <el-option label="后台发布" value="2"></el-option>
               </el-select>
             </el-form-item>
-
-            <el-form-item>
-              <el-button class="inquire" @click="onSubmit">查询</el-button>
-              <el-button @click="resetForm('form')">重置</el-button>
-            </el-form-item>
           </el-form>
+          <div class="SumbitBtn">
+            <el-button class="inquire" @click="onSubmit">查询</el-button>
+            <el-button @click="resetForm('form')">重置</el-button>
+          </div>
         </div>
         <!--筛选-->
         <list
@@ -82,11 +90,13 @@
               style="height: 48px;"
             >
               <div class="positionMsg">
-                
-                <span class="job_name">{{props.scope.row.positionName}}
-                  <span class="execlPut" v-if="props.scope.row.wherefrom==='3'">导</span>
+                <span class="job_name">
+                  {{props.scope.row.positionName}}
+                  <span
+                    class="execlPut"
+                    v-if="props.scope.row.wherefrom==='3'"
+                  >导</span>
                 </span>
-                
               </div>
             </div>
 
@@ -147,7 +157,7 @@
               style="height: 48px;"
             >
               <i class="el-icon-error" style="color: #F56C6C;"></i>
-            </div> -->
+            </div>-->
             <template v-else>
               <span
                 :class="{'row-delete': props.scope.row.status !== 1}"
@@ -181,7 +191,8 @@ import Component from "vue-class-component";
 import List from "@/components/list";
 import { login, templistApi } from "API/company";
 import { getPositionCodeUrlApi } from "API/interview";
-import { getListApi } from "API/position";
+import { getListApi, getLabelPositionListApi } from "API/position";
+import { deflate } from "zlib";
 @Component({
   name: "course-list",
   components: {
@@ -202,6 +213,7 @@ export default class companyCheck extends Vue {
     name: "",
     count: 20
   };
+  options = [];
   fields = [
     {
       prop: "id",
@@ -215,7 +227,7 @@ export default class companyCheck extends Vue {
     },
     {
       prop: "recruiterName",
-      label: "发布者",
+      label: "招聘官",
       width: 180
     },
     {
@@ -225,7 +237,7 @@ export default class companyCheck extends Vue {
     },
     {
       prop: "createdAt",
-      label: "最近修改时间",
+      label: "更新时间",
       width: 200
     },
     {
@@ -335,6 +347,20 @@ export default class companyCheck extends Vue {
   }
   created() {
     this.getTemplist();
+    this.ManageList();
+  }
+  ManageList() {
+    getLabelPositionListApi().then(res => {
+      this.options = res.data.data;
+      this.options.forEach(item => {
+        item.children.forEach(item1 => {
+          item1.children.forEach(item2 => {
+            let result = JSON.stringify(item2.children);
+            if (result === "[]") delete item2.children;
+          });
+        });
+      });
+    });
   }
   activated() {
     let that = this;
@@ -346,6 +372,7 @@ export default class companyCheck extends Vue {
 </script>
 
 <style lang="less" scoped="scoped">
+@import "./index.less";
 .positionManage {
   margin-left: 200px;
   .container {
@@ -381,6 +408,8 @@ export default class companyCheck extends Vue {
     .el-form {
       display: flex;
       align-items: center;
+      flex-wrap: wrap;
+      width: 1200px;
       .el-input {
         width: 200px;
       }
@@ -392,7 +421,7 @@ export default class companyCheck extends Vue {
   .positionMsg {
     width: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     .job_name {
       font-family: PingFang-SC-Medium;
@@ -408,7 +437,7 @@ export default class companyCheck extends Vue {
       -webkit-box-orient: vertical;
       display: inline-block;
       margin-right: 10px;
-      .execlPut{
+      .execlPut {
         width: 20px;
         height: 20px;
         border-radius: 50%;
@@ -437,7 +466,7 @@ export default class companyCheck extends Vue {
   .btn-container {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     .check {
       line-height: 48px;
       color: #652791;
@@ -445,55 +474,5 @@ export default class companyCheck extends Vue {
     }
   }
 }
-.inquire {
-  background-color: #652791;
-  color: #ffffff;
-  border-radius: 4px;
-}
-.qrCode {
-  width: 150px;
-  height: 70px;
-  border-radius: 4px;
-  transform: translateY(-90%) translateX(-20%);
-  color: #652791;
-  position: absolute;
-  top: -999px;
-  left: -999px;
-  z-index: 3;
-  line-height: 60px;
-  .phoneBg {
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 5%;
-    z-index: -1;
-  }
-}
-.qrCode {
-  width: 300px;
-  height: 300px;
-  /*background-color: #CCCCCC;*/
-  transform: translateY(-100%) translateX(-50%);
-  .Qr {
-    width: 200px;
-    height: 200px;
-    margin-top: 30px;
-    object-fit: contain;
-  }
-  .bg {
-    width: 100%;
-    height: 100%;
-    max-width: 100%;
-    max-height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: -1;
-  }
-  .txt {
-    line-height: normal;
-    color: #5c565d;
-    margin-top: 5px;
-  }
-}
+
 </style>
