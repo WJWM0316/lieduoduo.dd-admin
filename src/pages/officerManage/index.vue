@@ -179,52 +179,52 @@ export default class officerManage extends Vue{
     {
       prop: 'index',
       label: '序号',
-      width: 60
+      // width: 60
     },
     {
       prop: 'realName',
       label: '申请信息',
-      width: 150
+      // width: 150
     },
     {
       prop: 'userEmail',
       label: '邮箱',
-      width: 220
+      // width: 220
     },
     {
       prop: 'userPosition',
       label: '公司职务',
-      width: 150
+      // width: 150
     },
     {
       prop: 'companyName',
       label: '加入公司',
-      width: 220
+      // width: 220
     },
     {
       prop: 'statusDesc',
       label: '加入审核状态',
-      width: 150
+      // width: 150
     },
     {
       prop: 'authStatus',
       label: '身份认证状态',
-      width: 150
+      // width: 150
     },
     {
       prop: 'auditMode',
       label: '身份审核模式',
-      width: 150
+      // width: 150
     },
     {
       prop: 'createdAt',
       label: '申请时间',
-      width: 200
+      // width: 200
     },
     {
       prop: 'id',
       fixed: "right",
-      width: 150,
+      // width: 150,
       label: '操作'
     }
   ]
