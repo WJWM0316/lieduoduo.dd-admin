@@ -158,9 +158,9 @@
               <div class="companyName">
                 <div class="name">{{props.scope.row[props.scope.column.property]}}</div>
                 <div class="label">
-                  <span class="industry">{{props.scope.row.industry}}</span>
-                  <span class="capital">{{props.scope.row.financingInfo}}</span>
-                  <span class="extent">{{props.scope.row.employeesInfo}}</span>
+                  <span class="industry" v-if="props.scope.row.industry!=''">{{props.scope.row.industry}}</span>
+                  <span class="capital" v-if="props.scope.row.financingInfo!=''">{{props.scope.row.financingInfo}}</span>
+                  <span class="extent" v-if="props.scope.row.employeesInfo!=''">{{props.scope.row.employeesInfo}}</span>
                 </div>
               </div>
             </div>

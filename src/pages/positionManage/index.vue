@@ -32,7 +32,7 @@
               </el-select>
             </el-form-item>
             <!-- 职位来源 -->
-            <el-form-item label-width="80px" label="职位类别" prop="wherefrom">
+            <el-form-item label-width="80px" label="职位类别" prop="type">
               <el-cascader
                 placeholder="职位类别"
                 :options="options"
@@ -42,7 +42,8 @@
                 value:'labelId',
                 label:'name',
                 children:'children'
-              }"
+                }"
+                @change='type'
               ></el-cascader>
             </el-form-item>
 
@@ -259,6 +260,10 @@ export default class companyCheck extends Vue {
     }
   ];
   list = [];
+  type(e){
+    this.form.type=e[e.length-1];
+    console.log('this.form',this.form)
+  }
   onSubmit(e) {
     this.form.page = 1;
     this.getTemplist();
@@ -276,7 +281,9 @@ export default class companyCheck extends Vue {
   }
   /* 重置 */
   resetForm(formName) {
+    console.log(formName)
     this.$refs[formName].resetFields();
+    console.log(this.form)
   }
 
   addPosition() {

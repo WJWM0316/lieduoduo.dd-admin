@@ -172,7 +172,7 @@
             </el-form-item>
             <!-- 公司来源 -->
             <el-form-item label-width="77px" label="公司来源" prop="is_license">
-              <el-select v-model="form.is_license" placeholder="全部状态">
+              <el-select v-model="form.is_license1" placeholder="全部状态">
                 <el-option label="全部" value></el-option>
                 <el-option label="后台创建" value="0"></el-option>
                 <el-option label="用户创建" value="1"></el-option>
@@ -308,6 +308,7 @@ export default class indexPage extends Vue {
   total = 0; // 筛查结果数量
   pageCount = 0; // 请求回的数据共几页
   form = {
+    is_license1:'',
     is_license: "",
     start: "",
     end: "",
