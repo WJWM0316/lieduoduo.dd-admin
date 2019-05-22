@@ -292,7 +292,6 @@ import Component from "vue-class-component";
 import { getCompanyListApi, getCityApi } from "API/company";
 import { rightInfoApi, getSalerListApi } from "API/commont";
 import List from "@/components/list";
-import {throttle} from 'UTIL/js/throttle.js'
 Component.registerHooks([
   "beforeRouteEnter",
   "beforeRouteLeave",
