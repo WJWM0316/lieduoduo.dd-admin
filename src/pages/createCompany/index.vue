@@ -1,224 +1,228 @@
 <!--创建公司-->
 <template>
-  <div class="createCompany">
-    <div class="header">
-      <div class="creatTab" @click.stop="tab">
-        <div class="Info" :class="{'active': active === 0 }">公司信息</div>
-        <div class="userInfo" :class="{'active': active === 1 }">账户设置</div>
+  <keep-live>
+    <div class="createCompany">
+      <div class="header">
+        <div class="creatTab" @click.stop="tab">
+          <div class="Info" :class="{'active': active === 0 }">公司信息</div>
+          <div class="userInfo" :class="{'active': active === 1 }">账户设置</div>
+        </div>
+        <div>
+          <el-button @click.stop="createdCompany" v-show="active === 0 && !isEdit">保存并通过</el-button>
+          <el-button @click.stop="createdCompany" v-show="active === 0 && isEdit">保存编辑</el-button>
+          <el-button @click.stop="saveSaller" v-show="active === 1 && isEdit">保存跟进人</el-button>
+        </div>
       </div>
-      <div>
-        <el-button @click.stop="createdCompany" v-show="active === 0 && !isEdit">保存并通过</el-button>
-        <el-button @click.stop="createdCompany" v-show="active === 0 && isEdit">保存编辑</el-button>
-        <el-button @click.stop="saveSaller" v-show="active === 1 && isEdit">保存跟进人</el-button>
-      </div>
-    </div>
-    <!--公司信息表格-->
-    <div class="companyInfo" v-if="active === 0">
-      <div class="point">上传工牌/名片/在职证明等信息需要与身份信息保持一致</div>
-      <el-form
-        class="edit-form"
-        ref="companyInfo"
-        :rules="companyInfoRules"
-        :model="companyInfo"
-        label-width="150px"
-        label-suffix="："
-      >
-        <h3>公司信息</h3>
-        <!--工牌/名片/在职证明-->
-        <el-form-item class="full" label="公司LOGO" prop="icon">
-          <image-uploader
-            :width="iconUploader.width"
-            :height="iconUploader.height"
-            type="logo"
-            v-model="form.logo"
-            @loaded="handleIconLoaded"
-          />
-        </el-form-item>
-
-        <el-form-item label="公司全称" prop="company_name">
-          <el-input
-            v-model="companyInfo.company_name"
-            placeholder="请输入名称"
-            :minlength="2"
-            :maxlength="50"
-            style="width: 400px;"
-            v-if="!isEdit"
-          ></el-input>
-          <el-input
-            v-model="companyInfo.company_name"
-            placeholder="请输入名称"
-            :minlength="2"
-            disabled
-            :maxlength="50"
-            style="width: 400px;"
-            v-if="isEdit"
-          ></el-input>
-        </el-form-item>
-
-        <el-form-item label="公司简称" prop="company_shortname">
-          <el-input
-            v-model="companyInfo.company_shortname"
-            placeholder="请输入名称"
-            :maxlength="10"
-            style="width: 400px;"
-          ></el-input>
-        </el-form-item>
-
-        <el-form-item label="所属行业" prop="industry_id">
-          <el-select
-            style="width: 400px;"
-            ref="tagSelector"
-            v-model="companyInfo.industry_id"
-            placeholder="请选择所属行业"
-          >
-            <el-option
-              v-for="item in industry"
-              :label="item.name"
-              :value="item.labelId"
-              :key="item.id"
-            />
-          </el-select>
-        </el-form-item>
-
-        <el-form-item label="融资阶段" prop="financing">
-          <el-select
-            style="width: 400px;"
-            ref="tagSelector"
-            v-model="companyInfo.financing"
-            placeholder="请选择融资阶段"
-          >
-            <el-option
-              v-for="item in financing"
-              :label="item.name"
-              :value="item.id"
-              :key="item.id"
-            />
-          </el-select>
-        </el-form-item>
-
-        <el-form-item label="人员规模" prop="employees">
-          <el-select
-            style="width: 400px;"
-            ref="tagSelector"
-            v-model="companyInfo.employees"
-            placeholder="请选择人员规模"
-          >
-            <el-option
-              v-for="item in employees"
-              :label="item.name"
-              :value="item.id"
-              :key="item.id"
-            />
-          </el-select>
-        </el-form-item>
-
-        <el-form-item
-          label="公司地址"
-          prop="address_id"
-          style="width: 380px;"
-          v-if="!$route.params.checkId"
+      <!--公司信息表格-->
+      <div class="companyInfo" v-if="active === 0">
+        <div class="point">上传工牌/名片/在职证明等信息需要与身份信息保持一致</div>
+        <el-form
+          class="edit-form"
+          ref="companyInfo"
+          :rules="companyInfoRules"
+          :model="companyInfo"
+          label-width="150px"
+          label-suffix="："
         >
-          <span class="addAdress" @click.stop="changeAdress">
-            <i class="el-icon-circle-plus" style="color: #67C23A;"></i>点击添加公司地址
-          </span>
-          <!--公司地址列表-->
-          <span class="AdressList" v-for="(item, index) in adressList">
-            <i
-              @click.stop="delAdress(index)"
-              class="el-icon-remove"
-              style="color: rgb(245, 108, 108);"
-            ></i>
-            {{`${item.address}${item.doorplate}`}}
-          </span>
-        </el-form-item>
-
-        <el-form-item class label="公司简介" style="width: 640px;">
-          <el-input
-            type="textarea"
-            :rows="6"
-            placeholder="请输入内容"
-            :maxlength="5000"
-            v-model="companyInfo.intro"
-          ></el-input>
-        </el-form-item>
-
-        <el-form-item class label="公司官网" style="width: 640px;">
-          <el-input placeholder="请输入官网" :maxlength="5000" v-model="companyInfo.website"></el-input>
-        </el-form-item>
-
-        <h3>资质信息</h3>
-        <el-form-item class="full" label="营业执照" prop="icon">
-          <image-uploader
-            :width="iconUploader.width"
-            :height="iconUploader.height"
-            :tips="iconUploader.tips"
-            type="business_license"
-            v-model="form.icon1"
-            @loaded="handleIconLoaded"
-          />
-        </el-form-item>
-        <!--工牌/名片/在职证明-->
-        <el-form-item class="full" label="工牌/名片/在职证明" prop="icon">
-          <image-uploader
-            :width="iconUploader.width"
-            :height="iconUploader.height"
-            :tips="iconUploader.tips"
-            type="on_job"
-            v-model="form.icon2"
-            @loaded="handleIconLoaded"
-          />
-        </el-form-item>
-        <!-- 邮箱验证 -->
-        <el-form-item class="email" label="公司邮箱" prop="icon" v-show="companyInfo.company_name">
-          <span @click.stop="email.isShow = true" v-if="companyInfo.email">
-            {{companyInfo.email}} 更改邮箱
-            <i class="el-icon-edit"></i>
-          </span>
-          <span @click.stop="email.isShow = true" v-else>验证邮箱</span>
-        </el-form-item>
-      </el-form>
-    </div>
-    <!-- 跟进销售设置 -->
-    <div class="sales" v-if="active === 1">
-      <h3>跟进销售</h3>
-      <el-form>
-        <el-form-item label="跟进人">
-          <el-select
-            style="width: 400px;"
-            ref="salesList"
-            v-model="companyInfo.admin_uid"
-            placeholder="请选择跟进人"
-            @change="ground"
-          >
-            <el-option label="无" :value="0"/>
-            <el-option
-              v-for="(item, index) in salesList"
-              :label="item.realname"
-              :value="item.id"
-              :key="index"
+          <h3>公司信息</h3>
+          <!--工牌/名片/在职证明-->
+          <el-form-item class="full" label="公司LOGO" prop="icon">
+            <image-uploader
+              :width="iconUploader.width"
+              :height="iconUploader.height"
+              type="logo"
+              v-model="form.logo"
+              @loaded="handleIconLoaded"
             />
-          </el-select>
-        </el-form-item>
-      </el-form>
+          </el-form-item>
+
+          <el-form-item label="公司全称" prop="company_name">
+            <el-input
+              v-model="companyInfo.company_name"
+              placeholder="请输入名称"
+              :minlength="2"
+              :maxlength="50"
+              style="width: 400px;"
+              v-if="!isEdit"
+            ></el-input>
+            <el-input
+              v-model="companyInfo.company_name"
+              placeholder="请输入名称"
+              :minlength="2"
+              disabled
+              :maxlength="50"
+              style="width: 400px;"
+              v-if="isEdit"
+            ></el-input>
+          </el-form-item>
+
+          <el-form-item label="公司简称" prop="company_shortname">
+            <el-input
+              v-model="companyInfo.company_shortname"
+              placeholder="请输入名称"
+              :maxlength="10"
+              style="width: 400px;"
+            ></el-input>
+          </el-form-item>
+
+          <el-form-item label="所属行业" prop="industry_id">
+            <el-select
+              style="width: 400px;"
+              ref="tagSelector"
+              v-model="companyInfo.industry_id"
+              placeholder="请选择所属行业"
+            >
+              <el-option
+                v-for="item in industry"
+                :label="item.name"
+                :value="item.labelId"
+                :key="item.id"
+              />
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="融资阶段" prop="financing">
+            <el-select
+              style="width: 400px;"
+              ref="tagSelector"
+              v-model="companyInfo.financing"
+              placeholder="请选择融资阶段"
+            >
+              <el-option
+                v-for="item in financing"
+                :label="item.name"
+                :value="item.id"
+                :key="item.id"
+              />
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="人员规模" prop="employees">
+            <el-select
+              style="width: 400px;"
+              ref="tagSelector"
+              v-model="companyInfo.employees"
+              placeholder="请选择人员规模"
+            >
+              <el-option
+                v-for="item in employees"
+                :label="item.name"
+                :value="item.id"
+                :key="item.id"
+              />
+            </el-select>
+          </el-form-item>
+
+          <el-form-item
+            label="公司地址"
+            prop="address_id"
+            style="width: 380px;"
+            v-if="!$route.params.checkId"
+          >
+            <span class="addAdress" @click.stop="changeAdress">
+              <i class="el-icon-circle-plus" style="color: #67C23A;"></i>点击添加公司地址
+            </span>
+            <!--公司地址列表-->
+            <span class="AdressList" v-for="(item, index) in adressList" :key="index">
+              <i
+                @click.stop="delAdress(index)"
+                class="el-icon-remove"
+                style="color: rgb(245, 108, 108);"
+              ></i>
+              {{`${item.address}${item.doorplate}`}}
+            </span>
+          </el-form-item>
+
+          <el-form-item class label="公司简介" style="width: 640px;">
+            <el-input
+              type="textarea"
+              :rows="6"
+              placeholder="请输入内容"
+              :maxlength="5000"
+              v-model="companyInfo.intro"
+            ></el-input>
+          </el-form-item>
+
+          <el-form-item class label="公司官网" style="width: 640px;">
+            <el-input placeholder="请输入官网" :maxlength="5000" v-model="companyInfo.website"></el-input>
+          </el-form-item>
+
+          <h3>资质信息</h3>
+          <el-form-item class="full" label="营业执照" prop="icon">
+            <image-uploader
+              :width="iconUploader.width"
+              :height="iconUploader.height"
+              :tips="iconUploader.tips"
+              type="business_license"
+              v-model="form.icon1"
+              @loaded="handleIconLoaded"
+            />
+          </el-form-item>
+          <!--工牌/名片/在职证明-->
+          <el-form-item class="full" label="工牌/名片/在职证明" prop="icon">
+            <image-uploader
+              :width="iconUploader.width"
+              :height="iconUploader.height"
+              :tips="iconUploader.tips"
+              type="on_job"
+              v-model="form.icon2"
+              @loaded="handleIconLoaded"
+            />
+          </el-form-item>
+          <!-- 邮箱验证 -->
+          <el-form-item class="email" label="公司邮箱" prop="icon" v-show="companyInfo.company_name">
+            <span @click.stop="email.isShow = true" v-if="companyInfo.email">
+              {{companyInfo.email}} 更改邮箱
+              <i class="el-icon-edit"></i>
+            </span>
+            <span @click.stop="email.isShow = true" v-else>验证邮箱</span>
+          </el-form-item>
+        </el-form>
+      </div>
+      <!-- 跟进销售设置 -->
+      <div class="sales" v-if="active === 1">
+        <h3>跟进销售</h3>
+        <el-form>
+          <el-form-item label="跟进人">
+            <el-select
+              style="width: 400px;"
+              ref="salesList"
+              v-model="companyInfo.admin_uid"
+              placeholder="请选择跟进人"
+              @change="ground"
+            >
+              <el-option label="全部" :value="all" v-if="AdminShow==4"/>
+              <el-option label="无" :value="0"/>
+              <el-option
+                v-for="(item, index) in salesList"
+                :label="item.realname"
+                :value="item.id"
+                :key="index"
+              />
+            </el-select>
+          </el-form-item>
+        </el-form>
+      </div>
+      <!--添加新公司地址弹窗-->
+      <div class="pop" v-show="pop.isShow">
+        <map-search @popCancel="popCancel" @addAdress="addAdress"></map-search>
+      </div>
+      <!-- 添加邮箱 -->
+      <div class="emailBox" v-show="email.isShow">
+        <email-check :companyName="companyInfo.company_name" @save="save" @close="close"></email-check>
+      </div>
+      <!-- 绑定管理员 -->
+      <div v-if="showAdminWindow" class="bindAdminWindo" @click.self="closeAdminWindow">
+        <admin-control
+          :companyInfo="companyInfo"
+          @closeAdminWindow="showAdminWindow"
+          :isBindAdmin="companyInfo.createdUid? true : false"
+          :companyName="companyInfo.companyName"
+          :nextAdmin="nextAdmin"
+        ></admin-control>
+      </div>
     </div>
-    <!--添加新公司地址弹窗-->
-    <div class="pop" v-show="pop.isShow">
-      <map-search @popCancel="popCancel" @addAdress="addAdress"></map-search>
-    </div>
-    <!-- 添加邮箱 -->
-    <div class="emailBox" v-show="email.isShow">
-      <email-check :companyName="companyInfo.company_name" @save="save" @close="close"></email-check>
-    </div>
-    <!-- 绑定管理员 -->
-    <div v-if="showAdminWindow" class="bindAdminWindo">
-      <admin-control
-        @closeAdminWindow="close"
-        :isBindAdmin="companyInfo.createdUid? true : false"
-        :companyName="companyInfo.companyName"
-        :nextAdmin="nextAdmin"
-      ></admin-control>
-    </div>
-  </div>
+  </keep-live>
 </template>
 
 <script>
@@ -261,6 +265,7 @@ import mapSearch from "@/components/map";
   }
 })
 export default class createCompany extends Vue {
+  newComponyId = "";
   isEdit = false;
   active = 0;
   adressList = []; // 地址列表
@@ -271,13 +276,17 @@ export default class createCompany extends Vue {
   email = {
     isShow: false
   };
-  companyInfo = {};
+  AdminShow = "";
   nextAdmin = {};
-  showAdminWindow=false //展示绑定管理员
+  showAdminWindow = false; //展示绑定管理员
   // 关闭
   close(e) {
+    console.log("我基恩来了");
     this.showAdminWindow = false;
     if (e && e.needLoad) this.getCompanyInfo();
+  }
+  closeAdminWindow() {
+    this.showAdminWindow = false;
   }
   ground(e) {
     let result = this.salesList.find(field => field.id === e);
@@ -302,6 +311,7 @@ export default class createCompany extends Vue {
   };
   /* 公司信息 */
   companyInfo = {
+    mobile: "", //管理员(招聘官)手机号码
     groupId: "", //主id
     company_name: "", // 公司名称
     company_shortname: "", // 公司简称
@@ -404,24 +414,28 @@ export default class createCompany extends Vue {
           // 编辑公司
           if (id) {
             await editCompanyApi(id, this.companyInfo);
+            this.$message({
+              message: "编辑成功",
+              type: "success"
+            });
           } else {
             await editCheckCompanyInfoApi(checkId, this.companyInfo);
           }
         } else {
           // 新建公司
-          // console.log('创建成功了一个公司')
-          // this.showAdminWindow=true
-          await setCompanyInfoApi(this.companyInfo);
+          console.log("创建成功了一个公司");
+          console.log(this.companyInfo);
+          this.showAdminWindow = true;
         }
-        this.$message({
-          message: this.isEdit ? "编辑成功" : "公司创建成功",
-          type: "success"
-        });
-        if (checkId) {
-          this.$router.push({
-            path: `/check/companyCheck/verify?id=${checkId}`
-          });
-        } 
+        // this.$message({
+        //   message: this.isEdit ? "编辑成功" : "公司创建成功",
+        //   type: "success"
+        // });
+        // if (checkId) {
+        //   this.$router.push({
+        //     path: `/check/companyCheck/verify?id=${checkId}`
+        //   });
+        // }
         // else {
         //   this.$router.go(-1);
         // }
@@ -430,7 +444,10 @@ export default class createCompany extends Vue {
       }
     });
   }
-
+  mounted() {
+    this.AdminShow = +sessionStorage.getItem("AdminShow");
+    console.log('this.AdminShow',this.AdminShow)
+  }
   /* 保存跟进人 */
   async saveSaller() {
     const { id, checkId } = this.$route.params;

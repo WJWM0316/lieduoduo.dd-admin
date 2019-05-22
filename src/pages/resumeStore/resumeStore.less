@@ -22,8 +22,9 @@
     }
 
     .BtnList {
+      width: 254px;
       .inquire {
-        color: #FFFFFF;
+        color: #ffffff;
         background-color: #652791;
       }
     }
@@ -101,7 +102,6 @@
               color: #000;
               text-align: left;
             }
-
           }
 
           .education {
@@ -111,7 +111,6 @@
               text-align: left;
             }
           }
-
         }
 
         .userLabel {
@@ -119,8 +118,6 @@
           justify-content: space-between;
           align-items: center;
           margin-top: 9px;
-
-          .whereFrom {}
 
           .iconList {
             width: 546px;
@@ -136,8 +133,6 @@
             }
           }
         }
-
-
       }
     }
   }
@@ -161,9 +156,9 @@
   z-index: 520;
   height: 100%;
   position: relative;
-  max-width: 950px;
-  margin-top: 30px; 
-  
+  max-width: 923px;
+  margin-top: 30px;
+
   .arrow {
     position: absolute;
     width: 1046px;
@@ -184,221 +179,250 @@
 
   .swipertype {
     text-align: left;
-
+    width: 240px;
+    position: relative;
     .common {
+      color: rgba(66, 51, 77, 1);
       font-size: 16px;
-      display: inline-block;
-      width: 100px;
-      height: 40px;
       text-align: center;
-      z-index: 501;
-      position: relative;
       line-height: 40px;
-      cursor: pointer;
-
-      &:nth-child(1) {
-        border-top-left-radius: 5px;
-      }
-
-      &:nth-child(3) {
-        border-top-right-radius: 5px;
-      }
+      display: inline-block;
+      position: relative;
     }
 
     .isCheck {
-      background: #fff;
+      width: 120px;
+      height: 40px;
+      background: rgba(255, 220, 41, 1);
+      border-radius: 10px 10px 0px 0px;
+      font-size: 16px;
+      color: rgba(66, 51, 77, 1);
+      bottom: 0px;
     }
 
     .noCheck {
-      background: #f5f5f5;
+      background: rgba(251, 251, 255, 1);
+      width: 102px;
+      height: 34px;
+      border-radius: 10px 10px 0px 0px;
+      color: rgba(146, 146, 146, 1);
+      font-size: 14px;
+      bottom: -6px;
     }
   }
 
   .nowResume {
     background: #fff;
-    height: 720px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    padding: 20px;
-    overflow: scroll;
-    .base {
-      padding-bottom: 20px;
-      border-bottom: 1px solid #000;
-
-      .Numbering {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
+    height: 776px;
+    border: 1px solid #42334d;
+    position: relative;
+    .Numbering {
+      padding: 36px 50px 30px 50px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #f5f5f5;
+      position: relative;
+      top: 0px;
+      left: 0px;
+      span {
+        color: #929292;
       }
-
-      .message {
+    }
+    .Code {
+      width: 181px;
+      height: 690px;
+      border-left: 2px solid #f5f5f5;
+      position: absolute;
+      right: 0px;
+      .msgCode {
         display: flex;
-        justify-content: flex-start;
+        flex-direction: column;
+        justify-content: center;
         align-items: center;
-        width: 100%;
-        margin-top: 30px;
-
-        .msgUrl {
-          width: 160px;
-          height: 160px;
-          background: #f5f5f5;
-
-          img {
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            vertical-align: middle;
-          }
+        img {
+          width: 120px;
+          height: 120px;
         }
 
-        .msgUserInfo {
-          text-align: left;
-          vertical-align: top;
-          height: 100%;
-          padding-left: 10px;
+        span {
+          font-size: 12px;
+          color: #42334d;
+          margin-top: 10px;
+          width: 72px;
+          height: 26px;
+          background: rgba(237, 237, 237, 1);
+          line-height: 26px;
+        }
+      }
+      .ContactInformation {
+        margin-top: 52px;
 
-          .realName {
-            font-size: 24px;
-            font-weight: 600;
-            color: #000;
-          }
-
-          .status {
-            padding: 5px 10px;
-            border: 1px solid #000;
-            background: #f5f5f5;
-            border-radius: 10px;
-            margin-left: 20px;
-            vertical-align: middle;
-          }
-
-          .nowWorking {
-            margin-top: 10px;
-            font-size: 15px;
-            color: #000;
-
+        .Contact {
+          color: #652791;
+          width: 120px;
+          height: 36px;
+          border-radius: 4px;
+          border: 1px solid rgba(101, 39, 145, 1);
+          text-align: center;
+          line-height: 36px;
+          position: relative;
+          display: inline-block;
+          margin-bottom: 30px;
+          cursor: pointer;
+          &:active {
             span {
-              padding-left: 10px;
-              display: inline-block;
-            }
-          }
+              display: block;
 
-          .education {
-            margin-top: 10px;
-            font-size: 15px;
-            color: #000;
-
-            span {
-              padding-left: 10px;
-              display: inline-block;
-            }
-          }
-
-          .ContactInformation {
-            margin-top: 32px;
-            height: 44px;
-
-            .Contact {
-              color: #FFFFFF;
-              background-color: #652791;
-              padding: 5px 10px;
-              width: 100px;
-              height: 30px;
-              border-radius: 10px;
-              text-align: center;
-              line-height: 30px;
-              position: relative;
-              display: inline-block;
-              margin-right: 30px;
-              cursor: pointer;
-              &:active {
-                span {
+              &:nth-child(2) {
+                display: block;
+                &:before {
                   display: block;
-
-                  &:nth-child(2) {
-                    display: block;
-                    &:before {
-                      display: block;
-                    }
-                  }
-                }
-              }
-
-              span {
-                &:nth-child(2) {
-                  position: absolute;
-                  width: 100px;
-                  padding: 5px 10px;
-                  height: 30px;
-                  background: rgba(0, 0, 0, 0.7);
-                  left: 0px;
-                  display: none;
-                  bottom: -53px;
-                  border-radius: 10px;
-
-                  &:before {
-                    content: '';
-                    position: absolute;
-                    top: -8px;
-                    left: 45%;
-                    width: 0;
-                    display: none;
-                    height: 0;
-                    border-left: 5px solid transparent;
-                    border-right: 5px solid transparent;
-                    border-bottom: 8px solid rgba(0, 0, 0, 0.7);
-                  }
                 }
               }
             }
-          }
-        }
-
-        .msgCode {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          margin-left: 120px;
-
-          img {
-            width: 140px;
-            height: 140px;
           }
 
           span {
-            font-size: 15px;
-            color: #000;
-            margin-top: 10px;
+            &:nth-child(2) {
+              position: absolute;
+              width: 100px;
+              padding: 5px 10px;
+              height: 30px;
+              background: rgba(0, 0, 0, 0.7);
+              left: 0px;
+              display: none;
+              bottom: -53px;
+              border-radius: 10px;
+
+              &:before {
+                content: "";
+                position: absolute;
+                top: -8px;
+                left: 45%;
+                width: 0;
+                display: none;
+                height: 0;
+                border-left: 5px solid transparent;
+                border-right: 5px solid transparent;
+                border-bottom: 8px solid rgba(0, 0, 0, 0.7);
+              }
+            }
           }
         }
       }
+      .download {
+        margin-top: 30px;
+        .Contact {
+          width: 120px;
+          height: 36px;
+          border-radius: 4px;
+          border: 1px solid rgba(101, 39, 145, 1);
+          font-size: 14px;
+          color: #652791;
+          line-height: 36px;
+          margin: 0 auto;
+        }
+      }
+    }
+    .ResumeDetails {
+      position: absolute;
+      top: 87px;
+      left: 0px;
+      width: 721px;
+      height: 689px;
+      overflow-y: scroll;
+      .base {
+        padding-bottom: 20px;
+        border-bottom: 1px solid #000;
 
-      .description {
-        margin-top: 20px;
-        text-align: left;
+        .message {
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          width: 100%;
+          margin-top: 30px;
 
-        .msg {
-          i {
-            font-weight: 600;
-            font-size: 15px;
-            color: #000;
+          .msgUrl {
+            width: 160px;
+            height: 160px;
+            background: #f5f5f5;
+
+            img {
+              width: 140px;
+              height: 140px;
+              border-radius: 50%;
+              vertical-align: middle;
+            }
+          }
+
+          .msgUserInfo {
+            text-align: left;
+            vertical-align: top;
+            height: 100%;
+            padding-left: 10px;
+
+            .realName {
+              font-size: 24px;
+              font-weight: 600;
+              color: #000;
+            }
+
+            .status {
+              padding: 5px 10px;
+              border: 1px solid #000;
+              background: #f5f5f5;
+              border-radius: 10px;
+              margin-left: 20px;
+              vertical-align: middle;
+            }
+
+            .nowWorking {
+              margin-top: 10px;
+              font-size: 15px;
+              color: #000;
+
+              span {
+                padding-left: 10px;
+                display: inline-block;
+              }
+            }
+
+            .education {
+              margin-top: 10px;
+              font-size: 15px;
+              color: #000;
+              span {
+                padding-left: 10px;
+                display: inline-block;
+              }
+            }
           }
         }
 
-        .iconList {
+        .description {
           margin-top: 20px;
+          text-align: left;
 
-          .iconItem {
-            padding: 5px 10px;
-            border: 1px solid #000;
-            background: #f5f5f5;
-            border-radius: 10px;
-            margin-left: 20px;
-            vertical-align: middle;
+          .msg {
+            i {
+              font-weight: 600;
+              font-size: 15px;
+              color: #000;
+            }
+          }
+
+          .iconList {
+            margin-top: 20px;
+
+            .iconItem {
+              padding: 5px 10px;
+              border: 1px solid #000;
+              background: #f5f5f5;
+              border-radius: 10px;
+              margin-left: 20px;
+              vertical-align: middle;
+            }
           }
         }
       }
@@ -447,23 +471,23 @@
         font-weight: 600;
         color: #000;
       }
-      .workList{
+      .workList {
         margin-top: 20px;
-        .workItem{
+        .workItem {
           margin-bottom: 20px;
-          .workTime{
+          .workTime {
             display: flex;
             justify-content: space-between;
             align-items: center;
             background: #f5f5f5;
             padding: 10px 15px;
-            span{
+            span {
               font-size: 15px;
               color: #000;
             }
           }
-          .workContent{
-            .name{
+          .workContent {
+            .name {
               margin: 15px;
               margin-left: 0px;
               // margin-top: 0px;
@@ -490,7 +514,4 @@
       }
     }
   }
-}
-.Mask{
-  // cursor: pointer;
 }

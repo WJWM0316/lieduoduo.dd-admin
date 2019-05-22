@@ -9,6 +9,9 @@
       <div class="formSumbit" slot="formContent">
         <div class="formReasult">
           <el-form ref="form" :model="form" class="form">
+            <el-form-item label="模糊搜索" class="formItem">
+              <el-input placeholder="搜索姓名、手机号、公司名" v-model="form.name"></el-input>
+            </el-form-item>
             <el-form-item label="求职状态" class="formItem">
               <el-select v-model="form.region" placeholder="请选择活动区域">
                 <el-option label="区域一" value="shanghai"></el-option>
@@ -39,6 +42,7 @@
                 <el-option label="区域二" value="beijing"></el-option>
               </el-select>
             </el-form-item>
+            <custom-select></custom-select>
           </el-form>
         </div>
         <div class="BtnList">
@@ -382,8 +386,8 @@
           </el-pagination>
         </footer>-->
       </div>
-      <transition name="el-fade-in-linear"  v-show="isShowMark" slot="Mark">
-        <div class="Mask" @click.stop='showMark'>
+      <transition name="el-fade-in-linear" v-show="isShowMark" slot="Mark">
+        <div class="Mask" @click.stop="showMark">
           <div class="swiperList">
             <div class="arrow">
               <div class="left comstyle" @click.stop="reduce">
@@ -399,61 +403,71 @@
                 :class="[index==nowCheck?'isCheck':'noCheck']"
                 v-for="(item,index) in typeList"
                 :key="item"
-                @click.self="check(index,'tab')"
+                @click.stop="check(index,'tab')"
               >{{item}}</div>
             </div>
             <div class="nowResume" v-show="nowCheck==0">
-              <!-- 基础信息 -->
-              <div class="base">
-                <div class="Numbering">
-                  <span>简历编号：928de08bB4b99169a</span>
-                  <span>2019-03-13 更新</span>
+              <div class="Numbering">
+                <span>简历编号：928de08bB4b99169a</span>
+                <span>在职-考虑机会</span>
+              </div>
+              <div class="Code">
+                <div class="msgCode">
+                  <img src="../../assets/images/preview.png" alt>
+                  <span>扫码进入</span>
                 </div>
-                <div class="message">
-                  <div class="msgUrl">
-                    <img src="../../assets/images/preview.png" alt>
+                <div class="ContactInformation">
+                  <div class="Contact">
+                    <span>联系方式</span>
+                    <span>13922281959</span>
                   </div>
-                  <div class="msgUserInfo">
-                    <span class="realName">李永江 · 女 · 24 岁</span>
-                    <span class="status">在职-考虑机会</span>
-                    <p class="nowWorking">
-                      工作情况:
-                      <span>厦门乐域网络科技有限公司 / 前端工程师 / 4年工作经验</span>
-                    </p>
-                    <p class="education">
-                      教育情况:
-                      <span>上海交通大学 / 本科 / 计算机科学与技术</span>
-                    </p>
-                    <div class="ContactInformation">
-                      <div class="Contact">
-                        <span>联系方式</span>
-                        <span>13922281959</span>
-                      </div>
-                      <div class="Contact">
-                        <span>微信号</span>
-                        <span>13922281959</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="msgCode">
-                    <img src="../../assets/images/preview.png" alt>
-                    <span>扫码进入</span>
+                  <div class="Contact">
+                    <span>微信号</span>
+                    <span>13922281959</span>
                   </div>
                 </div>
-                <div class="description">
-                  <span class="msg">
-                    <i>自我描述</i> ：完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整。
-                  </span>
-                  <div class="iconList">
-                    <span class="iconItem">撸猫</span>
-                    <span class="iconItem">分析用户</span>
-                    <span class="iconItem">这是个性标签</span>
-                    <span class="iconItem">这是个</span>
+                <div class="download row">
+                  <div class="Contact">
+                    <span>查看附件</span>
                   </div>
                 </div>
               </div>
+              <div class="ResumeDetails">
+                <!-- 基础信息 -->
+                <div class="base">
+                  <div class="message">
+                    <div class="msgUrl">
+                      <img src="../../assets/images/preview.png" alt>
+                    </div>
+                    <div class="msgUserInfo">
+                      <span class="realName">李永江 · 女 · 24 岁</span>
+                      <span class="status">在职-考虑机会</span>
+                      <p class="nowWorking">
+                        工作情况:
+                        <span>厦门乐域网络科技有限公司 / 前端工程师 / 4年工作经验</span>
+                      </p>
+                      <p class="education">
+                        教育情况:
+                        <span>上海交通大学 / 本科 / 计算机科学与技术</span>
+                      </p>
+                    </div>
+                  </div>
+                  <div class="description">
+                    <span class="msg">
+                      <i>自我描述</i> ：完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整。
+                    </span>
+                    <div class="iconList">
+                      <span class="iconItem">撸猫</span>
+                      <span class="iconItem">分析用户</span>
+                      <span class="iconItem">这是个性标签</span>
+                      <span class="iconItem">这是个</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <!-- 求职意向 -->
-              <div class="intention">
+              <!-- <div class="intention">
                 <p class="title">求职意向</p>
                 <div class="intentionItem">
                   <span>高级产品经理 | 广州</span>
@@ -470,9 +484,9 @@
                   <span>知识付费·服务·电子产品</span>
                   <span>6k-9k</span>
                 </div>
-              </div>
+              </div>-->
               <!-- 工作经历 -->
-              <div class="workExperience">
+              <!-- <div class="workExperience">
                 <p class="title">工作经历</p>
                 <div class="workList">
                   <div class="workItem">
@@ -482,9 +496,9 @@
                     </div>
                     <div class="workContent">
                       <p class="name">前端工程师</p>
-                      <span class="duties">
-                        负责项目组内前端开发、项目组的管理协调工作，负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作
-                      </span>
+                      <span
+                        class="duties"
+                      >负责项目组内前端开发、项目组的管理协调工作，负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作</span>
                     </div>
                   </div>
                   <div class="workItem">
@@ -494,15 +508,15 @@
                     </div>
                     <div class="workContent">
                       <p class="name">前端工程师</p>
-                      <span class="duties">
-                        负责项目组内前端开发、项目组的管理协调工作，负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作
-                      </span>
+                      <span
+                        class="duties"
+                      >负责项目组内前端开发、项目组的管理协调工作，负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作</span>
                     </div>
                   </div>
                 </div>
-              </div>
+              </div>-->
               <!-- 项目经历 -->
-              <div class="workExperience">
+              <!-- <div class="workExperience">
                 <p class="title">项目经历</p>
                 <div class="workList">
                   <div class="workItem">
@@ -512,9 +526,9 @@
                     </div>
                     <div class="workContent">
                       <p class="name">项目职责:前端工程师</p>
-                      <span class="duties">
-                        负责项目组内前端开发、项目组的管理协调工作，负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作
-                      </span>
+                      <span
+                        class="duties"
+                      >负责项目组内前端开发、项目组的管理协调工作，负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作</span>
                     </div>
                   </div>
                   <div class="workItem">
@@ -524,15 +538,15 @@
                     </div>
                     <div class="workContent">
                       <p class="name">前端工程师</p>
-                      <span class="duties">
-                        负责项目组内前端开发、项目组的管理协调工作，负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作
-                      </span>
+                      <span
+                        class="duties"
+                      >负责项目组内前端开发、项目组的管理协调工作，负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作</span>
                     </div>
                   </div>
                 </div>
-              </div>
+              </div>-->
               <!-- 教育经历 -->
-              <div class="workExperience">
+              <!-- <div class="workExperience">
                 <p class="title">教育经历</p>
                 <div class="workList">
                   <div class="workItem">
@@ -542,9 +556,9 @@
                     </div>
                     <div class="workContent">
                       <p class="name">项目职责:前端工程师</p>
-                      <span class="duties">
-                        负责项目组内前端开发、项目组的管理协调工作，负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作
-                      </span>
+                      <span
+                        class="duties"
+                      >负责项目组内前端开发、项目组的管理协调工作，负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作</span>
                     </div>
                   </div>
                   <div class="workItem">
@@ -554,17 +568,16 @@
                     </div>
                     <div class="workContent">
                       <p class="name">前端工程师</p>
-                      <span class="duties">
-                        负责项目组内前端开发、项目组的管理协调工作，负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作
-                      </span>
+                      <span
+                        class="duties"
+                      >负责项目组内前端开发、项目组的管理协调工作，负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作</span>
                     </div>
                   </div>
                 </div>
-              </div>
+              </div>-->
             </div>
-            <div class="nowResume" v-show="nowCheck==1">21</div>
             <!-- 历史记录 -->
-            <div class="nowResume" v-show="nowCheck==2">
+            <div class="nowResume" v-show="nowCheck==1">
               <div class="historyList">
                 <span>
                   2019-04-25 15:40:04
@@ -591,14 +604,16 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import lyoutContent from "COMPONENTS/Lyout/lyoutContent/lyoutContent.vue";
+import CustomSelect from "./components/CustomSelect/index.vue";
 @Component({
   name: "resumeStore",
   components: {
-    lyoutContent
+    lyoutContent,
+    CustomSelect
   }
 })
 export default class resumeStore extends Vue {
-  typeList = ["简历详情", "附件简历", "历史记录"];
+  typeList = ["简历详情", "历史记录"];
   leftcontent = {
     total: 0,
     title: "简历库"
@@ -617,6 +632,10 @@ export default class resumeStore extends Vue {
   add(index) {
     if (this.nowCheck === 2) return;
     this.nowCheck++;
+  }
+  // 重置搜索条件
+  resetForm(name) {
+    this.$refs[name].resetFields();
   }
   // 左边箭头
   reduce() {

@@ -154,6 +154,7 @@
             <!-- 跟进人筛选 -->
             <el-form-item class="area" label="跟进人" prop="adminUid" label-width="70px">
               <el-select v-model="form.adminUid" placeholder="请选择" style="margin-right: 10px;">
+                <el-option label="全部" value="all" v-if="AdminShow==4"></el-option>
                 <el-option label="无" value="0"></el-option>
                 <el-option
                   v-for="item in salerLis"
@@ -171,10 +172,10 @@
               </el-select>
             </el-form-item>
             <!-- 公司来源 -->
-            <el-form-item label-width="77px" label="公司来源" prop="is_license">
-              <el-select v-model="form.is_license1" placeholder="全部状态">
+            <el-form-item label-width="77px" label="公司来源" prop="wherefrom">
+              <el-select v-model="form.wherefrom" placeholder="全部状态">
                 <el-option label="全部" value></el-option>
-                <el-option label="后台创建" value="0"></el-option>
+                <el-option label="后台创建" value="2"></el-option>
                 <el-option label="用户创建" value="1"></el-option>
               </el-select>
             </el-form-item>
@@ -307,8 +308,9 @@ Component.registerHooks([
 export default class indexPage extends Vue {
   total = 0; // 筛查结果数量
   pageCount = 0; // 请求回的数据共几页
+  AdminShow='';//权限字段，限制搜索
   form = {
-    is_license1:'',
+    wherefrom:'',
     is_license: "",
     start: "",
     end: "",
@@ -397,6 +399,9 @@ export default class indexPage extends Vue {
       this.pageCount = res.data.meta.lastPage;
       this.total = res.data.meta.total;
     });
+  }
+  mounted() {
+    this.AdminShow = +sessionStorage.getItem('AdminShow')
   }
   /* 翻页 */
   handlePageChange(nowPage) {

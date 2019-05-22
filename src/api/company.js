@@ -14,6 +14,12 @@ export const templistApi = data => request({
   type: 'get',
   data
 })
+/* 在审核表创建公司 */
+export const createCompanyApi = data => request({
+  url: '/company/temp',
+  type: 'post',
+  data
+})
 
 /* 获取审核公司基本信息 */
 export const getCompanyInfo = data => request({

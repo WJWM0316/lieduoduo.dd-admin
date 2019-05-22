@@ -77,6 +77,7 @@
               style="margin-left: 20px;"
             >
               <el-select v-model="form.admin_uid" placeholder="跟进人">
+                <el-option label="全部" value="all" v-if="AdminShow==4"></el-option>
                 <el-option label="无" value></el-option>
                 <el-option
                   v-for="item in userList"
@@ -158,9 +159,18 @@
               <div class="companyName">
                 <div class="name">{{props.scope.row[props.scope.column.property]}}</div>
                 <div class="label">
-                  <span class="industry" v-if="props.scope.row.industry!=''">{{props.scope.row.industry}}</span>
-                  <span class="capital" v-if="props.scope.row.financingInfo!=''">{{props.scope.row.financingInfo}}</span>
-                  <span class="extent" v-if="props.scope.row.employeesInfo!=''">{{props.scope.row.employeesInfo}}</span>
+                  <span
+                    class="industry"
+                    v-if="props.scope.row.industry!=''"
+                  >{{props.scope.row.industry}}</span>
+                  <span
+                    class="capital"
+                    v-if="props.scope.row.financingInfo!=''"
+                  >{{props.scope.row.financingInfo}}</span>
+                  <span
+                    class="extent"
+                    v-if="props.scope.row.employeesInfo!=''"
+                  >{{props.scope.row.employeesInfo}}</span>
                 </div>
               </div>
             </div>
@@ -235,6 +245,7 @@ import { templistApi, companyTempUserList } from "API/company";
 export default class companyCheck extends Vue {
   total = 0; // 筛查结果数量
   pageCount = 0; // 请求回的数据共几页
+  AdminShow = ""; //权限字段，限制搜索
   form = {
     is_license: "",
     admin_uid: "",
@@ -344,6 +355,10 @@ export default class companyCheck extends Vue {
     this.getTemplist();
     console.log("0-----1");
     this.userList();
+  }
+  mounted() {
+    this.AdminShow = +sessionStorage.getItem("AdminShow");
+    console.log(typeof this.AdminShow)
   }
   userList() {
     console.log("---1------");

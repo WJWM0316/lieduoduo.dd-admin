@@ -44,21 +44,25 @@ export default class PageAside extends Vue {
     {
       path: "/index",
       name: "公司库",
+      isShow:false,
       children: []
     },
     {
       path: "/user",
       name: "用户管理",
-      children: []
+      isShow:false,
+      children: [],
     },
     {
       path: "/positionManage",
       name: "职位管理",
+      isShow:false,
       children: []
     },
     {
       path: "/check",
       name: "审核管理",
+      isShow:false,
       children: [
         {
           path: "/check/companyCheck",
@@ -73,6 +77,7 @@ export default class PageAside extends Vue {
     {
       path: "/interview",
       name: "面试管理",
+      isShow:false,
       children: [
         {
           path: "/interview",
@@ -84,17 +89,20 @@ export default class PageAside extends Vue {
         }
       ]
     },
-    // {
-    //   path: "/resumeStore",
-    //   name: "简历库",
-    //   children: []
-    // }
+    {
+      path: "/resumeStore",
+      name: "简历库",
+      isShow:false,
+      children: []
+    }
   ];
   handleNodeClick(data) {}
   tabSwitch() {
     this.isCLick = !this.isCLick;
   }
   mounted() {
+    this.AdminShow = sessionStorage.getItem('AdminShow')
+    console.log('this.AdminShow',this.AdminShow)
   }
 }
 </script>

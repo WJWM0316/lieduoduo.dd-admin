@@ -6,12 +6,18 @@
         <div class="userInfo active">基本信息</div>
       </div>
       <div class="editBox">
-        <el-button class="inquire" @click.stop="Review(personalInfo.uid, 'company')" v-show="userInfo.status === 0">审核</el-button>
         <el-button
-          type="info"
-          disabled
-          v-show="userInfo.status !== 0"
-        >{{userInfo.status === 1? '已通过' : '审核'}}</el-button>
+          class="inquire"
+          @click.stop="Review(personalInfo.uid, 'company')"
+          v-show="userInfo.status === 0"
+        >审核</el-button>
+        <div style="display:inline-block;margin-right:10px;" v-if="AdminShow==0||AdminShow==1||AdminShow==2">
+          <el-button
+            type="info"
+            disabled
+            v-show="userInfo.status !== 0"
+          >{{userInfo.status === 1? '已通过' : '审核'}}</el-button>
+        </div>
         <el-button class="inquire" @click.stop="toEdit(personalInfo.uid)">编辑</el-button>
       </div>
     </div>
@@ -223,6 +229,7 @@ export default class addUser extends Vue {
     isShow: false,
     type: "position"
   };
+  AdminShow = ""; //管理员权限控制
   needReason = ""; //审核结果
   isCheck = false;
   nowImg = ""; //当前大图预览显示的图片
@@ -255,9 +262,9 @@ export default class addUser extends Vue {
     tips: "建议尺寸400X400px，JPG、PNG格式，图片小于5M。"
   };
   form = {
-    result: '',
-    reason: '',
-    other: '' // 其他原因
+    result: "",
+    reason: "",
+    other: "" // 其他原因
   };
   /*设置审核结果 */
   setResult() {
@@ -273,7 +280,7 @@ export default class addUser extends Vue {
         this.isCheck = false;
         this.$message({ type: "success", message: "审核成功" });
       });
-      this.isCheck=false
+      this.isCheck = false;
     } else {
       identityFailApi(this.checkId, param).then(res => {
         this.personalInfo.identityAuth = 0;
@@ -283,10 +290,10 @@ export default class addUser extends Vue {
     }
   }
   // 点击审核按钮
-  Review (id, type) {
-    this.type = type
-    this.isCheck = true
-    this.checkId = id
+  Review(id, type) {
+    this.type = type;
+    this.isCheck = true;
+    this.checkId = id;
   }
   /* 查看大图 */
   showImg(imgUrl) {
@@ -346,7 +353,7 @@ export default class addUser extends Vue {
     console.log("userInfo", userInfo);
     /* 身份信息 */
     this.personalInfo = {
-      uid:userInfo.uid,
+      uid: userInfo.uid,
       name: userInfo.name, // 姓名
       gender: userInfo.gender,
       realname: userInfo.realname || "", // 真实姓名
@@ -398,6 +405,10 @@ export default class addUser extends Vue {
 
   created() {
     this.getUserInfo();
+  }
+  mounted() {
+    this.AdminShow = +sessionStorage.getItem("AdminShow");
+    console.log("this.AdminShow", this.AdminShow);
   }
 }
 </script>

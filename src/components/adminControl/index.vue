@@ -82,12 +82,15 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import ImageUploader from '@/components/imageUploader'
-import { checkIdentityApi, bindCompanyApi, deleteAdminApi, deleteRecruiterApi, checkCompanyNameApi } from 'API/company'
+import { checkIdentityApi, bindCompanyApi, deleteAdminApi, deleteRecruiterApi, checkCompanyNameApi,createCompanyApi } from 'API/company'
 @Component({
     name: 'adminBox',
     props: {
         isBindAdmin: {
             type: Boolean
+        },
+        companyInfo:{
+            type:Object,
         },
         /* 是否在用户详情编辑 */
         isFromUser: {
@@ -125,6 +128,9 @@ export default class adminBox extends Vue {
     newUserInfo = ''
     bindCompanyId = '' // 当前要绑定的公司id
     bindForm = {
+        admin_uid:'',
+        mobile:'',
+        real_name:'',
         is_admin: '1',
         adminUser: '', // 管理员账号
         position: '', // 担任职务
@@ -196,6 +202,10 @@ export default class adminBox extends Vue {
     }
     /* 绑定管理员 */
     async done () {
+        console.log(this.bindForm)
+        console.log(this.companyInfo)
+        // console.log()
+        // return
         if (!this.newUserInfo.name && !this.isFromUser) {
             this.$message({
                 type: 'error',
@@ -204,16 +214,19 @@ export default class adminBox extends Vue {
             return
         }
         if (!this.isFromUser) {
+            console.log('正常创建走这里')
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
-                    let res = await bindCompanyApi(this.$route.query.id, this.bindForm)
-                    this.$message({type: 'success', message: '管理员绑定成功'})
+                    let res = await createCompanyApi(this.companyInfo)
+                    this.isBindAdmin=false
+                    this.$message({type: 'success', message: '公司创建成功'})
                     this.$emit('closeAdminWindow', {'needLoad': true})
                 } else {
                     return false
                 }
             })
         } else {
+            console.log('编辑情况走这里')
             this.$refs['bindCompanyForm'].validate(async (valid) => {
                 if (valid) {
                     this.bindCompanyForm.uid = this.$route.params.id
@@ -230,12 +243,17 @@ export default class adminBox extends Vue {
         this.$emit('closeAdminWindow')
     }
     checkUser () {
+        console.log()
         checkIdentityApi(this.bindForm.adminUser).then(res => {
+            console.log(res.data.data)
             if (res.data.data.isExisted) {
                 if (!res.data.data.isAdmin && !res.data.data.companyId) {
                     this.isNewUser = true
                     this.toCretedUser = false
                     this.bindForm.uid = res.data.data.uid
+                    this.bindForm.real_name=res.data.data.realname
+                    this.companyInfo.mobile=this.bindForm.adminUser
+                    this.companyInfo.admin_uid=res.data.data.uid
                     this.newUserInfo = {
                         name: res.data.data.realname,
                         gender: res.data.data.gender === 1? '男' : '女'
@@ -301,6 +319,7 @@ export default class adminBox extends Vue {
         background-color: #652791;
         color: #ffffff;
     }
+    z-index: 111;
     overflow: hidden;
     width: 500px;
     background-color: #ffffff;
