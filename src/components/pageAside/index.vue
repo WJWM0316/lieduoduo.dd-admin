@@ -89,12 +89,12 @@ export default class PageAside extends Vue {
         }
       ]
     },
-    // {
-    //   path: "/resumeStore",
-    //   name: "简历库",
-    //   isShow:false,
-    //   children: []
-    // }
+    {
+      path: "/resumeStore",
+      name: "简历库",
+      isShow:false,
+      children: []
+    }
   ];
   handleNodeClick(data) {}
   tabSwitch() {

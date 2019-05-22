@@ -55,11 +55,12 @@
         </div>
       </div>
       <div class="resumeList" slot="dataList">
-        <div class="resumeItem" @click.stop="showMark">
+        <div class="resumeItem" @click.stop="showMark" v-for="(item,index) in itemList" :key="index">
           <div class="resumeNumber">
-            <span>简历编号 cdate0000012X</span>
-            <span>2018-08-12 23:00 更新</span>
-            <span>最近访问时间：2018-08-12 23:00</span>
+            <span>简历编号: {{item.resumeNum}}</span>
+            <span>{{item.jobStatusDesc}}</span>
+            <span>最近更新：{{item.jobStatusDesc}}</span>
+            <span>最近访问：{{item.jobStatusDesc}}</span>
           </div>
           <div class="resumeContent">
             <div class="userMsg">
@@ -605,6 +606,7 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import lyoutContent from "COMPONENTS/Lyout/lyoutContent/lyoutContent.vue";
 import CustomSelect from "./components/CustomSelect/index.vue";
+import { GetResumeAPI } from "API/resumeStore.js";
 @Component({
   name: "resumeStore",
   components: {
@@ -618,8 +620,21 @@ export default class resumeStore extends Vue {
     total: 0,
     title: "简历库"
   };
+  itemList=[];//简历数组
   form = {
-    name: ""
+    name: "",
+    keyword:'', //关键字
+    expectPosition:'',//期望职位类型id
+    expectCityNum:'',//期望城市编号
+    skillLabel:'',//工作技能标签名
+    jobStatus:'',//求职状态。 在职暂不考虑1，离职随时到岗2，在职月内到岗3，在职考虑机会4
+    degree:'',//最高学历，初中及以下5，中专/中技10，高中15，大专20，本科25，硕士30，博士35，默认本科
+    isStudent:'',//在校生、无工作经验。无工作经验时，该值为1，否则为0。该值为1时，忽略工作经验
+    workExpLower:'',//工作经验下限，单位“年”
+    workExpUpper:'',//工作经验上限，单位“年”
+    resumeLabel:'',//简历标签名
+    page:1,//第几页
+    count:20//每页条数
   };
   nowCheck = 0; //当前点击
   isCheck = 0;
@@ -645,6 +660,16 @@ export default class resumeStore extends Vue {
   // 点击切换
   check(index) {
     this.nowCheck = index;
+  }
+  created(){
+    this.getData();
+  }
+  getData(){
+    GetResumeAPI(this.form).then(res=>{
+      console.log(res)
+      this.itemList=res.data.data;
+
+    })
   }
 }
 </script>
