@@ -215,7 +215,7 @@
       <div v-if="showAdminWindow" class="bindAdminWindo" @click.self="closeAdminWindow">
         <admin-control
           :companyInfo="companyInfo"
-          @closeAdminWindow="showAdminWindow"
+          @close="closeAdminWindow"
           :isBindAdmin="companyInfo.createdUid? true : false"
           :companyName="companyInfo.companyName"
           :nextAdmin="nextAdmin"

@@ -62,7 +62,7 @@
             <p>解绑所属公司后，在平台上关联内容将如下处理，且数据永久保留</p>
             <ul>
                 <li>关闭与公司已绑定的所有职位</li>
-                <li>隐藏改用户的招聘官所有信息展示</li>
+                <li>隐藏该用户的招聘官所有信息展示</li>
                 <li>终止该用户所有有关的职位发布、面试邀约、面试行程</li>
                 <li>终止该用户所有权益和活动参与资格</li>
             </ul>
@@ -154,6 +154,19 @@ export default class adminBox extends Vue {
             }
         })
     }
+    emailRule=(rule,value,callback)=>{
+       const mailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/
+        if (!value) {
+            return callback(new Error('邮箱不能为空'))
+        }
+        setTimeout(() => {
+            if (mailReg.test(value)) {
+                callback()
+                } else {
+                    callback(new Error('请输入正确的邮箱格式'))
+                }
+            }, 100) 
+    }
     phoneRule = (rule, value, callback) => {
         checkIdentityApi(value).then(res => {
             if (res.data.data.isExisted) {
@@ -182,7 +195,8 @@ export default class adminBox extends Vue {
             { required: true, message: '请输入担任职务', trigger: 'blur' }
         ],
         "email": [
-            { required: true, message: '请输入邮箱', trigger: 'blur' }
+            { required: true, message: '请输入邮箱', trigger: 'blur'},
+            { required: true, message: '请输入正确的邮箱', trigger: 'blur', validator:this.emailRule }
         ],
     }
     companyRules = {
@@ -240,7 +254,7 @@ export default class adminBox extends Vue {
         }
     }
     cancel () {
-        this.$emit('closeAdminWindow')
+        this.$emit('close')
     }
     checkUser () {
         console.log()

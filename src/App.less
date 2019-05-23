@@ -1,7 +1,5 @@
 //@import "~COLORS/variables";
 
-
-
 body,
 p,
 h1,
@@ -93,7 +91,6 @@ table {
   border-spacing: 0;
 }
 
-
 /* 使用伪元素清除浮动 */
 .clearfix::before,
 .clearfix::after {
@@ -108,8 +105,6 @@ table {
 .clearfix {
   *zoom: 1;
 }
-
-
 
 /*可选*/
 /*单选框和复选框的配置，一般是分开的*/
@@ -126,10 +121,8 @@ label {
   cursor: pointer;
 }
 
-
-
-label input[type="radio"]:checked~i,
-label input[type="checkbox"]:checked~i {
+label input[type="radio"]:checked ~ i,
+label input[type="checkbox"]:checked ~ i {
   color: #38d6ff;
 }
 
@@ -150,7 +143,7 @@ input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
 }
 
-input[type="number"]+div {
+input[type="number"] + div {
   width: 30px;
   height: 40px;
   padding-left: 2px;
@@ -158,7 +151,7 @@ input[type="number"]+div {
 }
 
 #app {
-  >aside {
+  > aside {
     width: 200px;
     height: 100vh;
     background: #354048;
@@ -170,7 +163,7 @@ input[type="number"]+div {
     z-index: 2;
   }
 
-  >main {
+  > main {
     position: relative;
   }
 
@@ -215,7 +208,7 @@ ul {
   }
 
   &:before {
-    content: '';
+    content: "";
     height: 100%;
     width: 6px;
     height: 16px;
@@ -225,21 +218,17 @@ ul {
     float: left;
   }
 
-  ;
-
   .el-breadcrumb__inner {
     color: #000000 !important;
   }
 
   .el-breadcrumb__inner.is-link {
-    color: #BCBCBC !important;
+    color: #bcbcbc !important;
     font-weight: 300;
 
     &:hover {
-      color: #D7AB70 !important;
+      color: #d7ab70 !important;
     }
-
-    ;
   }
 }
 
@@ -251,7 +240,7 @@ ul {
   margin: 16px 0;
 
   &:before {
-    content: '';
+    content: "";
     height: 100%;
     width: 6px;
     height: 16px;
@@ -260,13 +249,11 @@ ul {
     margin-right: 10px;
     float: left;
   }
-
-  ;
 }
 
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity .4s;
+  transition: opacity 0.4s;
   transform: translate3d(0, 0, 0);
 }
 
@@ -274,7 +261,6 @@ ul {
 .fade-leave-to {
   opacity: 0;
 }
-
 
 .el-button--primary {
   color: #354048 !important;
@@ -288,13 +274,13 @@ ul {
   display: inline-block;
   line-height: 1;
   cursor: pointer;
-  border: 1px solid #DCDCDC;
+  border: 1px solid #dcdcdc;
   color: #606266;
   -webkit-appearance: none;
   text-align: center;
   box-sizing: border-box;
-  -webkit-transition: .1s;
-  transition: .1s;
+  -webkit-transition: 0.1s;
+  transition: 0.1s;
   font-weight: 500;
   padding: 10px 20px;
   font-size: 14px;
@@ -312,11 +298,9 @@ ul {
     border-radius: 4px;
     font-size: 14px;
     font-weight: 400;
-    color: #D7AB70;
-    border-color: #EDEDED;
+    color: #d7ab70;
+    border-color: #ededed;
   }
-
-  ;
 }
 
 .common-btn-active {
@@ -324,8 +308,8 @@ ul {
   border-radius: 4px;
   font-size: 14px;
   font-weight: 400;
-  color: #D7AB70;
-  border-color: #EDEDED;
+  color: #d7ab70;
+  border-color: #ededed;
 }
 
 .common-checkbox {
@@ -354,8 +338,8 @@ ul {
 }
 
 .el-dropdown-menu__item:hover {
-  background: #FFF9D9 !important;
-  color: #D7AB70 !important;
+  background: #fff9d9 !important;
+  color: #d7ab70 !important;
 }
 
 .btn-limit-width {
@@ -415,7 +399,12 @@ ul {
 
   .el-button.is-plain:hover {
     background-color: #ffe266;
-    border-color: #FFE266;
-    color: #FFE266;
+    border-color: #ffe266;
+    color: #ffe266;
   }
+}
+.el-input-group__prepend {
+  width: 57px !important;
+  height: 35px;
+  line-height: 35px;
 }

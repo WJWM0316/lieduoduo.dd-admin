@@ -9,365 +9,129 @@
       <div class="formSumbit" slot="formContent">
         <div class="formReasult">
           <el-form ref="form" :model="form" class="form">
-            <el-form-item label="模糊搜索" class="formItem">
-              <el-input placeholder="搜索姓名、手机号、公司名" v-model="form.name"></el-input>
+            <el-form-item label="模糊搜索" class="formItem" prop="keyword">
+              <el-input placeholder="搜索姓名、手机号、公司名" v-model="form.keyword"></el-input>
             </el-form-item>
-            <el-form-item label="求职状态" class="formItem">
-              <el-select v-model="form.region" placeholder="请选择活动区域">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
+            <el-form-item label="求职状态" prop="jobStatus" class="formItem">
+              <el-select v-model="form.jobStatus" placeholder="请选择活动区域">
+                <el-option
+                  v-for="(item,index) in jobhuntStatusList"
+                  :key="index"
+                  :label="item.text"
+                  :value="item.value"
+                ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="期望职位类型" class="formItem">
-              <el-select v-model="form.region" placeholder="请选择活动区域">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
+            <!-- 职位来源 -->
+            <el-form-item label-width="80px" label="职位类别" prop="expectPosition">
+              <el-cascader
+                v-model="form.expectPosition"
+                class="formItem"
+                placeholder="职位类别"
+                :options="options"
+                filterable
+                :props="{
+                value:'labelId',
+                label:'name',
+                children:'children'
+                }"
+                @change="type"
+              ></el-cascader>
+            </el-form-item>
+
+            <el-form-item label="期待工作城市" class="formItem" prop="expectCityNum">
+              <el-cascader
+                v-model="form.expectCityNum"
+                class="formItem"
+                placeholder="期待工作城市"
+                :options="getCityList"
+                filterable
+                :props="{
+                value:'areaId',
+                label:'title',
+                children:'children'
+                }"
+                @change="choiceCity"
+              ></el-cascader>
+            </el-form-item>
+            <el-form-item label="最高学历" class="formItem" prop="degree">
+              <el-select v-model="form.degree" placeholder="请选择活动区域">
+                <el-option
+                  v-for="(item,index) in degreeList"
+                  :key="index"
+                  :label="item.text"
+                  :value="item.value"
+                ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="期待工作城市" class="formItem">
-              <el-select v-model="form.region" placeholder="请选择活动区域">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="最高学历" class="formItem">
-              <el-select v-model="form.region" placeholder="请选择活动区域">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="工作经验" class="formItem">
-              <el-select v-model="form.region" placeholder="请选择活动区域">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
-              </el-select>
-            </el-form-item>
-            <custom-select></custom-select>
-          </el-form>
-        </div>
-        <div class="BtnList">
-          <el-form ref="form" :model="form">
-            <el-form-item class="btn">
-              <el-button class="inquire" @click.stop="onSubmit">查询</el-button>
-              <el-button @click.stop="resetForm('form')">重置</el-button>
-            </el-form-item>
+            <custom-select @callback="TimeResult"></custom-select>
+            <div class="BtnList">
+              <el-form-item class="btn">
+                <el-button class="inquire" @click.stop="onSubmit">查询</el-button>
+                <el-button @click.stop="resetForm('form')">重置</el-button>
+              </el-form-item>
+            </div>
           </el-form>
         </div>
       </div>
       <div class="resumeList" slot="dataList">
-        <div class="resumeItem" @click.stop="showMark" v-for="(item,index) in itemList" :key="index">
+        <div
+          class="resumeItem"
+          @click.stop="getDetail(item.uid)"
+          v-for="(item,index) in itemList"
+          :key="index"
+        >
           <div class="resumeNumber">
-            <span>简历编号: {{item.resumeNum}}</span>
-            <span>{{item.jobStatusDesc}}</span>
-            <span>最近更新：{{item.jobStatusDesc}}</span>
-            <span>最近访问：{{item.jobStatusDesc}}</span>
+            <span class="resumeNum">简历编号: {{item.resumeNum}}</span>
+            <span class="jobStatusDesc" v-if="item.jobStatusDesc!=''">{{item.jobStatusDesc}}</span>
+            <span class="resumeUpdateTime">最近更新：{{item.resumeUpdateTime}}</span>
+            <span class="lastLoginTime">最近访问：{{item.lastLoginTime}}</span>
           </div>
           <div class="resumeContent">
             <div class="userMsg">
               <div class="userAvator">
-                <img src="../../assets/images/text.jpg" alt>
+                <img :src="item.avatar.url" alt>
               </div>
               <div class="userName">
-                <p class="name">谢安琪</p>
+                <span class="name">{{item.name}}</span>
                 <div class="experience">
-                  <span>10年工作经验</span>
-                  <span>|</span>
-                  <span>本科</span>
-                  <span>|</span>
-                  <span>23岁</span>
-                  <span>|</span>
-                  <span>在职-考虑机会</span>
+                  <span v-if="item.workAge!=''">{{item.workAge}}年工作经验</span>
+                  <span v-else>{{item.workAgeDesc}}</span>
+                  <span>·</span>
+                  <span>{{item.degreeDesc}}</span>
+                  <span>·</span>
+                  <span>{{item.degree}}岁</span>
                 </div>
+                <p
+                  class="lastWork"
+                  v-show="item.lastCompany!=''"
+                >最近工作: {{item.lastCompany}} · {{item.lastPosition}}</p>
+                <p class="maxEducation">最高学历：{{item.school}} · {{item.degreeDesc}} · {{item.major}}</p>
               </div>
-              <div class="recentWork">
-                <p>最近工作经历</p>
-                <p>深圳腾讯科技有限公司</p>
-                <p>产品经理</p>
-              </div>
-              <div class="education">
-                <p>最高学历经历</p>
-                <p>深圳腾讯科技有限公司</p>
-                <p>产品经理</p>
+              <div class="needWork">
+                <div
+                  class="workItem"
+                  v-for="(item3,index3) in item.expects"
+                  :key="index3"
+                  v-show="index3<3"
+                >
+                  <span>{{item3.province}}</span>
+                  <span>{{item3.position}}</span>
+                  <span>{{item3.salaryFloor}}~{{item3.salaryCeil}}k</span>
+                  <div class="industry" v-for="(item4,index4) in item3.fields" :key="index4">
+                    <span>{{item4.field}}</span>
+                    <span>·</span>
+                  </div>
+                </div>
+                <!-- <p
+                  v-for="(item2,index2) in item.expects"
+                  :key="index2"
+                >{{item2.position}} {{item2.province}} 互联网·人才服务 6k-9k</p>-->
+                <!-- <p>产品经理 广州 互联网/人才服务 6k-9k</p> -->
+                <!-- <p>产品经理 广州 互联网/人才服务 6k-9k</p> -->
               </div>
               <div class="seeResume">
                 <el-button>查看简历附件</el-button>
-              </div>
-            </div>
-            <div class="line"></div>
-            <div class="userLabel">
-              <div class="whereFrom">
-                <span>
-                  求职意向:
-                  <i>·</i>
-                </span>
-                <span>
-                  广州
-                  <i>·</i>
-                </span>
-                <span>
-                  高级产品经理
-                  <i>·</i>
-                </span>
-                <span>
-                  知识付费
-                  <i>·</i>
-                </span>
-                <span>
-                  服务
-                  <i>·</i>
-                </span>
-                <span>
-                  服务
-                  <i>·</i>
-                </span>
-                <span>
-                  电子产品
-                  <i>·</i>
-                </span>
-                <span>
-                  6k-9k
-                  <i>·</i>
-                </span>
-              </div>
-              <div class="iconList">
-                <span>要求16薪水</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="resumeItem">
-          <div class="resumeNumber">
-            <span>简历编号 cdate0000012X</span>
-            <span>2018-08-12 23:00 更新</span>
-            <span>最近访问时间：2018-08-12 23:00</span>
-          </div>
-          <div class="resumeContent">
-            <div class="userMsg">
-              <div class="userAvator">
-                <img src="../../assets/images/text.jpg" alt>
-              </div>
-              <div class="userName">
-                <p class="name">谢安琪</p>
-                <div class="experience">
-                  <span>10年工作经验</span>
-                  <span>|</span>
-                  <span>本科</span>
-                  <span>|</span>
-                  <span>23岁</span>
-                  <span>|</span>
-                  <span>在职-考虑机会</span>
-                </div>
-              </div>
-              <div class="recentWork">
-                <p>最近工作经历</p>
-                <p>深圳腾讯科技有限公司</p>
-                <p>产品经理</p>
-              </div>
-              <div class="education">
-                <p>最高学历经历</p>
-                <p>深圳腾讯科技有限公司</p>
-                <p>产品经理</p>
-              </div>
-              <div class="seeResume">
-                <el-button>查看简历附件</el-button>
-              </div>
-            </div>
-            <div class="line"></div>
-            <div class="userLabel">
-              <div class="whereFrom">
-                <span>
-                  求职意向:
-                  <i>·</i>
-                </span>
-                <span>
-                  广州
-                  <i>·</i>
-                </span>
-                <span>
-                  高级产品经理
-                  <i>·</i>
-                </span>
-                <span>
-                  知识付费
-                  <i>·</i>
-                </span>
-                <span>
-                  服务
-                  <i>·</i>
-                </span>
-                <span>
-                  服务
-                  <i>·</i>
-                </span>
-                <span>
-                  电子产品
-                  <i>·</i>
-                </span>
-                <span>
-                  6k-9k
-                  <i>·</i>
-                </span>
-              </div>
-              <div class="iconList">
-                <span>要求16薪水</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="resumeItem">
-          <div class="resumeNumber">
-            <span>简历编号 cdate0000012X</span>
-            <span>2018-08-12 23:00 更新</span>
-            <span>最近访问时间：2018-08-12 23:00</span>
-          </div>
-          <div class="resumeContent">
-            <div class="userMsg">
-              <div class="userAvator">
-                <img src="../../assets/images/text.jpg" alt>
-              </div>
-              <div class="userName">
-                <p class="name">谢安琪</p>
-                <div class="experience">
-                  <span>10年工作经验</span>
-                  <span>|</span>
-                  <span>本科</span>
-                  <span>|</span>
-                  <span>23岁</span>
-                  <span>|</span>
-                  <span>在职-考虑机会</span>
-                </div>
-              </div>
-              <div class="recentWork">
-                <p>最近工作经历</p>
-                <p>深圳腾讯科技有限公司</p>
-                <p>产品经理</p>
-              </div>
-              <div class="education">
-                <p>最高学历经历</p>
-                <p>深圳腾讯科技有限公司</p>
-                <p>产品经理</p>
-              </div>
-              <div class="seeResume">
-                <el-button>查看简历附件</el-button>
-              </div>
-            </div>
-            <div class="line"></div>
-            <div class="userLabel">
-              <div class="whereFrom">
-                <span>
-                  求职意向:
-                  <i>·</i>
-                </span>
-                <span>
-                  广州
-                  <i>·</i>
-                </span>
-                <span>
-                  高级产品经理
-                  <i>·</i>
-                </span>
-                <span>
-                  知识付费
-                  <i>·</i>
-                </span>
-                <span>
-                  服务
-                  <i>·</i>
-                </span>
-                <span>
-                  服务
-                  <i>·</i>
-                </span>
-                <span>
-                  电子产品
-                  <i>·</i>
-                </span>
-                <span>
-                  6k-9k
-                  <i>·</i>
-                </span>
-              </div>
-              <div class="iconList">
-                <span>要求16薪水</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="resumeItem">
-          <div class="resumeNumber">
-            <span>简历编号 cdate0000012X</span>
-            <span>2018-08-12 23:00 更新</span>
-            <span>最近访问时间：2018-08-12 23:00</span>
-          </div>
-          <div class="resumeContent">
-            <div class="userMsg">
-              <div class="userAvator">
-                <img src="../../assets/images/text.jpg" alt>
-              </div>
-              <div class="userName">
-                <p class="name">谢安琪</p>
-                <div class="experience">
-                  <span>10年工作经验</span>
-                  <span>|</span>
-                  <span>本科</span>
-                  <span>|</span>
-                  <span>23岁</span>
-                  <span>|</span>
-                  <span>在职-考虑机会</span>
-                </div>
-              </div>
-              <div class="recentWork">
-                <p>最近工作经历</p>
-                <p>深圳腾讯科技有限公司</p>
-                <p>产品经理</p>
-              </div>
-              <div class="education">
-                <p>最高学历经历</p>
-                <p>深圳腾讯科技有限公司</p>
-                <p>产品经理</p>
-              </div>
-              <div class="seeResume">
-                <el-button>查看简历附件</el-button>
-              </div>
-            </div>
-            <div class="line"></div>
-            <div class="userLabel">
-              <div class="whereFrom">
-                <span>
-                  求职意向:
-                  <i>·</i>
-                </span>
-                <span>
-                  广州
-                  <i>·</i>
-                </span>
-                <span>
-                  高级产品经理
-                  <i>·</i>
-                </span>
-                <span>
-                  知识付费
-                  <i>·</i>
-                </span>
-                <span>
-                  服务
-                  <i>·</i>
-                </span>
-                <span>
-                  服务
-                  <i>·</i>
-                </span>
-                <span>
-                  电子产品
-                  <i>·</i>
-                </span>
-                <span>
-                  6k-9k
-                  <i>·</i>
-                </span>
-              </div>
-              <div class="iconList">
-                <span>要求16薪水</span>
               </div>
             </div>
           </div>
@@ -375,17 +139,17 @@
       </div>
       <div class="pageList" slot="pageList">
         <!-- v-if="hasPagination" v-show="total > 0" -->
-        <!-- <footer class="list-footer">
+        <footer class="list-footer">
           <el-pagination
-            :layout="paginationLayout"
+            layout="prev, pager, next, slot"
             :current-page="page"
-            :page-size="pageSize"
-            :total="total"
+            :page-size="20"
+            :total="leftcontent.total"
             @current-change="handlePageChange"
           >
-            <span class="total">共 {{pageCount}} 页，{{total}} 条记录</span>
+            <span class="total">共 {{pageCount}} 页，{{leftcontent.total}} 条记录</span>
           </el-pagination>
-        </footer>-->
+        </footer>
       </div>
       <transition name="el-fade-in-linear" v-show="isShowMark" slot="Mark">
         <div class="Mask" @click.stop="showMark">
@@ -606,7 +370,14 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import lyoutContent from "COMPONENTS/Lyout/lyoutContent/lyoutContent.vue";
 import CustomSelect from "./components/CustomSelect/index.vue";
-import { GetResumeAPI } from "API/resumeStore.js";
+import { getLabelPositionListApi } from "API/position";
+import { getCityApi } from "API/company";
+import {
+  GetResumeAPI,
+  GetResumeDetailsAPI,
+  degreeListAPI,
+  jobhuntStatusAPI
+} from "API/resumeStore.js";
 @Component({
   name: "resumeStore",
   components: {
@@ -620,22 +391,28 @@ export default class resumeStore extends Vue {
     total: 0,
     title: "简历库"
   };
-  itemList=[];//简历数组
+  options = []; //期待职位信息
+  itemList = []; //简历数组
+  degreeList = []; //学历列表
+  getCityList = []; //省市列表
+  jobhuntStatusList = []; //求职状态
   form = {
     name: "",
-    keyword:'', //关键字
-    expectPosition:'',//期望职位类型id
-    expectCityNum:'',//期望城市编号
-    skillLabel:'',//工作技能标签名
-    jobStatus:'',//求职状态。 在职暂不考虑1，离职随时到岗2，在职月内到岗3，在职考虑机会4
-    degree:'',//最高学历，初中及以下5，中专/中技10，高中15，大专20，本科25，硕士30，博士35，默认本科
-    isStudent:'',//在校生、无工作经验。无工作经验时，该值为1，否则为0。该值为1时，忽略工作经验
-    workExpLower:'',//工作经验下限，单位“年”
-    workExpUpper:'',//工作经验上限，单位“年”
-    resumeLabel:'',//简历标签名
-    page:1,//第几页
-    count:20//每页条数
+    keyword: "", //关键字
+    expectPosition: "", //期望职位类型id
+    expectCityNum: "", //期望城市编号
+    skillLabel: "", //工作技能标签名
+    jobStatus: "", //求职状态。 在职暂不考虑1，离职随时到岗2，在职月内到岗3，在职考虑机会4
+    degree: "", //最高学历，初中及以下5，中专/中技10，高中15，大专20，本科25，硕士30，博士35，默认本科
+    isStudent: "", //在校生、无工作经验。无工作经验时，该值为1，否则为0。该值为1时，忽略工作经验
+    workExpLower: "", //工作经验下限，单位“年”
+    workExpUpper: "", //工作经验上限，单位“年”
+    resumeLabel: "", //简历标签名
+    page: 1, //第几页
+    count: 20 //每页条数
   };
+  pageCount = 20; //请求回来的数据量
+  page = 1;
   nowCheck = 0; //当前点击
   isCheck = 0;
   isShowbtn = true;
@@ -648,28 +425,103 @@ export default class resumeStore extends Vue {
     if (this.nowCheck === 2) return;
     this.nowCheck++;
   }
-  // 重置搜索条件
+  // 时间选择器
+  TimeResult(e) {
+    let { isStudent, workExpLower, workExpUpper } = e;
+    this.form.isStudent = isStudent;
+    this.form.workExpLower = workExpLower;
+    this.form.workExpUpper = workExpUpper;
+  }
+  /* 清除列表选项 */
   resetForm(name) {
     this.$refs[name].resetFields();
+  }
+  type(e) {
+    this.form.expectPosition = e[e.length - 1];
+  }
+  choiceCity(e) {
+    this.form.expectCityNum = e[e.length - 1];
   }
   // 左边箭头
   reduce() {
     if (this.nowCheck === 0) return;
     this.nowCheck--;
   }
+  // 查询按钮
+  onSubmit() {
+    this.getData();
+  }
   // 点击切换
   check(index) {
     this.nowCheck = index;
   }
-  created(){
+  mounted() {
     this.getData();
+    this.degreeData();
+    this.jobhuntStatus();
+    this.ManageList();
+    this.CityData();
   }
-  getData(){
-    GetResumeAPI(this.form).then(res=>{
-      console.log(res)
-      this.itemList=res.data.data;
-
-    })
+  CityData() {
+    getCityApi().then(res => {
+      this.getCityList = res.data.data;
+      this.getCityList.forEach(item => {
+        item.children.forEach(item1 => {
+          let result = JSON.stringify(item1.children);
+          if (result === "[]") delete item1.children;
+        });
+      });
+      console.log("getCityApi", res);
+    });
+  }
+  // 期待职位
+  ManageList() {
+    getLabelPositionListApi().then(res => {
+      this.options = res.data.data;
+      this.options.forEach(item => {
+        item.children.forEach(item1 => {
+          item1.children.forEach(item2 => {
+            let result = JSON.stringify(item2.children);
+            if (result === "[]") delete item2.children;
+          });
+        });
+      });
+    });
+  }
+  jobhuntStatus() {
+    jobhuntStatusAPI().then(res => {
+      this.jobhuntStatusList = res.data.data;
+      console.log("this.jobhuntStatusList", this.jobhuntStatusList);
+    });
+  }
+  // 学历列表
+  degreeData() {
+    degreeListAPI().then(res => {
+      this.degreeList = res.data.data;
+      console.log("this.degreeList", this.degreeList);
+    });
+  }
+  getDetail(uid) {
+    this.isShowMark = !this.isShowMark;
+    GetResumeDetailsAPI(uid).then(res => {
+      console.log(res);
+    });
+  }
+  getData() {
+    GetResumeAPI(this.form).then(res => {
+      console.log(res);
+      this.itemList = res.data.data;
+      this.leftcontent.total = res.data.meta.total;
+      console.log(this.leftcontent);
+    });
+  }
+  // 翻页
+  /* 翻页 */
+  handlePageChange(nowPage) {
+    this.$route.meta.scrollY = 0;
+    window.scrollTo(0, 0);
+    this.form.page = nowPage;
+    // this.getCompanyList();
   }
 }
 </script>

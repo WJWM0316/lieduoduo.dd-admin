@@ -93,10 +93,10 @@
               prop="admin_uid"
               style="margin-left: 20px;"
             >
-              <el-select v-model="form.admin_uid" placeholder="公司来源">
+              <el-select v-model="form.wherefrom" placeholder="公司来源">
                 <el-option label="全部" value></el-option>
-                <el-option label="营业执照" value="0"></el-option>
-                <el-option label="用户创建" value="0"></el-option>
+                <el-option label="后台创建" value="2"></el-option>
+                <el-option label="用户创建" value="1"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item class="btn">
@@ -235,6 +235,7 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import List from "@/components/list";
+import {getSalerListApi} from 'API/commont'
 import { templistApi, companyTempUserList } from "API/company";
 @Component({
   name: "course-list",
@@ -247,6 +248,7 @@ export default class companyCheck extends Vue {
   pageCount = 0; // 请求回的数据共几页
   AdminShow = ""; //权限字段，限制搜索
   form = {
+    wherefrom:'',
     is_license: "",
     admin_uid: "",
     keyword: "",
@@ -362,7 +364,7 @@ export default class companyCheck extends Vue {
   }
   userList() {
     console.log("---1------");
-    companyTempUserList().then(res => {
+    getSalerListApi().then(res => {
       this.userList = res.data.data;
     });
   }

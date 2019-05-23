@@ -52,14 +52,12 @@ export default class login extends Vue {
   login() {
     loginApi(this.loginForm)
       .then(res => {
-        console.log(res.data.data)
         let { groupId, isAdmin, isGroupAdmin } = res.data.data;
         sessionStorage.setItem("email", this.loginForm.email);
         sessionStorage.setItem("avar", res.data.data.avatarInfo.smallUrl);
         sessionStorage.setItem("name", res.data.data.realname);
         saveAccessToken(res.data.data.adminToken);
         let AdminShow= this.judge(groupId, isAdmin, isGroupAdmin, res.data.data);
-        console.log('AdminShow',AdminShow)
         sessionStorage.setItem("AdminShow", AdminShow);
         this.$store.dispatch("update_userinfo", {
           userinfo:res.data.data
@@ -80,7 +78,7 @@ export default class login extends Vue {
   judge(groupId, isAdmin, isGroupAdmin, userinfo) {
     let AdminShow;
     if (isAdmin) {
-      console.log("我是超管");
+      console.log("超管");
       AdminShow=0
     } else if (isGroupAdmin && groupId === 2) {
       console.log("客服组长");

@@ -6,3 +6,31 @@
   // width: 500px;
   margin-left: 70px;
 }
+.el-input__inner{
+  width: 100px;
+}
+.el-form {
+  /*display: flex;*/
+  /*align-items: center;*/
+  /* 筛选 */
+  .inputSelect {
+    line-height: 20px !important;
+    width: 300px !important;
+    background-color: #ffffff;
+    .el-select {
+      width: 120px;
+      margin-top: -2px;
+      border: none;
+      box-sizing: border-box;
+    }
+  }
+  .el-input {
+    width: 200px;
+  }
+  &::after {
+    content: "";
+    display: block;
+    height: 0;
+    clear: both;
+  }
+}

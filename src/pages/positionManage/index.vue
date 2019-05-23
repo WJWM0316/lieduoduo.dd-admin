@@ -9,11 +9,31 @@
       <el-main>
         <!--筛选-->
         <div class="selectionBox" @keyup.enter="search">
-          <el-form ref="form" :model="form" label-width="80px" validate="validate">
-            <el-form-item label="职位名称" prop="name">
-              <el-input v-model="form.name" placeholder="输入职位/发布者/主体公司"></el-input>
+          <el-form ref="form" :model="form" validate="validate">
+            <el-form-item prop="name">
+              <!-- 筛选条件1 -->
+              <div class="searchTab">
+                <el-input placeholder="请输入" v-model="form.name" class="inputSelect">
+                  <el-select v-model="select1" slot="prepend" placeholder="公司名">
+                    <el-option label="公司名" value="1"></el-option>
+                    <el-option label="招聘官" value="2"></el-option>
+                    <el-option label="职位" value="3"></el-option>
+                  </el-select>
+                </el-input>
+              </div>
             </el-form-item>
-
+            <el-form-item prop="name2">
+              <!-- 筛选条件1 -->
+              <div class="searchTab" style="margin-left:20px;">
+                <el-input placeholder="请输入" v-model="form.name2" class="inputSelect">
+                  <el-select v-model="select1" slot="prepend" placeholder="招聘官">
+                    <el-option label="公司名" value="1"></el-option>
+                    <el-option label="招聘官" value="2"></el-option>
+                    <el-option label="职位" value="3"></el-option>
+                  </el-select>
+                </el-input>
+              </div>
+            </el-form-item>
             <el-form-item label-width="80px" label="上线/下线" prop="is_online">
               <el-select v-model="form.is_online" placeholder="全部状态">
                 <el-option label="上线" value="1"></el-option>
@@ -43,7 +63,7 @@
                 label:'name',
                 children:'children'
                 }"
-                @change='type'
+                @change="type"
               ></el-cascader>
             </el-form-item>
 
@@ -191,6 +211,7 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import List from "@/components/list";
+import mixingInput from "@/components/Input/input.vue";
 import { login, templistApi } from "API/company";
 import { getPositionCodeUrlApi } from "API/interview";
 import { getListApi, getLabelPositionListApi } from "API/position";
@@ -198,13 +219,25 @@ import { deflate } from "zlib";
 @Component({
   name: "course-list",
   components: {
-    List
+    List,
+    mixingInput
   }
 })
 export default class companyCheck extends Vue {
   total = 0; // 筛查结果数量
   pageCount = 0; // 请求回的数据共几页
   qrCode = "";
+  searchType = {
+    condition1: "name",
+    condition2: "name2",
+    condition2: "name3",
+    keyword1: "",
+    keyword2: "",
+    keyword3: ""
+  };
+  select1 = {
+    value: ""
+  };
   form = {
     wherefrom: "", //数据来源
     type: "",
@@ -212,10 +245,17 @@ export default class companyCheck extends Vue {
     status: "", // 状态（0关闭，1开启，审核通过，2审核中，3审核失败）查询多种状态用，号分隔（1,2,3）
     recruiter: "",
     page: 1,
-    name: "",
+    name: "", //职位名称，公司名，招聘官名（1）
+    name2: "", //职位名称，公司名，招聘官名（2）
     count: 20
   };
   options = [];
+  searchType = {
+    condition1: "keyword",
+    condition2: "mobile",
+    keyword1: "",
+    keyword2: ""
+  };
   fields = [
     {
       prop: "id",
@@ -260,9 +300,9 @@ export default class companyCheck extends Vue {
     }
   ];
   list = [];
-  type(e){
-    this.form.type=e[e.length-1];
-    console.log('this.form',this.form)
+  type(e) {
+    this.form.type = e[e.length - 1];
+    console.log("this.form", this.form);
   }
   onSubmit(e) {
     this.form.page = 1;
@@ -279,11 +319,12 @@ export default class companyCheck extends Vue {
       query: { id: id }
     });
   }
+  changeProvince() {}
   /* 重置 */
   resetForm(formName) {
-    console.log(formName)
+    console.log(formName);
     this.$refs[formName].resetFields();
-    console.log(this.form)
+    console.log(this.form);
   }
 
   addPosition() {
@@ -381,6 +422,20 @@ export default class companyCheck extends Vue {
 
 <style lang="less" scoped="scoped">
 @import "./index.less";
+.inputSelect {
+  line-height: 20px !important;
+  width: 100px !important;
+  background-color: #ffffff;
+  .el-select {
+    width: 120px;
+    margin-top: -2px;
+    border: none;
+    box-sizing: border-box;
+  }
+}
+.el-input-group__prepend {
+  width: 57px !important;
+}
 .positionManage {
   margin-left: 200px;
   .container {
@@ -417,7 +472,7 @@ export default class companyCheck extends Vue {
       display: flex;
       align-items: center;
       flex-wrap: wrap;
-      width: 1200px;
+      width: 1279px;
       .el-input {
         width: 200px;
       }
@@ -482,5 +537,4 @@ export default class companyCheck extends Vue {
     }
   }
 }
-
 </style>
