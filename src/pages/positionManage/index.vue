@@ -211,7 +211,6 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import List from "@/components/list";
-import mixingInput from "@/components/Input/input.vue";
 import { login, templistApi } from "API/company";
 import { getPositionCodeUrlApi } from "API/interview";
 import { getListApi, getLabelPositionListApi } from "API/position";
@@ -219,8 +218,7 @@ import { deflate } from "zlib";
 @Component({
   name: "course-list",
   components: {
-    List,
-    mixingInput
+    List
   }
 })
 export default class companyCheck extends Vue {
