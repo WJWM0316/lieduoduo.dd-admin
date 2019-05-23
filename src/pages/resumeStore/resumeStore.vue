@@ -205,84 +205,100 @@
                   <div class="message">
                     <div class="msgUrl">
                       <img src="../../assets/images/preview.png" alt>
+                      <span class="gender">
+                        <i class="icon iconfont iconicon_boy"></i>
+                      </span>
                     </div>
                     <div class="msgUserInfo">
-                      <span class="realName">李永江</span>
-                      <span class="status">在职-考虑机会</span>
-                      <i class="icon iconfont iconzhiwei"></i>
-                      <p class="nowWorking">
-                        工作情况:
-                        <span>厦门乐域网络科技有限公司 / 前端工程师 / 4年工作经验</span>
-                      </p>
-                      <p class="education">
-                        教育情况:
-                        <span>上海交通大学 / 本科 / 计算机科学与技术</span>
-                      </p>
+                      <div class="basemsg">
+                        <span class="realName">李永江</span>
+                        <div class="lebalList">
+                          <div class="lebalItem">
+                            <i class="icon iconfont iconzhiwei"></i>
+                            <span>暂无经历</span>
+                          </div>
+                          <div class="lebalItem">
+                            <i class="icon iconfont iconnianling"></i>
+                            <span>25岁</span>
+                          </div>
+                          <div class="lebalItem">
+                            <i class="icon iconfont iconxueli"></i>
+                            <span>本科</span>
+                          </div>
+                          <div class="lebalItem">
+                            <span class="status">在职-考虑机会</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="description">
+                        <span
+                          class="msg"
+                        >4年的UI设计经验，个人适应力强，愿意不断学习，做事上手快，是一个有个性，负责任，有上进心且开朗的设计师。 对安卓及苹果尺寸规范熟悉； 现主要负责APP视觉界面设计，也有运营类经验； 会Ae动效 Sketch PS Ai软件 会手绘； 本人艺术生及艺术院系设计专业毕业，对美有一定的追求及敏感度；</span>
+                        <div class="iconList">
+                          <span class="iconItem">撸猫</span>
+                          <span class="iconItem">分析用户</span>
+                          <span class="iconItem">这是个性标签</span>
+                          <span class="iconItem">这是个</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <div class="description">
-                    <span class="msg">
-                      <i>自我描述</i> ：完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整显示，完整。
-                    </span>
-                    <div class="iconList">
-                      <span class="iconItem">撸猫</span>
-                      <span class="iconItem">分析用户</span>
-                      <span class="iconItem">这是个性标签</span>
-                      <span class="iconItem">这是个</span>
+                </div>
+                <!-- 求职意向 -->
+                <div class="intention">
+                  <p class="title">求职意向</p>
+                  <div class="intentList">
+                    <div class="intentionItem">
+                      <span>高级产品经理 | 广州</span>
+                      <span>知识付费·服务·电子产品</span>
+                      <span>6k-9k</span>
+                    </div>
+                    <div class="intentionItem">
+                      <span>高级产品经理 | 广州</span>
+                      <span>知识付费·服务·电子产品</span>
+                      <span>6k-9k</span>
+                    </div>
+                    <div class="intentionItem">
+                      <span>高级产品经理 | 广州</span>
+                      <span>知识付费·服务·电子产品</span>
+                      <span>6k-9k</span>
+                    </div>
+                  </div>
+                </div>
+                <!-- 工作经历 -->
+                <div class="workExperience">
+                  <p class="title">工作经历</p>
+                  <div class="workList">
+                    <div class="workItem">
+                      <div class="workTime">
+                        <span>厦门乐域网络科技有限公司 | UI设计师</span>
+                        <span>2017.06-2019.03</span>
+                      </div>
+                      <div class="workContent">
+                        <span
+                          class="duties"
+                        >1、负责项目组内前端开发、项目组的管理协调工作，负责项目组内前端开发;
+                         2、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发；
+                         3、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端； 4、管理协调工作负责项目组内前端开发、项目组的管理协调工；
+                         </span>
+                      </div>
+                    </div>
+                    <div class="workItem">
+                      <div class="workTime">
+                        <span>广州老虎科技</span>
+                        <span>2015.07-至今</span>
+                      </div>
+                      <div class="workContent">
+                        <p class="name">前端工程师</p>
+                        <span
+                          class="duties"
+                        >负责项目组内前端开发、项目组的管理协调工作，负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <!-- 求职意向 -->
-              <!-- <div class="intention">
-                <p class="title">求职意向</p>
-                <div class="intentionItem">
-                  <span>高级产品经理 | 广州</span>
-                  <span>知识付费·服务·电子产品</span>
-                  <span>6k-9k</span>
-                </div>
-                <div class="intentionItem">
-                  <span>高级产品经理 | 广州</span>
-                  <span>知识付费·服务·电子产品</span>
-                  <span>6k-9k</span>
-                </div>
-                <div class="intentionItem">
-                  <span>高级产品经理 | 广州</span>
-                  <span>知识付费·服务·电子产品</span>
-                  <span>6k-9k</span>
-                </div>
-              </div>-->
-              <!-- 工作经历 -->
-              <!-- <div class="workExperience">
-                <p class="title">工作经历</p>
-                <div class="workList">
-                  <div class="workItem">
-                    <div class="workTime">
-                      <span>广州老虎科技</span>
-                      <span>2015.07-至今</span>
-                    </div>
-                    <div class="workContent">
-                      <p class="name">前端工程师</p>
-                      <span
-                        class="duties"
-                      >负责项目组内前端开发、项目组的管理协调工作，负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作</span>
-                    </div>
-                  </div>
-                  <div class="workItem">
-                    <div class="workTime">
-                      <span>广州老虎科技</span>
-                      <span>2015.07-至今</span>
-                    </div>
-                    <div class="workContent">
-                      <p class="name">前端工程师</p>
-                      <span
-                        class="duties"
-                      >负责项目组内前端开发、项目组的管理协调工作，负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作</span>
-                    </div>
-                  </div>
-                </div>
-              </div>-->
               <!-- 项目经历 -->
               <!-- <div class="workExperience">
                 <p class="title">项目经历</p>
@@ -419,7 +435,7 @@ export default class resumeStore extends Vue {
   nowCheck = 0; //当前点击
   isCheck = 0;
   isShowbtn = true;
-  isShowMark = true;//展示简历详情
+  isShowMark = true; //展示简历详情
   showMark() {
     this.isShowMark = !this.isShowMark;
   }

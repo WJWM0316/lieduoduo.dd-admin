@@ -186,7 +186,7 @@
           <el-select
             style="width: 400px;"
             ref="salesList"
-            v-model="companyInfo.admin_uid"
+            v-model="companyInfo.realname"
             placeholder="请选择跟进人"
             @change="ground"
           >
@@ -265,7 +265,7 @@ import mapSearch from "@/components/map";
 export default class createCompany extends Vue {
   newComponyId = "";
   isEdit = false;
-  active = 0;
+  active = 0; //0表示现在在填公司信息页  1表示不是在填公司信息页
   adressList = []; // 地址列表
   pop = {
     isShow: false,
@@ -280,13 +280,18 @@ export default class createCompany extends Vue {
   // 关闭
   closeAdmin(e) {
     console.log("触发了么");
+
     this.showAdminWindow = false;
-    if (e && e.needLoad) this.getCompanyInfo();
+
+    if (e && e.needLoad) {
+      this.$set(this.companyInfo,'realname', sessionStorage.getItem("name"))
+    }
   }
   closeAdminWindow() {
     this.showAdminWindow = false;
   }
   ground(e) {
+    console.log(e)
     let result = this.salesList.find(field => field.id === e);
     this.companyInfo.groupId = result.groupId;
     console.log(result);
@@ -545,9 +550,12 @@ export default class createCompany extends Vue {
 
   /* 获取编辑公司信息 */
   async getCompanyInfo() {
+    console.log("this.$route.params", this.$route.params);
     const { id } = this.$route.params;
+    console.log("id", id);
     let res = await getCompanyInfoApi(id);
     let newCompanyInfo = res.data.data.companyInfo;
+    console.log("newCompanyInfo", newCompanyInfo);
     this.setCompanyInfo(newCompanyInfo);
   }
 
@@ -561,6 +569,8 @@ export default class createCompany extends Vue {
 
   /* 填充原公司数据 */
   setCompanyInfo(newCompanyInfo) {
+    let admin_uid = sessionStorage.getItem("admin_uid");
+    console.log("newCompanyInfo", newCompanyInfo);
     this.companyInfo = {
       company_name: newCompanyInfo.companyName, // 公司名称
       company_shortname: newCompanyInfo.companyShortname, // 公司简称
@@ -578,7 +588,7 @@ export default class createCompany extends Vue {
       website: newCompanyInfo.website, // 公司官网
       address: newCompanyInfo.address ? newCompanyInfo.address : [], // 公司地址
       email: newCompanyInfo.email,
-      admin_uid: parseInt(newCompanyInfo.adminUid) //跟进人员
+      admin_uid: parseInt(newCompanyInfo.admin_uid) //跟进人员
     };
     // 上传证件信息
     this.form = {

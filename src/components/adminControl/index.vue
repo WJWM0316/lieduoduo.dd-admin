@@ -233,7 +233,7 @@ export default class adminBox extends Vue {
                 if (valid) {
                     let res = await createCompanyApi(this.companyInfo)
                     this.$message({type: 'success', message: '公司创建成功'})
-                     this.$emit('close')
+                     this.$emit('close',{needLoad:true})
                 } else {
                     return false
                 }

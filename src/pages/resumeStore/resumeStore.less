@@ -415,18 +415,34 @@
       padding-left: 50px;
       .base {
         padding-bottom: 20px;
-        border-bottom: 1px solid #000;
-
         .message {
           display: flex;
           justify-content: flex-start;
-          align-items: center;
+          align-items: flex-start;
           width: 100%;
           margin-top: 30px;
 
           .msgUrl {
             width: 88px;
             height: 88px;
+            position: relative;
+            .gender {
+              width: 26px;
+              height: 26px;
+              background: #2878ff;
+              border: 1px solid #ffffff;
+              border-radius: 50%;
+              position: absolute;
+              right: -6px;
+              bottom: -9px;
+              text-align: center;
+              i {
+                line-height: 26px;
+                color: #fff;
+                font-size: 12px;
+                text-align: center;
+              }
+            }
             img {
               width: 88px;
               height: 88px;
@@ -442,22 +458,36 @@
             height: 100%;
             padding-left: 10px;
             margin-left: 30px;
-            .realName {
-              font-size: 22px;
-              font-weight: 600;
-              color: #42334d;
-              width: 153px;
-              white-space: nowrap;
-              overflow: hidden;
-              text-overflow: ellipsis;
-              display: inline-block;
+            .basemsg {
+              display: flex;
+              justify-content: flex-start;
+              align-items: baseline;
+              .realName {
+                font-size: 22px;
+                font-weight: 600;
+                color: #42334d;
+                width: 153px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: inline-block;
+              }
+              .lebalList {
+                display: inline-block;
+                .lebalItem {
+                  display: inline-block;
+                  margin-right: 24px;
+                  i {
+                    margin-right: 10px;
+                  }
+                }
+              }
             }
 
             .status {
               padding: 5px 10px;
-              border: 1px solid #000;
-              background: #f5f5f5;
-              border-radius: 10px;
+              background: rgba(239, 233, 244, 1);
+              color: #652791;
               margin-left: 20px;
               vertical-align: middle;
             }
@@ -502,11 +532,12 @@
 
             .iconItem {
               padding: 5px 10px;
-              border: 1px solid #000;
-              background: #f5f5f5;
+              border: 1px solid rgba(230, 226, 237, 1);
+              background: #fff;
               border-radius: 10px;
               margin-left: 20px;
               vertical-align: middle;
+              color: #652791;
             }
           }
         }
@@ -518,67 +549,80 @@
       text-align: left;
       padding-top: 20px;
       padding-bottom: 20px;
-      border-bottom: 1px solid #000;
+      display: flex;
+      justify-content: flex-start;
+      align-items:baseline;
       .title {
-        font-size: 20px;
-        font-weight: 600;
-        color: #000;
+        font-size: 14px;
+        font-family:PingFangSC-Medium;
+        font-weight:500;
+        color: #42334d;
+        display: inline-block;
       }
+      .intentList {
+        display: inline-block;
+        margin-left: 30px;
+        .intentionItem {
+          width: 100%;
+          text-align: left;
+          padding-top: 20px;
 
-      .intentionItem {
-        width: 100%;
-        text-align: left;
-        padding-top: 20px;
+          span {
+            font-size: 15px;
+            color: #5C565D;
 
-        span {
-          font-size: 15px;
-          color: #000;
+            &:nth-child(2) {
+              margin: 0 30px;
+              display: inline-block;
+            }
 
-          &:nth-child(2) {
-            margin: 0 30px;
-            display: inline-block;
-          }
-
-          &:nth-child(3) {
-            color: red;
+            &:nth-child(3) {
+              color: #FF7F4C;
+            }
           }
         }
       }
     }
 
     .workExperience {
-      width: 300px;
-      display: inline-block;
-      text-align: left;
+      width: 100%;
+      display: flex;
+      justify-content: flex-start;
+      align-items: baseline;
       padding-top: 20px;
       border-bottom: 1px solid #000;
       .title {
-        font-size: 20px;
-        font-weight: 600;
-        color: #000;
+        font-size: 14px;
+        color: #42334D;
+        width: 100px;
+        text-align: left;
       }
       .workList {
         margin-top: 20px;
+        width: 100%;
         .workItem {
           margin-bottom: 20px;
           .workTime {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #f5f5f5;
-            padding: 10px 15px;
+            padding: 10px 15px 10px 0px;
             span {
               font-size: 15px;
-              color: #000;
+              color: #5C565D;
             }
           }
           .workContent {
+            text-align: left;
             .name {
               margin: 15px;
               margin-left: 0px;
               // margin-top: 0px;
               font-size: 15px;
               color: #000;
+            }
+            .duties{
+              text-align: left;
             }
           }
         }

@@ -56,6 +56,7 @@ export default class login extends Vue {
         sessionStorage.setItem("email", this.loginForm.email);
         sessionStorage.setItem("avar", res.data.data.avatarInfo.smallUrl);
         sessionStorage.setItem("name", res.data.data.realname);
+        sessionStorage.setItem("admin_uid", res.data.data.id);
         saveAccessToken(res.data.data.adminToken);
         let AdminShow= this.judge(groupId, isAdmin, isGroupAdmin, res.data.data);
         sessionStorage.setItem("AdminShow", AdminShow);
