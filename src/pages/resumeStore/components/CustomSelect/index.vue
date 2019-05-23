@@ -29,7 +29,7 @@ import Component from "vue-class-component";
 import { scrypt } from "crypto";
 
 @Component({
-  name: "CustomSelect"
+  name: "CustomSelect",
 })
 export default class CustomSelect extends Vue {
   isCheck = false;
@@ -42,6 +42,10 @@ export default class CustomSelect extends Vue {
   showSelect() {
     this.isCheck = !this.isCheck;
   }
+  // 初始化
+  clearValue(){
+    this.checkTime='请选择'
+  }
   choice(e) {
     this.isCheck = false;
     if (e === 0) {
@@ -52,7 +56,8 @@ export default class CustomSelect extends Vue {
       this.$emit("callback", {
         isStudent: this.isStudent,
         workExpLower: this.workExpLower,
-        workExpUpper: this.workExpUpper
+        workExpUpper: this.workExpUpper,
+        checkTime:this.checkTime
       });
     } else if (e === 1) {
       this.checkTime = "无经验";
@@ -62,7 +67,8 @@ export default class CustomSelect extends Vue {
       this.$emit("callback", {
         isStudent: this.isStudent,
         workExpLower: this.workExpLower,
-        workExpUpper: this.workExpUpper
+        workExpUpper: this.workExpUpper,
+        checkTime:this.checkTime
       });
     } else {
       this.workExpLower = document.getElementById("minYear").value;
@@ -73,7 +79,7 @@ export default class CustomSelect extends Vue {
           this.$emit("callback", {
             isStudent: this.isStudent,
             workExpLower: this.workExpLower,
-            workExpUpper: this.workExpUpper
+            workExpUpper: this.workExpUpper,
           });
         }
       }

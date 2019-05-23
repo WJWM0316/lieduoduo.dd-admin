@@ -64,7 +64,7 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <custom-select @callback="TimeResult"></custom-select>
+            <custom-select ref="custom" @callback="TimeResult"></custom-select>
             <div class="BtnList">
               <el-form-item class="btn">
                 <el-button class="inquire" @click.stop="onSubmit">查询</el-button>
@@ -152,7 +152,7 @@
         </footer>
       </div>
       <transition name="el-fade-in-linear" v-show="isShowMark" slot="Mark">
-        <div class="Mask" @click.stop="showMark">
+        <div class="Mask" @click.self="showMark">
           <div class="swiperList">
             <div class="arrow">
               <div class="left comstyle" @click.stop="reduce">
@@ -174,7 +174,7 @@
             <div class="nowResume" v-show="nowCheck==0">
               <div class="Numbering">
                 <span>简历编号：928de08bB4b99169a</span>
-                <span>在职-考虑机会</span>
+                <span>1995-.01.71更新</span>
               </div>
               <div class="Code">
                 <div class="msgCode">
@@ -182,8 +182,9 @@
                   <span>扫码进入</span>
                 </div>
                 <div class="ContactInformation">
+                  <p class="contactTitle">联系方式:</p>
                   <div class="Contact">
-                    <span>联系方式</span>
+                    <span>手机号</span>
                     <span>13922281959</span>
                   </div>
                   <div class="Contact">
@@ -192,6 +193,7 @@
                   </div>
                 </div>
                 <div class="download row">
+                  <p class="contactTitle">附件简历:</p>
                   <div class="Contact">
                     <span>查看附件</span>
                   </div>
@@ -205,8 +207,9 @@
                       <img src="../../assets/images/preview.png" alt>
                     </div>
                     <div class="msgUserInfo">
-                      <span class="realName">李永江 · 女 · 24 岁</span>
+                      <span class="realName">李永江</span>
                       <span class="status">在职-考虑机会</span>
+                      <i class="icon iconfont iconzhiwei"></i>
                       <p class="nowWorking">
                         工作情况:
                         <span>厦门乐域网络科技有限公司 / 前端工程师 / 4年工作经验</span>
@@ -416,7 +419,7 @@ export default class resumeStore extends Vue {
   nowCheck = 0; //当前点击
   isCheck = 0;
   isShowbtn = true;
-  isShowMark = false;
+  isShowMark = true;//展示简历详情
   showMark() {
     this.isShowMark = !this.isShowMark;
   }
@@ -435,10 +438,14 @@ export default class resumeStore extends Vue {
   /* 清除列表选项 */
   resetForm(name) {
     this.$refs[name].resetFields();
+    this.form.isStudent = "";
+    this.form.workExpLower = "";
+    this.form.workExpUpper = "";
     this.$nextTick(() => {
       let obj = {};
       obj.stopPropagation = () => {};
       this.$refs.cascader.clearValue(obj);
+      this.$refs.custom.clearValue();
     });
   }
   type(e) {

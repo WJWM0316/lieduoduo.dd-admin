@@ -232,9 +232,8 @@ export default class adminBox extends Vue {
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
                     let res = await createCompanyApi(this.companyInfo)
-                    this.isBindAdmin=false
                     this.$message({type: 'success', message: '公司创建成功'})
-                    this.$emit('closeAdminWindow', {'needLoad': true})
+                     this.$emit('close')
                 } else {
                     return false
                 }

@@ -173,6 +173,7 @@
     <!-- 绑定与解绑模块 -->
     <div v-if="showAdminWindow" class="bindAdminWindo">
       <admin-control
+        @close='closeAdmin'
         @closeAdminWindow="close"
         :isBindAdmin="isRemove"
         :userName="personalInfo.name"
@@ -302,6 +303,10 @@ export default class addUser extends Vue {
   /* 隐藏大图 */
   hiddenMask() {
     this.nowImg = "";
+  }
+  // 关闭移除招聘官
+  closeAdmin(){
+    this.showAdminWindow=false
   }
   /* 去编辑用户信息 */
   toEdit() {
