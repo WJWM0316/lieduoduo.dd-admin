@@ -451,7 +451,7 @@ export default class createCompany extends Vue {
   /* 保存跟进人 */
   async saveSaller() {
     const { id, checkId } = this.$route.params;
-    console.log(this.$route.params);
+    // console.log(this.$route.params);
     console.log("this.companyInfo", this.companyInfo);
     // return;
     if (id) {
@@ -471,7 +471,10 @@ export default class createCompany extends Vue {
       type: "success",
       message: "跟进人编辑成功"
     });
-    this.$router.go(-1);
+    this.$route.push({
+      url:'/index'
+    })
+    // aaa
   }
 
   handleIconLoaded(e) {

@@ -14,7 +14,7 @@
               <!-- 筛选条件1 -->
               <div class="searchTab">
                 <el-input placeholder="请输入" v-model="form.name" class="inputSelect">
-                  <el-select v-model="select1" slot="prepend" placeholder="公司名">
+                  <el-select v-model="select1" slot="prepend" placeholder="职位">
                     <el-option label="公司名" value="1"></el-option>
                     <el-option label="招聘官" value="2"></el-option>
                     <el-option label="职位" value="3"></el-option>
@@ -26,7 +26,7 @@
               <!-- 筛选条件1 -->
               <div class="searchTab" style="margin-left:20px;">
                 <el-input placeholder="请输入" v-model="form.name2" class="inputSelect">
-                  <el-select v-model="select1" slot="prepend" placeholder="招聘官">
+                  <el-select v-model="select2" slot="prepend" placeholder="公司">
                     <el-option label="公司名" value="1"></el-option>
                     <el-option label="招聘官" value="2"></el-option>
                     <el-option label="职位" value="3"></el-option>
@@ -54,15 +54,12 @@
             <!-- 职位来源 -->
             <el-form-item label-width="80px" label="职位类别" prop="type">
               <el-cascader
+                ref="cascader"
                 placeholder="职位类别"
                 :options="options"
                 filterable
                 change-on-select
-                :props="{
-                value:'labelId',
-                label:'name',
-                children:'children'
-                }"
+                :props="positionManage"
                 @change="type"
               ></el-cascader>
             </el-form-item>
@@ -236,6 +233,9 @@ export default class companyCheck extends Vue {
   select1 = {
     value: ""
   };
+  select2 = {
+    value: ""
+  };
   form = {
     wherefrom: "", //数据来源
     type: "",
@@ -248,6 +248,11 @@ export default class companyCheck extends Vue {
     count: 20
   };
   options = [];
+  positionManage = {
+    value: "labelId",
+    label: "name",
+    children: "children"
+  }; //职位类别的配置
   searchType = {
     condition1: "keyword",
     condition2: "mobile",
@@ -299,10 +304,12 @@ export default class companyCheck extends Vue {
   ];
   list = [];
   type(e) {
+    console.log(e);
     this.form.type = e[e.length - 1];
     console.log("this.form", this.form);
   }
   onSubmit(e) {
+    console.log(this.form);
     this.form.page = 1;
     this.getTemplist();
   }
@@ -320,9 +327,14 @@ export default class companyCheck extends Vue {
   changeProvince() {}
   /* 重置 */
   resetForm(formName) {
-    console.log(formName);
     this.$refs[formName].resetFields();
-    console.log(this.form);
+    this.$nextTick(() => {
+      let obj = {};
+      obj.stopPropagation = () => {};
+      this.$refs.cascader.clearValue(obj);
+    });
+    // this.positionManage.label = "";
+    // console.log(this.form);
   }
 
   addPosition() {

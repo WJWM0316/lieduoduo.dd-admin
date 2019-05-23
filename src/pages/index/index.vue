@@ -386,6 +386,7 @@ export default class indexPage extends Vue {
       next();
     }
   }
+  // 获取公司数据
   getCompanyList(newForm) {
     if (this.form.firstAreaId !== "" && this.form.area_id === "") {
       this.$message.error("请选择城市");
@@ -482,7 +483,6 @@ export default class indexPage extends Vue {
     this.$router.push({ path: `/user/userInfo/${uid}` });
   }
   created() {
-    
     this.getCompanyList();
     this.getCity();
     this.getRightList();

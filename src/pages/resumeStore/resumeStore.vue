@@ -25,7 +25,7 @@
             <!-- 职位来源 -->
             <el-form-item label-width="80px" label="职位类别" prop="expectPosition">
               <el-cascader
-                v-model="form.expectPosition"
+                ref="cascader"
                 class="formItem"
                 placeholder="职位类别"
                 :options="options"
@@ -39,7 +39,7 @@
               ></el-cascader>
             </el-form-item>
 
-            <el-form-item label="期待工作城市" class="formItem" prop="expectCityNum">
+            <!-- <el-form-item label="期待工作城市" class="formItem" prop="expectCityNum">
               <el-cascader
                 v-model="form.expectCityNum"
                 class="formItem"
@@ -53,7 +53,7 @@
                 }"
                 @change="choiceCity"
               ></el-cascader>
-            </el-form-item>
+            </el-form-item>-->
             <el-form-item label="最高学历" class="formItem" prop="degree">
               <el-select v-model="form.degree" placeholder="请选择活动区域">
                 <el-option
@@ -435,6 +435,11 @@ export default class resumeStore extends Vue {
   /* 清除列表选项 */
   resetForm(name) {
     this.$refs[name].resetFields();
+    this.$nextTick(() => {
+      let obj = {};
+      obj.stopPropagation = () => {};
+      this.$refs.cascader.clearValue(obj);
+    });
   }
   type(e) {
     this.form.expectPosition = e[e.length - 1];
@@ -471,7 +476,6 @@ export default class resumeStore extends Vue {
           if (result === "[]") delete item1.children;
         });
       });
-      console.log("getCityApi", res);
     });
   }
   // 期待职位
