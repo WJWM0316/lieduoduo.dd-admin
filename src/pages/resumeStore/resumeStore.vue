@@ -77,7 +77,7 @@
       <div class="resumeList" slot="dataList">
         <div
           class="resumeItem"
-          @click.stop="getDetail(item.uid)"
+          @click.stop="getDetail(item.uid,index)"
           v-for="(item,index) in itemList"
           :key="index"
         >
@@ -167,18 +167,18 @@
                 class="common"
                 :class="[index==nowCheck?'isCheck':'noCheck']"
                 v-for="(item,index) in typeList"
-                :key="item"
+                :key="index"
                 @click.stop="check(index,'tab')"
               >{{item}}</div>
             </div>
             <div class="nowResume" v-show="nowCheck==0">
               <div class="Numbering">
-                <span>简历编号：928de08bB4b99169a</span>
+                <span>简历编号：{{nowResumeMsg.vkey}}</span>
                 <span>1995-.01.71更新</span>
               </div>
               <div class="Code">
                 <div class="msgCode">
-                  <img src="../../assets/images/preview.png" alt>
+                  <img :src="nowResumeMsg.resumeQrCode" alt>
                   <span>扫码进入</span>
                 </div>
                 <div class="ContactInformation">
@@ -204,41 +204,41 @@
                 <div class="base">
                   <div class="message">
                     <div class="msgUrl">
-                      <img src="../../assets/images/preview.png" alt>
+                      <img :src="nowResumeMsg.avatar.url" alt>
                       <span class="gender">
                         <i class="icon iconfont iconicon_boy"></i>
                       </span>
                     </div>
                     <div class="msgUserInfo">
                       <div class="basemsg">
-                        <span class="realName">李永江</span>
+                        <span class="realName">{{nowResumeMsg.name}}</span>
                         <div class="lebalList">
                           <div class="lebalItem">
                             <i class="icon iconfont iconzhiwei"></i>
-                            <span>暂无经历</span>
+                            <span>{{nowResumeMsg.workAgeDesc}}</span>
                           </div>
                           <div class="lebalItem">
                             <i class="icon iconfont iconnianling"></i>
-                            <span>25岁</span>
+                            <span>{{nowResumeMsg.age}}岁</span>
                           </div>
                           <div class="lebalItem">
                             <i class="icon iconfont iconxueli"></i>
-                            <span>本科</span>
+                            <span>{{nowResumeMsg.degreeDesc}}</span>
                           </div>
                           <div class="lebalItem">
-                            <span class="status">在职-考虑机会</span>
+                            <span class="status">{{nowResumeMsg.jobStatusDesc}}</span>
                           </div>
                         </div>
                       </div>
                       <div class="description">
-                        <span
-                          class="msg"
-                        >4年的UI设计经验，个人适应力强，愿意不断学习，做事上手快，是一个有个性，负责任，有上进心且开朗的设计师。 对安卓及苹果尺寸规范熟悉； 现主要负责APP视觉界面设计，也有运营类经验； 会Ae动效 Sketch PS Ai软件 会手绘； 本人艺术生及艺术院系设计专业毕业，对美有一定的追求及敏感度；</span>
+                        <span class="msg">{{nowResumeMsg.signature}}</span>
+                        <!-- v-show="nowResumeMsg.personalizedLabels.length>0" -->
                         <div class="iconList">
-                          <span class="iconItem">撸猫</span>
-                          <span class="iconItem">分析用户</span>
-                          <span class="iconItem">这是个性标签</span>
-                          <span class="iconItem">这是个</span>
+                          <span
+                            class="iconItem"
+                            v-for="item in nowResumeMsg.personalizedLabels"
+                            :key="item.labelName"
+                          >{{item.labelName}}</span>
                         </div>
                       </div>
                     </div>
@@ -248,117 +248,101 @@
                 <div class="intention">
                   <p class="title">求职意向</p>
                   <div class="intentList">
-                    <div class="intentionItem">
-                      <span>高级产品经理 | 广州</span>
-                      <span>知识付费·服务·电子产品</span>
-                      <span>6k-9k</span>
-                    </div>
-                    <div class="intentionItem">
-                      <span>高级产品经理 | 广州</span>
-                      <span>知识付费·服务·电子产品</span>
-                      <span>6k-9k</span>
-                    </div>
-                    <div class="intentionItem">
-                      <span>高级产品经理 | 广州</span>
-                      <span>知识付费·服务·电子产品</span>
-                      <span>6k-9k</span>
+                    <div
+                      class="intentionItem"
+                      v-for="item in nowResumeMsg.expects"
+                      :key="item.position"
+                    >
+                      <span class="position">{{item.position}} | {{item.city}}</span>
+                      <div style="margin-left:20px;display:inline-block;">
+                        <div class="fields" v-for="(item1,index1) in item.fields" :key="index1">
+                          <span>{{item1.field}}</span>
+                          <!-- <span v-show="index1!==item.fields.length">·</span> -->
+                        </div>
+                      </div>
+                      <span class="price">{{item.salaryFloor}}k-{{item.salaryCeil}}k</span>
                     </div>
                   </div>
                 </div>
                 <!-- 工作经历 -->
                 <div class="workExperience">
                   <p class="title">工作经历</p>
+                  <!-- v-show="nowResumeMsg.careers.length>0" -->
                   <div class="workList">
-                    <div class="workItem">
+                    <div class="workItem" v-for="item in nowResumeMsg.careers" :key="item.company">
                       <div class="workTime">
-                        <span>厦门乐域网络科技有限公司 | UI设计师</span>
-                        <span>2017.06-2019.03</span>
+                        <span>{{item.company}} | {{item.position}}</span>
+                        <span>{{item.startTimeDesc}}-{{item.endTimeDesc}}</span>
                       </div>
                       <div class="workContent">
+                        <span class="duties">
+                          <pre>{{item.duty}}</pre>
+                        </span>
+                      </div>
+                      <!-- v-show="item.technicalLabels.length>0" -->
+                      <div class="workIconList">
                         <span
-                          class="duties"
-                        >1、负责项目组内前端开发、项目组的管理协调工作，负责项目组内前端开发;
-                         2、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发；
-                         3、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端； 4、管理协调工作负责项目组内前端开发、项目组的管理协调工；
-                         </span>
+                          v-for="item1 in item.technicalLabels"
+                          :key="item1.technicalLabels"
+                        >#{{item1.labelName}}</span>
                       </div>
                     </div>
-                    <div class="workItem">
+                  </div>
+                </div>
+                <!-- 项目经历 -->
+                <div class="workExperience">
+                  <p class="title">项目经历</p>
+                  <div class="workList">
+                    <div class="workItem" v-for="item in nowResumeMsg.projects" :key="item.role">
                       <div class="workTime">
-                        <span>广州老虎科技</span>
-                        <span>2015.07-至今</span>
+                        <span>{{item.name}}</span>
+                        <span>{{item.startTimeDesc}}-{{item.endTimeDesc}}</span>
                       </div>
                       <div class="workContent">
-                        <p class="name">前端工程师</p>
-                        <span
-                          class="duties"
-                        >负责项目组内前端开发、项目组的管理协调工作，负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作</span>
+                        <p class="name">项目职责:{{item.role}}</p>
+                        <span class="duties">
+                          <pre>{{item.description}}</pre>
+                        </span>
                       </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- 教育经历 -->
+                <div class="workExperience">
+                  <p class="title">教育经历</p>
+                  <div class="workList">
+                    <div
+                      class="workItem"
+                      v-for="item in nowResumeMsg.educations"
+                      :key="item.school"
+                    >
+                      <div class="workTime">
+                        <span>{{item.school}} | {{item.degreeDesc}} | {{item.major}}</span>
+                        <span>{{item.startTimeDesc}}-{{item.endTimeDesc}}</span>
+                      </div>
+                      <div class="workContent">
+                        <span class="duties">{{item.experience}}</span>
+                        <span class="duties" v-show="item.experience==''">暂无介绍</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- 更多介绍 -->
+                <div class="workExperience">
+                  <p class="title">更多介绍</p>
+                  <div class="workList">
+                    <pre>{{nowResumeMsg.moreIntroduce.introduce}}</pre>
+                    <div class="imgList">
+                      <img
+                        :src="item.url"
+                        alt
+                        v-for="(item,index) in nowResumeMsg.moreIntroduce.imgs"
+                        :key="index"
+                      >
                     </div>
                   </div>
                 </div>
               </div>
-
-              <!-- 项目经历 -->
-              <!-- <div class="workExperience">
-                <p class="title">项目经历</p>
-                <div class="workList">
-                  <div class="workItem">
-                    <div class="workTime">
-                      <span>广州老虎科技</span>
-                      <span>2015.07-至今</span>
-                    </div>
-                    <div class="workContent">
-                      <p class="name">项目职责:前端工程师</p>
-                      <span
-                        class="duties"
-                      >负责项目组内前端开发、项目组的管理协调工作，负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作</span>
-                    </div>
-                  </div>
-                  <div class="workItem">
-                    <div class="workTime">
-                      <span>广州老虎科技</span>
-                      <span>2015.07-至今</span>
-                    </div>
-                    <div class="workContent">
-                      <p class="name">前端工程师</p>
-                      <span
-                        class="duties"
-                      >负责项目组内前端开发、项目组的管理协调工作，负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作</span>
-                    </div>
-                  </div>
-                </div>
-              </div>-->
-              <!-- 教育经历 -->
-              <!-- <div class="workExperience">
-                <p class="title">教育经历</p>
-                <div class="workList">
-                  <div class="workItem">
-                    <div class="workTime">
-                      <span>广州老虎科技</span>
-                      <span>2015.07-至今</span>
-                    </div>
-                    <div class="workContent">
-                      <p class="name">项目职责:前端工程师</p>
-                      <span
-                        class="duties"
-                      >负责项目组内前端开发、项目组的管理协调工作，负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作</span>
-                    </div>
-                  </div>
-                  <div class="workItem">
-                    <div class="workTime">
-                      <span>广州老虎科技</span>
-                      <span>2015.07-至今</span>
-                    </div>
-                    <div class="workContent">
-                      <p class="name">前端工程师</p>
-                      <span
-                        class="duties"
-                      >负责项目组内前端开发、项目组的管理协调工作，负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作负责项目组内前端开发、项目组的管理协调工作</span>
-                    </div>
-                  </div>
-                </div>
-              </div>-->
             </div>
             <!-- 历史记录 -->
             <div class="nowResume" v-show="nowCheck==1">
@@ -395,7 +379,8 @@ import {
   GetResumeAPI,
   GetResumeDetailsAPI,
   degreeListAPI,
-  jobhuntStatusAPI
+  jobhuntStatusAPI,
+  GetResumeHistory
 } from "API/resumeStore.js";
 @Component({
   name: "resumeStore",
@@ -410,6 +395,11 @@ export default class resumeStore extends Vue {
     total: 0,
     title: "简历库"
   };
+  nowResumeMsg = {
+    moreIntroduce: {
+      introduce: ""
+    }
+  }; /* 简历详情 */
   options = []; //期待职位信息
   itemList = []; //简历数组
   degreeList = []; //学历列表
@@ -435,7 +425,7 @@ export default class resumeStore extends Vue {
   nowCheck = 0; //当前点击
   isCheck = 0;
   isShowbtn = true;
-  isShowMark = true; //展示简历详情
+  isShowMark = false; //展示简历详情
   showMark() {
     this.isShowMark = !this.isShowMark;
   }
@@ -483,12 +473,12 @@ export default class resumeStore extends Vue {
   check(index) {
     this.nowCheck = index;
   }
-  mounted() {
-    this.getData();
+  created() {
     this.degreeData();
     this.jobhuntStatus();
     this.ManageList();
     this.CityData();
+    this.getData();
   }
   CityData() {
     getCityApi().then(res => {
@@ -518,7 +508,6 @@ export default class resumeStore extends Vue {
   jobhuntStatus() {
     jobhuntStatusAPI().then(res => {
       this.jobhuntStatusList = res.data.data;
-      console.log("this.jobhuntStatusList", this.jobhuntStatusList);
     });
   }
   // 学历列表
@@ -528,18 +517,19 @@ export default class resumeStore extends Vue {
       console.log("this.degreeList", this.degreeList);
     });
   }
-  getDetail(uid) {
+  getDetail(uid, index) {
     this.isShowMark = !this.isShowMark;
     GetResumeDetailsAPI(uid).then(res => {
       console.log(res);
+      this.nowResumeMsg = res.data.data;
+      console.log("this.nowResumeMsg", this.nowResumeMsg);
     });
   }
   getData() {
     GetResumeAPI(this.form).then(res => {
-      console.log(res);
       this.itemList = res.data.data;
       this.leftcontent.total = res.data.meta.total;
-      console.log(this.leftcontent);
+      console.log("itemList", this.itemList);
     });
   }
   // 翻页

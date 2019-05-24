@@ -213,15 +213,15 @@
   height: 100%;
   position: relative;
   max-width: 969px;
-  margin-top: 30px;
+  margin-top: 6px;
 
   .arrow {
     position: absolute;
-    width: 1046px;
+    width: 1061px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    left: -47px;
+    left: -46px;
     top: 50%;
     z-index: -1;
     .comstyle {
@@ -244,6 +244,7 @@
       line-height: 40px;
       display: inline-block;
       position: relative;
+      cursor: pointer;
     }
 
     .isCheck {
@@ -298,6 +299,7 @@
         img {
           width: 120px;
           height: 120px;
+          border-radius: 50%;
         }
 
         span {
@@ -362,23 +364,24 @@
               width: 100px;
               padding: 5px 10px;
               height: 30px;
-              background: rgba(0, 0, 0, 0.7);
-              left: 0px;
+              background: #ffffff;
+              box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.1);
+              right: -11px;
               display: none;
-              bottom: -53px;
+              top: -33px;
               border-radius: 10px;
 
               &:before {
                 content: "";
                 position: absolute;
-                top: -8px;
-                left: 45%;
+                bottom: -7px;
+                left: 43px;
                 width: 0;
                 display: none;
                 height: 0;
                 border-left: 5px solid transparent;
                 border-right: 5px solid transparent;
-                border-bottom: 8px solid rgba(0, 0, 0, 0.7);
+                border-top: 8px solid #fff;
               }
             }
           }
@@ -402,6 +405,7 @@
           color: #652791;
           line-height: 36px;
           margin: 0 auto;
+          cursor: pointer;
         }
       }
     }
@@ -466,7 +470,7 @@
                 font-size: 22px;
                 font-weight: 600;
                 color: #42334d;
-                width: 153px;
+                width: 122px;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
@@ -529,15 +533,19 @@
 
           .iconList {
             margin-top: 20px;
-
+            display: flex;
+            justify-items: flex-start;
+            align-items: flex-start;
+            flex-wrap: wrap;
             .iconItem {
               padding: 5px 10px;
               border: 1px solid rgba(230, 226, 237, 1);
               background: #fff;
               border-radius: 10px;
-              margin-left: 20px;
+              margin-right: 20px;
               vertical-align: middle;
               color: #652791;
+              margin-bottom: 8px;
             }
           }
         }
@@ -551,11 +559,11 @@
       padding-bottom: 20px;
       display: flex;
       justify-content: flex-start;
-      align-items:baseline;
+      align-items: baseline;
       .title {
         font-size: 14px;
-        font-family:PingFangSC-Medium;
-        font-weight:500;
+        font-family: PingFangSC-Medium;
+        font-weight: 500;
         color: #42334d;
         display: inline-block;
       }
@@ -566,19 +574,18 @@
           width: 100%;
           text-align: left;
           padding-top: 20px;
-
-          span {
+          .position{
             font-size: 15px;
-            color: #5C565D;
-
-            &:nth-child(2) {
-              margin: 0 30px;
-              display: inline-block;
-            }
-
-            &:nth-child(3) {
-              color: #FF7F4C;
-            }
+            color: #5c565d;
+            margin-right: 10px;
+          }
+          .fields{
+            display: inline-block;
+            margin-right: 20px;
+          }
+          .price{
+            font-size: 16px;
+            color: #FF7F4C;
           }
         }
       }
@@ -590,16 +597,30 @@
       justify-content: flex-start;
       align-items: baseline;
       padding-top: 20px;
-      border-bottom: 1px solid #000;
       .title {
         font-size: 14px;
-        color: #42334D;
+        color: #42334d;
         width: 100px;
         text-align: left;
       }
       .workList {
         margin-top: 20px;
         width: 100%;
+        pre{
+          text-align: left;
+        }
+        .imgList{
+          display: flex;
+          justify-content: flex-start;
+          align-items: flex-start;
+          flex-wrap: wrap;
+          img{
+            width: 86px;
+            height: 86px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+          }
+        }
         .workItem {
           margin-bottom: 20px;
           .workTime {
@@ -609,7 +630,21 @@
             padding: 10px 15px 10px 0px;
             span {
               font-size: 15px;
-              color: #5C565D;
+              color: #5c565d;
+            }
+          }
+          .workIconList {
+            text-align: left;
+            margin-top: 8px;
+            span {
+              display: inline-block;
+              background: rgba(239, 233, 244, 1);
+              padding: 2px 8px;
+              text-align: center;
+              color: #652791;
+              font-size: 12px;
+              margin-right: 10px;
+              border-radius: 5px;
             }
           }
           .workContent {
@@ -621,7 +656,7 @@
               font-size: 15px;
               color: #000;
             }
-            .duties{
+            .duties {
               text-align: left;
             }
           }

@@ -78,7 +78,7 @@
             >
               <el-select v-model="form.admin_uid" placeholder="跟进人">
                 <el-option label="全部" value="all" v-if="AdminShow==4"></el-option>
-                <el-option label="无" value></el-option>
+                <el-option label="无" value="0"></el-option>
                 <el-option
                   v-for="item in userList"
                   :key="item.id"

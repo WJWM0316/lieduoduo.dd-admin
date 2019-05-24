@@ -6,8 +6,7 @@ export const GetResumeAPI = data => request({
 	type: 'get',
 	data
 })
-
-// 简历详情
+/* 简历详情 */
 export const GetResumeDetailsAPI = data => request({
 	url: `/resume/detail/uid/${data}`,
 	type: 'get',
@@ -22,5 +21,11 @@ export const degreeListAPI = () => request({
 // 求职状态列表
 export const jobhuntStatusAPI = data => request({
 	url: `/jobhunt_status/all`,
+	type: 'get',
+})
+
+// 获取简历历史记录
+export const GetResumeHistory = data => request({
+	url: `/resume/history/${data}`,
 	type: 'get',
 })

@@ -284,17 +284,17 @@ export default class createCompany extends Vue {
     this.showAdminWindow = false;
 
     if (e && e.needLoad) {
-      this.$set(this.companyInfo,'realname', sessionStorage.getItem("name"))
+      this.$set(this.companyInfo, "realname", sessionStorage.getItem("name"));
     }
   }
   closeAdminWindow() {
     this.showAdminWindow = false;
   }
   ground(e) {
-    console.log(e)
+    console.log(e);
     let result = this.salesList.find(field => field.id === e);
     this.companyInfo.groupId = result.groupId;
-    this.companyInfo.admin_uid=result.id
+    this.companyInfo.admin_uid = result.id;
     console.log(result);
   }
   /* 自定义公司名称校验规则 */
@@ -411,23 +411,36 @@ export default class createCompany extends Vue {
   /* 创建公司 */
   async createdCompany() {
     this.companyInfo.address = this.adressList;
+    console.log(this.$route.params);
     this.$refs["companyInfo"].validate(async valid => {
       if (valid) {
         const { id, checkId } = this.$route.params;
-        console.log(this.$route.params)
+
+        console.log("是否处于编辑状态", this.isEdit);
         if (this.isEdit) {
-          // 编辑公司
+          // 编辑正式库
           if (id) {
-            console.log('编辑公司',this.companyInfo)
-            delete this.companyInfo.adminUid
+            console.log("编辑正式库", this.companyInfo);
+            delete this.companyInfo.adminUid;
             await editCompanyApi(id, this.companyInfo);
             this.$message({
               message: "编辑成功",
               type: "success"
             });
           } else {
-            delete this.companyInfo.admin_uid
-            await editCheckCompanyInfoApi(checkId, this.companyInfo);
+            /* 编辑审核库 */
+            console.log("编辑审核库", this.companyInfo);
+            delete this.companyInfo.admin_uid;
+
+            try {
+              await editCheckCompanyInfoApi(checkId, this.companyInfo);
+              this.$message({
+                message: "编辑成功",
+                type: "success"
+              });
+            } catch (err) {
+              console.log(err);
+            }
           }
         } else {
           // 新建公司
