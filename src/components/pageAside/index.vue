@@ -106,7 +106,6 @@ export default class PageAside extends Vue {
     // this.judge(this.AdminShow);
   }
   judge(adminGrade) {
-    console.log("adminGrade", +adminGrade);
     if (/(0|1|2)/.test(+adminGrade)) {
       console.log("显示简历库");
       this.$set(this.itemList, 5, {

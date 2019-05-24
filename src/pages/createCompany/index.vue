@@ -414,15 +414,19 @@ export default class createCompany extends Vue {
     this.$refs["companyInfo"].validate(async valid => {
       if (valid) {
         const { id, checkId } = this.$route.params;
+        console.log(this.$route.params)
         if (this.isEdit) {
           // 编辑公司
           if (id) {
+            console.log('编辑公司',this.companyInfo)
+            delete this.companyInfo.adminUid
             await editCompanyApi(id, this.companyInfo);
             this.$message({
               message: "编辑成功",
               type: "success"
             });
           } else {
+            delete this.companyInfo.admin_uid
             await editCheckCompanyInfoApi(checkId, this.companyInfo);
           }
         } else {
