@@ -90,7 +90,7 @@
           <div class="resumeContent">
             <div class="userMsg">
               <div class="userAvator">
-                <img :src="item.avatar.url" alt>
+                <img :src="item.avatar.url" alt v-if="item.avatar">
               </div>
               <div class="userName">
                 <span class="name">{{item.name}}</span>
@@ -178,7 +178,7 @@
               </div>
               <div class="Code">
                 <div class="msgCode">
-                  <img :src="nowResumeMsg.resumeQrCode" alt>
+                  <img :src="nowResumeMsg.resumeQrCode" alt v-if="nowResumeMsg.resumeQrCode">
                   <span>扫码进入</span>
                 </div>
                 <div class="ContactInformation">
@@ -194,7 +194,7 @@
                 </div>
                 <div class="download row">
                   <p class="contactTitle">附件简历:</p>
-                  <div class="Contact">
+                  <div class="Contact" @click.stop="seeFiles">
                     <span>查看附件</span>
                   </div>
                 </div>
@@ -204,7 +204,7 @@
                 <div class="base">
                   <div class="message">
                     <div class="msgUrl">
-                      <img :src="nowResumeMsg.avatar.url" alt>
+                      <img :src="nowResumeMsg.avatar.url" alt v-if="nowResumeMsg.avatar">
                       <span class="gender">
                         <i class="icon iconfont iconicon_boy"></i>
                       </span>
