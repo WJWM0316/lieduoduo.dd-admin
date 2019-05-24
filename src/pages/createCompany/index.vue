@@ -190,7 +190,7 @@
             placeholder="请选择跟进人"
             @change="ground"
           >
-            <el-option label="全部" :value="all" v-if="AdminShow==4"/>
+            <!-- <el-option label="全部" :value="all" v-if="AdminShow==4"/> -->
             <el-option label="无" :value="0"/>
             <el-option
               v-for="(item, index) in salesList"
@@ -294,6 +294,7 @@ export default class createCompany extends Vue {
     console.log(e)
     let result = this.salesList.find(field => field.id === e);
     this.companyInfo.groupId = result.groupId;
+    this.companyInfo.admin_uid=result.id
     console.log(result);
   }
   /* 自定义公司名称校验规则 */

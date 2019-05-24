@@ -8,10 +8,10 @@
         <ul>
           <li v-for="(item, index) in itemList" :key="index">
             <router-link :to="{path:item.path}" v-if="item.path">
-               <div class="path">
-                 <i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>
-                 <span>{{item.name}}</span>
-               </div>
+              <div class="path" v-if="item.isShow==true">
+                <i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>
+                <span>{{item.name}}</span>
+              </div>
               <div class="verify" v-if="item.children!=''">
                 <li v-for="(page,index1) in item.children" :key="index1">
                   <router-link :to="{path:page.path}">{{page.name}}</router-link>
@@ -44,25 +44,25 @@ export default class PageAside extends Vue {
     {
       path: "/index",
       name: "公司库",
-      isShow:false,
+      isShow: true,
       children: []
     },
     {
       path: "/user",
       name: "用户管理",
-      isShow:false,
-      children: [],
+      isShow: true,
+      children: []
     },
     {
       path: "/positionManage",
       name: "职位管理",
-      isShow:false,
+      isShow: true,
       children: []
     },
     {
       path: "/check",
       name: "审核管理",
-      isShow:false,
+      isShow: true,
       children: [
         {
           path: "/check/companyCheck",
@@ -77,7 +77,7 @@ export default class PageAside extends Vue {
     {
       path: "/interview",
       name: "面试管理",
-      isShow:false,
+      isShow: true,
       children: [
         {
           path: "/interview",
@@ -89,20 +89,42 @@ export default class PageAside extends Vue {
         }
       ]
     },
-    // {
-    //   path: "/resumeStore",
-    //   name: "简历库",
-    //   isShow:false,
-    //   children: []
-    // }
+    {
+      path: "/resumeStore",
+      name: "简历库",
+      isShow: true,
+      children: []
+    }
   ];
   handleNodeClick(data) {}
   tabSwitch() {
     this.isCLick = !this.isCLick;
   }
-  mounted() {
-    this.AdminShow = sessionStorage.getItem('AdminShow')
-    console.log('this.AdminShow',this.AdminShow)
+  created() {
+    this.AdminShow = sessionStorage.getItem("AdminShow");
+    console.log("this.AdminShow", this.AdminShow);
+    this.judge(this.AdminShow);
+  }
+  judge(adminGrade) {
+    console.log("adminGrade", +adminGrade);
+    if (/(0|1|2)/.test(+adminGrade)) {
+      console.log("显示简历库");
+      this.$set(this.itemList, 5, {
+        path: "/resumeStore",
+        name: "简历库",
+        isShow: true,
+        children: []
+      });
+    } else {
+      console.log("不显示简历库");
+      this.$set(this.itemList, 5, {
+        path: "/resumeStore",
+        name: "简历库",
+        isShow: false,
+        children: []
+      });
+    }
+    console.log(this.itemList);
   }
 }
 </script>
