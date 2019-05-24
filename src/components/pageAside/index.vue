@@ -89,12 +89,12 @@ export default class PageAside extends Vue {
         }
       ]
     },
-    {
-      path: "/resumeStore",
-      name: "简历库",
-      isShow: true,
-      children: []
-    }
+    // {
+    //   path: "/resumeStore",
+    //   name: "简历库",
+    //   isShow: true,
+    //   children: []
+    // }
   ];
   handleNodeClick(data) {}
   tabSwitch() {
@@ -103,7 +103,7 @@ export default class PageAside extends Vue {
   created() {
     this.AdminShow = sessionStorage.getItem("AdminShow");
     console.log("this.AdminShow", this.AdminShow);
-    this.judge(this.AdminShow);
+    // this.judge(this.AdminShow);
   }
   judge(adminGrade) {
     console.log("adminGrade", +adminGrade);
