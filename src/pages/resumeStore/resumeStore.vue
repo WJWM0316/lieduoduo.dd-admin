@@ -120,7 +120,7 @@
                   <span>{{item3.salaryFloor}}~{{item3.salaryCeil}}k</span>
                   <div class="industry" v-for="(item4,index4) in item3.fields" :key="index4">
                     <span>{{item4.field}}</span>
-                    <span>·</span>
+                    <span v-show="index4!=item3.fields.length-1">·</span>
                   </div>
                 </div>
                 <!-- <p
@@ -130,7 +130,7 @@
                 <!-- <p>产品经理 广州 互联网/人才服务 6k-9k</p> -->
                 <!-- <p>产品经理 广州 互联网/人才服务 6k-9k</p> -->
               </div>
-              <div class="seeResume">
+              <div class="seeResume" @click.stop="seereResume(index)">
                 <el-button>查看简历附件</el-button>
               </div>
             </div>
@@ -139,7 +139,7 @@
       </div>
       <div class="pageList" slot="pageList">
         <!-- v-if="hasPagination" v-show="total > 0" -->
-        <footer class="list-footer">
+        <footer class="list-footer" v-show="isShowMark==false">
           <el-pagination
             layout="prev, pager, next, slot"
             :current-page="page"
@@ -155,10 +155,10 @@
         <div class="Mask" @click.self="showMark">
           <div class="swiperList">
             <div class="arrow">
-              <div class="left comstyle" @click.stop="reduce">
+              <div class="left comstyle" @click.stop="LeftArrow">
                 <i class="el-icon-caret-left"></i>
               </div>
-              <div class="right comstyle" @click.stop="add">
+              <div class="right comstyle" @click.stop="rightArrow">
                 <i class="el-icon-caret-right"></i>
               </div>
             </div>
@@ -183,13 +183,15 @@
                 </div>
                 <div class="ContactInformation">
                   <p class="contactTitle">联系方式:</p>
-                  <div class="Contact">
+                  <div class="Contact" @click.stop="seeMobile">
                     <span>手机号</span>
-                    <span>13922281959</span>
+                    <span v-if="nowResumeMsg.mobile!=''">{{nowResumeMsg.mobile}}</span>
+                    <span v-else>消息暂无</span>
                   </div>
-                  <div class="Contact">
+                  <div class="Contact" @click.stop="seeWechat">
                     <span>微信号</span>
-                    <span>13922281959</span>
+                    <span v-if="nowResumeMsg.wechat!=''">{{nowResumeMsg.wechat}}</span>
+                    <span v-else>消息暂无</span>
                   </div>
                 </div>
                 <div class="download row">
@@ -347,9 +349,10 @@
             <!-- 历史记录 -->
             <div class="nowResume" v-show="nowCheck==1">
               <div class="historyList">
-                <span>
-                  2019-04-25 15:40:04
-                  <i>陈某某</i> 查看 联系方式
+                <span v-for="(item,index) in historyList" :key="index">
+                  {{item.createdAt}}
+                  <i>{{item.admin}}</i>
+                  {{item.action}} {{item.desc}}
                 </span>
                 <span>
                   2019-04-25 15:40:04
@@ -380,13 +383,19 @@ import {
   GetResumeDetailsAPI,
   degreeListAPI,
   jobhuntStatusAPI,
-  GetResumeHistory
+  GetResumeHistory,
+  addHistory
 } from "API/resumeStore.js";
 @Component({
   name: "resumeStore",
   components: {
     lyoutContent,
     CustomSelect
+  },
+  watch: {
+    itemList: (newData, oldData) => {
+      this.getDetail(newData[0].uid, 0);
+    }
   }
 })
 export default class resumeStore extends Vue {
@@ -402,6 +411,7 @@ export default class resumeStore extends Vue {
   }; /* 简历详情 */
   options = []; //期待职位信息
   itemList = []; //简历数组
+  historyList = []; //历史记录数组
   degreeList = []; //学历列表
   getCityList = []; //省市列表
   jobhuntStatusList = []; //求职状态
@@ -422,17 +432,13 @@ export default class resumeStore extends Vue {
   };
   pageCount = 20; //请求回来的数据量
   page = 1;
-  nowCheck = 0; //当前点击
+  nowCheck = 0; //当前点击详情上方的tab
+  nowIndex = ""; //当前点击的简历索引
   isCheck = 0;
   isShowbtn = true;
   isShowMark = false; //展示简历详情
   showMark() {
     this.isShowMark = !this.isShowMark;
-  }
-  // 右箭头
-  add(index) {
-    if (this.nowCheck === 2) return;
-    this.nowCheck++;
   }
   // 时间选择器
   TimeResult(e) {
@@ -454,24 +460,45 @@ export default class resumeStore extends Vue {
       this.$refs.custom.clearValue();
     });
   }
+  /* 查看简历附件 */
+  seereResume(index) {
+    let uid = this.itemList[index].uid;
+    this.operating(uid, { desc: "简历附件" });
+  }
+  // 查看手机号码
+  seeMobile() {
+    let uid = this.itemList[this.nowIndex].uid;
+    this.operating(uid, { desc: "联系方式" });
+  }
+  /* 查看微信号 */
+  seeWechat() {
+    let uid = this.itemList[this.nowIndex].uid;
+    this.operating(uid, { desc: "微信号" });
+  }
+  // 查看操作
+  async operating(uid, param) {
+    await addHistory(uid, param);
+  }
   type(e) {
     this.form.expectPosition = e[e.length - 1];
   }
   choiceCity(e) {
     this.form.expectCityNum = e[e.length - 1];
   }
-  // 左边箭头
-  reduce() {
-    if (this.nowCheck === 0) return;
-    this.nowCheck--;
-  }
+
   // 查询按钮
   onSubmit() {
     this.getData();
   }
   // 点击切换
   check(index) {
-    this.nowCheck = index;
+    this.nowCheck = +index;
+    if (this.nowCheck === 1) {
+      GetResumeHistory(this.itemList[this.nowIndex].uid).then(res => {
+        console.log(res);
+        this.historyList = res.data.data;
+      });
+    }
   }
   created() {
     this.degreeData();
@@ -510,6 +537,25 @@ export default class resumeStore extends Vue {
       this.jobhuntStatusList = res.data.data;
     });
   }
+  seeFiles() {
+    let File = this.nowResumeMsg.resumeAttach;
+    if (File === null) {
+      this.$message.error("此人未上传简历附件");
+    } else {
+      let uid = this.nowResumeMsg.uid;
+      let type = File.attachType;
+      this.operating(uid, { desc: "简历附件" });
+      this.$nextTick(() => {
+        if (type === "img") {
+          window.open(File.url);
+        } else {
+          window.open(
+            `https://view.officeapps.live.com/op/view.aspx?src=${File.url}`
+          );
+        }
+      });
+    }
+  }
   // 学历列表
   degreeData() {
     degreeListAPI().then(res => {
@@ -517,12 +563,70 @@ export default class resumeStore extends Vue {
       console.log("this.degreeList", this.degreeList);
     });
   }
+  // 左边箭头
+  LeftArrow() {
+    if (this.nowCheck === 0) return;
+    this.nowCheck--;
+  }
+  // 右箭头
+  rightArrow() {
+    console.log(this.nowIndex++);
+    this.nowIndex = 20;
+    if (this.nowIndex === this.itemList.length) {
+      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+        center: true
+      })
+        .then(() => {
+          this.$message({
+            type: "success",
+            message: "删除成功!"
+          });
+          this.$nextTick(() => {
+            // this.$set(this.form, "page", this.form.page++);
+            this.form.page++;
+            console.log(this.form);
+            this.getData();
+            this.nowIndex = 0;
+            console.log(this.nowIndex, "this.nowIndex");
+            console.log(this.itemList, "this.itemList");
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+      // this.$confirm("本页数据已经加载完毕，是否加载下一页数据?", "温馨提醒", {
+      //   confirmButtonText: "确定",
+      //   cancelButtonText: "取消",
+      //   type: "warning"
+      // })
+      //   .then(() => {
+      //     this.$set(this.form, "page", page++);
+      //     console.log(this.form);
+      //   })
+      //   .catch(() => {
+      //     this.$message({
+      //       type: "info",
+      //       message: "已取消删除"
+      //     });
+      //   });
+    } else {
+      let index = this.nowIndex++;
+      this.getDetail(this.itemList[index].uid, index);
+    }
+  }
   getDetail(uid, index) {
-    this.isShowMark = !this.isShowMark;
+    this.isShowMark = true;
+    this.nowIndex = +index;
     GetResumeDetailsAPI(uid).then(res => {
-      console.log(res);
       this.nowResumeMsg = res.data.data;
-      console.log("this.nowResumeMsg", this.nowResumeMsg);
+      const uid = this.nowResumeMsg.uid;
+      this.operating(uid, { desc: "简历" });
     });
   }
   getData() {
@@ -530,15 +634,19 @@ export default class resumeStore extends Vue {
       this.itemList = res.data.data;
       this.leftcontent.total = res.data.meta.total;
       console.log("itemList", this.itemList);
+      console.log("this.leftcontent", this.leftcontent);
     });
   }
   // 翻页
   /* 翻页 */
   handlePageChange(nowPage) {
+    console.log(nowPage);
     this.$route.meta.scrollY = 0;
     window.scrollTo(0, 0);
     this.form.page = nowPage;
     // this.getCompanyList();
+    this.form.page = nowPage;
+    this.getData();
   }
 }
 </script>

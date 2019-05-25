@@ -29,3 +29,10 @@ export const GetResumeHistory = data => request({
 	url: `/resume/history/${data}`,
 	type: 'get',
 })
+
+// 添加简历历史记录
+export const addHistory = (uid,data) => request({
+	url: `/resume/history/${uid}`,
+	type: 'post',
+	data
+})
