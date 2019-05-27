@@ -2,9 +2,9 @@
 <template>
   <div class="createCompany">
     <div class="header">
-      <div class="creatTab" @click.stop="tab">
-        <div class="userInfo" :class="{'active': active === 0 }">基本信息</div>
-        <div class="editAdminName" :class="{'active': active === 1 }">账户设置</div>
+      <div class="creatTab">
+        <div class="userInfo" :class="{'active': active === 0 }" @click.self="tab">基本信息</div>
+        <div class="editAdminName" :class="{'active': active === 1 }" @click.self="tab">账户设置</div>
       </div>
       <div class="editBox" v-if="isEditAdminName==false">
         <el-button
@@ -157,11 +157,11 @@
     </div>
     <div class="companyMessage" v-if="isEditAdminName===false">
       <div>所属公司</div>
-      <div class="companyName" v-show="companyInfo">
+      <div class="companyName" v-show="companyInfo.companyName!=''">
         <span class="label">公司全称</span>
         <div>{{companyInfo.companyName}}</div>
       </div>
-      <div class="companyName" v-show="companyInfo">
+      <div class="companyName" v-show="companyInfo.isAdmin!=''">
         <span class="label">身份类型</span>
         <div>{{companyInfo.isAdmin === 1? '管理员' : '招聘官'}}</div>
       </div>
@@ -295,13 +295,13 @@ export default class addUser extends Vue {
     idNum: "", // 身份证号码
     passportFront: "" // 身份证正面照片
   };
-
+  companyName = {};
   companyInfo = {
     companyName: {}
   };
   saveParam = {
-    admin_uid :"",
-    group_id :""
+    admin_uid: "",
+    group_id: ""
   };
   salesList = [];
   iconUploader = {
@@ -318,31 +318,34 @@ export default class addUser extends Vue {
   /* 切换tab */
   tab(e) {
     console.log(e);
-    if (e.target.className === "editAdminName") {
+    console.log(this.active);
+    if (this.active === 0) {
+      console.log("基本信息");
       this.active = 1;
-      this.isEditAdminName == true;
+      this.isEditAdminName = true;
       // if (this.salesList.length > 0) return;
       // getSalerListApi().then(res => {
       //   this.salesList = res.data.data;
       //   console.log(this.salesList);
       // });
     } else {
+      console.log("账户设置");
       this.active = 0;
-      this.isEditAdminName == false;
+      this.isEditAdminName = false;
     }
   }
   ground(e) {
-    this.$set(this.saveParam,'group_id',this.salesList[e].groupId)
-    this.$set(this.saveParam,'admin_uid',this.salesList[e].id)
+    this.$set(this.saveParam, "group_id", this.salesList[e].groupId);
+    this.$set(this.saveParam, "admin_uid", this.salesList[e].id);
   }
-  async saveAdminName(){
-    console.log(this.saveParam)
-    let res= await editAdminNameApi(this.$route.params.id,this.saveParam);
+  async saveAdminName() {
+    console.log(this.saveParam);
+    let res = await editAdminNameApi(this.$route.params.id, this.saveParam);
     this.$message({
       showClose: true,
-      type: 'success',
-      message:'保存成功'
-    })
+      type: "success",
+      message: "保存成功"
+    });
   }
   /*设置审核结果 */
   setResult() {
@@ -491,6 +494,7 @@ export default class addUser extends Vue {
   }
   mounted(e) {
     this.isEditAdminName = this.$route.query.isEditAdminName;
+    console.log(this.isEditAdminName);
     if (this.isEditAdminName) {
       this.active = 1;
       this.userList();

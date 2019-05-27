@@ -8,7 +8,7 @@
         <ul>
           <li v-for="(item, index) in itemList" :key="index">
             <router-link :to="{path:item.path}" v-if="item.path">
-              <div class="path" v-if="item.isShow==true">
+              <div class="path" v-if="item.isShow==true"  :class="{'pathactive': isActive==index}" @click.stop="click(index)">
                 <i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>
                 <span>{{item.name}}</span>
               </div>
@@ -39,7 +39,7 @@ import { routes } from "@/router/routes";
 })
 export default class PageAside extends Vue {
   routes = null;
-  isCLick = true;
+  isActive =0;
   itemList = [
     {
       path: "/index",
@@ -101,6 +101,9 @@ export default class PageAside extends Vue {
   handleNodeClick(data) {}
   tabSwitch() {
     this.isCLick = !this.isCLick;
+  }
+  click(e){
+    this.isActive=e
   }
   mounted() {
     this.AdminShow = sessionStorage.getItem("AdminShow");

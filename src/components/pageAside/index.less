@@ -37,12 +37,14 @@
   li {
     font-weight: 300;
     color: #fff;
-    // height: 60px;
+    height: 65px;
     // line-height: 60px;
+    height: 55px;
     cursor: pointer;
     transition: all ease 0.4s;
     font-size: 14px;
     text-align: left;
+    position: relative;
     .verify {
       width: 100%;
       display: inline-block;
@@ -96,32 +98,54 @@
     .iconfont {
       color: #ffffff;
     }
-    &:before {
-      background: #ffe266;
-      content: "";
-      display: block;
-      left: 0;
-      position: absolute;
-      height: 100%;
-      width: 4px;
-    }
-    &:after {
-      width: 0;
-      height: 0;
-      border-color: red;
-      position: absolute;
-      top: 50%;
-      left: 0;
-      transform: translateY(-50%);
-      border-width: 10px;
-      border-style: solid;
-      border-color: transparent transparent transparent #ffe266;
-      display: block;
-      content: "";
-    }
+    // &:before {
+    //   background: #ffe266;
+    //   content: "";
+    //   display: block;
+    //   left: 0;
+    //   position: absolute;
+    //   height: 100%;
+    //   width: 4px;
+    // }
+    // &:after {
+    //   width: 0;
+    //   height: 0;
+    //   border-color: red;
+    //   position: absolute;
+    //   top: 50%;
+    //   left: 0;
+    //   transform: translateY(-50%);
+    //   border-width: 10px;
+    //   border-style: solid;
+    //   border-color: transparent transparent transparent #ffe266;
+    //   display: block;
+    //   content: "";
+    // }
   }
   
 }
-.isClick{
-  
+.pathactive{
+  &:before {
+    background: #ffe266;
+    content: "";
+    display: block;
+    left: 0;
+    position: absolute;
+    height: 100%;
+    width: 4px;
+  }
+  &:after {
+    width: 0;
+    height: 0;
+    border-color: red;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    border-width: 10px;
+    border-style: solid;
+    border-color: transparent transparent transparent #ffe266;
+    display: block;
+    content: "";
+  }
 }
