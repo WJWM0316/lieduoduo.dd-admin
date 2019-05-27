@@ -3,7 +3,8 @@
   <div class="createCompany">
     <div class="header">
       <div class="creatTab" @click.stop="tab">
-        <div class="userInfo active">基本信息</div>
+        <div class="userInfo" :class="{'active': active === 0 }">基本信息</div>
+        <div class="editAdminName" :class="{'active': active === 1 }">账户设置</div>
       </div>
       <div class="editBox">
         <el-button
@@ -69,7 +70,6 @@
           <span>{{phone.mobile}}</span>
         </el-form-item>
       </el-form>
-
       <el-form
         class="edit-form"
         ref="personalInfo"
@@ -230,6 +230,7 @@ export default class addUser extends Vue {
     isShow: false,
     type: "position"
   };
+  active=0;//点击切换tab
   AdminShow = ""; //管理员权限控制
   needReason = ""; //审核结果
   isCheck = false;
@@ -267,6 +268,20 @@ export default class addUser extends Vue {
     reason: "",
     other: "" // 其他原因
   };
+    /* 切换tab */
+  tab(e) {
+    console.log(e)
+    if (e.target.className === "editAdminName") {
+      this.active = 1;
+      // if (this.salesList.length > 0) return;
+      // getSalerListApi().then(res => {
+      //   this.salesList = res.data.data;
+      //   console.log(this.salesList);
+      // });
+    } else {
+      this.active = 0;
+    }
+  }
   /*设置审核结果 */
   setResult() {
     let param = {

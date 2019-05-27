@@ -80,10 +80,12 @@ export default class PageAside extends Vue {
       isShow: true,
       children: [
         {
+          isShow:false,
           path: "/interview",
           name: "申请列表"
         },
         {
+          isShow:false,
           path: "/interview/invite",
           name: "邀请列表"
         }
@@ -100,7 +102,7 @@ export default class PageAside extends Vue {
   tabSwitch() {
     this.isCLick = !this.isCLick;
   }
-  created() {
+  mounted() {
     this.AdminShow = sessionStorage.getItem("AdminShow");
     console.log("this.AdminShow", this.AdminShow);
     // this.judge(this.AdminShow);

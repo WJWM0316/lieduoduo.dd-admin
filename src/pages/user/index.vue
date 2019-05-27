@@ -130,9 +130,9 @@
                 <el-option label="未通过" value="2"></el-option>
               </el-select>
             </el-form-item>
-          <!-- 跟进人筛选 -->
-            <el-form-item class="area" label="跟进人" prop="adminUid" label-width="70px">
-              <el-select v-model="form.adminUid" placeholder="请选择" style="margin-right: 10px;">
+            <!-- 跟进人筛选 -->
+            <el-form-item class="area" label="跟进人" prop="admin_uid" label-width="70px">
+              <el-select v-model="form.admin_uid" placeholder="请选择" style="margin-right: 10px;">
                 <el-option label="全部" value="all" v-if="AdminShow==4"></el-option>
                 <el-option label="无" value="0"></el-option>
                 <el-option
@@ -205,6 +205,17 @@
                 >是</span>
                 <span v-else>---</span>
               </div>
+            </div>
+            <!-- 跟进人 -->
+            <div
+              class="btn-container"
+              v-else-if="props.scope.column.property === 'adminName'"
+              style="justify-content: flex-start;"
+            >
+              <span style="text-align: left;">
+                <span v-if="props.scope.row.adminUid">{{props.scope.row.adminName}}</span>
+                <span v-else class="btn" @click.stop="toEditAdminName(props.scope.row.uid)">添加跟进人</span>
+              </span>
             </div>
             <!-- 身份认证状态 -->
             <div class="btn-container" v-else-if="props.scope.column.property === 'identityAuth'">
@@ -302,10 +313,10 @@ export default class user extends Vue {
   total = 0;
   pageCount = 0;
   qrCode = "";
-  salerLis=[];//跟进人销售名单
-  AdminShow='';//权限字段，限制搜索
+  salerLis = []; //跟进人销售名单
+  AdminShow = ""; //权限字段，限制搜索
   form = {
-    adminUid:'',//跟进人
+    admin_uid: "", //跟进人
     keyword: "",
     status: "",
     auth_status: "",
@@ -355,6 +366,11 @@ export default class user extends Vue {
       width: 150
     },
     {
+      prop: "adminName",
+      label: "跟进人",
+      width: 150
+    },
+    {
       prop: "identityAuth",
       label: "身份认证状态",
       width: 220
@@ -376,9 +392,9 @@ export default class user extends Vue {
     this.$route.meta.scrollY = window.scrollY;
     this.$router.push({ path: "/user/addUser" });
   }
-  mounted(){
-    console.log('1231')
-    this.AdminShow = +sessionStorage.getItem('AdminShow')
+  mounted() {
+    console.log("1231");
+    this.AdminShow = +sessionStorage.getItem("AdminShow");
     this.getSalerList();
   }
   /* 选择变更 */
@@ -400,6 +416,14 @@ export default class user extends Vue {
   async getSalerList() {
     let res = await getSalerListApi({ pageCount: 50 });
     this.salerLis = res.data.data;
+  }
+  // 添加跟进人
+  toEditAdminName(uid) {
+    this.$route.meta.scrollY = window.scrollY;
+    this.$router.push({
+      path: `/user/editAdminName/${uid}`,
+      query: { isEditAdminName: true }
+    });
   }
   // 搜索地址
   search() {
@@ -580,6 +604,20 @@ export default class user extends Vue {
       color: #652791;
       cursor: pointer;
     }
+  }
+}
+.btn-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  .check {
+    line-height: 48px;
+    color: #652791;
+    cursor: pointer;
+  }
+  .btn {
+    color: #652791;
+    cursor: pointer;
   }
 }
 .inquire {

@@ -355,7 +355,6 @@ export default class companyCheck extends Vue {
   }
   created() {
     this.getTemplist();
-    console.log("0-----1");
     this.userList();
   }
   mounted() {
