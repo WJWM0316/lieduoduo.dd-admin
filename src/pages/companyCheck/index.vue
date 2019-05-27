@@ -90,7 +90,7 @@
             <el-form-item
               label-width="90px"
               label="公司来源"
-              prop="admin_uid"
+              prop="wherefrom"
               style="margin-left: 20px;"
             >
               <el-select v-model="form.wherefrom" placeholder="公司来源">

@@ -307,9 +307,9 @@ Component.registerHooks([
 export default class indexPage extends Vue {
   total = 0; // 筛查结果数量
   pageCount = 0; // 请求回的数据共几页
-  AdminShow='';//权限字段，限制搜索
+  AdminShow = ""; //权限字段，限制搜索
   form = {
-    wherefrom:'',
+    wherefrom: "",
     is_license: "",
     start: "",
     end: "",
@@ -394,14 +394,15 @@ export default class indexPage extends Vue {
     }
     //  delete this.form.firstAreaId
     getCompanyListApi(newForm || this.form).then(res => {
-      console.log("res", res);
-      this.list = res.data.data;
-      this.pageCount = res.data.meta.lastPage;
-      this.total = res.data.meta.total;
+      this.$nextTick(() => {
+        this.list = res.data.data;
+        this.pageCount = res.data.meta.lastPage;
+        this.total = res.data.meta.total;
+      });
     });
   }
   mounted() {
-    this.AdminShow = +sessionStorage.getItem('AdminShow')
+    this.AdminShow = +sessionStorage.getItem("AdminShow");
   }
   /* 翻页 */
   handlePageChange(nowPage) {
