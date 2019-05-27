@@ -8,10 +8,87 @@
   left: 0;
   bottom: 0;
   z-index: 2;
-  > section {
+  .section {
     height: 100%;
     overflow: hidden;
     width: 200px;
+    .AsideContent{
+      .logo {
+        position: relative;
+        margin: 42px auto 50px;
+        .avatar {
+          position: relative;
+          z-index: 1;
+          width: 124px;
+        }
+      }
+      .itemList{
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        margin-bottom: 150px;
+        .item {
+          font-weight: 300;
+          color: #fff;
+          cursor: pointer;
+          transition: all ease 0.4s;
+          font-size: 14px;
+          text-align: left;
+          position: relative;
+          .verify {
+            width: 100%;
+            display: inline-block;
+            .children {
+              font-weight: 300;
+              color: #fff;
+              height: 65px;
+              // line-height: 60px;
+              height: 55px;
+              cursor: pointer;
+              transition: all ease 0.4s;
+              font-size: 14px;
+              text-align: left;
+              a {
+                padding-left: 60px;
+                line-height: 50px;
+              }
+            }
+          }
+          .path{
+            padding-left: 22px;
+            span{
+              line-height: 55px;
+              display: inline-block;
+            }
+          }
+          &:hover {
+            .path{
+              background: rgba(255, 226, 102, 0.12);
+            }
+           
+          }
+          .zike-icon {
+            margin-right: 10px;
+          }
+          .iconfont {
+            margin-left: 5px;
+          }
+          .iconfont::before {
+            transition: 0.5s ease;
+          }
+          a {
+            box-sizing: border-box;
+            text-decoration: none;
+            color: #ededed;
+            display: block;
+            /*padding-left: 50px;*/
+            .iconfont {
+              color: #513e5f;
+            }
+          }
+        }
+      }
+    }
     > div {
       height: 100%;
       overflow-x: hidden;
@@ -19,75 +96,12 @@
       width: 217px;
     }
   }
-  .logo {
-    position: relative;
-    margin: 42px auto 50px;
-    .avatar {
-      position: relative;
-      z-index: 1;
-      width: 124px;
-    }
-  }
+  
   ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    margin-bottom: 150px;
+   
+    
   }
-  li {
-    font-weight: 300;
-    color: #fff;
-    height: 65px;
-    // line-height: 60px;
-    height: 55px;
-    cursor: pointer;
-    transition: all ease 0.4s;
-    font-size: 14px;
-    text-align: left;
-    position: relative;
-    .verify {
-      width: 100%;
-      display: inline-block;
-      li {
-        a {
-          padding-left: 60px;
-          line-height: 50px;
-        }
-      }
-    }
-    .path{
-      padding-left: 22px;
-      span{
-        line-height: 55px;
-        display: inline-block;
-      }
-    }
-    &:hover {
-      .path{
-        background: rgba(255, 226, 102, 0.12);
-      }
-     
-    }
-    .zike-icon {
-      margin-right: 10px;
-    }
-    .iconfont {
-      margin-left: 5px;
-    }
-    .iconfont::before {
-      transition: 0.5s ease;
-    }
-    a {
-      box-sizing: border-box;
-      text-decoration: none;
-      color: #ededed;
-      display: block;
-      /*padding-left: 50px;*/
-      .iconfont {
-        color: #513e5f;
-      }
-    }
-  }
+ 
   .router-link-active,
   .interviewActive,
   .filter-tree {

@@ -10,6 +10,7 @@ export const routes = [
     path: '/login',
     name: 'login',
     component: resolve => require(['@/pages/login/index.vue'], resolve),
+    
   },
   /* 公司管理 */
   {

@@ -1,19 +1,19 @@
 <template>
   <aside id="page-aside">
-    <section>
-      <div>
+    <section class="section">
+      <div class="AsideContent">
         <div class="logo">
           <img src="../../assets/lieduoduo.png" class="avatar">
         </div>
-        <ul>
-          <li v-for="(item, index) in itemList" :key="index">
+        <ul class="itemList">
+          <li v-for="(item, index) in itemList" :key="index" class="item">
             <router-link :to="{path:item.path}" v-if="item.path">
-              <div class="path" v-if="item.isShow==true"  :class="{'pathactive': isActive==index}" @click.stop="click(index)">
+              <div class="path" v-if="item.isShow==true">
                 <i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>
                 <span>{{item.name}}</span>
               </div>
-              <div class="verify" v-if="item.children!=''">
-                <li v-for="(page,index1) in item.children" :key="index1">
+              <div class="verify" v-if="item.children.length>0">
+                <li v-for="(page,index1) in item.children" :key="index1" class="children">
                   <router-link :to="{path:page.path}">{{page.name}}</router-link>
                 </li>
               </div>
@@ -32,14 +32,14 @@ import { routes } from "@/router/routes";
 @Component({
   name: "page-asise",
   watched: {
-    'itemList':(newVal,oldVal)=>{
-        console.log('newVal',newVal)
-    },
+    itemList: (newVal, oldVal) => {
+      console.log("newVal", newVal);
+    }
   }
 })
 export default class PageAside extends Vue {
   routes = null;
-  isActive =0;
+  isActive = 0;
   itemList = [
     {
       path: "/index",
@@ -80,17 +80,17 @@ export default class PageAside extends Vue {
       isShow: true,
       children: [
         {
-          isShow:false,
+          isShow: false,
           path: "/interview",
           name: "申请列表"
         },
         {
-          isShow:false,
+          isShow: false,
           path: "/interview/invite",
           name: "邀请列表"
         }
       ]
-    },
+    }
     // {
     //   path: "/resumeStore",
     //   name: "简历库",
@@ -102,8 +102,8 @@ export default class PageAside extends Vue {
   tabSwitch() {
     this.isCLick = !this.isCLick;
   }
-  click(e){
-    this.isActive=e
+  click(e) {
+    this.isActive = e;
   }
   mounted() {
     this.AdminShow = sessionStorage.getItem("AdminShow");
