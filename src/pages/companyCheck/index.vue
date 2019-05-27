@@ -337,6 +337,7 @@ export default class companyCheck extends Vue {
     templistApi(this.form).then(res => {
       this.list = res.data.data;
       this.total = res.data.meta.total;
+      console.log('this.total',this.total)
       this.pageCount = res.data.meta.lastPage;
     });
   }

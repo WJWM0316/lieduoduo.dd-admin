@@ -3,8 +3,8 @@
   <div class="createCompany">
     <div class="header">
       <div class="creatTab">
-        <div class="userInfo" :class="{'active': active === 0 }" @click.self="tab">基本信息</div>
-        <div class="editAdminName" :class="{'active': active === 1 }" @click.self="tab">账户设置</div>
+        <div class="userInfo" :class="{'active': isEditAdminName === false }" @click.self="tab">基本信息</div>
+        <div class="editAdminName" :class="{'active': isEditAdminName === true }" @click.self="tab">账户设置</div>
       </div>
       <div class="editBox" v-if="isEditAdminName==false">
         <el-button
@@ -68,7 +68,7 @@
       </div>
     </el-dialog>
     <!-- 账户设置 -->
-    <div class="editAdminNam" v-if="isEditAdminName===true">
+    <div class="editAdminNam" v-if="isEditAdminName==true">
       <div class="sales">
         <h3>跟进销售</h3>
         <el-form>
@@ -155,9 +155,9 @@
         </el-form-item>
       </el-form>
     </div>
-    <div class="companyMessage" v-if="isEditAdminName===false">
+    <div class="companyMessage" v-if="isEditAdminName===false&&userInfo.companyInfo!=null">
       <div>所属公司</div>
-      <div class="companyName" v-show="companyInfo.companyName!=''">
+      <div class="companyName" v-show="companyInfo!=''">
         <span class="label">公司全称</span>
         <div>{{companyInfo.companyName}}</div>
       </div>
@@ -287,6 +287,29 @@ export default class addUser extends Vue {
   phone = {
     mobile: ""
   };
+  companyInfo = {
+    avatarIds: [],
+    avatars: [],
+    companyEmail: "",
+    companyId: "",
+    companyInfo: "",
+    createPositionRight: "",
+    email: "",
+    gender: "",
+    identityAuth: 0,
+    identityNum: "",
+    isBlockCreatePosition: 0,
+    mobile: "",
+    name: "",
+    needRealNameAuth: "",
+    passportFront: "",
+    passportFrontId: 0,
+    position: "",
+    realname: "",
+    status: "",
+    uid: "",
+    vkey: ""
+  };
   /* 身份信息 */
   personalInfo = {
     name: "", // 姓名
@@ -316,23 +339,8 @@ export default class addUser extends Vue {
     other: "" // 其他原因
   };
   /* 切换tab */
-  tab(e) {
-    console.log(e);
-    console.log(this.active);
-    if (this.active === 0) {
-      console.log("基本信息");
-      this.active = 1;
-      this.isEditAdminName = true;
-      // if (this.salesList.length > 0) return;
-      // getSalerListApi().then(res => {
-      //   this.salesList = res.data.data;
-      //   console.log(this.salesList);
-      // });
-    } else {
-      console.log("账户设置");
-      this.active = 0;
-      this.isEditAdminName = false;
-    }
+  tab() {
+    this.isEditAdminName=!this.isEditAdminName
   }
   ground(e) {
     this.$set(this.saveParam, "group_id", this.salesList[e].groupId);
@@ -493,13 +501,16 @@ export default class addUser extends Vue {
     });
   }
   mounted(e) {
-    this.isEditAdminName = this.$route.query.isEditAdminName;
+    this.isEditAdminName = Boolean(this.$route.query.isEditAdminName);
     console.log(this.isEditAdminName);
     if (this.isEditAdminName) {
-      this.active = 1;
+      console.log("进入账户设置");
+      // this.active = 1;
       this.userList();
     } else {
-      this.active = 0;
+      console.log("进入基本信息");
+
+      // this.active = 0;
       this.getUserInfo();
     }
     console.log("isEditAdminName", this.isEditAdminName);
