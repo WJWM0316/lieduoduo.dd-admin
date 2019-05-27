@@ -109,13 +109,6 @@ export const routes = [
     meta: {title: '编辑公司信息', haveParent: true, parentPath: '/check/companyCheck', parentName: '公司审核管理'},
     component: resolve => require(['@/pages/createCompany/index.vue'], resolve)
   },
-  /* 用户管理添加跟进人 */
-  {
-    path: '/user/editAdminName/:checkId',
-    name: 'editAdminName',
-    meta: {title: '添加用户跟进人', haveParent: true, parentPath: '/user/editAdminName', parentName: '用户管理'},
-    component: resolve => require(['@/pages/user/editAdminName.vue'], resolve)
-  },
   /* 编辑身份信息 */
   {
     path: '/index/editIdentity',
