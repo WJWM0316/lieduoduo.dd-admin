@@ -332,7 +332,6 @@ export default class addUser extends Vue {
     }
   }
   ground(e) {
-    // this.$set(this.saveParam,'uid',this.$route.params.id)
     this.$set(this.saveParam,'group_id',this.salesList[e].groupId)
     this.$set(this.saveParam,'admin_uid',this.salesList[e].id)
   }
