@@ -161,7 +161,7 @@ export default class adminBox extends Vue {
             return callback(new Error('邮箱不能为空'))
         }
         setTimeout(() => {
-            if (mailReg.test(value)) {
+            if (emailReg.test(value)) {
                 callback()
                 } else {
                     callback(new Error('请输入正确的邮箱格式'))
