@@ -332,6 +332,7 @@ export default class createCompany extends Vue {
     let reg = /\d+/g;
     let arr = value.match(reg);
     if (arr) {
+      this.companyName.name = "";
       callback(new Error("公司名称不能使用阿拉伯数字"));
     } else {
       checkCompanyNameApi({ company_name: value })
