@@ -8,7 +8,7 @@
         <ul class="itemList">
           <li v-for="(item, index) in itemList" :key="index" class="item">
             <router-link :to="{path:item.path}" v-if="item.path">
-              <div class="path" v-if="item.isShow==true">
+              <div class="path">
                 <i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>
                 <span>{{item.name}}</span>
               </div>

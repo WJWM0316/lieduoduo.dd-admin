@@ -4,8 +4,8 @@
         <div v-if="!isFromUser">
             <header>绑定管理员</header>
             <el-form ref="form" :model="bindForm" :rules="bindRules" class="bindForm" label-width="120px" label-suffix="：" @keyup.enter="done">
-                <el-form-item label="管理员账号" prop="adminUser">
-                    <el-input v-model="bindForm.adminUser" @blur.stop="checkUser"></el-input>
+                <el-form-item label="管理员账号" prop="mobile">
+                    <el-input v-model="bindForm.mobile" @blur.stop="checkUser"></el-input>
                 </el-form-item>
                 <p v-if="toCretedUser"><i class="el-icon-warning" style="color: #E6A23C;"></i> 该用户不存在，请先 <span class="addUser" @click.stop="addUser">添加用户</span></p>
                 <div v-if="isNewUser && !toCretedUser">
@@ -15,11 +15,11 @@
                     <el-form-item label="性别">
                         <P>{{newUserInfo.gender}}</p>
                     </el-form-item>
-                    <el-form-item label="担任职务" prop="position">
-                        <el-input v-model="bindForm.position"></el-input>
+                    <el-form-item label="担任职务" prop="user_position">
+                        <el-input v-model="bindForm.user_position"></el-input>
                     </el-form-item>
-                    <el-form-item label="接收简历邮箱" prop="email">
-                        <el-input v-model="bindForm.email"></el-input>
+                    <el-form-item label="接收简历邮箱" prop="user_email">
+                        <el-input v-model="bindForm.user_email"></el-input>
                     </el-form-item>
                 </div>
                 <el-button class="btn done" @click.stop="done" v-show="isNewUser">确定</el-button>
@@ -127,23 +127,20 @@ export default class adminBox extends Vue {
     isNewUser = false
     newUserInfo = ''
     bindCompanyId = '' // 当前要绑定的公司id
+    /* 新建公司提交的数据 */
     bindForm = {
-        admin_uid:'',
-        mobile:'',
-        real_name:'',
-        is_admin: '1',
-        adminUser: '', // 管理员账号
-        position: '', // 担任职务
-        email: '',
-        avatars: ''
+      user_email:'',//邮箱地址
+      user_position:'',//担任职务
+      mobile: "", //管理员(招聘官)手机号码
     }
-    /* 绑定公司 */
+    /* 编辑状态提交的数据 */
     bindCompanyForm = {
-        name: '',
+        mobile: '',
         is_admin: '1',
         uid: '', // 管理员账号
         position: '', // 担任职务
-        email: ''
+        email: '',
+        position:""
     }
     nameRule = (rule, value, callback) => {
         checkCompanyNameApi(value).then(res => {
@@ -217,9 +214,11 @@ export default class adminBox extends Vue {
     }
     /* 绑定管理员 */
     async done () {
-        console.log(this.bindForm)
-        console.log(this.companyInfo)
-        // console.log()
+        console.log('this.bindForm',this.bindForm)
+        console.log('this.companyInfo',this.companyInfo)
+        let company=this.companyInfo;
+        let NewcompanyInfo={...company,...this.bindForm}
+        // console.log(NewcompanyInfo)
         // return
         if (!this.newUserInfo.name && !this.isFromUser) {
             this.$message({
@@ -232,7 +231,7 @@ export default class adminBox extends Vue {
             console.log('正常创建走这里')
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
-                    let res = await createCompanyApi(this.companyInfo)
+                    let res = await createCompanyApi(NewcompanyInfo)
                     this.$message({type: 'success', message: '公司创建成功'})
                      this.$emit('close',{needLoad:true})
                 } else {
@@ -240,7 +239,7 @@ export default class adminBox extends Vue {
                 }
             })
         } else {
-            console.log('编辑情况走这里')
+            console.log('绑定公司招聘官')
             this.$refs['bindCompanyForm'].validate(async (valid) => {
                 if (valid) {
                     this.bindCompanyForm.uid = this.$route.params.id
@@ -258,15 +257,13 @@ export default class adminBox extends Vue {
     }
     checkUser () {
         console.log()
-        checkIdentityApi(this.bindForm.adminUser).then(res => {
+        checkIdentityApi(this.bindForm.mobile).then(res => {
             console.log(res.data.data)
             if (res.data.data.isExisted) {
                 if (!res.data.data.isAdmin && !res.data.data.companyId) {
                     this.isNewUser = true
                     this.toCretedUser = false
-                    this.bindForm.uid = res.data.data.uid
                     this.bindForm.real_name=res.data.data.realname
-                    this.companyInfo.mobile=this.bindForm.adminUser
                     this.companyInfo.admin_uid=res.data.data.uid
                     this.newUserInfo = {
                         name: res.data.data.realname,

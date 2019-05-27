@@ -446,6 +446,7 @@ export default class user extends Vue {
       this.list = res.data.data;
       this.total = res.data.meta.total;
       this.pageCount = res.data.meta.lastPage;
+      console.log(this.total,'total')
     });
   }
   /* 翻页 */

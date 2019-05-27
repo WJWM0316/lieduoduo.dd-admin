@@ -352,21 +352,24 @@ export default class createCompany extends Vue {
   };
   /* 公司信息 */
   companyInfo = {
+    real_name:'',//真实姓名
+    user_email:'',//邮箱地址
+    user_position:'',//担任职务
+    company_name:'',// 公司名称
+    company_shortname:'',//公司简称
     mobile: "", //管理员(招聘官)手机号码
+    admin_uid:"",//跟进人员
+    industry_id:"",// 所属行业
     groupId: "", //主id
-    company_name: "", // 公司名称
-    company_shortname: "", // 公司简称
-    industry_id: "", // 所属行业
     financing: "", // 融资
     employees: "", // 规模
-    intro: "", // 公司简介
     business_license: "", // 营业执照
     on_job: "", // 在职证明
+    intro: "", // 公司简介
+    email:"",//公司邮箱
     logo: "",
     website: "", // 公司官网
     address: [], // 公司地址
-    email: "",
-    admin_uid: "" //跟进人员
   };
   /* 融资情况标签 */
   financing = [
@@ -483,7 +486,7 @@ export default class createCompany extends Vue {
           }
         } else {
           // 新建公司
-          console.log("创建成功了一个公司");
+          console.log("开始预创建公司，绑定公司管理员");
           console.log(this.companyInfo);
           this.showAdminWindow = true;
         }

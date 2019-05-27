@@ -195,7 +195,7 @@ export const checkIdentityApi = (phone) => request({
   type: 'get',
   noGlobalLoading: true
 })
-/* 公司绑定用户 */
+/* 公司绑定招聘官 */
 export const bindCompanyApi = (companyId, data) => request({
   url: `/company/recruiter/bind/${companyId}`,
   type: 'post',
