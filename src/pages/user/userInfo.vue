@@ -347,6 +347,7 @@ export default class addUser extends Vue {
     console.log(this.isEditAdminName);
     if (this.isEditAdminName) {
       this.isEditAdminName = false;
+      this.getUserInfo()
     } else {
       this.isEditAdminName = true;
       this.userList();
