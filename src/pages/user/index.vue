@@ -421,7 +421,7 @@ export default class user extends Vue {
   toEditAdminName(uid) {
     this.$route.meta.scrollY = window.scrollY;
     this.$router.push({
-      path: `/user/editAdminName/${uid}`,
+      path: `/user/userInfo/${uid}`,
       query: { isEditAdminName: true }
     });
   }
@@ -459,7 +459,10 @@ export default class user extends Vue {
   check(id) {
     this.$route.meta.scrollY = window.scrollY;
     this.$router.push({
-      path: `/user/userInfo/${id}`
+      path: `/user/userInfo/${id}`,
+      query:{
+        isEditAdminName:false
+      }
     });
   }
   /* 生成职位详情小程序码 */

@@ -223,6 +223,12 @@ export const editCheckCompanyFollowUserApi = (companyId, uid,groupId) => request
   url: `/company/company_temp_add_to_follow_user/${companyId}?admin_uid=${uid}&groupId=${groupId}`,
   type: 'put'
 })
+/* 用户表设置跟进人 */
+export const editAdminNameApi = (uid,data) => request({
+  url: `/usermanage/save_admin_uid_to_user/${uid}`,
+  type: 'put',
+  data
+})
 /* 编辑公司库表里跟进人 */
 export const editCompanyFollowUserApi = (companyId, uid,groupId) => request({
   url: `/company/company_add_to_follow_user/${companyId}?admin_uid=${uid}&groupId=${groupId}`,
