@@ -308,9 +308,10 @@ export default class createCompany extends Vue {
     }
   }
   /* 保存公司名 */
-  saveCompanyName(){
-    this.isShowCompany=false
-    this.$set(this.companyInfo,'company_name',this.companyName.name)
+  saveCompanyName() {
+    if (this.companyName.name === "") return;
+    this.isShowCompany = false;
+    this.$set(this.companyInfo, "company_name", this.companyName.name);
   }
   closeAdminWindow() {
     this.showAdminWindow = false;
@@ -333,13 +334,19 @@ export default class createCompany extends Vue {
     if (arr) {
       callback(new Error("公司名称不能使用阿拉伯数字"));
     } else {
-      checkCompanyNameApi({ company_name: value }).then(res => {
-        if (res.data.data.exist) {
-          callback(new Error("公司名称已被注册，请重新输入"));
-        } else {
-          callback();
-        }
-      });
+      checkCompanyNameApi({ company_name: value })
+        .then(res => {
+          if (res.data.data.exist) {
+            this.companyName.name = "";
+            callback(new Error("公司名称已被注册，请重新输入"));
+          } else {
+            callback();
+          }
+        })
+        .catch(err => {
+          console.log("err", err);
+          this.companyName.name = "";
+        });
     }
   };
   /* 公司信息 */
@@ -397,9 +404,7 @@ export default class createCompany extends Vue {
   };
   // 公司名字校验规则
   NameRules = {
-    name: [
-      { validator: this.companyNameRule, trigger: "blur" }
-    ]
+    name: [{ validator: this.companyNameRule, trigger: "blur" }]
   };
   // 公司表单验证规则
   companyInfoRules = {
