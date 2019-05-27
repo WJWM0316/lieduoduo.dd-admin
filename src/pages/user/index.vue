@@ -303,6 +303,7 @@ import List from "@/components/list";
 import { getUserListApi } from "API/recruiter";
 import { getRecruiterCodeUrlApi } from "API/interview";
 import { companyTempUserList } from "API/company";
+import { getSalerListApi } from "API/commont";
 @Component({
   name: "userList",
   components: {
@@ -414,7 +415,7 @@ export default class user extends Vue {
   }
   // 获取销售人员名单
   async getSalerList() {
-    let res = await companyTempUserList({ pageCount: 50 });
+    let res = await getSalerListApi({ pageCount: 50 });
     this.salerLis = res.data.data;
   }
   // 添加跟进人

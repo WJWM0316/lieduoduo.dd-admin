@@ -4,7 +4,11 @@
     <div class="header">
       <div class="creatTab">
         <div class="userInfo" :class="{'active': isEditAdminName === false }" @click.self="tab">基本信息</div>
-        <div class="editAdminName" :class="{'active': isEditAdminName === true }" @click.self="tab">账户设置</div>
+        <div
+          class="editAdminName"
+          :class="{'active': isEditAdminName === true }"
+          @click.self="tab"
+        >账户设置</div>
       </div>
       <div class="editBox" v-if="isEditAdminName==false">
         <el-button
@@ -340,7 +344,13 @@ export default class addUser extends Vue {
   };
   /* 切换tab */
   tab() {
-    this.isEditAdminName=!this.isEditAdminName
+    console.log(this.isEditAdminName);
+    if (this.isEditAdminName) {
+      this.isEditAdminName = false;
+    } else {
+      this.isEditAdminName = true;
+      this.userList();
+    }
   }
   ground(e) {
     this.$set(this.saveParam, "group_id", this.salesList[e].groupId);
