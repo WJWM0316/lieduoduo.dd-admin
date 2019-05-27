@@ -133,7 +133,7 @@
             <!-- 跟进人筛选 -->
             <el-form-item class="area" label="跟进人" prop="admin_uid" label-width="70px">
               <el-select v-model="form.admin_uid" placeholder="请选择" style="margin-right: 10px;">
-                <el-option label="全部" value="all" v-if="AdminShow==4"></el-option>
+                <el-option label="全部" value></el-option>
                 <el-option label="无" value="0"></el-option>
                 <el-option
                   v-for="item in salerLis"
