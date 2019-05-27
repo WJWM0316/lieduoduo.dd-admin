@@ -358,12 +358,16 @@ export default class addUser extends Vue {
   }
   async saveAdminName() {
     console.log(this.saveParam);
-    let res = await editAdminNameApi(this.$route.params.id, this.saveParam);
-    this.$message({
-      showClose: true,
-      type: "success",
-      message: "保存成功"
-    });
+    if (this.saveParam.group_id === "") {
+      this.$message.error("请先选择跟进人");
+    } else {
+      let res = await editAdminNameApi(this.$route.params.id, this.saveParam);
+      this.$message({
+        showClose: true,
+        type: "success",
+        message: "保存成功"
+      });
+    }
   }
   /*设置审核结果 */
   setResult() {
