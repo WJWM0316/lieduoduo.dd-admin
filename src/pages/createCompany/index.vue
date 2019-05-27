@@ -40,10 +40,13 @@
             v-model="companyInfo.company_name"
             placeholder="请输入名称"
             :minlength="2"
+            :disabled="can_company_input"
             :maxlength="50"
             style="width: 400px;"
             v-if="!isEdit"
-          ></el-input>
+          >
+            <el-button slot="append" @click="isShowCompany=true">修改</el-button>
+          </el-input>
           <el-input
             v-model="companyInfo.company_name"
             placeholder="请输入名称"
@@ -210,6 +213,18 @@
     <div class="emailBox" v-show="email.isShow">
       <email-check :companyName="companyInfo.company_name" @save="save" @close="close"></email-check>
     </div>
+    <!-- 修改公司名 -->
+    <el-dialog title="新建公司" :visible.sync="isShowCompany" width="30%" :center="true">
+      <el-form ref="companyName" :model="companyName" :rules="NameRules" label-width="80px">
+        <el-form-item prop="name">
+          <el-input v-model="companyName.name"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="isShowCompany = false">取 消</el-button>
+        <el-button type="primary" @click="saveCompanyName">保存</el-button>
+      </span>
+    </el-dialog>
     <!-- 绑定管理员 -->
     <div v-if="showAdminWindow" class="bindAdminWindo" @click.self="closeAdminWindow">
       <admin-control
@@ -267,6 +282,11 @@ export default class createCompany extends Vue {
   isEdit = false;
   active = 0; //0表示现在在填公司信息页  1表示不是在填公司信息页
   adressList = []; // 地址列表
+  isShowCompany = false; /* 展示修改公司名 */
+  companyName = {
+    name: "" /* 检验公司名 */
+  };
+  can_company_input = true;
   pop = {
     isShow: false,
     type: "position"
@@ -287,8 +307,17 @@ export default class createCompany extends Vue {
       this.$set(this.companyInfo, "realname", sessionStorage.getItem("name"));
     }
   }
+  /* 保存公司名 */
+  saveCompanyName(){
+    this.isShowCompany=false
+    this.$set(this.companyInfo,'company_name',this.companyName.name)
+  }
   closeAdminWindow() {
     this.showAdminWindow = false;
+  }
+  /* 修改公司名 */
+  editCompanyName() {
+    console.log("dsfsddf");
   }
   ground(e) {
     console.log(e);
@@ -304,7 +333,7 @@ export default class createCompany extends Vue {
     if (arr) {
       callback(new Error("公司名称不能使用阿拉伯数字"));
     } else {
-      checkCompanyNameApi(value).then(res => {
+      checkCompanyNameApi({ company_name: value }).then(res => {
         if (res.data.data.exist) {
           callback(new Error("公司名称已被注册，请重新输入"));
         } else {
@@ -366,6 +395,12 @@ export default class createCompany extends Vue {
     icon1: "", // 营业执照
     icon2: "" // 工牌/名片/在职证明
   };
+  // 公司名字校验规则
+  NameRules = {
+    name: [
+      { validator: this.companyNameRule, trigger: "blur" }
+    ]
+  };
   // 公司表单验证规则
   companyInfoRules = {
     company_name: [
@@ -396,7 +431,6 @@ export default class createCompany extends Vue {
   /* 切换tab */
   tab(e) {
     if (e.target.className === "userInfo") {
-      console.log("---1---");
       this.active = 1;
       if (this.salesList.length > 0) return;
       getSalerListApi().then(res => {
@@ -404,7 +438,6 @@ export default class createCompany extends Vue {
         console.log(this.salesList);
       });
     } else {
-      console.log("------");
       this.active = 0;
     }
   }

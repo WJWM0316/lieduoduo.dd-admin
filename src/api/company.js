@@ -160,8 +160,9 @@ export const getCityApi = () => request({
 })
 /* 校验公司名称是否被使用 */
 export const checkCompanyNameApi = (data) => request({
-  url: `/company/exist/${data}`,
+  url: `/company/company_exist`,
   type: 'get',
+  data,
   noGlobalLoading: true
 })
 /* 发送验证码到企业邮箱 */

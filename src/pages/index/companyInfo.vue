@@ -140,6 +140,7 @@
     <!-- 绑定与解绑模块 -->
     <div v-if="showAdminWindow" class="bindAdminWindo">
       <admin-control
+        @close="closeBtn"
         @closeAdminWindow="close"
         :isBindAdmin="companyInfo.createdUid? true : false"
         :companyName="companyInfo.companyName"
@@ -253,6 +254,9 @@ export default class createCompany extends Vue {
   close(e) {
     this.showAdminWindow = false;
     if (e && e.needLoad) this.getCompanyInfo();
+  }
+  closeBtn() {
+    this.showAdminWindow = false;
   }
   /* 查看大图 */
   showImg(imgUrl) {

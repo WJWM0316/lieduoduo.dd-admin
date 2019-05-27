@@ -34,5 +34,6 @@ export const GetResumeHistory = data => request({
 export const addHistory = (uid,data) => request({
 	url: `/resume/history/${uid}`,
 	type: 'post',
+	noGlobalLoading: true,
 	data
 })

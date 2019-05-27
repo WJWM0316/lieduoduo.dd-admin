@@ -238,10 +238,12 @@
     width: 240px;
     position: relative;
     .common {
-      color: rgba(66, 51, 77, 1);
+      color: #42334d;
+      font-family: PingFangSC-Medium;
       font-size: 16px;
       text-align: center;
       line-height: 40px;
+      font-weight: 500;
       display: inline-block;
       position: relative;
       cursor: pointer;
@@ -333,6 +335,12 @@
           color: #42334d;
           margin-bottom: 10px;
         }
+        .noUpload {
+          text-align: left;
+          margin-left: 20px;
+          font-size: 13px;
+          color: #929292;
+        }
         .Contact {
           color: #652791;
           width: 120px;
@@ -345,18 +353,6 @@
           display: inline-block;
           margin-bottom: 10px;
           cursor: pointer;
-          &:active {
-            span {
-              display: block;
-
-              &:nth-child(2) {
-                display: block;
-                &:before {
-                  display: block;
-                }
-              }
-            }
-          }
 
           span {
             &:nth-child(2) {
@@ -367,7 +363,7 @@
               background: #ffffff;
               box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.1);
               right: -11px;
-              display: none;
+              display: block;
               top: -33px;
               border-radius: 10px;
 
@@ -377,7 +373,7 @@
                 bottom: -7px;
                 left: 43px;
                 width: 0;
-                display: none;
+                display: block;
                 height: 0;
                 border-left: 5px solid transparent;
                 border-right: 5px solid transparent;
@@ -389,6 +385,12 @@
       }
       .download {
         margin-top: 30px;
+        .noUpload {
+          text-align: left;
+          margin-left: 20px;
+          font-size: 13px;
+          color: #929292;
+        }
         .contactTitle {
           text-align: left;
           margin-left: 20px;
@@ -417,6 +419,9 @@
       height: 689px;
       overflow-y: scroll;
       padding-left: 50px;
+      &::-webkit-scrollbar {
+        display: none;
+      }
       .base {
         padding-bottom: 20px;
         .message {
@@ -522,7 +527,8 @@
         .description {
           margin-top: 20px;
           text-align: left;
-
+          color: #929292;
+          font-size: 13px;
           .msg {
             i {
               font-weight: 600;
@@ -541,8 +547,8 @@
               padding: 5px 10px;
               border: 1px solid rgba(230, 226, 237, 1);
               background: #fff;
-              border-radius: 10px;
-              margin-right: 20px;
+              border-radius: 30px;
+              margin-right: 6px;
               vertical-align: middle;
               color: #652791;
               margin-bottom: 8px;
@@ -575,8 +581,10 @@
           text-align: left;
           padding-top: 20px;
           .position {
-            font-size: 15px;
-            color: #5c565d;
+            font-family: PingFangSC-Regular;
+            font-weight: 400;
+            font-size: 14px;
+            color: rgba(92, 86, 93, 1);
             margin-right: 10px;
           }
           .fields {
@@ -629,8 +637,9 @@
             align-items: center;
             padding: 10px 15px 10px 0px;
             span {
-              font-size: 15px;
+              font-size: 14px;
               color: #5c565d;
+              font-weight: 400;
             }
           }
           .workIconList {
@@ -658,6 +667,12 @@
             }
             .duties {
               text-align: left;
+              pre {
+                font-size: 14px;
+                color: #929292;
+                font-family: PingFangSC-Regular;
+                font-weight: 400;
+              }
             }
           }
         }

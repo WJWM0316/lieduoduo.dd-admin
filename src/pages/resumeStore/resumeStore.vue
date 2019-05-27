@@ -183,20 +183,20 @@
                 </div>
                 <div class="ContactInformation">
                   <p class="contactTitle">联系方式:</p>
-                  <div class="Contact" @click.stop="seeMobile">
+                  <div class="Contact" @click.stop="seeMobile" v-if="nowResumeMsg.mobile!=''">
                     <span>手机号</span>
-                    <span v-if="nowResumeMsg.mobile!=''">{{nowResumeMsg.mobile}}</span>
-                    <span v-else>消息暂无</span>
+                    <span v-if="nowResumeMsg.showPhone==true">{{nowResumeMsg.mobile}}</span>
                   </div>
-                  <div class="Contact" @click.stop="seeWechat">
+                  <div class="Contact" @click.stop="seeWechat" v-if="nowResumeMsg.wechat!=''">
                     <span>微信号</span>
-                    <span v-if="nowResumeMsg.wechat!=''">{{nowResumeMsg.wechat}}</span>
-                    <span v-else>消息暂无</span>
+                    <span v-if="nowResumeMsg.showWechat==true">{{nowResumeMsg.wechat}}</span>
                   </div>
+                  <p v-if="nowResumeMsg.wechat==''&&nowResumeMsg.mobile==''" class="noUpload">暂无上传</p>
                 </div>
                 <div class="download row">
                   <p class="contactTitle">附件简历:</p>
-                  <div class="Contact" @click.stop="seeFiles">
+                  <p v-if="nowResumeMsg.resumeAttach==null" class="noUpload">暂无上传</p>
+                  <div class="Contact" @click.stop="seeFiles" v-else>
                     <span>查看附件</span>
                   </div>
                 </div>
@@ -393,9 +393,9 @@ import {
     CustomSelect
   },
   watch: {
-    itemList: (newData, oldData) => {
-      this.getDetail(newData[0].uid, 0);
-    }
+    // itemList: (newData, oldData) => {
+    //   this.getDetail(newData[0].uid, 0);
+    // }
   }
 })
 export default class resumeStore extends Vue {
@@ -469,11 +469,17 @@ export default class resumeStore extends Vue {
   seeMobile() {
     let uid = this.itemList[this.nowIndex].uid;
     this.operating(uid, { desc: "联系方式" });
+    this.$nextTick(() => {
+      this.nowResumeMsg.showPhone = !this.nowResumeMsg.showPhone;
+    });
   }
   /* 查看微信号 */
   seeWechat() {
     let uid = this.itemList[this.nowIndex].uid;
     this.operating(uid, { desc: "微信号" });
+    this.$nextTick(() => {
+      this.nowResumeMsg.showWechat = !this.nowResumeMsg.showWechat;
+    });
   }
   // 查看操作
   async operating(uid, param) {
@@ -573,7 +579,7 @@ export default class resumeStore extends Vue {
     console.log(this.nowIndex++);
     this.nowIndex = 20;
     if (this.nowIndex === this.itemList.length) {
-      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+      this.$confirm("该页数据已经全部加载完毕, 是否继续加载下一页?", "温馨提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
@@ -625,6 +631,11 @@ export default class resumeStore extends Vue {
     this.nowIndex = +index;
     GetResumeDetailsAPI(uid).then(res => {
       this.nowResumeMsg = res.data.data;
+      this.nowResumeMsg = Object.assign({}, this.nowResumeMsg, {
+        showPhone: false,
+        showWechat: false
+      });
+      console.log("this.nowResumeMsg", this.nowResumeMsg);
       const uid = this.nowResumeMsg.uid;
       this.operating(uid, { desc: "简历" });
     });

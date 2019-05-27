@@ -32,9 +32,9 @@ import { routes } from "@/router/routes";
 @Component({
   name: "page-asise",
   watched: {
-    filterText(val) {
-      this.$refs.tree.filter(val);
-    }
+    'itemList':(newVal,oldVal)=>{
+        console.log('newVal',newVal)
+    },
   }
 })
 export default class PageAside extends Vue {
@@ -89,12 +89,12 @@ export default class PageAside extends Vue {
         }
       ]
     },
-    {
-      path: "/resumeStore",
-      name: "简历库",
-      isShow: true,
-      children: []
-    }
+    // {
+    //   path: "/resumeStore",
+    //   name: "简历库",
+    //   isShow: true,
+    //   children: []
+    // }
   ];
   handleNodeClick(data) {}
   tabSwitch() {
@@ -103,11 +103,10 @@ export default class PageAside extends Vue {
   created() {
     this.AdminShow = sessionStorage.getItem("AdminShow");
     console.log("this.AdminShow", this.AdminShow);
-    this.judge(this.AdminShow);
+    // this.judge(this.AdminShow);
   }
   judge(adminGrade) {
     if (/(0|1|2)/.test(+adminGrade)) {
-      console.log("显示简历库");
       this.$set(this.itemList, 5, {
         path: "/resumeStore",
         name: "简历库",
@@ -123,7 +122,6 @@ export default class PageAside extends Vue {
         children: []
       });
     }
-    console.log(this.itemList);
   }
 }
 </script>
