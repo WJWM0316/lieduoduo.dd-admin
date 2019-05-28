@@ -6,7 +6,7 @@
           <img src="../../assets/lieduoduo.png" class="avatar">
         </div>
         <ul class="itemList">
-          <li v-for="(item, index) in itemList" :key="index" class="item">
+          <li v-for="(item, index) in itemList" :key="index" class="item" v-if="item.isShow">
             <router-link :to="{path:item.path}" v-if="item.path">
               <div class="path">
                 <i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>
@@ -90,13 +90,13 @@ export default class PageAside extends Vue {
           name: "邀请列表"
         }
       ]
+    },
+    {
+      path: "/resumeStore",
+      name: "简历库",
+      isShow: true,
+      children: []
     }
-    // {
-    //   path: "/resumeStore",
-    //   name: "简历库",
-    //   isShow: true,
-    //   children: []
-    // }
   ];
   handleNodeClick(data) {}
   tabSwitch() {
@@ -108,10 +108,12 @@ export default class PageAside extends Vue {
   mounted() {
     this.AdminShow = sessionStorage.getItem("AdminShow");
     console.log("this.AdminShow", this.AdminShow);
-    // this.judge(this.AdminShow);
+    this.judge(this.AdminShow);
   }
   judge(adminGrade) {
+    console.log('+adminGrade',+adminGrade)
     if (/(0|1|2)/.test(+adminGrade)) {
+      console.log('显示简历库')
       this.$set(this.itemList, 5, {
         path: "/resumeStore",
         name: "简历库",

@@ -291,7 +291,7 @@ export default class addUser extends Vue {
     mobile: ""
   };
   companyInfo = {
-    realname:'',
+    realname: "",
     avatarIds: [],
     avatars: [],
     companyEmail: "",
@@ -342,19 +342,21 @@ export default class addUser extends Vue {
     other: "" // 其他原因
   };
   /* 切换tab */
-  tab() {
-    if (this.isEditAdminName) {
-      console.log("账户设置 ");
+  tab(e) {
+    console.log("e.target.className", e.target.className);
+    console.log("-----");
+    if (e.target.className.indexOf("userInfo") == -1) {
+      console.log("基本信息 ");
       this.$nextTick(() => {
         this.userList();
       });
-      this.isEditAdminName = false;
-    } else {
-      console.log("基本信息");
+      this.isEditAdminName = true;
+    } else if (e.target.className.indexOf("editAdminName") == -1) {
+      console.log("账户设置");
       this.$nextTick(() => {
         this.getUserInfo();
       });
-      this.isEditAdminName = true;
+      this.isEditAdminName = false;
     }
   }
   ground(e) {
@@ -453,17 +455,17 @@ export default class addUser extends Vue {
 
   /* 获取用户信息 */
   async getUserInfo() {
-    console.log('routeId',this.$route.params.id)
+    console.log("routeId", this.$route.params.id);
     let res = await getUserInfoApi(this.$route.params.id);
     let userInfo = res.data.data;
     this.userInfo = userInfo;
     this.isDetection = !userInfo.needRealNameAuth;
-    if(userInfo.companyInfo) {
+    if (userInfo.companyInfo) {
       this.companyInfo = userInfo.companyInfo;
     } else {
       this.companyInfo = {
-        realname: ''
-      }
+        realname: ""
+      };
     }
     this.createPositionRight = !!userInfo.createPositionRight;
     this.phone = {
@@ -524,7 +526,7 @@ export default class addUser extends Vue {
   userList() {
     getSalerListApi().then(res => {
       this.salesList = res.data.data;
-      console.log(this.salesList, 'fffffffffffffffffffffffff');
+      console.log(this.salesList, "fffffffffffffffffffffffff");
     });
   }
   mounted(e) {
