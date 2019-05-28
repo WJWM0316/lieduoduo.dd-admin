@@ -6,7 +6,7 @@
           <img src="../../assets/lieduoduo.png" class="avatar">
         </div>
         <ul class="itemList">
-          <li v-for="(item, index) in itemList" :key="index" class="item" v-if="item.isShow">
+          <li v-for="(item, index) in itemList" :key="index" class="item">
             <router-link :to="{path:item.path}" v-if="item.path">
               <div class="path">
                 <i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>
