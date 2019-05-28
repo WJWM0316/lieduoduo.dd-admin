@@ -52,9 +52,9 @@ import { routes } from "@/router/routes";
         console.log(this.onePath);
         // this.SecondPath=route.path;
         this.AdminShow = +sessionStorage.getItem("AdminShow");
-
+        console.log(this.AdminShow,'console.log( this.AdminShow )');
         if (/(0|1|2)/.test(this.AdminShow)) {
-          // console.log('显示简历库')
+          console.log("显示简历库");
           this.$set(this.itemList, 5, {
             path: "/resumeStore",
             name: "简历库",
@@ -62,7 +62,7 @@ import { routes } from "@/router/routes";
             children: []
           });
         } else {
-          // console.log('不显示简历库')
+          console.log("不显示简历库");
           this.$set(this.itemList, 5, {
             path: "/resumeStore",
             name: "简历库",
