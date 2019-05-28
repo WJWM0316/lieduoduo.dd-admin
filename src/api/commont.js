@@ -37,5 +37,6 @@ export const rightInfoApi = data => request({
 /* 获取销售人员名单 */
 export const getSalerListApi = () => request({
   url: `/company/admin_user_list`,
-  type: 'get'
+  type: 'get',
+  noGlobalLoading: true
 })

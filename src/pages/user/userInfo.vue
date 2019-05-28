@@ -3,10 +3,10 @@
   <div class="createCompany">
     <div class="header">
       <div class="creatTab">
-        <div class="userInfo" :class="{'active': isEditAdminName === false }" @click.self="tab">基本信息</div>
+        <div class="userInfo" :class="{'active': isEditAdminName == false }" @click.self="tab">基本信息</div>
         <div
           class="editAdminName"
-          :class="{'active': isEditAdminName === true }"
+          :class="{'active': isEditAdminName == true }"
           @click.self="tab"
         >账户设置</div>
       </div>
@@ -98,7 +98,7 @@
       </div>
     </div>
     <!--身份信息表格-->
-    <div class="personalInfo" v-if="isEditAdminName===false">
+    <div class="personalInfo" v-if="isEditAdminName==false">
       <div class="point">上传工牌/名片/在职证明等信息需要与身份信息保持一致</div>
       <el-form class="edit-form" ref="mobile" :model="phone" label-width="150px" label-suffix="：">
         <h3>账号信息</h3>
@@ -159,7 +159,7 @@
         </el-form-item>
       </el-form>
     </div>
-    <div class="companyMessage" v-if="isEditAdminName===false&&userInfo.companyInfo!=null">
+    <div class="companyMessage" v-if="isEditAdminName==false&&userInfo.companyInfo!=null">
       <div>所属公司</div>
       <div class="companyName" v-show="companyInfo!=''">
         <span class="label">公司全称</span>
@@ -182,7 +182,7 @@
       </div>
       <div class="companyName btn" v-show="userInfo.companyId" @click.stop="removeUser">移出公司</div>
     </div>
-    <div class="companyMessage" v-else-if="isEditAdminName===false">
+    <div class="companyMessage" v-else-if="isEditAdminName==false">
       <div>所属公司</div>
       <div class="companyName btn" @click.stop="bindCompany">绑定公司</div>
     </div>
@@ -292,6 +292,7 @@ export default class addUser extends Vue {
     mobile: ""
   };
   companyInfo = {
+    realname:'',
     avatarIds: [],
     avatars: [],
     companyEmail: "",
@@ -309,7 +310,6 @@ export default class addUser extends Vue {
     passportFront: "",
     passportFrontId: 0,
     position: "",
-    realname: "",
     status: "",
     uid: "",
     vkey: ""
@@ -344,13 +344,18 @@ export default class addUser extends Vue {
   };
   /* 切换tab */
   tab() {
-    console.log(this.isEditAdminName);
     if (this.isEditAdminName) {
+      console.log("账户设置 ");
+      this.$nextTick(() => {
+        this.userList();
+      });
       this.isEditAdminName = false;
-      this.getUserInfo()
     } else {
+      console.log("基本信息");
+      this.$nextTick(() => {
+        this.getUserInfo();
+      });
       this.isEditAdminName = true;
-      this.userList();
     }
   }
   ground(e) {
@@ -449,6 +454,7 @@ export default class addUser extends Vue {
 
   /* 获取用户信息 */
   async getUserInfo() {
+    console.log('routeId',this.$route.params.id)
     let res = await getUserInfoApi(this.$route.params.id);
     let userInfo = res.data.data;
     this.userInfo = userInfo;
@@ -513,6 +519,7 @@ export default class addUser extends Vue {
   userList() {
     getSalerListApi().then(res => {
       this.salesList = res.data.data;
+      console.log(this.salesList);
     });
   }
   mounted(e) {
