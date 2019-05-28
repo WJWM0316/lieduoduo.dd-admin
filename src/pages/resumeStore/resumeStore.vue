@@ -353,14 +353,6 @@
                   <i>{{item.admin}}</i>
                   {{item.action}} {{item.desc}}
                 </span>
-                <span>
-                  2019-04-25 15:40:04
-                  <i>陈某某</i> 查看 联系方式
-                </span>
-                <span>
-                  2019-04-25 15:40:04
-                  <i>陈某某</i> 查看 联系方式
-                </span>
               </div>
             </div>
           </div>
@@ -585,9 +577,9 @@ export default class resumeStore extends Vue {
         type: "warning"
       });
     } else {
-      this.nowIndex += this.nowIndex;
-      console.log(this.nowIndex, typeof this.nowIndex);
-      this.getDetail(this.itemList[this.nowIndex].uid, this.nowIndex);
+      let index = this.nowIndex++;
+      console.log(index, typeof index);
+      this.getDetail(this.itemList[index].uid, index);
     }
   }
   getDetail(uid, index) {

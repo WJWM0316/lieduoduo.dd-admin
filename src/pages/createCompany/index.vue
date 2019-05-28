@@ -214,7 +214,14 @@
       <email-check :companyName="companyInfo.company_name" @save="save" @close="close"></email-check>
     </div>
     <!-- 修改公司名 -->
-    <el-dialog :close-on-click-modal="false" :show-close="false" title="新建公司" :visible.sync="isShowCompany" width="30%" :center="true">
+    <el-dialog
+      :close-on-click-modal="false"
+      :show-close="false"
+      title="新建公司"
+      :visible.sync="isShowCompany"
+      width="30%"
+      :center="true"
+    >
       <el-form ref="companyName" :model="companyName" :rules="NameRules" label-width="80px">
         <el-form-item prop="name">
           <el-input v-model="companyName.name"></el-input>
@@ -352,24 +359,24 @@ export default class createCompany extends Vue {
   };
   /* 公司信息 */
   companyInfo = {
-    real_name:'',//真实姓名
-    user_email:'',//邮箱地址
-    user_position:'',//担任职务
-    company_name:'',// 公司名称
-    company_shortname:'',//公司简称
+    real_name: "", //真实姓名
+    user_email: "", //邮箱地址
+    user_position: "", //担任职务
+    company_name: "", // 公司名称
+    company_shortname: "", //公司简称
     mobile: "", //管理员(招聘官)手机号码
-    admin_uid:"",//跟进人员
-    industry_id:"",// 所属行业
+    admin_uid: "", //跟进人员
+    industry_id: "", // 所属行业
     groupId: "", //主id
     financing: "", // 融资
     employees: "", // 规模
     business_license: "", // 营业执照
     on_job: "", // 在职证明
     intro: "", // 公司简介
-    email:"",//公司邮箱
+    email: "", //公司邮箱
     logo: "",
     website: "", // 公司官网
-    address: [], // 公司地址
+    address: [] // 公司地址
   };
   /* 融资情况标签 */
   financing = [
@@ -510,7 +517,10 @@ export default class createCompany extends Vue {
   mounted() {
     this.AdminShow = +sessionStorage.getItem("AdminShow");
     // console.log("this.AdminShow", this.AdminShow);
-    this.isShowCompany=true;
+    console.log(typeof this.$route.query.isCreated);
+    if (this.$route.query.isCreated) {
+      this.isShowCompany = true;
+    }
   }
   /* 保存跟进人 */
   async saveSaller() {

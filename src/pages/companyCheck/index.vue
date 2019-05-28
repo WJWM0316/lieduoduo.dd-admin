@@ -314,7 +314,10 @@ export default class companyCheck extends Vue {
   }
   addCompany() {
     this.$router.push({
-      path: "/index/createCompany"
+      path: "/index/createCompany",
+      query:{
+        isCreated:true
+      }
     });
     console.log("添加公司");
   }
