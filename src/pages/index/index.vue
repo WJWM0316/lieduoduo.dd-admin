@@ -420,11 +420,25 @@ export default class indexPage extends Vue {
   onSubmit() {
     this.form.page = 1;
     let searchCondition = {};
+
     if (this.searchType.condition1 && this.searchType.keyword1)
       searchCondition[this.searchType.condition1] = this.searchType.keyword1;
     if (this.searchType.condition2 && this.searchType.keyword2)
       searchCondition[this.searchType.condition2] = this.searchType.keyword2;
     let searchForm = Object.assign({}, this.form, searchCondition);
+    if (searchForm.start !== "" && searchForm.end === "") {
+      this.$message({
+        message: "权益截止时间必需选择区间时间",
+        type: "warning"
+      });
+      return;
+    } else if (searchForm.start === "" && searchForm.end !== "") {
+      this.$message({
+        message: "权益截止时间必需选择区间时间",
+        type: "warning"
+      });
+      return;
+    }
     this.getCompanyList(searchForm);
   }
   // 搜索公司

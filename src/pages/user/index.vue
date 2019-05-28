@@ -411,6 +411,19 @@ export default class user extends Vue {
     if (this.searchType.condition2 && this.searchType.keyword2)
       searchCondition[this.searchType.condition2] = this.searchType.keyword2;
     let searchForm = Object.assign({}, this.form, searchCondition);
+    if (searchForm.createTimeStart !== "" && searchForm.createTimeEnd === "") {
+      this.$message({
+        message: "创建时间必须选择开始时间和结束时间",
+        type: "warning"
+      });
+      return;
+    } else if (searchForm.createTimeStart === "" && searchForm.createTimeEnd !== "") {
+      this.$message({
+        message: "创建时间必须选择开始时间和结束时间",
+        type: "warning"
+      });
+      return;
+    }
     this.getRecruiterList(searchForm);
   }
   // 获取销售人员名单

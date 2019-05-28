@@ -60,8 +60,9 @@ export default class login extends Vue {
         saveAccessToken(res.data.data.adminToken);
         let AdminShow= this.judge(groupId, isAdmin, isGroupAdmin, res.data.data);
         sessionStorage.setItem("AdminShow", AdminShow);
+        let userInfo=Object.assign({},res.data.data,{AdminShow})
         this.$store.dispatch("update_userinfo", {
-          userinfo:res.data.data
+          userInfo
         });
         this.$message({
           message: "登录成功",

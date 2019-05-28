@@ -276,7 +276,6 @@ export default class addUser extends Vue {
   needReason = ""; //审核结果
   isCheck = false;
   nowImg = ""; //当前大图预览显示的图片
-  userInfo = "";
   isEditAdminName = false; //显示基本信息还是账户设置
   showAdminWindow = false; // 是否显示招聘官弹窗
   nextAdmin = null; // 公司下一个管理员的信息
@@ -459,6 +458,7 @@ export default class addUser extends Vue {
     let res = await getUserInfoApi(this.$route.params.id);
     let userInfo = res.data.data;
     this.userInfo = userInfo;
+    console.log('this.userInfo',this.userInfo)
     this.isDetection = !userInfo.needRealNameAuth;
     if (userInfo.companyInfo) {
       this.companyInfo = userInfo.companyInfo;

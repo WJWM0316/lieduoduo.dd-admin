@@ -334,6 +334,19 @@ export default class companyCheck extends Vue {
   }
   /* 请求审核列表 */
   getTemplist() {
+    if (this.form.start !== "" && this.form.end === "") {
+      this.$message({
+        message: "申请时间必须选择开始时间和结束时间",
+        type: "warning"
+      });
+      return;
+    } else if (this.form.start === "" && this.form.end !== "") {
+      this.$message({
+        message: "申请时间必须选择开始时间和结束时间",
+        type: "warning"
+      });
+      return;
+    }
     templistApi(this.form).then(res => {
       this.list = res.data.data;
       this.total = res.data.meta.total;

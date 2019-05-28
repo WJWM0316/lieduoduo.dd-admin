@@ -39,9 +39,9 @@
               ></el-cascader>
             </el-form-item>
 
-            <!-- <el-form-item label="期待工作城市" class="formItem" prop="expectCityNum">
+            <el-form-item label="期待工作城市" class="formItem" prop="expectCityNum">
               <el-cascader
-                v-model="form.expectCityNum"
+                ref="cityChoice"
                 class="formItem"
                 placeholder="期待工作城市"
                 :options="getCityList"
@@ -53,7 +53,7 @@
                 }"
                 @change="choiceCity"
               ></el-cascader>
-            </el-form-item>-->
+            </el-form-item>
             <el-form-item label="最高学历" class="formItem" prop="degree">
               <el-select v-model="form.degree" placeholder="请选择活动区域">
                 <el-option
@@ -453,10 +453,13 @@ export default class resumeStore extends Vue {
     this.form.isStudent = "";
     this.form.workExpLower = "";
     this.form.workExpUpper = "";
+
+    this.form.expectCityNum = "";
     this.$nextTick(() => {
       let obj = {};
       obj.stopPropagation = () => {};
       this.$refs.cascader.clearValue(obj);
+      this.$refs.cityChoice.clearValue(obj);
       this.$refs.custom.clearValue();
     });
   }
@@ -576,54 +579,15 @@ export default class resumeStore extends Vue {
   }
   // 右箭头
   rightArrow() {
-    console.log(this.nowIndex++);
-    this.nowIndex = 20;
     if (this.nowIndex === this.itemList.length) {
-      this.$confirm("该页数据已经全部加载完毕, 是否继续加载下一页?", "温馨提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-        center: true
+      this.$message({
+        message:'本页数据加载完毕',
+        type: 'warning'
       })
-        .then(() => {
-          this.$message({
-            type: "success",
-            message: "删除成功!"
-          });
-          this.$nextTick(() => {
-            // this.$set(this.form, "page", this.form.page++);
-            this.form.page++;
-            console.log(this.form);
-            this.getData();
-            this.nowIndex = 0;
-            console.log(this.nowIndex, "this.nowIndex");
-            console.log(this.itemList, "this.itemList");
-          });
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
-        });
-      // this.$confirm("本页数据已经加载完毕，是否加载下一页数据?", "温馨提醒", {
-      //   confirmButtonText: "确定",
-      //   cancelButtonText: "取消",
-      //   type: "warning"
-      // })
-      //   .then(() => {
-      //     this.$set(this.form, "page", page++);
-      //     console.log(this.form);
-      //   })
-      //   .catch(() => {
-      //     this.$message({
-      //       type: "info",
-      //       message: "已取消删除"
-      //     });
-      //   });
     } else {
-      let index = this.nowIndex++;
-      this.getDetail(this.itemList[index].uid, index);
+      this.nowIndex+=this.nowIndex;
+      console.log(this.nowIndex,typeof this.nowIndex)
+      this.getDetail(this.itemList[this.nowIndex].uid, this.nowIndex);
     }
   }
   getDetail(uid, index) {
@@ -635,7 +599,6 @@ export default class resumeStore extends Vue {
         showPhone: false,
         showWechat: false
       });
-      console.log("this.nowResumeMsg", this.nowResumeMsg);
       const uid = this.nowResumeMsg.uid;
       this.operating(uid, { desc: "简历" });
     });

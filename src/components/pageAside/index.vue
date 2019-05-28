@@ -34,6 +34,9 @@ import { routes } from "@/router/routes";
   watched: {
     itemList: (newVal, oldVal) => {
       console.log("newVal", newVal);
+    },
+    "this.$store":(newval,oldval)=>{
+      console.log('newval',newval)
     }
   }
 })
@@ -106,6 +109,7 @@ export default class PageAside extends Vue {
     this.isActive = e;
   }
   mounted() {
+    console.log(this.$store)
     this.AdminShow = sessionStorage.getItem("AdminShow");
     console.log("this.AdminShow", this.AdminShow);
     this.judge(this.AdminShow);
