@@ -7,7 +7,7 @@
         <div class="userInfo" :class="{'active': active === 1 }">账户设置</div>
       </div>
       <div>
-        <el-button @click.stop="createdCompany" v-show="active === 0 && !isEdit">保存并通过</el-button>
+        <el-button @click.stop="createdCompany" v-show="active === 0 && !isEdit">保存</el-button>
         <el-button @click.stop="createdCompany" v-show="active === 0 && isEdit">保存编辑</el-button>
         <el-button @click.stop="saveSaller" v-show="active === 1 && isEdit">保存跟进人</el-button>
       </div>
