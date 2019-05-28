@@ -8,7 +8,7 @@
         <ul class="itemList">
           <li v-for="(item, index) in itemList" :key="index" class="item">
             <router-link :to="{path:item.path}" v-if="item.path">
-              <div class="path" :class="{'pathactive': item.path === onePath }">
+              <div class="path" :class="{'pathactive': item.path === onePath }" v-if="item.isShow==true">
                 <i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>
                 <span>{{item.name}}</span>
               </div>
@@ -47,7 +47,7 @@ import { routes } from "@/router/routes";
         this.AdminShow = +sessionStorage.getItem("AdminShow");
 
         if (/(0|1|2)/.test(this.AdminShow)) {
-          console.log('显示简历库')
+          // console.log('显示简历库')
           this.$set(this.itemList, 5, {
             path: "/resumeStore",
             name: "简历库",
@@ -55,7 +55,7 @@ import { routes } from "@/router/routes";
             children: []
           });
         } else {
-          console.log('不显示简历库')
+          // console.log('不显示简历库')
           this.$set(this.itemList, 5, {
             path: "/resumeStore",
             name: "简历库",
@@ -108,7 +108,7 @@ export default class PageAside extends Vue {
       ]
     },
     {
-      path: "/interview",
+      path: "/interview/List",
       name: "面试管理",
       isShow: true,
       children: [

@@ -214,7 +214,7 @@
       <email-check :companyName="companyInfo.company_name" @save="save" @close="close"></email-check>
     </div>
     <!-- 修改公司名 -->
-    <el-dialog title="新建公司" :visible.sync="isShowCompany" width="30%" :center="true">
+    <el-dialog :close-on-click-modal="false" :show-close="false" title="新建公司" :visible.sync="isShowCompany" width="30%" :center="true">
       <el-form ref="companyName" :model="companyName" :rules="NameRules" label-width="80px">
         <el-form-item prop="name">
           <el-input v-model="companyName.name"></el-input>
@@ -509,7 +509,8 @@ export default class createCompany extends Vue {
   }
   mounted() {
     this.AdminShow = +sessionStorage.getItem("AdminShow");
-    console.log("this.AdminShow", this.AdminShow);
+    // console.log("this.AdminShow", this.AdminShow);
+    this.isShowCompany=true;
   }
   /* 保存跟进人 */
   async saveSaller() {
