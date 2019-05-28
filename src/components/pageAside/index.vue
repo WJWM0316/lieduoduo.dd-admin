@@ -7,8 +7,12 @@
         </div>
         <ul class="itemList">
           <li v-for="(item, index) in itemList" :key="index" class="item">
-            <router-link :to="{path:item.path}" v-if="item.path">
-              <div class="path" :class="{'pathactive': item.path === onePath }" v-if="item.isShow==true">
+            <router-link :to="{path: item.path==='/interview' ? '/interview/List' : item.path}">
+              <div
+                class="path"
+                :class="{'pathactive': item.path === onePath&&item.path!=='/interview' }"
+                v-if="item.isShow===true"
+              >
                 <i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>
                 <span>{{item.name}}</span>
               </div>
@@ -19,7 +23,9 @@
                       class="verify"
                       v-if="item.children.length>0"
                       :class="{'pathactive': page.path === onePath }"
-                    >{{page.name}}</div>
+                    >
+                      <span>{{page.name}}</span>
+                    </div>
                   </router-link>
                 </li>
               </ul>
@@ -41,8 +47,9 @@ import { routes } from "@/router/routes";
     $route: {
       handler(route) {
         // console.log('this.itemList',this.itemList)
-        console.log(route);
+
         this.onePath = route.path;
+        console.log(this.onePath);
         // this.SecondPath=route.path;
         this.AdminShow = +sessionStorage.getItem("AdminShow");
 
@@ -108,7 +115,7 @@ export default class PageAside extends Vue {
       ]
     },
     {
-      path: "/interview/List",
+      path: "/interview",
       name: "面试管理",
       isShow: true,
       children: [

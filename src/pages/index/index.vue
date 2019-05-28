@@ -106,7 +106,7 @@
             </el-form-item>
 
             <!-- 权益筛选 -->
-            <el-form-item class="area" label="权益筛选" prop="equity">
+            <el-form-item class="area" label="权益类型" prop="equity">
               <el-select v-model="form.equity" placeholder="请选择权益" style="margin-right: 10px;">
                 <el-option label="全部权益" value="0"></el-option>
                 <el-option
