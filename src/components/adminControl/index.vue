@@ -201,7 +201,7 @@ export default class adminBox extends Vue {
     companyRules = {
         "name": [
             { required: true, message: '请输入公司名字', trigger: 'blur' },
-            { validator: this.nameRule, trigger: 'blur' }
+            // { validator: this.nameRule, trigger: 'blur' }
         ],
         "is_admin": [
             { required: true, message: '请选择身份', trigger: 'blur' },
@@ -280,6 +280,7 @@ export default class adminBox extends Vue {
             }
         })
     }
+    // 检测已有公司名，并且将该公司与管理员绑定
     checkCompany () {
         checkOldCompanyName(this.bindCompanyForm.name).then(res => {
             if (res.data.data.exist) {
