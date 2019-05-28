@@ -7,7 +7,7 @@ Vue.use(Router)
 const router = new Router({
   mode: 'history',
   routes,
-  linkActiveClass:'pathactive',
+  // linkActiveClass:'pathactive',
   scrollBehavior(to, from, savedPosition) {
     if (to.hash) {
       return {

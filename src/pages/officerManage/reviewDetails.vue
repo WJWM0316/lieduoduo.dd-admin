@@ -46,7 +46,7 @@
         <div class="item"><span class="lable">手机号码：</span> {{identityInfo.mobile}}</div>
         <div class="title">个人信息</div>
         <div class="item"><span class="lable">姓名：</span> {{personalInfo.realName}}</div>
-        <div class="item"><span class="lable">性别：</span> {{identityInfo.genderDesc}}</div>
+        <div class="item"><span class="lable">性别：</span> {{personalInfo.genderDesc}}</div>
       </div>
       <div class="content noData" v-if="!identityInfo.status && identityInfo.status !== 0">
         用户还未上传身份认证信息
@@ -131,8 +131,10 @@ export default class reviewDetails extends Vue {
   getReviewDetails () {
     const { id } = this.$route.query
     getReviewDetailsApi(id).then(res => {
+      console.log(res)
       this.personalInfo = res.data.data.applyInfo
-      this.identityInfo = res.data.data.identityInfo
+      this.identityInfo = res.data.data.identityInfo;
+      console.log(this.personalInfo)
       this.recruiterInfo = res.data.data.recruiterInfo
     })
   }

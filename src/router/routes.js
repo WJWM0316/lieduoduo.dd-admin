@@ -180,7 +180,7 @@ export const routes = [
   },
   /* 面试申请列表 */
   {
-    path: "/interview",
+    path: "/interview/List",
     name: "application",
     meta: { title: "申请列表管理", haveParent: false, keepAlive: true },
     component: resolve => require(["@/pages/application/index.vue"], resolve)

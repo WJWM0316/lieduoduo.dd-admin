@@ -12,7 +12,7 @@
     height: 100%;
     overflow: hidden;
     width: 200px;
-    .AsideContent{
+    .AsideContent {
       .logo {
         position: relative;
         margin: 42px auto 50px;
@@ -22,7 +22,7 @@
           width: 124px;
         }
       }
-      .itemList{
+      .itemList {
         margin: 0;
         padding: 0;
         list-style: none;
@@ -35,9 +35,15 @@
           font-size: 14px;
           text-align: left;
           position: relative;
-          .verify {
-            width: 100%;
-            display: inline-block;
+
+          .path {
+            padding-left: 22px;
+            span {
+              line-height: 55px;
+              display: inline-block;
+            }
+          }
+          ul {
             .children {
               font-weight: 300;
               color: #fff;
@@ -48,24 +54,20 @@
               transition: all ease 0.4s;
               font-size: 14px;
               text-align: left;
+              .verify {
+                width: 100%;
+                display: inline-block;
+              }
               a {
                 padding-left: 60px;
                 line-height: 50px;
               }
             }
           }
-          .path{
-            padding-left: 22px;
-            span{
-              line-height: 55px;
-              display: inline-block;
-            }
-          }
           &:hover {
-            .path{
+            .path {
               background: rgba(255, 226, 102, 0.12);
             }
-           
           }
           .zike-icon {
             margin-right: 10px;
@@ -96,7 +98,7 @@
       width: 217px;
     }
   }
- 
+
   .router-link-active,
   .interviewActive,
   .filter-tree {
@@ -131,16 +133,15 @@
     //   content: "";
     // }
   }
-  
 }
-.pathactive{
+.pathactive {
   &:before {
     background: #ffe266;
     content: "";
     display: block;
     left: 0;
     position: absolute;
-    height: 100%;
+    height: 55px;
     width: 4px;
   }
   &:after {

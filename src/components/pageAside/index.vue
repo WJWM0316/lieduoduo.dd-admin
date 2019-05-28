@@ -8,15 +8,21 @@
         <ul class="itemList">
           <li v-for="(item, index) in itemList" :key="index" class="item">
             <router-link :to="{path:item.path}" v-if="item.path">
-              <div class="path">
+              <div class="path" :class="{'pathactive': item.path === onePath }">
                 <i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>
                 <span>{{item.name}}</span>
               </div>
-              <div class="verify" v-if="item.children.length>0">
+              <ul>
                 <li v-for="(page,index1) in item.children" :key="index1" class="children">
-                  <router-link :to="{path:page.path}">{{page.name}}</router-link>
+                  <router-link :to="{path:page.path}">
+                    <div
+                      class="verify"
+                      v-if="item.children.length>0"
+                      :class="{'pathactive': page.path === onePath }"
+                    >{{page.name}}</div>
+                  </router-link>
                 </li>
-              </div>
+              </ul>
             </router-link>
           </li>
         </ul>
@@ -34,8 +40,14 @@ import { routes } from "@/router/routes";
   watch: {
     $route: {
       handler(route) {
+        // console.log('this.itemList',this.itemList)
+        console.log(route);
+        this.onePath = route.path;
+        // this.SecondPath=route.path;
         this.AdminShow = +sessionStorage.getItem("AdminShow");
+
         if (/(0|1|2)/.test(this.AdminShow)) {
+          console.log('显示简历库')
           this.$set(this.itemList, 5, {
             path: "/resumeStore",
             name: "简历库",
@@ -43,6 +55,7 @@ import { routes } from "@/router/routes";
             children: []
           });
         } else {
+          console.log('不显示简历库')
           this.$set(this.itemList, 5, {
             path: "/resumeStore",
             name: "简历库",
@@ -58,6 +71,8 @@ import { routes } from "@/router/routes";
 export default class PageAside extends Vue {
   routes = null;
   isActive = 0;
+  onePath = ""; //当前一级路由
+  SecondPath = ""; //当前二级路由
   itemList = [
     {
       path: "/index",
@@ -99,7 +114,7 @@ export default class PageAside extends Vue {
       children: [
         {
           isShow: false,
-          path: "/interview",
+          path: "/interview/List",
           name: "申请列表"
         },
         {
@@ -119,9 +134,6 @@ export default class PageAside extends Vue {
   handleNodeClick(data) {}
   tabSwitch() {
     this.isCLick = !this.isCLick;
-  }
-  click(e) {
-    this.isActive = e;
   }
   mounted() {
     // console.log(this.$store);
