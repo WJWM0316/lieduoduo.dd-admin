@@ -20,7 +20,7 @@
                   class="selectTitle"
                   v-model="searchType.condition1"
                   slot="prepend"
-                  placeholder="请选择"
+                  placeholder="公司名"
                   @change="changeProvince"
                 >
                   <el-option
@@ -56,7 +56,7 @@
                   class="selectTitle"
                   v-model="searchType.condition2"
                   slot="prepend"
-                  placeholder="请选择"
+                  placeholder="手机号"
                   @change="changeProvince"
                 >
                   <el-option

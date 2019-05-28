@@ -31,12 +31,27 @@ import { routes } from "@/router/routes";
 
 @Component({
   name: "page-asise",
-  watched: {
-    itemList: (newVal, oldVal) => {
-      console.log("newVal", newVal);
-    },
-    "this.$store":(newval,oldval)=>{
-      console.log('newval',newval)
+  watch: {
+    $route: {
+      handler(route) {
+        this.AdminShow = +sessionStorage.getItem("AdminShow");
+        if (/(0|1|2)/.test(this.AdminShow)) {
+          this.$set(this.itemList, 5, {
+            path: "/resumeStore",
+            name: "简历库",
+            isShow: true,
+            children: []
+          });
+        } else {
+          this.$set(this.itemList, 5, {
+            path: "/resumeStore",
+            name: "简历库",
+            isShow: false,
+            children: []
+          });
+        }
+      },
+      immediate: true
     }
   }
 })
@@ -109,15 +124,14 @@ export default class PageAside extends Vue {
     this.isActive = e;
   }
   mounted() {
-    console.log(this.$store)
-    this.AdminShow = sessionStorage.getItem("AdminShow");
-    console.log("this.AdminShow", this.AdminShow);
-    this.judge(this.AdminShow);
+    // console.log(this.$store);
+    // this.AdminShow = sessionStorage.getItem("AdminShow");
+    // console.log("this.AdminShow", this.AdminShow);
   }
   judge(adminGrade) {
-    console.log('+adminGrade',+adminGrade)
+    console.log("+adminGrade", +adminGrade);
     if (/(0|1|2)/.test(+adminGrade)) {
-      console.log('显示简历库')
+      console.log("显示简历库");
       this.$set(this.itemList, 5, {
         path: "/resumeStore",
         name: "简历库",

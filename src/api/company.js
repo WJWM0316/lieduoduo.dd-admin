@@ -158,11 +158,17 @@ export const getCityApi = () => request({
   url: `/area?level=3`,
   type: 'get'
 })
-/* 校验公司名称是否被使用 */
+/* 校验新公司名称是否被使用 */
 export const checkCompanyNameApi = (data) => request({
   url: `/company/company_exist`,
   type: 'get',
   data,
+  noGlobalLoading: true
+})
+// 绑定公司，检测公司是否存在
+export const checkOldCompanyName = (data) => request({
+  url: `/company/exist/${data}`,
+  type: 'get',
   noGlobalLoading: true
 })
 /* 发送验证码到企业邮箱 */

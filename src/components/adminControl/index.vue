@@ -82,7 +82,7 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import ImageUploader from '@/components/imageUploader'
-import { checkIdentityApi, bindCompanyApi, deleteAdminApi, deleteRecruiterApi, checkCompanyNameApi,createCompanyApi } from 'API/company'
+import { checkIdentityApi, bindCompanyApi, deleteAdminApi, deleteRecruiterApi, checkCompanyNameApi,checkOldCompanyName,createCompanyApi } from 'API/company'
 @Component({
     name: 'adminBox',
     props: {
@@ -142,12 +142,13 @@ export default class adminBox extends Vue {
         email: '',
         position:""
     }
+    // wait
     nameRule = (rule, value, callback) => {
-        checkCompanyNameApi(value).then(res => {
+        checkCompanyNameApi({company_name:value}).then(res => {
             if (res.data.data.exist) {
                 callback()
             } else {
-                callback(new Error(`公司不存在，请输入完整且正确的公司名字`))
+                callback(new Error(`${res.data.msg}`))
             }
         })
     }
@@ -280,7 +281,7 @@ export default class adminBox extends Vue {
         })
     }
     checkCompany () {
-        checkCompanyNameApi(this.bindCompanyForm.name).then(res => {
+        checkOldCompanyName(this.bindCompanyForm.name).then(res => {
             if (res.data.data.exist) {
                 this.bindCompanyId = res.data.data.id
             }

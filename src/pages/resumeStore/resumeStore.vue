@@ -146,9 +146,8 @@
             :page-size="20"
             :total="leftcontent.total"
             @current-change="handlePageChange"
-          >
-            <span class="total">共 {{pageCount}} 页，{{leftcontent.total}} 条记录</span>
-          </el-pagination>
+          ></el-pagination>
+          <span class="total">共 {{lastPage}} 页，{{leftcontent.total}} 条记录</span>
         </footer>
       </div>
       <transition name="el-fade-in-linear" v-show="isShowMark" slot="Mark">
@@ -393,9 +392,9 @@ import {
     CustomSelect
   },
   watch: {
-    // itemList: (newData, oldData) => {
-    //   this.getDetail(newData[0].uid, 0);
-    // }
+    nowIndex: (newData, oldData) => {
+      console.log("new", newData, oldData);
+    }
   }
 })
 export default class resumeStore extends Vue {
@@ -404,6 +403,7 @@ export default class resumeStore extends Vue {
     total: 0,
     title: "简历库"
   };
+  lastPage = "";
   nowResumeMsg = {
     moreIntroduce: {
       introduce: ""
@@ -581,12 +581,12 @@ export default class resumeStore extends Vue {
   rightArrow() {
     if (this.nowIndex === this.itemList.length) {
       this.$message({
-        message:'本页数据加载完毕',
-        type: 'warning'
-      })
+        message: "本页数据加载完毕",
+        type: "warning"
+      });
     } else {
-      this.nowIndex+=this.nowIndex;
-      console.log(this.nowIndex,typeof this.nowIndex)
+      this.nowIndex += this.nowIndex;
+      console.log(this.nowIndex, typeof this.nowIndex);
       this.getDetail(this.itemList[this.nowIndex].uid, this.nowIndex);
     }
   }
@@ -606,7 +606,14 @@ export default class resumeStore extends Vue {
   getData() {
     GetResumeAPI(this.form).then(res => {
       this.itemList = res.data.data;
-      this.leftcontent.total = res.data.meta.total;
+      this.leftcontent.total = parseInt(res.data.meta.total);
+      this.lastPage = parseInt(res.data.meta.lastPage);
+      console.log(this.lastPage);
+      // this.$nextTick(() => {
+      //   this.$set(this.leftcontent, "total", Number(res.data.meta.total));
+      //   this.$set(this.leftcontent, "lastPage", Number(res.data.meta.lastPage));
+      // });
+
       console.log("itemList", this.itemList);
       console.log("this.leftcontent", this.leftcontent);
     });

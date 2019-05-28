@@ -28,6 +28,7 @@ export const jobhuntStatusAPI = data => request({
 export const GetResumeHistory = data => request({
 	url: `/resume/history/${data}`,
 	type: 'get',
+	noGlobalLoading: true,
 })
 
 // 添加简历历史记录

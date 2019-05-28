@@ -31,9 +31,11 @@
   }
 
   .resumeList {
-    height: 520px;
+    height: 566px;
     overflow-y: scroll;
-
+    &::-webkit-scrollbar {
+      display: none;
+    }
     .resumeItem {
       border: 1px solid #ccc;
       margin-bottom: 20px;
@@ -204,6 +206,9 @@
   background-color: #ffffff;
   box-shadow: 0px -1px 0px 0px rgba(232, 233, 235, 1);
   border: 1px solid #e8e9eb;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 // 简历轮播显示
@@ -285,10 +290,11 @@
       left: 0px;
       span {
         color: #929292;
+        font-size: 14px;
       }
     }
     .Code {
-      width: 181px;
+      width: 180px;
       height: 690px;
       border-left: 1px solid #ededed;
       position: absolute;
@@ -334,6 +340,7 @@
           font-size: 14px;
           color: #42334d;
           margin-bottom: 10px;
+          font-weight: 700;
         }
         .noUpload {
           text-align: left;
@@ -395,6 +402,7 @@
           text-align: left;
           margin-left: 20px;
           font-size: 14px;
+          font-weight: 700;
           color: #42334d;
           margin-bottom: 10px;
         }
@@ -408,6 +416,10 @@
           line-height: 36px;
           margin: 0 auto;
           cursor: pointer;
+          span{
+            color:rgba(101,39,145,1);
+            font-size: 14px;
+          }
         }
       }
     }
@@ -473,7 +485,7 @@
               align-items: baseline;
               .realName {
                 font-size: 22px;
-                font-weight: 600;
+                font-weight: 700;
                 color: #42334d;
                 width: 122px;
                 white-space: nowrap;
@@ -486,8 +498,26 @@
                 .lebalItem {
                   display: inline-block;
                   margin-right: 24px;
+                  &:nth-child(1){
+                    span{
+                      font-weight: 300;
+                    }
+                  }
+                  &:nth-child(2){
+                    span{
+                      font-weight: 300;
+                    }
+                  }
+                  &:nth-child(3){
+                    span{
+                      font-weight: 300;
+                    }
+                  }
                   i {
                     margin-right: 10px;
+                  }
+                  span{
+                    font-size: 14px;
                   }
                 }
               }
@@ -530,6 +560,10 @@
           color: #929292;
           font-size: 13px;
           .msg {
+            span{
+              font-size:13px;
+              color:rgba(146,146,146,1);
+            }
             i {
               font-weight: 600;
               font-size: 15px;
@@ -552,6 +586,7 @@
               vertical-align: middle;
               color: #652791;
               margin-bottom: 8px;
+              font-weight: 300;
             }
           }
         }
@@ -569,7 +604,7 @@
       .title {
         font-size: 14px;
         font-family: PingFangSC-Medium;
-        font-weight: 500;
+        font-weight: 700;
         color: #42334d;
         display: inline-block;
       }
@@ -582,7 +617,6 @@
           padding-top: 20px;
           .position {
             font-family: PingFangSC-Regular;
-            font-weight: 400;
             font-size: 14px;
             color: rgba(92, 86, 93, 1);
             margin-right: 10px;
@@ -594,6 +628,7 @@
           .price {
             font-size: 16px;
             color: #ff7f4c;
+            font-weight: 700;
           }
         }
       }
@@ -607,6 +642,7 @@
       padding-top: 20px;
       .title {
         font-size: 14px;
+        font-weight: 700;
         color: #42334d;
         width: 100px;
         text-align: left;
@@ -639,7 +675,6 @@
             span {
               font-size: 14px;
               color: #5c565d;
-              font-weight: 400;
             }
           }
           .workIconList {
@@ -654,6 +689,7 @@
               font-size: 12px;
               margin-right: 10px;
               border-radius: 5px;
+              font-weight: 300;
             }
           }
           .workContent {
@@ -671,7 +707,6 @@
                 font-size: 14px;
                 color: #929292;
                 font-family: PingFangSC-Regular;
-                font-weight: 400;
               }
             }
           }
