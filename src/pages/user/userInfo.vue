@@ -84,7 +84,6 @@
               placeholder="请选择跟进人"
               @change="ground"
             >
-              <!-- <el-option label="全部" :value="all" v-if="AdminShow==4"/> -->
               <el-option label="无" :value="0"/>
               <el-option
                 v-for="(item, index) in salesList"
@@ -459,7 +458,13 @@ export default class addUser extends Vue {
     let userInfo = res.data.data;
     this.userInfo = userInfo;
     this.isDetection = !userInfo.needRealNameAuth;
-    this.companyInfo = userInfo.companyInfo;
+    if(userInfo.companyInfo) {
+      this.companyInfo = userInfo.companyInfo;
+    } else {
+      this.companyInfo = {
+        realname: ''
+      }
+    }
     this.createPositionRight = !!userInfo.createPositionRight;
     this.phone = {
       mobile: userInfo.mobile
@@ -519,7 +524,7 @@ export default class addUser extends Vue {
   userList() {
     getSalerListApi().then(res => {
       this.salesList = res.data.data;
-      console.log(this.salesList);
+      console.log(this.salesList, 'fffffffffffffffffffffffff');
     });
   }
   mounted(e) {
