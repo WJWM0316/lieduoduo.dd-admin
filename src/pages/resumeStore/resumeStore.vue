@@ -123,14 +123,12 @@
                     <span v-show="index4!=item3.fields.length-1">·</span>
                   </div>
                 </div>
-                <!-- <p
-                  v-for="(item2,index2) in item.expects"
-                  :key="index2"
-                >{{item2.position}} {{item2.province}} 互联网·人才服务 6k-9k</p>-->
-                <!-- <p>产品经理 广州 互联网/人才服务 6k-9k</p> -->
-                <!-- <p>产品经理 广州 互联网/人才服务 6k-9k</p> -->
               </div>
-              <div class="seeResume" @click.stop="seereResume(index)">
+              <div
+                class="seeResume"
+                @click.stop="seereResume(index)"
+                v-show="item.resumeAttach!=null"
+              >
                 <el-button>查看简历附件</el-button>
               </div>
             </div>
@@ -153,6 +151,7 @@
       <transition name="el-fade-in-linear" v-show="isShowMark" slot="Mark">
         <div class="Mask" @click.self="showMark">
           <div class="swiperList">
+            jobStatusDesc
             <div class="arrow">
               <div class="left comstyle" @click.stop="LeftArrow">
                 <i class="el-icon-caret-left"></i>
@@ -455,11 +454,7 @@ export default class resumeStore extends Vue {
       this.$refs.custom.clearValue();
     });
   }
-  /* 查看简历附件 */
-  seereResume(index) {
-    let uid = this.itemList[index].uid;
-    this.operating(uid, { desc: "简历附件" });
-  }
+
   // 查看手机号码
   seeMobile() {
     let uid = this.itemList[this.nowIndex].uid;
@@ -538,21 +533,34 @@ export default class resumeStore extends Vue {
       this.jobhuntStatusList = res.data.data;
     });
   }
-  seeFiles() {
-    let File = this.nowResumeMsg.resumeAttach;
+  /* 查看简历附件 */
+  seereResume(index) {
+    let uid = this.itemList[index].uid;
+    console.log(this.itemList[index]);
+    this.seeFiles(this.itemList[index], uid);
+    this.operating(uid, { desc: "简历附件" });
+  }
+  seeFiles(fileObJ, uid) {
+    let File = fileObJ.resumeAttach;
+
     if (File === null) {
       this.$message.error("此人未上传简历附件");
     } else {
-      let uid = this.nowResumeMsg.uid;
-      let type = File.attachType;
+      let uid = fileObJ.uid;
+      let type = File.extension;
       this.operating(uid, { desc: "简历附件" });
       this.$nextTick(() => {
         if (type === "img") {
           window.open(File.url);
-        } else {
+        } else if (/(doc|docx|jpg|png)/.test(type)) {
           window.open(
             `https://view.officeapps.live.com/op/view.aspx?src=${File.url}`
           );
+        } else {
+          this.$message({
+            message: "格式不支持",
+            type: "warning"
+          });
         }
       });
     }

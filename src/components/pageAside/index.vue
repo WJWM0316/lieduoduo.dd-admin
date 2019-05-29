@@ -48,26 +48,26 @@ import { routes } from "@/router/routes";
       handler(route) {
         // console.log('this.itemList',this.itemList)
 
-        this.onePath = route.path;
-        // this.SecondPath=route.path;
-        this.AdminShow = +sessionStorage.getItem("AdminShow");
-        if (/(0|1|2)/.test(this.AdminShow)) {
-          console.log("显示简历库");
-          this.$set(this.itemList, 5, {
-            path: "/resumeStore",
-            name: "简历库",
-            isShow: true,
-            children: []
-          });
-        } else {
-          console.log("不显示简历库");
-          this.$set(this.itemList, 5, {
-            path: "/resumeStore",
-            name: "简历库",
-            isShow: false,
-            children: []
-          });
-        }
+        // this.onePath = route.path;
+        // // this.SecondPath=route.path;
+        // this.AdminShow = +sessionStorage.getItem("AdminShow");
+        // if (/(0|1|2)/.test(this.AdminShow)) {
+        //   console.log("显示简历库");
+        //   this.$set(this.itemList, 5, {
+        //     path: "/resumeStore",
+        //     name: "简历库",
+        //     isShow: true,
+        //     children: []
+        //   });
+        // } else {
+        //   console.log("不显示简历库");
+        //   this.$set(this.itemList, 5, {
+        //     path: "/resumeStore",
+        //     name: "简历库",
+        //     isShow: false,
+        //     children: []
+        //   });
+        // }
       },
       immediate: true
     }
@@ -128,13 +128,13 @@ export default class PageAside extends Vue {
           name: "邀请列表"
         }
       ]
-    },
-    {
-      path: "/resumeStore",
-      name: "简历库",
-      isShow: true,
-      children: []
     }
+    // {
+    //   path: "/resumeStore",
+    //   name: "简历库",
+    //   isShow: true,
+    //   children: []
+    // }
   ];
   handleNodeClick(data) {}
   tabSwitch() {
