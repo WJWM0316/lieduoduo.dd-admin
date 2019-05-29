@@ -404,14 +404,16 @@ let lock = false;
         const scrollTop = el.scrollTop;
         const scrollHeight = el.scrollHeight;
         if (offsetHeight + scrollTop - scrollHeight >= -1) {
-          if (!lock) {
+          // console.log(!lock)
+          if (lock) {
+            console.log('水电费水电费')
             GetResumeHistory(self.itemList[self.nowIndex].uid, {
               page: self.historyCount++,
               count: 20
             }).then(res => {
+              self.historyList=[...res.data.data,...self.historyList];
               lock = false;
-              self.historyList.concat(res.data.data);
-              console.log(self.historyList);
+              
             });
           }
         }
