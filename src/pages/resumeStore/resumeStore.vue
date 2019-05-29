@@ -542,7 +542,7 @@ export default class resumeStore extends Vue {
   // 查看附件
   seeFilesBtn() {
     this.seeFiles(this.nowResumeMsg, this.nowResumeMsg.uid);
-    this.operating(uid, { desc: "简历附件" });
+    this.operating(this.nowResumeMsg.uid, { desc: "简历附件" });
   }
   seeFiles(fileObJ, uid) {
     let File = fileObJ.resumeAttach;
