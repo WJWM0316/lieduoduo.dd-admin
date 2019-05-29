@@ -193,7 +193,7 @@
                 <div class="download row">
                   <p class="contactTitle">附件简历:</p>
                   <p v-if="nowResumeMsg.resumeAttach==null" class="noUpload">暂无上传</p>
-                  <div class="Contact" @click.stop="seeFiles" v-else>
+                  <div class="Contact" @click.stop="seeFilesBtn" v-else>
                     <span>查看附件</span>
                   </div>
                 </div>
@@ -380,7 +380,7 @@ import {
   components: {
     lyoutContent,
     CustomSelect
-  },
+  }
 })
 export default class resumeStore extends Vue {
   typeList = ["简历详情", "历史记录"];
@@ -435,7 +435,7 @@ export default class resumeStore extends Vue {
   /* 清除列表选项 */
   resetForm(name) {
     this.$refs[name].resetFields();
-    this.form.page=1;
+    this.form.page = 1;
     this.form.isStudent = "";
     this.form.workExpLower = "";
     this.form.workExpUpper = "";
@@ -482,7 +482,7 @@ export default class resumeStore extends Vue {
 
   // 查询按钮
   onSubmit() {
-    this.form.page=1;
+    this.form.page = 1;
     this.getData();
   }
   // 点击切换
@@ -539,6 +539,11 @@ export default class resumeStore extends Vue {
     this.seeFiles(this.itemList[index], uid);
     this.operating(uid, { desc: "简历附件" });
   }
+  // 查看附件
+  seeFilesBtn() {
+    this.seeFiles(this.nowResumeMsg, this.nowResumeMsg.uid);
+    this.operating(uid, { desc: "简历附件" });
+  }
   seeFiles(fileObJ, uid) {
     let File = fileObJ.resumeAttach;
 
@@ -575,7 +580,7 @@ export default class resumeStore extends Vue {
   LeftArrow() {
     if (this.nowIndex < 0) return;
     let index = this.nowIndex--;
-    this.nowResumeMsg=Object.assign(this.nowResumeMsg,this.itemList[index]);
+    this.nowResumeMsg = Object.assign(this.nowResumeMsg, this.itemList[index]);
   }
   // 右箭头
   rightArrow() {
@@ -585,15 +590,18 @@ export default class resumeStore extends Vue {
         type: "warning"
       });
     } else {
-      console.log(this.nowIndex)
+      console.log(this.nowIndex);
       let index = this.nowIndex++;
-      this.nowResumeMsg=Object.assign(this.nowResumeMsg,this.itemList[index]);
+      this.nowResumeMsg = Object.assign(
+        this.nowResumeMsg,
+        this.itemList[index]
+      );
     }
   }
   getDetail(uid, index) {
     this.isShowMark = true;
-    this.nowIndex=index
-    console.log('thisIndex',typeof this.nowIndex)
+    this.nowIndex = index;
+    console.log("thisIndex", typeof this.nowIndex);
     GetResumeDetailsAPI(uid).then(res => {
       this.nowResumeMsg = res.data.data;
       this.nowResumeMsg = Object.assign({}, this.nowResumeMsg, {
