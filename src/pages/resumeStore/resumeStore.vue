@@ -151,7 +151,6 @@
       <transition name="el-fade-in-linear" v-show="isShowMark" slot="Mark">
         <div class="Mask" @click.self="showMark">
           <div class="swiperList">
-            jobStatusDesc
             <div class="arrow">
               <div class="left comstyle" @click.stop="LeftArrow">
                 <i class="el-icon-caret-left"></i>
@@ -382,11 +381,6 @@ import {
     lyoutContent,
     CustomSelect
   },
-  watch: {
-    nowIndex: (newData, oldData) => {
-      console.log("new", newData, oldData);
-    }
-  }
 })
 export default class resumeStore extends Vue {
   typeList = ["简历详情", "历史记录"];
@@ -581,7 +575,7 @@ export default class resumeStore extends Vue {
   LeftArrow() {
     if (this.nowIndex < 0) return;
     let index = this.nowIndex--;
-    this.getDetail(this.itemList[index].uid);
+    this.nowResumeMsg=Object.assign(this.nowResumeMsg,this.itemList[index]);
   }
   // 右箭头
   rightArrow() {
@@ -591,13 +585,15 @@ export default class resumeStore extends Vue {
         type: "warning"
       });
     } else {
+      console.log(this.nowIndex)
       let index = this.nowIndex++;
-      this.getDetail(this.itemList[index].uid);
+      this.nowResumeMsg=Object.assign(this.nowResumeMsg,this.itemList[index]);
     }
   }
   getDetail(uid, index) {
     this.isShowMark = true;
     this.nowIndex=index
+    console.log('thisIndex',typeof this.nowIndex)
     GetResumeDetailsAPI(uid).then(res => {
       this.nowResumeMsg = res.data.data;
       this.nowResumeMsg = Object.assign({}, this.nowResumeMsg, {
