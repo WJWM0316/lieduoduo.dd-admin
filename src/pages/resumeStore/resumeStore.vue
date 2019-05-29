@@ -284,8 +284,12 @@
                   <div class="workExperience" v-show="nowResumeMsg.projects!=''">
                     <p class="title">项目经历</p>
                     <div class="workList">
-                      <div class="workItem" v-for="(item,index) in nowResumeMsg.projects" :key="item.role"
-                      :style="index===nowResumeMsg.projects.length-1?'margin-bottom:0px;':''">
+                      <div
+                        class="workItem"
+                        v-for="(item,index) in nowResumeMsg.projects"
+                        :key="item.role"
+                        :style="index===nowResumeMsg.projects.length-1?'margin-bottom:0px;':''"
+                      >
                         <div class="workTime">
                           <span>{{item.name}} &nbsp;| &nbsp;{{item.role}}</span>
                           <span>{{item.startTimeDesc}}~{{item.endTimeDesc}}</span>
@@ -363,14 +367,14 @@
             </div>
             <!-- 历史记录 -->
             <div class="nowResume" v-show="nowCheck==1">
-               <div class="Numbering">
+              <div class="Numbering">
                 <span>简历编号：{{nowResumeMsg.vkey}}</span>
                 <span>{{nowResumeMsg.resumeUpdateTime}}更新</span>
               </div>
               <div class="historyList" id="historyScroll">
                 <span v-for="(item,index) in historyList" :key="index">
                   {{item.createdAt}}
-                  <i> &nbsp;&nbsp;&nbsp;{{item.admin}}&nbsp;&nbsp;</i>
+                  <i>&nbsp;&nbsp;&nbsp;{{item.admin}}&nbsp;&nbsp;</i>
                   &nbsp;&nbsp;{{item.action}} &nbsp;&nbsp;{{item.desc}}
                 </span>
               </div>
@@ -420,7 +424,7 @@ let lock = false;
               page: self.historyCount++,
               count: 20
             }).then(res => {
-              self.historyList = [...res.data.data, ...self.historyList];
+              self.historyList = [...self.historyList, ...res.data.data];
               lock = false;
             });
           }
@@ -534,17 +538,28 @@ export default class resumeStore extends Vue {
     this.form.page = 1;
     this.getData();
   }
+  // 请求历史记录
+  history(uid, form) {
+    GetResumeHistory(uid, form).then(res => {
+      console.log(res);
+      this.historyList = res.data.data;
+    });
+  }
   // 点击切换
   check(index) {
     this.nowCheck = +index;
+    this.historyCount = 1;
+    this.historyList = [];
     if (this.nowCheck === 1) {
-      GetResumeHistory(this.itemList[this.nowIndex].uid, {
-        page: this.historyCount++,
+      // console.log("我进来了");
+      this.history(this.nowResumeMsg.uid, {
+        page: this.historyCount,
         count: 20
-      }).then(res => {
-        console.log(res);
-        this.historyList = res.data.data;
       });
+    } else if (this.nowCheck === 0) {
+      console.log("简历详情");
+      console.log(this.nowResumeMsg.name);
+      this.operating(this.nowResumeMsg.uid, { desc: "简历" });
     }
   }
   created() {
@@ -634,6 +649,14 @@ export default class resumeStore extends Vue {
   LeftArrow() {
     if (this.nowIndex < 0) return;
     let index = this.nowIndex--;
+    // this.historyCount=1;
+    if (this.nowCheck == 1) {
+      this.historyCount = 1;
+      this.history(this.itemList[index].uid, {
+        page: this.historyCount,
+        count: 20
+      });
+    }
     this.nowResumeMsg = Object.assign(this.nowResumeMsg, this.itemList[index]);
   }
   // 右箭头
@@ -644,8 +667,15 @@ export default class resumeStore extends Vue {
         type: "warning"
       });
     } else {
-      console.log(this.nowIndex);
       let index = this.nowIndex++;
+      // this.historyCount=1;
+      if (this.nowCheck === 1) {
+        this.historyCount = 1;
+        this.history(this.itemList[index].uid, {
+          page: this.historyCount,
+          count: 20
+        });
+      }
       this.nowResumeMsg = Object.assign(
         this.nowResumeMsg,
         this.itemList[index]
