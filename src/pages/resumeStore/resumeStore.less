@@ -217,7 +217,7 @@
   z-index: 520;
   height: 100%;
   position: relative;
-  max-width: 969px;
+  max-width: 923px;
   margin-top: 23px;
 
   .arrow {
@@ -339,7 +339,7 @@
         margin-top: 52px;
         .contactTitle {
           text-align: left;
-          margin-left: 20px;
+          margin-left: 23px;
           font-size: 14px;
           color: #42334d;
           margin-bottom: 10px;
@@ -403,7 +403,7 @@
         }
         .contactTitle {
           text-align: left;
-          margin-left: 20px;
+          margin-left: 23px;
           font-size: 14px;
           font-weight: 700;
           color: #42334d;
@@ -430,22 +430,21 @@
       position: absolute;
       top: 87px;
       left: 0px;
-      width: 739px;
+      width: 742px;
       height: 689px;
       overflow-y: scroll;
-      padding-left: 50px;
+     
       &::-webkit-scrollbar {
         display: none;
       }
       .base {
         padding-bottom: 20px;
+        padding-left: 50px;
         .message {
           display: flex;
           justify-content: flex-start;
           align-items: flex-start;
           width: 100%;
-          margin-top: 30px;
-
           .msgUrl {
             width: 88px;
             height: 88px;
@@ -480,7 +479,6 @@
             text-align: left;
             vertical-align: top;
             height: 100%;
-            padding-left: 10px;
             margin-left: 30px;
             .basemsg {
               display: flex;
@@ -490,7 +488,7 @@
                 font-size: 22px;
                 font-weight: 700;
                 color: #42334d;
-                width: 122px;
+                width: 153px;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
@@ -498,9 +496,14 @@
               }
               .lebalList {
                 display: inline-block;
+                margin-left: 20px;
+                overflow: hidden;
+                height: 19px;
                 .lebalItem {
                   display: inline-block;
                   margin-right: 24px;
+                  height: 23px;
+                  overflow: 19px;
                   &:nth-child(1){
                     span{
                       font-weight: 300;
@@ -516,8 +519,12 @@
                       font-weight: 300;
                     }
                   }
+                  &:nth-child(4){
+                    height: 0px;
+                    margin-right: 0px;
+                  }
                   i {
-                    margin-right: 10px;
+                    margin-right: 7px;
                   }
                   span{
                     font-size: 14px;
@@ -530,7 +537,6 @@
               padding: 5px 10px;
               background: rgba(239, 233, 244, 1);
               color: #652791;
-              margin-left: 20px;
               vertical-align: middle;
             }
 
@@ -591,6 +597,7 @@
               margin-bottom: 8px;
               font-weight: 300;
               height: 22px;
+              width: 48px;
               padding: 1px 12px;
               line-height: 22px;
             }
@@ -600,13 +607,13 @@
     }
 
     .intention {
-      width: 100%;
       text-align: left;
       padding-top: 20px;
       padding-bottom: 20px;
       display: flex;
       justify-content: flex-start;
       align-items: baseline;
+      margin-left: 82px;
       .title {
         font-size: 14px;
         font-family: PingFangSC-Medium;
@@ -641,7 +648,7 @@
     }
 
     .workExperience {
-      width: 100%;
+      margin-left: 82px;
       display: flex;
       justify-content: flex-start;
       align-items: baseline;
@@ -650,12 +657,12 @@
         font-size: 14px;
         font-weight: 700;
         color: #42334d;
-        width: 100px;
         text-align: left;
       }
       .workList {
         margin-top: 20px;
-        width: 100%;
+        width:545px;
+        margin-left: 30px;
         pre {
           text-align: left;
         }
@@ -678,6 +685,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 10px 15px 10px 0px;
+            width: 545px;
             span {
               font-size: 14px;
               color: #5c565d;
@@ -713,6 +721,8 @@
                 font-size: 14px;
                 color: #929292;
                 font-family: PingFangSC-Regular;
+                width: 545px;
+                white-space: pre-wrap;
               }
             }
           }

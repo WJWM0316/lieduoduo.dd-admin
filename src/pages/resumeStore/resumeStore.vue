@@ -271,7 +271,7 @@
                     <div class="workItem" v-for="item in nowResumeMsg.careers" :key="item.company">
                       <div class="workTime">
                         <span>{{item.company}} | {{item.position}}</span>
-                        <span>{{item.startTimeDesc}}-{{item.endTimeDesc}}</span>
+                        <span>{{item.startTimeDesc}}~{{item.endTimeDesc}}</span>
                       </div>
                       <div class="workContent">
                         <span class="duties">
@@ -295,7 +295,7 @@
                     <div class="workItem" v-for="item in nowResumeMsg.projects" :key="item.role">
                       <div class="workTime">
                         <span>{{item.name}}</span>
-                        <span>{{item.startTimeDesc}}-{{item.endTimeDesc}}</span>
+                        <span>{{item.startTimeDesc}}~{{item.endTimeDesc}}</span>
                       </div>
                       <div class="workContent">
                         <p class="name">项目职责:{{item.role}}</p>
@@ -317,7 +317,7 @@
                     >
                       <div class="workTime">
                         <span>{{item.school}} | {{item.degreeDesc}} | {{item.major}}</span>
-                        <span>{{item.startTimeDesc}}-{{item.endTimeDesc}}</span>
+                        <span>{{item.startTimeDesc}}~{{item.endTimeDesc}}</span>
                       </div>
                       <div class="workContent">
                         <span class="duties">{{item.experience}}</span>
@@ -455,7 +455,7 @@ export default class resumeStore extends Vue {
     // console.log(this.nowIndex)
     // console.log(this.itemList[this.nowIndex])
     // return
-    let uid = this.itemList[this.nowIndex].uid;
+    let uid = this.nowResumeMsg.uid;
     this.operating(uid, { desc: "联系方式" });
     this.$nextTick(() => {
       this.nowResumeMsg.showPhone = !this.nowResumeMsg.showPhone;
@@ -463,7 +463,7 @@ export default class resumeStore extends Vue {
   }
   /* 查看微信号 */
   seeWechat() {
-    let uid = this.itemList[this.nowIndex].uid;
+    let uid = this.nowResumeMsg.uid;
     this.operating(uid, { desc: "微信号" });
     this.$nextTick(() => {
       this.nowResumeMsg.showWechat = !this.nowResumeMsg.showWechat;
@@ -556,6 +556,8 @@ export default class resumeStore extends Vue {
       this.$nextTick(() => {
         if (type === "img") {
           window.open(File.url);
+        }else if(/(pdf)/.test(type)){
+          window.open(File.url)
         } else if (/(doc|docx|jpg|png)/.test(type)) {
           window.open(
             `https://view.officeapps.live.com/op/view.aspx?src=${File.url}`
