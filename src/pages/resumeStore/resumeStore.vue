@@ -441,6 +441,7 @@ export default class resumeStore extends Vue {
   /* 清除列表选项 */
   resetForm(name) {
     this.$refs[name].resetFields();
+    this.form.page=1;
     this.form.isStudent = "";
     this.form.workExpLower = "";
     this.form.workExpUpper = "";
@@ -457,6 +458,9 @@ export default class resumeStore extends Vue {
 
   // 查看手机号码
   seeMobile() {
+    // console.log(this.nowIndex)
+    // console.log(this.itemList[this.nowIndex])
+    // return
     let uid = this.itemList[this.nowIndex].uid;
     this.operating(uid, { desc: "联系方式" });
     this.$nextTick(() => {
@@ -484,6 +488,7 @@ export default class resumeStore extends Vue {
 
   // 查询按钮
   onSubmit() {
+    this.form.page=1;
     this.getData();
   }
   // 点击切换
@@ -592,6 +597,7 @@ export default class resumeStore extends Vue {
   }
   getDetail(uid, index) {
     this.isShowMark = true;
+    this.nowIndex=index
     GetResumeDetailsAPI(uid).then(res => {
       this.nowResumeMsg = res.data.data;
       this.nowResumeMsg = Object.assign({}, this.nowResumeMsg, {
