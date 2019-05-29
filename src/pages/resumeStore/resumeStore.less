@@ -230,11 +230,14 @@
     top: 50%;
     z-index: -1;
     .comstyle {
-      width: 30px;
+      width: 50px;
       height: 110px;
       background: #fff;
       line-height: 110px;
       cursor: pointer;
+      i{
+        font-size: 20px;
+      }
     }
   }
 
@@ -515,6 +518,7 @@
                 display: inline-block;
                 margin-left: 20px;
                 overflow: hidden;
+                text-align: right;
                 height: 19px;
                 .lebalItem {
                   display: inline-block;
@@ -631,7 +635,7 @@
     .intention {
       text-align: left;
       padding-top: 20px;
-      padding-bottom: 20px;
+      padding-bottom: 48px;
       display: flex;
       justify-content: flex-start;
       align-items: baseline;
@@ -658,10 +662,14 @@
           }
           .fields {
             display: inline-block;
-            margin-right: 20px;
+            span{
+              font-size: 14px;
+              color: #5C565D;
+            }
+            // margin-right: 20px;
           }
           .price {
-            font-size: 16px;
+            font-size: 14px;
             color: #ff7f4c;
             font-weight: 700;
           }
@@ -674,8 +682,7 @@
       display: flex;
       justify-content: flex-start;
       align-items: baseline;
-      padding-top: 20px;
-      min-height: 135px;
+      margin-bottom: 48px;
       .title {
         font-size: 14px;
         font-weight: 700;
@@ -683,11 +690,13 @@
         text-align: left;
       }
       .workList {
-        margin-top: 20px;
         width:545px;
         margin-left: 30px;
         pre {
           text-align: left;
+          white-space: pre-wrap;
+          font-size: 13px;
+          color: #929292;
         }
         .imgList {
           display: flex;
@@ -711,12 +720,12 @@
             width: 545px;
             span {
               font-size: 14px;
-              color: #5c565d;
+              color: #929292;
             }
           }
           .workIconList {
             text-align: left;
-            margin-top: 8px;
+            margin-top: 12px;
             span {
               display: inline-block;
               background: rgba(239, 233, 244, 1);
@@ -732,7 +741,6 @@
           .workContent {
             text-align: left;
             .name {
-              margin: 15px;
               margin-left: 0px;
               // margin-top: 0px;
               font-size: 15px;
@@ -741,11 +749,12 @@
             .duties {
               text-align: left;
               pre {
-                font-size: 14px;
+                font-size: 13px;
                 color: #929292;
                 font-family: PingFangSC-Regular;
                 width: 545px;
                 white-space: pre-wrap;
+                margin: 0px;
               }
             }
           }

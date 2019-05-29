@@ -51,8 +51,17 @@ import { routes } from "@/router/routes";
         this.onePath = route.path;
         // this.SecondPath=route.path;
         this.AdminShow = +sessionStorage.getItem("AdminShow");
+        if(/(5)/.test(this.AdminShow)){
+          // console.log('隐藏审核管理')
+          this.$set(this.itemList, 3, {
+            path: "/check",
+            name: "审核管理",
+            isShow: false,
+            children: []
+          });
+        }
         if (/(0|1|2|5|6)/.test(this.AdminShow)) {
-          console.log("显示简历库");
+          // console.log("显示简历库");
           this.$set(this.itemList, 5, {
             path: "/resumeStore",
             name: "简历库",
@@ -60,7 +69,7 @@ import { routes } from "@/router/routes";
             children: []
           });
         } else {
-          console.log("不显示简历库");
+          // console.log("不显示简历库");
           this.$set(this.itemList, 5, {
             path: "/resumeStore",
             name: "简历库",

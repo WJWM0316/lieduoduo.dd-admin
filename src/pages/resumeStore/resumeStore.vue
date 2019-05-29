@@ -100,7 +100,7 @@
                   <span>·</span>
                   <span>{{item.degreeDesc}}</span>
                   <span>·</span>
-                  <span>{{item.degree}}岁</span>
+                  <span>{{item.age}}岁</span>
                 </div>
                 <p
                   class="lastWork"
@@ -120,7 +120,7 @@
                   <span>{{item3.salaryFloor}}~{{item3.salaryCeil}}k</span>
                   <div class="industry" v-for="(item4,index4) in item3.fields" :key="index4">
                     <span>{{item4.field}}</span>
-                    <span v-show="index4!=item3.fields.length-1">·</span>
+                    <span v-show="index4!=item3.fields.length-1">&nbsp;</span>
                   </div>
                 </div>
               </div>
@@ -171,7 +171,7 @@
             <div class="nowResume" v-show="nowCheck==0">
               <div class="Numbering">
                 <span>简历编号：{{nowResumeMsg.vkey}}</span>
-                <span>1995-.01.71更新</span>
+                <span>{{nowResumeMsg.resumeUpdateTime}}更新</span>
               </div>
               <div class="Code">
                 <div class="msgCode">
@@ -247,7 +247,7 @@
                   </div>
                 </div>
                 <!-- 求职意向 -->
-                <div class="intention">
+                <div class="intention" v-show="nowResumeMsg.expects!=''">
                   <p class="title">求职意向</p>
                   <div class="intentList">
                     <div
@@ -255,11 +255,10 @@
                       v-for="item in nowResumeMsg.expects"
                       :key="item.position"
                     >
-                      <span class="position">{{item.position}} | {{item.city}}</span>
+                      <span class="position">{{item.position}}&nbsp;|&nbsp;{{item.city}}</span>
                       <div style="margin-left:20px;display:inline-block;">
                         <div class="fields" v-for="(item1,index1) in item.fields" :key="index1">
-                          <span>{{item1.field}}</span>
-                          <!-- <span v-show="index1!==item.fields.length">·</span> -->
+                          <span>{{item1.field}}&nbsp;&nbsp;</span>
                         </div>
                       </div>
                       <span class="price">{{item.salaryFloor}}k-{{item.salaryCeil}}k</span>
@@ -267,7 +266,7 @@
                   </div>
                 </div>
                 <!-- 工作经历 -->
-                <div class="workExperience">
+                <div class="workExperience" v-show="nowResumeMsg.careers!=''">
                   <p class="title">工作经历</p>
                   <!-- v-show="nowResumeMsg.careers.length>0" -->
                   <div class="workList">
@@ -292,16 +291,15 @@
                   </div>
                 </div>
                 <!-- 项目经历 -->
-                <div class="workExperience">
+                <div class="workExperience" v-show="nowResumeMsg.projects!=''">
                   <p class="title">项目经历</p>
                   <div class="workList">
                     <div class="workItem" v-for="item in nowResumeMsg.projects" :key="item.role">
                       <div class="workTime">
-                        <span>{{item.name}}</span>
+                        <span>{{item.name}} &nbsp; &nbsp;|&nbsp; &nbsp;{{item.role}}</span>
                         <span>{{item.startTimeDesc}}~{{item.endTimeDesc}}</span>
                       </div>
                       <div class="workContent">
-                        <p class="name">项目职责:{{item.role}}</p>
                         <span class="duties">
                           <pre>{{item.description}}</pre>
                         </span>
@@ -310,7 +308,7 @@
                   </div>
                 </div>
                 <!-- 教育经历 -->
-                <div class="workExperience">
+                <div class="workExperience" v-show="nowResumeMsg.educations!=''">
                   <p class="title">教育经历</p>
                   <div class="workList">
                     <div
@@ -322,15 +320,14 @@
                         <span>{{item.school}} | {{item.degreeDesc}} | {{item.major}}</span>
                         <span>{{item.startTimeDesc}}~{{item.endTimeDesc}}</span>
                       </div>
-                      <div class="workContent">
+                      <div class="workContent" v-show="item.experience!=''">
                         <span class="duties">{{item.experience}}</span>
-                        <span class="duties" v-show="item.experience==''">暂无介绍</span>
                       </div>
                     </div>
                   </div>
                 </div>
                 <!-- 更多介绍 -->
-                <div class="workExperience">
+                <div class="workExperience" v-show="nowResumeMsg.moreIntroduce.introduce!=''">
                   <p class="title">更多介绍</p>
                   <div class="workList">
                     <pre>{{nowResumeMsg.moreIntroduce.introduce}}</pre>
