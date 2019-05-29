@@ -58,9 +58,14 @@ export default class login extends Vue {
         sessionStorage.setItem("name", res.data.data.realname);
         sessionStorage.setItem("admin_uid", res.data.data.id);
         saveAccessToken(res.data.data.adminToken);
-        let AdminShow= this.judge(groupId, isAdmin, isGroupAdmin, res.data.data);
+        let AdminShow = this.judge(
+          groupId,
+          isAdmin,
+          isGroupAdmin,
+          res.data.data
+        );
         sessionStorage.setItem("AdminShow", AdminShow);
-        let userInfo=Object.assign({},res.data.data,{AdminShow})
+        let userInfo = Object.assign({}, res.data.data, { AdminShow });
         this.$store.dispatch("update_userinfo", {
           userInfo
         });
@@ -81,21 +86,29 @@ export default class login extends Vue {
     let AdminShow;
     if (isAdmin) {
       console.log("超管");
-      AdminShow=0
+      AdminShow = 0;
     } else if (isGroupAdmin && groupId === 2) {
       console.log("客服组长");
-      AdminShow=1
+      AdminShow = 1;
     } else if (!isGroupAdmin && groupId === 2) {
       console.log("客服组员");
-      AdminShow=2
-    } else if (!isGroupAdmin && groupId >= 3) {
+      AdminShow = 2;
+    } else if (!isGroupAdmin && groupId === 3) {
       console.log("商务组员");
-      AdminShow=3
-    } else if (isGroupAdmin && groupId>=3) {
+      AdminShow = 3;
+    } else if (isGroupAdmin && groupId === 4) {
       console.log("商务组长");
-      AdminShow=4
+      AdminShow = 4;
+    } else if (!isGroupAdmin && groupId === 4) {
+      AdminShow = 3;
+    } else if (isGroupAdmin && groupId === 5) {
+      console.log("顾问主管");
+      AdminShow = 5;
+    } else if (!isGroupAdmin && groupId === 5) {
+      console.log("顾问组员");
+      AdminShow = 6;
     }
-    return AdminShow
+    return AdminShow;
   }
   resetForm(formName) {
     this.$refs[formName].resetFields();

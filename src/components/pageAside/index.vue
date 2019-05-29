@@ -51,7 +51,7 @@ import { routes } from "@/router/routes";
         this.onePath = route.path;
         // this.SecondPath=route.path;
         this.AdminShow = +sessionStorage.getItem("AdminShow");
-        if (/(0|1|2|4)/.test(this.AdminShow)) {
+        if (/(0|1|2|5|6)/.test(this.AdminShow)) {
           console.log("显示简历库");
           this.$set(this.itemList, 5, {
             path: "/resumeStore",
