@@ -579,12 +579,11 @@ export default class resumeStore extends Vue {
     } else {
       let index = this.nowIndex++;
       console.log(index, typeof index);
-      this.getDetail(this.itemList[index].uid, index);
+      this.getDetail(this.itemList[index].uid);
     }
   }
   getDetail(uid, index) {
     this.isShowMark = true;
-    this.nowIndex = +index;
     GetResumeDetailsAPI(uid).then(res => {
       this.nowResumeMsg = res.data.data;
       this.nowResumeMsg = Object.assign({}, this.nowResumeMsg, {

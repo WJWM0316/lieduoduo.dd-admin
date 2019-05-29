@@ -45,33 +45,31 @@ import { routes } from "@/router/routes";
   name: "page-asise",
   watch: {
     $route: {
-      // handler(route) {
-      //   // console.log('this.itemList',this.itemList)
+      handler(route) {
+        // console.log('this.itemList',this.itemList)
 
-      //   this.onePath = route.path;
-      //   console.log(this.onePath);
-      //   // this.SecondPath=route.path;
-      //   this.AdminShow = +sessionStorage.getItem("AdminShow");
-      //   console.log(this.AdminShow,'console.log( this.AdminShow )');
-      //   if (/(0|1|2)/.test(this.AdminShow)) {
-      //     console.log("显示简历库");
-      //     this.$set(this.itemList, 5, {
-      //       path: "/resumeStore",
-      //       name: "简历库",
-      //       isShow: true,
-      //       children: []
-      //     });
-      //   } else {
-      //     console.log("不显示简历库");
-      //     this.$set(this.itemList, 5, {
-      //       path: "/resumeStore",
-      //       name: "简历库",
-      //       isShow: false,
-      //       children: []
-      //     });
-      //   }
-      // },
-      // immediate: true
+        this.onePath = route.path;
+        // this.SecondPath=route.path;
+        this.AdminShow = +sessionStorage.getItem("AdminShow");
+        if (/(0|1|2)/.test(this.AdminShow)) {
+          console.log("显示简历库");
+          this.$set(this.itemList, 5, {
+            path: "/resumeStore",
+            name: "简历库",
+            isShow: true,
+            children: []
+          });
+        } else {
+          console.log("不显示简历库");
+          this.$set(this.itemList, 5, {
+            path: "/resumeStore",
+            name: "简历库",
+            isShow: false,
+            children: []
+          });
+        }
+      },
+      immediate: true
     }
   }
 })
@@ -131,12 +129,12 @@ export default class PageAside extends Vue {
         }
       ]
     },
-    // {
-    //   path: "/resumeStore",
-    //   name: "简历库",
-    //   isShow: true,
-    //   children: []
-    // }
+    {
+      path: "/resumeStore",
+      name: "简历库",
+      isShow: true,
+      children: []
+    }
   ];
   handleNodeClick(data) {}
   tabSwitch() {
