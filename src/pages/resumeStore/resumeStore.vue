@@ -328,6 +328,31 @@
                     </div>
                   </div>
                 </div>
+                <div class="Code">
+                  <div class="msgCode">
+                    <img :src="nowResumeMsg.resumeQrCode" alt v-if="nowResumeMsg.resumeQrCode">
+                    <span>扫码进入</span>
+                  </div>
+                  <div class="ContactInformation">
+                    <p class="contactTitle">联系方式:</p>
+                    <div class="Contact" @click.stop="seeMobile" v-if="nowResumeMsg.mobile!=''">
+                      <span>手机号</span>
+                      <span v-if="nowResumeMsg.showPhone==true">{{nowResumeMsg.mobile}}</span>
+                    </div>
+                    <div class="Contact" @click.stop="seeWechat" v-if="nowResumeMsg.wechat!=''">
+                      <span>微信号</span>
+                      <span v-if="nowResumeMsg.showWechat==true">{{nowResumeMsg.wechat}}</span>
+                    </div>
+                    <p v-if="nowResumeMsg.wechat==''&&nowResumeMsg.mobile==''" class="noUpload">暂无上传</p>
+                  </div>
+                  <div class="download row">
+                    <p class="contactTitle">附件简历:</p>
+                    <p v-if="nowResumeMsg.resumeAttach==null" class="noUpload">暂无上传</p>
+                    <div class="Contact" @click.stop="seeFilesBtn" v-else>
+                      <span>查看附件</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             <!-- 历史记录 -->
@@ -363,7 +388,7 @@ import {
   addHistory
 } from "API/resumeStore.js";
 
-let lock= false
+let lock = false;
 @Component({
   name: "resumeStore",
   components: {
@@ -379,19 +404,18 @@ let lock= false
         const scrollTop = el.scrollTop;
         const scrollHeight = el.scrollHeight;
         if (offsetHeight + scrollTop - scrollHeight >= -1) {
-          if(lock) return ;
-          GetResumeHistory(self.itemList[self.nowIndex].uid, {
-            page: self.historyCount++,
-            count: 20
-          }).then(res => {
-            lock = false
-            // console.log(self.historyList)
-            // console.log(res.data.data)
-            self.historyList.concat(res.data.data);
-            // self.historyList = [...self.historyList, ...res.data.data];
-            console.log(self.historyList);
-          });
+          if (!lock) {
+            GetResumeHistory(self.itemList[self.nowIndex].uid, {
+              page: self.historyCount++,
+              count: 20
+            }).then(res => {
+              lock = false;
+              self.historyList.concat(res.data.data);
+              console.log(self.historyList);
+            });
+          }
         }
+        lock = true;
       });
     }
   }
