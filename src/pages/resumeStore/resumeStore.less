@@ -285,7 +285,7 @@
     position: relative;
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 10px;
-    
+
     .Numbering {
       padding: 36px 50px 30px 50px;
       display: flex;
@@ -296,7 +296,7 @@
         font-size: 14px;
       }
     }
-    .resumeLyout{
+    .resumeLyout {
       display: flex;
       justify-content: flex-start;
       align-items: flex-start;
@@ -314,7 +314,7 @@
             height: 120px;
             border-radius: 50%;
           }
-  
+
           span {
             font-size: 12px;
             color: #42334d;
@@ -365,7 +365,7 @@
             display: inline-block;
             margin-bottom: 10px;
             cursor: pointer;
-  
+
             span {
               &:nth-child(2) {
                 position: absolute;
@@ -378,7 +378,7 @@
                 display: block;
                 top: -33px;
                 border-radius: 10px;
-  
+
                 &:before {
                   content: "";
                   position: absolute;
@@ -490,7 +490,7 @@
                 vertical-align: middle;
               }
             }
-  
+
             .msgUserInfo {
               text-align: left;
               vertical-align: top;
@@ -500,7 +500,7 @@
               padding-right: 28px;
               .basemsg {
                 display: flex;
-                justify-content:space-between;
+                justify-content: space-between;
                 align-items: baseline;
                 .realName {
                   font-size: 22px;
@@ -544,8 +544,7 @@
                     }
                     i {
                       margin-right: 7px;
-                      color: #CDCBCF;
-                      
+                      color: #cdcbcf;
                     }
                     span {
                       font-size: 14px;
@@ -553,7 +552,7 @@
                   }
                 }
               }
-  
+
               .status {
                 padding: 5px 9px 5px 10px;
                 background: #efe9f4;
@@ -564,18 +563,18 @@
                 line-height: 14px;
                 height: 23px;
               }
-  
+
               .nowWorking {
                 margin-top: 10px;
                 font-size: 15px;
                 color: #000;
-  
+
                 span {
                   padding-left: 10px;
                   display: inline-block;
                 }
               }
-  
+
               .education {
                 margin-top: 10px;
                 font-size: 15px;
@@ -587,7 +586,7 @@
               }
             }
           }
-  
+
           .description {
             margin-top: 20px;
             text-align: left;
@@ -604,7 +603,7 @@
                 color: #000;
               }
             }
-  
+
             .iconList {
               margin-top: 20px;
               display: flex;
@@ -632,11 +631,10 @@
         }
       }
     }
-   
 
     .intention {
       text-align: left;
-      padding-top: 20px;
+      padding-top: 28px;
       padding-bottom: 48px;
       display: flex;
       justify-content: flex-start;
@@ -655,7 +653,7 @@
         .intentionItem {
           width: 100%;
           text-align: left;
-          padding-top: 20px;
+          padding-bottom: 20px;
           .position {
             font-family: PingFangSC-Regular;
             font-size: 14px;
@@ -674,6 +672,7 @@
             font-size: 14px;
             color: #ff7f4c;
             font-weight: 700;
+            margin-left: 30px;
           }
         }
       }
@@ -692,7 +691,7 @@
         text-align: left;
       }
       .workList {
-        width: 545px;
+        width: 572px;
         margin-left: 30px;
         pre {
           text-align: left;
@@ -708,12 +707,15 @@
           img {
             width: 86px;
             height: 86px;
-            margin-right: 8px;
-            margin-bottom: 8px;
+            margin-right: 6px;
+            margin-bottom: 6px;
+            &:nth-child(6n+6){
+              margin-right: 0px;
+            }
           }
         }
         .workItem {
-          // margin-bottom: 20px;
+          margin-bottom: 28px;
           .workTime {
             display: flex;
             justify-content: space-between;
@@ -723,8 +725,8 @@
             span {
               font-size: 14px;
               color: #929292;
-              &:nth-child(1){
-                color: #5C565D;
+              &:nth-child(1) {
+                color: #5c565d;
               }
             }
           }
@@ -753,6 +755,8 @@
             }
             .duties {
               text-align: left;
+              font-size: 13px;
+              color: #929292;
               pre {
                 font-size: 13px;
                 color: #929292;
@@ -769,16 +773,22 @@
 
     .historyList {
       padding: 20px;
-      height: 685px;
+      padding-left: 50px;
+      height: 650px;
       overflow-y: scroll;
+      &::-webkit-scrollbar {
+        display: none;
+      }
       span {
         display: block;
         text-align: left;
         margin-bottom: 20px;
-
+        font-size: 14px;
+        color: #5c565d;
+        // font-weight: 700;
+        line-height: 20px;
         i {
-          cursor: pointer;
-          color: red;
+          margin-left: 34px;
         }
       }
     }

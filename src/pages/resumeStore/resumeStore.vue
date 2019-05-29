@@ -220,8 +220,9 @@
                           <div class="iconList">
                             <span
                               class="iconItem"
-                              v-for="item in nowResumeMsg.personalizedLabels"
+                              v-for="(item,index) in nowResumeMsg.personalizedLabels"
                               :key="item.labelName"
+                              :style="index===nowResumeMsg.personalizedLabels.length-1?'margin-bottom:0px;':''"
                             >{{item.labelName}}</span>
                           </div>
                         </div>
@@ -234,11 +235,13 @@
                     <div class="intentList">
                       <div
                         class="intentionItem"
-                        v-for="item in nowResumeMsg.expects"
+                        v-for="(item,index) in nowResumeMsg.expects"
                         :key="item.position"
+                        :style="index===nowResumeMsg.expects.length-1?'padding-bottom:0px;':''"
                       >
                         <span class="position">{{item.position}}&nbsp;|&nbsp;{{item.city}}</span>
-                        <div style="margin-left:20px;display:inline-block;">
+                        <span v-if="item.fields.length>0">|</span>
+                        <div style="margin-left:9px;display:inline-block;">
                           <div class="fields" v-for="(item1,index1) in item.fields" :key="index1">
                             <span>{{item1.field}}&nbsp;&nbsp;</span>
                           </div>
@@ -254,8 +257,9 @@
                     <div class="workList">
                       <div
                         class="workItem"
-                        v-for="item in nowResumeMsg.careers"
+                        v-for="(item,index) in nowResumeMsg.careers"
                         :key="item.company"
+                        :style="index===nowResumeMsg.careers.length-1?'margin-bottom:0px;':''"
                       >
                         <div class="workTime">
                           <span>{{item.company}} | {{item.position}}</span>
@@ -280,9 +284,10 @@
                   <div class="workExperience" v-show="nowResumeMsg.projects!=''">
                     <p class="title">项目经历</p>
                     <div class="workList">
-                      <div class="workItem" v-for="item in nowResumeMsg.projects" :key="item.role">
+                      <div class="workItem" v-for="(item,index) in nowResumeMsg.projects" :key="item.role"
+                      :style="index===nowResumeMsg.projects.length-1?'margin-bottom:0px;':''">
                         <div class="workTime">
-                          <span>{{item.name}} &nbsp; &nbsp;|&nbsp; &nbsp;{{item.role}}</span>
+                          <span>{{item.name}} &nbsp;| &nbsp;{{item.role}}</span>
                           <span>{{item.startTimeDesc}}~{{item.endTimeDesc}}</span>
                         </div>
                         <div class="workContent">
@@ -299,8 +304,9 @@
                     <div class="workList">
                       <div
                         class="workItem"
-                        v-for="item in nowResumeMsg.educations"
+                        v-for="(item,index) in nowResumeMsg.educations"
                         :key="item.school"
+                        :style="index===nowResumeMsg.educations.length-1?'margin-bottom:0px;':''"
                       >
                         <div class="workTime">
                           <span>{{item.school}} | {{item.degreeDesc}} | {{item.major}}</span>
@@ -357,11 +363,15 @@
             </div>
             <!-- 历史记录 -->
             <div class="nowResume" v-show="nowCheck==1">
+               <div class="Numbering">
+                <span>简历编号：{{nowResumeMsg.vkey}}</span>
+                <span>{{nowResumeMsg.resumeUpdateTime}}更新</span>
+              </div>
               <div class="historyList" id="historyScroll">
                 <span v-for="(item,index) in historyList" :key="index">
                   {{item.createdAt}}
-                  <i>{{item.admin}}</i>
-                  {{item.action}} {{item.desc}}
+                  <i> &nbsp;&nbsp;&nbsp;{{item.admin}}&nbsp;&nbsp;</i>
+                  &nbsp;&nbsp;{{item.action}} &nbsp;&nbsp;{{item.desc}}
                 </span>
               </div>
             </div>
