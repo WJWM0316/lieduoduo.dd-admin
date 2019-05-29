@@ -173,171 +173,158 @@
                 <span>简历编号：{{nowResumeMsg.vkey}}</span>
                 <span>{{nowResumeMsg.resumeUpdateTime}}更新</span>
               </div>
-              <div class="Code">
-                <div class="msgCode">
-                  <img :src="nowResumeMsg.resumeQrCode" alt v-if="nowResumeMsg.resumeQrCode">
-                  <span>扫码进入</span>
-                </div>
-                <div class="ContactInformation">
-                  <p class="contactTitle">联系方式:</p>
-                  <div class="Contact" @click.stop="seeMobile" v-if="nowResumeMsg.mobile!=''">
-                    <span>手机号</span>
-                    <span v-if="nowResumeMsg.showPhone==true">{{nowResumeMsg.mobile}}</span>
-                  </div>
-                  <div class="Contact" @click.stop="seeWechat" v-if="nowResumeMsg.wechat!=''">
-                    <span>微信号</span>
-                    <span v-if="nowResumeMsg.showWechat==true">{{nowResumeMsg.wechat}}</span>
-                  </div>
-                  <p v-if="nowResumeMsg.wechat==''&&nowResumeMsg.mobile==''" class="noUpload">暂无上传</p>
-                </div>
-                <div class="download row">
-                  <p class="contactTitle">附件简历:</p>
-                  <p v-if="nowResumeMsg.resumeAttach==null" class="noUpload">暂无上传</p>
-                  <div class="Contact" @click.stop="seeFilesBtn" v-else>
-                    <span>查看附件</span>
-                  </div>
-                </div>
-              </div>
-              <div class="ResumeDetails">
-                <!-- 基础信息 -->
-                <div class="base">
-                  <div class="message">
-                    <div class="msgUrl">
-                      <img :src="nowResumeMsg.avatar.url" alt v-if="nowResumeMsg.avatar">
-                      <span class="gender" v-show="nowResumeMsg.gender===1">
-                        <i v-show="nowResumeMsg.gender===1" class="icon iconfont iconicon_boy"></i>
-                      </span>
-                      <span class="gender2" v-show="nowResumeMsg.gender===2">
-                        <i v-show="nowResumeMsg.gender===2" class="icon iconfont iconicon_girl"></i>
-                      </span>
-                    </div>
-                    <div class="msgUserInfo">
-                      <div class="basemsg">
-                        <span class="realName">{{nowResumeMsg.name}}</span>
-                        <div class="lebalList">
-                          <div class="lebalItem">
-                            <i class="icon iconfont iconzhiwei"></i>
-                            <span>{{nowResumeMsg.workAgeDesc}}</span>
-                          </div>
-                          <div class="lebalItem">
-                            <i class="icon iconfont iconnianling"></i>
-                            <span>{{nowResumeMsg.age}}岁</span>
-                          </div>
-                          <div class="lebalItem">
-                            <i class="icon iconfont iconxueli"></i>
-                            <span>{{nowResumeMsg.degreeDesc}}</span>
-                          </div>
-                          <div class="lebalItem">
-                            <span class="status">{{nowResumeMsg.jobStatusDesc}}</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="description">
-                        <span class="msg">{{nowResumeMsg.signature}}</span>
-                        <!-- v-show="nowResumeMsg.personalizedLabels.length>0" -->
-                        <div class="iconList">
-                          <span
-                            class="iconItem"
-                            v-for="item in nowResumeMsg.personalizedLabels"
-                            :key="item.labelName"
-                          >{{item.labelName}}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- 求职意向 -->
-                <div class="intention" v-show="nowResumeMsg.expects!=''">
-                  <p class="title">求职意向</p>
-                  <div class="intentList">
-                    <div
-                      class="intentionItem"
-                      v-for="item in nowResumeMsg.expects"
-                      :key="item.position"
-                    >
-                      <span class="position">{{item.position}}&nbsp;|&nbsp;{{item.city}}</span>
-                      <div style="margin-left:20px;display:inline-block;">
-                        <div class="fields" v-for="(item1,index1) in item.fields" :key="index1">
-                          <span>{{item1.field}}&nbsp;&nbsp;</span>
-                        </div>
-                      </div>
-                      <span class="price">{{item.salaryFloor}}k-{{item.salaryCeil}}k</span>
-                    </div>
-                  </div>
-                </div>
-                <!-- 工作经历 -->
-                <div class="workExperience" v-show="nowResumeMsg.careers!=''">
-                  <p class="title">工作经历</p>
-                  <!-- v-show="nowResumeMsg.careers.length>0" -->
-                  <div class="workList">
-                    <div class="workItem" v-for="item in nowResumeMsg.careers" :key="item.company">
-                      <div class="workTime">
-                        <span>{{item.company}} | {{item.position}}</span>
-                        <span>{{item.startTimeDesc}}~{{item.endTimeDesc}}</span>
-                      </div>
-                      <div class="workContent">
-                        <span class="duties">
-                          <pre>{{item.duty}}</pre>
+              <div class="resumeLyout">
+                <div class="ResumeDetails">
+                  <!-- 基础信息 -->
+                  <div class="base">
+                    <div class="message">
+                      <div class="msgUrl">
+                        <img :src="nowResumeMsg.avatar.url" alt v-if="nowResumeMsg.avatar">
+                        <span class="gender" v-show="nowResumeMsg.gender===1">
+                          <i v-show="nowResumeMsg.gender===1" class="icon iconfont iconicon_boy"></i>
+                        </span>
+                        <span class="gender2" v-show="nowResumeMsg.gender===2">
+                          <i v-show="nowResumeMsg.gender===2" class="icon iconfont iconicon_girl"></i>
                         </span>
                       </div>
-                      <!-- v-show="item.technicalLabels.length>0" -->
-                      <div class="workIconList">
-                        <span
-                          v-for="item1 in item.technicalLabels"
-                          :key="item1.technicalLabels"
-                        >#{{item1.labelName}}</span>
+                      <div class="msgUserInfo">
+                        <div class="basemsg">
+                          <span class="realName">{{nowResumeMsg.name}}</span>
+                          <div class="lebalList">
+                            <div class="lebalItem">
+                              <i class="icon iconfont iconzhiwei" style></i>
+                              <span>{{nowResumeMsg.workAgeDesc}}</span>
+                            </div>
+                            <div class="lebalItem">
+                              <i class="icon iconfont iconnianling"></i>
+                              <span>{{nowResumeMsg.age}}岁</span>
+                            </div>
+                            <div
+                              class="lebalItem"
+                              :style="nowResumeMsg.jobStatus==''?'margin-right:0px;':''"
+                            >
+                              <i class="icon iconfont iconxueli"></i>
+                              <span>{{nowResumeMsg.degreeDesc}}</span>
+                            </div>
+                            <div class="lebalItem">
+                              <span
+                                class="status"
+                                v-if="nowResumeMsg.jobStatus"
+                              >{{nowResumeMsg.jobStatusDesc}}</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="description">
+                          <span class="msg">{{nowResumeMsg.signature}}</span>
+                          <!-- v-show="nowResumeMsg.personalizedLabels.length>0" -->
+                          <div class="iconList">
+                            <span
+                              class="iconItem"
+                              v-for="item in nowResumeMsg.personalizedLabels"
+                              :key="item.labelName"
+                            >{{item.labelName}}</span>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <!-- 项目经历 -->
-                <div class="workExperience" v-show="nowResumeMsg.projects!=''">
-                  <p class="title">项目经历</p>
-                  <div class="workList">
-                    <div class="workItem" v-for="item in nowResumeMsg.projects" :key="item.role">
-                      <div class="workTime">
-                        <span>{{item.name}} &nbsp; &nbsp;|&nbsp; &nbsp;{{item.role}}</span>
-                        <span>{{item.startTimeDesc}}~{{item.endTimeDesc}}</span>
-                      </div>
-                      <div class="workContent">
-                        <span class="duties">
-                          <pre>{{item.description}}</pre>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- 教育经历 -->
-                <div class="workExperience" v-show="nowResumeMsg.educations!=''">
-                  <p class="title">教育经历</p>
-                  <div class="workList">
-                    <div
-                      class="workItem"
-                      v-for="item in nowResumeMsg.educations"
-                      :key="item.school"
-                    >
-                      <div class="workTime">
-                        <span>{{item.school}} | {{item.degreeDesc}} | {{item.major}}</span>
-                        <span>{{item.startTimeDesc}}~{{item.endTimeDesc}}</span>
-                      </div>
-                      <div class="workContent" v-show="item.experience!=''">
-                        <span class="duties">{{item.experience}}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- 更多介绍 -->
-                <div class="workExperience" v-show="nowResumeMsg.moreIntroduce.introduce!=''">
-                  <p class="title">更多介绍</p>
-                  <div class="workList">
-                    <pre>{{nowResumeMsg.moreIntroduce.introduce}}</pre>
-                    <div class="imgList">
-                      <img
-                        :src="item.url"
-                        alt
-                        v-for="(item,index) in nowResumeMsg.moreIntroduce.imgs"
-                        :key="index"
+                  <!-- 求职意向 -->
+                  <div class="intention" v-show="nowResumeMsg.expects!=''">
+                    <p class="title">求职意向</p>
+                    <div class="intentList">
+                      <div
+                        class="intentionItem"
+                        v-for="item in nowResumeMsg.expects"
+                        :key="item.position"
                       >
+                        <span class="position">{{item.position}}&nbsp;|&nbsp;{{item.city}}</span>
+                        <div style="margin-left:20px;display:inline-block;">
+                          <div class="fields" v-for="(item1,index1) in item.fields" :key="index1">
+                            <span>{{item1.field}}&nbsp;&nbsp;</span>
+                          </div>
+                        </div>
+                        <span class="price">{{item.salaryFloor}}k-{{item.salaryCeil}}k</span>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- 工作经历 -->
+                  <div class="workExperience" v-show="nowResumeMsg.careers!=''">
+                    <p class="title">工作经历</p>
+                    <!-- v-show="nowResumeMsg.careers.length>0" -->
+                    <div class="workList">
+                      <div
+                        class="workItem"
+                        v-for="item in nowResumeMsg.careers"
+                        :key="item.company"
+                      >
+                        <div class="workTime">
+                          <span>{{item.company}} | {{item.position}}</span>
+                          <span>{{item.startTimeDesc}}~{{item.endTimeDesc}}</span>
+                        </div>
+                        <div class="workContent">
+                          <span class="duties">
+                            <pre>{{item.duty}}</pre>
+                          </span>
+                        </div>
+                        <!-- v-show="item.technicalLabels.length>0" -->
+                        <div class="workIconList" v-show="item.technicalLabels.length>0">
+                          <span
+                            v-for="item1 in item.technicalLabels"
+                            :key="item1.technicalLabels"
+                          >#{{item1.labelName}}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- 项目经历 -->
+                  <div class="workExperience" v-show="nowResumeMsg.projects!=''">
+                    <p class="title">项目经历</p>
+                    <div class="workList">
+                      <div class="workItem" v-for="item in nowResumeMsg.projects" :key="item.role">
+                        <div class="workTime">
+                          <span>{{item.name}} &nbsp; &nbsp;|&nbsp; &nbsp;{{item.role}}</span>
+                          <span>{{item.startTimeDesc}}~{{item.endTimeDesc}}</span>
+                        </div>
+                        <div class="workContent">
+                          <span class="duties">
+                            <pre>{{item.description}}</pre>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- 教育经历 -->
+                  <div class="workExperience" v-show="nowResumeMsg.educations!=''">
+                    <p class="title">教育经历</p>
+                    <div class="workList">
+                      <div
+                        class="workItem"
+                        v-for="item in nowResumeMsg.educations"
+                        :key="item.school"
+                      >
+                        <div class="workTime">
+                          <span>{{item.school}} | {{item.degreeDesc}} | {{item.major}}</span>
+                          <span>{{item.startTimeDesc}}~{{item.endTimeDesc}}</span>
+                        </div>
+                        <div class="workContent" v-show="item.experience!=''">
+                          <span class="duties">{{item.experience}}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- 更多介绍 -->
+                  <div class="workExperience" v-show="nowResumeMsg.moreIntroduce.introduce!=''">
+                    <p class="title">更多介绍</p>
+                    <div class="workList">
+                      <pre>{{nowResumeMsg.moreIntroduce.introduce}}</pre>
+                      <div class="imgList">
+                        <img
+                          :src="item.url"
+                          alt
+                          v-for="(item,index) in nowResumeMsg.moreIntroduce.imgs"
+                          :key="index"
+                        >
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -345,7 +332,7 @@
             </div>
             <!-- 历史记录 -->
             <div class="nowResume" v-show="nowCheck==1">
-              <div class="historyList">
+              <div class="historyList" id="historyScroll">
                 <span v-for="(item,index) in historyList" :key="index">
                   {{item.createdAt}}
                   <i>{{item.admin}}</i>
@@ -375,11 +362,38 @@ import {
   GetResumeHistory,
   addHistory
 } from "API/resumeStore.js";
+
+let lock= false
 @Component({
   name: "resumeStore",
   components: {
     lyoutContent,
     CustomSelect
+  },
+  watch: {
+    nowCheck: function(newval, oldval) {
+      const el = document.getElementById("historyScroll");
+      let self = this;
+      el.addEventListener("scroll", function(e) {
+        const offsetHeight = el.offsetHeight;
+        const scrollTop = el.scrollTop;
+        const scrollHeight = el.scrollHeight;
+        if (offsetHeight + scrollTop - scrollHeight >= -1) {
+          if(lock) return ;
+          GetResumeHistory(self.itemList[self.nowIndex].uid, {
+            page: self.historyCount++,
+            count: 20
+          }).then(res => {
+            lock = false
+            // console.log(self.historyList)
+            // console.log(res.data.data)
+            self.historyList.concat(res.data.data);
+            // self.historyList = [...self.historyList, ...res.data.data];
+            console.log(self.historyList);
+          });
+        }
+      });
+    }
   }
 })
 export default class resumeStore extends Vue {
@@ -415,6 +429,7 @@ export default class resumeStore extends Vue {
     page: 1, //第几页
     count: 20 //每页条数
   };
+  historyCount = 1;
   pageCount = 20; //请求回来的数据量
   page = 1;
   nowCheck = 0; //当前点击详情上方的tab
@@ -489,7 +504,10 @@ export default class resumeStore extends Vue {
   check(index) {
     this.nowCheck = +index;
     if (this.nowCheck === 1) {
-      GetResumeHistory(this.itemList[this.nowIndex].uid).then(res => {
+      GetResumeHistory(this.itemList[this.nowIndex].uid, {
+        page: this.historyCount++,
+        count: 20
+      }).then(res => {
         console.log(res);
         this.historyList = res.data.data;
       });
