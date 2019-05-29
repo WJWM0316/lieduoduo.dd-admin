@@ -566,8 +566,9 @@ export default class resumeStore extends Vue {
   }
   // 左边箭头
   LeftArrow() {
-    if (this.nowCheck === 0) return;
-    this.nowCheck--;
+    if (this.nowIndex < 0) return;
+    let index = this.nowIndex--;
+    this.getDetail(this.itemList[index].uid);
   }
   // 右箭头
   rightArrow() {
@@ -578,7 +579,6 @@ export default class resumeStore extends Vue {
       });
     } else {
       let index = this.nowIndex++;
-      console.log(index, typeof index);
       this.getDetail(this.itemList[index].uid);
     }
   }
