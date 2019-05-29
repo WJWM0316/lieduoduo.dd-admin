@@ -226,7 +226,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    left: -46px;
+    left: -67px;
     top: 50%;
     z-index: -1;
     .comstyle {
@@ -449,6 +449,23 @@
             width: 88px;
             height: 88px;
             position: relative;
+            .gender2{
+              width: 26px;
+              height: 26px;
+              background: #FF6796;
+              border: 1px solid #ffffff;
+              border-radius: 50%;
+              position: absolute;
+              right: -6px;
+              bottom: -9px;
+              text-align: center;
+              i {
+                line-height: 26px;
+                color: #fff;
+                font-size: 12px;
+                text-align: center;
+              }
+            }
             .gender {
               width: 26px;
               height: 26px;
@@ -534,10 +551,14 @@
             }
 
             .status {
-              padding: 5px 10px;
-              background: rgba(239, 233, 244, 1);
+              padding: 5px 9px 5px 10px;
+              background: #efe9f4;
               color: #652791;
               vertical-align: middle;
+              box-sizing: border-box;
+              font-size: 14px;
+              line-height: 14px;
+              height: 23px;
             }
 
             .nowWorking {
@@ -587,7 +608,6 @@
             align-items: flex-start;
             flex-wrap: wrap;
             .iconItem {
-              padding: 5px 10px;
               border: 1px solid rgba(230, 226, 237, 1);
               background: #fff;
               border-radius: 30px;
@@ -597,9 +617,11 @@
               margin-bottom: 8px;
               font-weight: 300;
               height: 22px;
-              width: 48px;
               padding: 1px 12px;
-              line-height: 22px;
+              text-align: center;
+              line-height: 20px;
+              font-size: 12px;
+              box-sizing: border-box;
             }
           }
         }
@@ -653,6 +675,7 @@
       justify-content: flex-start;
       align-items: baseline;
       padding-top: 20px;
+      min-height: 135px;
       .title {
         font-size: 14px;
         font-weight: 700;

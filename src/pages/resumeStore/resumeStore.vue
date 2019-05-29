@@ -204,8 +204,11 @@
                   <div class="message">
                     <div class="msgUrl">
                       <img :src="nowResumeMsg.avatar.url" alt v-if="nowResumeMsg.avatar">
-                      <span class="gender">
-                        <i class="icon iconfont iconicon_boy"></i>
+                      <span class="gender" v-show="nowResumeMsg.gender===1">
+                        <i v-show="nowResumeMsg.gender===1" class="icon iconfont iconicon_boy"></i>
+                      </span>
+                      <span class="gender2" v-show="nowResumeMsg.gender===2">
+                        <i v-show="nowResumeMsg.gender===2" class="icon iconfont iconicon_girl"></i>
                       </span>
                     </div>
                     <div class="msgUserInfo">
@@ -554,11 +557,11 @@ export default class resumeStore extends Vue {
       let type = File.extension;
       this.operating(uid, { desc: "简历附件" });
       this.$nextTick(() => {
-        if (type === "img") {
+        if (/(png|jpg)/.test(type)) {
           window.open(File.url);
-        }else if(/(pdf)/.test(type)){
-          window.open(File.url)
-        } else if (/(doc|docx|jpg|png)/.test(type)) {
+        } else if (/(pdf)/.test(type)) {
+          window.open(File.url);
+        } else if (/(doc|docx)/.test(type)) {
           window.open(
             `https://view.officeapps.live.com/op/view.aspx?src=${File.url}`
           );
