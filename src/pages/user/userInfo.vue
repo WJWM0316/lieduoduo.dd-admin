@@ -213,6 +213,7 @@
     <!-- 绑定与解绑模块 -->
     <div v-if="showAdminWindow" class="bindAdminWindo">
       <admin-control
+        :isNewCompany="isNewCompany"
         @close="closeAdmin"
         :AdduserInfo="userInfo"
         @closeAdminWindow="close"
@@ -284,6 +285,7 @@ export default class addUser extends Vue {
   createPositionRight = false; // 是否有职位发布权限
   isDetection = ""; // 是否已校验身份证信息
   isBindAdmin=0;
+  isNewCompany=false;
   /* 身份证信息对象 */
   iDCard = {};
   /* 手机号码 */
@@ -427,20 +429,22 @@ export default class addUser extends Vue {
   }
   /* 移出公司 */
   async removeUser() {
-    this.isRemove = true;
     this.showAdminWindow = true;
-    if (!!this.companyInfo.isAdmin) {
-      let param = {
-        page: 1,
-        count: 2
-      };
-      let res = await getRecruitersListApi(this.companyInfo.id, param);
-      res.data.data.forEach(item => {
-        if (this.userInfo.uid !== item.uid) {
-          this.nextAdmin = item;
-        }
-      });
-    }
+    this.isBindAdmin=2;
+    // this.isNewCompany=false
+    console.log(this.companyInfo)
+    // if (!!this.companyInfo.isAdmin) {
+    //   let param = {
+    //     page: 1,
+    //     count: 2
+    //   };
+    //   let res = await getRecruitersListApi(this.companyInfo.id, param);
+    //   res.data.data.forEach(item => {
+    //     if (this.userInfo.uid !== item.uid) {
+    //       this.nextAdmin = item;
+    //     }
+    //   });
+    // }
   }
   /* 绑定公司 */
   bindCompany() {

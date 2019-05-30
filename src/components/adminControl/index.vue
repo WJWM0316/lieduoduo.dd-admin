@@ -334,8 +334,8 @@ export default class adminBox extends Vue {
         this.$emit('closeAdminWindow', {'needLoad': true})
     }
     async created () {
-        console.log(this.companyInfo,'companyInfo')
-        console.log(this.userInfo,'userInfo')
+        // console.log(this.companyInfo,'companyInfo')
+        // console.log(this.userInfo,'userInfo')
     }
 }
 </script>
