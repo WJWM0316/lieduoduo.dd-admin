@@ -221,6 +221,7 @@ export default class adminBox extends Vue {
     /* 绑定管理员 */
     async done () {
         let company=this.companyInfo;
+        console.log(company,'company')
         let NewcompanyInfo={...company,...this.bindForm}
         // console.log(this.AdduserInfo)
         // console.log('this.AdduserInfo.name',this.AdduserInfo.name)
@@ -235,10 +236,9 @@ export default class adminBox extends Vue {
             return
             }
         }
-        
+        console.log(this.isNewCompany)
         if(this.isNewCompany){
             console.log('创建公司')
-            return
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
                     let res = await createCompanyApi(NewcompanyInfo)
