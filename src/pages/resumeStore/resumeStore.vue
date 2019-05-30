@@ -724,7 +724,6 @@ export default class resumeStore extends Vue {
     console.log(el)
     el.scrollTop= 0;
     this.form.page = nowPage;
-    // this.getCompanyList();
     this.form.page = nowPage;
     this.getData();
   }

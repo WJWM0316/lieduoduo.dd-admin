@@ -217,6 +217,7 @@ export default class adminBox extends Vue {
     async done () {
         console.log('this.bindForm',this.bindForm)
         console.log('this.companyInfo',this.companyInfo)
+        return
         let company=this.companyInfo;
         let NewcompanyInfo={...company,...this.bindForm}
         // console.log(NewcompanyInfo)
@@ -265,7 +266,7 @@ export default class adminBox extends Vue {
                     this.isNewUser = true
                     this.toCretedUser = false
                     this.bindForm.real_name=res.data.data.realname
-                    this.companyInfo.admin_uid=res.data.data.uid
+                    this.companyInfo.created_uid=res.data.data.uid
                     this.newUserInfo = {
                         name: res.data.data.realname,
                         gender: res.data.data.gender === 1? '男' : '女'
