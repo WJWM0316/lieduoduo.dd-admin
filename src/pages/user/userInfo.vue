@@ -8,7 +8,7 @@
           class="editAdminName"
           :class="{'active': isEditAdminName == true }"
           @click.self="tab"
-        >账户设置</div> -->
+        >账户设置</div>-->
       </div>
       <div class="editBox" v-if="isEditAdminName==false">
         <el-button
@@ -214,8 +214,9 @@
     <div v-if="showAdminWindow" class="bindAdminWindo">
       <admin-control
         @close="closeAdmin"
+        :AdduserInfo="userInfo"
         @closeAdminWindow="close"
-        :isBindAdmin="isRemove"
+        :isBindAdmin="isBindAdmin"
         :userName="personalInfo.name"
         :companyName="companyInfo? companyInfo.companyName : ''"
         :nextAdmin="nextAdmin"
@@ -282,7 +283,7 @@ export default class addUser extends Vue {
   userInfo = ""; // 请求回来的所有用户信息
   createPositionRight = false; // 是否有职位发布权限
   isDetection = ""; // 是否已校验身份证信息
-  isRemove = false;
+  isBindAdmin=0;
   /* 身份证信息对象 */
   iDCard = {};
   /* 手机号码 */
@@ -443,8 +444,10 @@ export default class addUser extends Vue {
   }
   /* 绑定公司 */
   bindCompany() {
-    this.isRemove = false;
     this.showAdminWindow = true;
+    this.isBindAdmin = 1;
+    console.log(this.userInfo)
+    // this.
   }
   /* 关闭弹窗 */
   close(e) {
@@ -458,7 +461,7 @@ export default class addUser extends Vue {
     let res = await getUserInfoApi(this.$route.params.id);
     let userInfo = res.data.data;
     this.userInfo = userInfo;
-    console.log('this.userInfo',this.userInfo)
+    console.log("this.userInfo", this.userInfo);
     this.isDetection = !userInfo.needRealNameAuth;
     if (userInfo.companyInfo) {
       this.companyInfo = userInfo.companyInfo;
@@ -521,10 +524,10 @@ export default class addUser extends Vue {
   }
 
   toEditRecruiter() {
-    this.$router.push({ 
+    this.$router.push({
       path: `/user/editRecruiter/${this.$route.params.id}`,
-      params:{
-        isEditAdminName:false
+      params: {
+        isEditAdminName: false
       }
     });
   }

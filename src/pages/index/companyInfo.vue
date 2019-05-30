@@ -11,7 +11,7 @@
         <el-button @click.stop="next" v-show="active === 0">保存，下一步</el-button>-->
         <el-button @click.stop="toEdit">编辑</el-button>
         <el-button @click.stop="bindAdmin" v-if="companyInfo.createdUid === 0">绑定管理员</el-button>
-        <el-button @click.stop="bindAdmin" v-else>移除管理员</el-button>
+        <el-button @click.stop="delateAdmin" v-else>移除管理员</el-button>
       </div>
     </div>
     <!--大图蒙层-->
@@ -142,9 +142,9 @@
       <admin-control
         @close="closeBtn"
         :companyInfo="companyInfo"
+        :isNewCompany="isNewCompany"
         @closeAdminWindow="close"
-        :isBindAdmin="companyInfo.createdUid? true : false"
-        :companyName="companyInfo.companyName"
+        :isBindAdmin="isBindAdmin"
         :nextAdmin="nextAdmin"
       ></admin-control>
     </div>
@@ -157,6 +157,7 @@ import Component from "vue-class-component";
 import adminControl from "@/components/adminControl/index";
 import { fieldApi, uploadApi, getSalerListApi } from "API/commont";
 import {
+  bindCompanyApi,
   setCompanyInfoApi,
   setIdentityInfoApi,
   addCompanyAddressApi,
@@ -183,11 +184,14 @@ export default class createCompany extends Vue {
     isShow: false,
     type: "position"
   };
+  isNewCompany = false;
   email = {
     isShow: false
   };
   /* 公司信息 */
-  companyInfo = {};
+  companyInfo = {
+    createdUid: "" /* 0没有绑定管理员，1已经绑定了管理员 */
+  };
 
   /* 权益信息 */
   rightInfo = {};
@@ -218,6 +222,7 @@ export default class createCompany extends Vue {
       })
       .then(res => {
         this.companyInfo = res.data.data.companyInfo;
+        console.log(this.companyInfo);
         this.rightInfo = res.data.data.rtInfo;
       });
     // try {
@@ -231,15 +236,27 @@ export default class createCompany extends Vue {
     //   console.log(e)
     // }
   }
-
-  /* 绑定和解绑管理员 */
+  // 绑定已有公司的管理员
   async bindAdmin() {
+    // this.isFromUser = !false;
     this.showAdminWindow = true;
+    this.isBindAdmin=this.companyInfo.createdUid?1: 0;
+    this.isNewCompany=false
+    console.log(this.companyInfo.createdUid)
+  }
+  /* 移除已有公司的管理员 */
+  async delateAdmin() {
+    this.showAdminWindow = true;
+    this.isBindAdmin=2;
+    this.isNewCompany=false
+    console.log(this.companyInfo);
+    // 判断是否存在公司id，如果存在，则进入下一步
     if (this.companyInfo.createdUid) {
       let param = {
         page: 1,
         count: 2
       };
+      //弹出移除并更换管理员的系统弹框，并自动调取管理员列表，获取下一个管理员信息
       let res = await getRecruitersListApi(this.$route.query.id, param);
       res.data.data.forEach((item, index) => {
         if (this.companyInfo.createdUid !== item.uid) {

@@ -1,7 +1,6 @@
 <template>
   <div class="adminBox">
-      <div v-if="!isBindAdmin">
-        <div v-if="!isFromUser">
+        <div v-if="isBindAdmin===0">
             <header>绑定管理员</header>
             <el-form ref="form" :model="bindForm" :rules="bindRules" class="bindForm" label-width="120px" label-suffix="：" @keyup.enter="done">
                 <el-form-item label="管理员账号" prop="mobile">
@@ -27,7 +26,7 @@
                 <el-button class="btn" @click.stop="cancel">取消</el-button>
             </el-form>
         </div>
-        <div v-else>
+        <div v-if="isBindAdmin===1">
             <header>绑定公司</header>
             <el-form ref="bindCompanyForm" :model="bindCompanyForm" :rules="companyRules" class="bindForm" label-width="120px" label-suffix="：" @keyup.enter="done">
                 <el-form-item label="绑定公司名称" prop="name">
@@ -51,29 +50,28 @@
                 <el-button class="btn" type="info" disabled v-show="!bindCompanyId">确定</el-button>
                 <el-button class="btn" @click.stop="cancel">取消</el-button>
             </el-form>
-        </div>
-      </div>
-      <div v-else>
-        <header v-if="!!isAdmin || !isFromUser">移除并更换管理员</header>
-        <header v-else>移除招聘官</header>
-        <div class="removeAdmin">
-            <h2 v-if="!!isAdmin || !isFromUser">确定将<span class="companyName">【{{companyName}}】</span>移除该管理员并更换?</h2>
-            <h2 v-else>确定将<span class="companyName">【{{userName}}】</span>招聘官从<span class="companyName">【{{companyName}}】</span>移出吗?</h2>
-            <p>解绑所属公司后，在平台上关联内容将如下处理，且数据永久保留</p>
-            <ul>
-                <li>关闭与公司已绑定的所有职位</li>
-                <li>隐藏该用户的招聘官所有信息展示</li>
-                <li>终止该用户所有有关的职位发布、面试邀约、面试行程</li>
-                <li>终止该用户所有权益和活动参与资格</li>
-            </ul>
-            <div class="nextAdmin" v-if="nextAdmin">
-                <p>管理员身份和权限将自动更换到该公司所属以下招聘官</p>
-                <img class="nextAvar" :src="nextAdmin.avatar.smallUrl" alt="">
-                <span class="nextName">{{nextAdmin.name}}</span>
+        </div>  
+        <div v-if="isBindAdmin===2">
+            <header v-if="!!isAdmin || !isFromUser">移除并更换管理员</header>
+            <header v-else>移除招聘官</header>
+            <div class="removeAdmin">
+                <h2 v-if="!!isAdmin || !isFromUser">确定将<span class="companyName">【{{companyInfo.realName}}】</span>移除该管理员并更换?</h2>
+                <h2 v-else>确定将<span class="companyName">【{{companyInfo.realName}}】</span>招聘官从<span class="companyName">【{{companyInfo.companyName}}】</span>移出吗?</h2>
+                <p>解绑所属公司后，在平台上关联内容将如下处理，且数据永久保留</p>
+                <ul>
+                    <li>关闭与公司已绑定的所有职位</li>
+                    <li>隐藏该用户的招聘官所有信息展示</li>
+                    <li>终止该用户所有有关的职位发布、面试邀约、面试行程</li>
+                    <li>终止该用户所有权益和活动参与资格</li>
+                </ul>
+                <div class="nextAdmin" v-if="nextAdmin">
+                    <p>管理员身份和权限将自动更换到该公司所属以下招聘官</p>
+                    <img class="nextAvar" :src="nextAdmin.avatar.smallUrl" alt="">
+                    <span class="nextName">{{nextAdmin.name}}</span>
+                </div>
+                <el-button class="btn done" @click.stop="removeAdmin">确定</el-button>
+                <el-button class="btn" @click.stop="cancel">取消</el-button>
             </div>
-            <el-button class="btn done" @click.stop="removeAdmin">确定</el-button>
-            <el-button class="btn" @click.stop="cancel">取消</el-button>
-        </div>
       </div>
   </div>
 </template>
@@ -86,14 +84,20 @@ import { checkIdentityApi, bindCompanyApi, deleteAdminApi, deleteRecruiterApi, c
 @Component({
     name: 'adminBox',
     props: {
+        //0是绑定管理员，1是用户绑定公司，2是解绑管理员
         isBindAdmin: {
-            type: Boolean
+            type: Number
         },
+        // 公司信息
         companyInfo:{
             type:Object,
         },
-        /* 是否在用户详情编辑 */
-        isFromUser: {
+        // 用户信息
+        AdduserInfo:{
+            type:Object, 
+        },
+        /* 是否是新公司  true是新创建公司，false是编辑公司 */
+        isNewCompany: {
             type: Boolean,
             default: false
         },
@@ -106,6 +110,7 @@ import { checkIdentityApi, bindCompanyApi, deleteAdminApi, deleteRecruiterApi, c
             type: Number,
             default: 0
         },
+        // 当前公司招聘官名字,在点击移除管理员时使用
         companyName: {
             type: String,
             default: ''
@@ -133,7 +138,7 @@ export default class adminBox extends Vue {
       user_position:'',//担任职务
       mobile: "", //管理员(招聘官)手机号码
     }
-    /* 编辑状态提交的数据 */
+    /* 用户绑定公司 */
     bindCompanyForm = {
         mobile: '',
         is_admin: '1',
@@ -217,17 +222,20 @@ export default class adminBox extends Vue {
     async done () {
         let company=this.companyInfo;
         let NewcompanyInfo={...company,...this.bindForm}
-        // console.log(NewcompanyInfo)
-        // return
-        if (!this.newUserInfo.name && !this.isFromUser) {
+        // console.log(this.AdduserInfo)
+        // console.log('this.AdduserInfo.name',this.AdduserInfo.name)
+        // console.log(this.newUserInfo.name)
+        console.log('this.companyInfo.id')
+        if (this.AdduserInfo.name==="") {
             this.$message({
                 type: 'error',
                 message: '用户信息不完善，请先完善后再绑定！'
             })
             return
         }
-        if (!this.isFromUser) {
-            console.log('正常创建走这里')
+        if(this.isNewCompany){
+            console.log('创建公司')
+            return
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
                     let res = await createCompanyApi(NewcompanyInfo)
@@ -237,18 +245,22 @@ export default class adminBox extends Vue {
                     return false
                 }
             })
-        } else {
-            console.log('绑定公司招聘官')
-            this.$refs['bindCompanyForm'].validate(async (valid) => {
-                if (valid) {
-                    this.bindCompanyForm.uid = this.$route.params.id
-                    let res = await bindCompanyApi(this.bindCompanyId, this.bindCompanyForm)
-                    this.$message({type: 'success', message: '绑定成功'})
-                    this.$emit('closeAdminWindow', {'needLoad': true})
-                } else {
-                    return false
-                }
-            })
+        }else{
+            console.log('绑定公司管理员')
+            // console.log('',this.$ref['bindCompanyForm'])
+          
+            let companyId=this.bindCompanyId||this.companyInfo.id;
+              console.log('this.companyInfo.id',companyId)
+           let param={
+                mobile: this.bindForm.mobile||this.bindCompanyForm.mobile,
+                is_admin: '1',
+                uid: this.bindForm.uid||this.AdduserInfo.uid, // 管理员账号
+                position: this.bindForm.user_position||this.bindCompanyForm.position, // 担任职务
+                email:this.bindForm.user_email||this.bindCompanyForm.email ,
+            }
+            let res = await bindCompanyApi(companyId, param)
+            this.$message({type: 'success', message: '绑定成功'})
+            this.$emit('closeAdminWindow', {'needLoad': true})
         }
     }
     cancel () {
@@ -264,6 +276,7 @@ export default class adminBox extends Vue {
                     this.toCretedUser = false
                     this.bindForm.real_name=res.data.data.realname
                     this.companyInfo.created_uid=res.data.data.uid
+                    this.bindForm.uid=res.data.data.uid
                     this.newUserInfo = {
                         name: res.data.data.realname,
                         gender: res.data.data.gender === 1? '男' : '女'
@@ -317,7 +330,10 @@ export default class adminBox extends Vue {
         }
         this.$emit('closeAdminWindow', {'needLoad': true})
     }
-    created () {}
+    async created () {
+        console.log(this.companyInfo,'companyInfo')
+        console.log(this.userInfo,'userInfo')
+    }
 }
 </script>
 
