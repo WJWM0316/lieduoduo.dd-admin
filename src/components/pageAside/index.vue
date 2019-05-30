@@ -7,10 +7,10 @@
         </div>
         <ul class="itemList">
           <li v-for="(item, index) in itemList" :key="index" class="item">
-            <router-link :to="{path: item.path==='/interview' ? '/interview/List' : item.path}">
+            <router-link :to=" item.path">
               <div
                 class="path"
-                :class="{'pathactive': item.path === onePath&&item.path!=='/interview' }"
+                :class="{'pathactive': item.path === onePath }"
                 v-if="item.isShow===true"
               >
                 <i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>
@@ -47,11 +47,15 @@ import { routes } from "@/router/routes";
     $route: {
       handler(route) {
         // console.log('this.itemList',this.itemList)
-
+        if (route.path === "/interview") {
+          this.$router.push({
+            path: "/interview/List"
+          });
+        }
         this.onePath = route.path;
         // this.SecondPath=route.path;
         this.AdminShow = +sessionStorage.getItem("AdminShow");
-        if(/(5)/.test(this.AdminShow)){
+        if (/(5)/.test(this.AdminShow)) {
           // console.log('隐藏审核管理')
           this.$set(this.itemList, 3, {
             path: "/check",

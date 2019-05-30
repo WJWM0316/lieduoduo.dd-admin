@@ -102,15 +102,19 @@
             margin-left: 20px;
             width: 300px;
             text-align: left;
-            .name {
-              font-size: 24px;
-              color: #000;
-              text-align: left;
-              min-width: 343px;
-              white-space: nowrap;
-              overflow: hidden;
-              text-overflow: ellipsis;
+            .userTop {
+              .name {
+                font-size: 24px;
+                color: #000;
+                text-align: left;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: inline-block;
+                max-width: 140px;
+              }
             }
+
             .experience {
               max-width: 260px;
               display: inline-block;
@@ -709,7 +713,7 @@
             height: 86px;
             margin-right: 6px;
             margin-bottom: 6px;
-            &:nth-child(6n+6){
+            &:nth-child(6n + 6) {
               margin-right: 0px;
             }
           }

@@ -93,14 +93,16 @@
                 <img :src="item.avatar.url" alt v-if="item.avatar">
               </div>
               <div class="userName">
-                <span class="name">{{item.name}}</span>
-                <div class="experience">
-                  <span v-if="item.workAge!=''">{{item.workAge}}年工作经验</span>
-                  <span v-else>{{item.workAgeDesc}}</span>
-                  <span>·</span>
-                  <span>{{item.degreeDesc}}</span>
-                  <span>·</span>
-                  <span>{{item.age}}岁</span>
+                <div class="userTop row">
+                  <span class="name">{{item.name}}</span>
+                  <div class="experience">
+                    <span v-if="item.workAge!=''">{{item.workAge}}年工作经验</span>
+                    <span v-else>{{item.workAgeDesc}}</span>
+                    <span>·</span>
+                    <span>{{item.degreeDesc}}</span>
+                    <span>·</span>
+                    <span>{{item.age}}岁</span>
+                  </div>
                 </div>
                 <p
                   class="lastWork"
@@ -115,7 +117,7 @@
                   :key="index3"
                   v-show="index3<3"
                 >
-                  <span>{{item3.province}}</span>
+                  <span>{{item3.city}}</span>
                   <span>{{item3.position}}</span>
                   <span>{{item3.salaryFloor}}~{{item3.salaryCeil}}k</span>
                   <div class="industry" v-for="(item4,index4) in item3.fields" :key="index4">
@@ -317,7 +319,9 @@
                           <span>{{item.startTimeDesc}}~{{item.endTimeDesc}}</span>
                         </div>
                         <div class="workContent" v-show="item.experience!=''">
-                          <span class="duties">{{item.experience}}</span>
+                          <span class="duties">
+                            <pre>{{item.experience}}</pre>
+                          </span>
                         </div>
                       </div>
                     </div>

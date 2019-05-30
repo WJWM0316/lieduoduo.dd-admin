@@ -18,13 +18,79 @@ export const routes = [
     meta: { title: "公司库", keepAlive: true, scrollY: 0 },
     component: resolve => require(["@/pages/index/index.vue"], resolve)
   },
-  /* 公司审核管理 */
+  // 审核管理
   {
-    path: "/check/companyCheck",
-    name: "companyCheck",
-    meta: { title: "公司审核管理", keepAlive: true, flag: "gongsiku" },
-    component: resolve => require(["@/pages/companyCheck/index.vue"], resolve)
+    path: "/check",
+    name: "check",
+    meta: { title: "审核管理", keepAlive: true, scrollY: 0 },
+    component: resolve => require(["../App.vue"], resolve),
+    children: [
+      {
+        path: "companyCheck",
+        name: "companyCheck",
+        meta: { title: "公司审核管理", keepAlive: true, flag: "shenheguanli" },
+        component: resolve =>
+          require(["@/pages/companyCheck/index.vue"], resolve)
+      },
+      {
+        path: "recruitmentOfficer",
+        name: "recruitmentOfficer",
+        meta: { title: "招聘官管理", keepAlive: true },
+        component: resolve =>
+          require(["@/pages/officerManage/index.vue"], resolve)
+      }
+    ]
   },
+  /* 面试管理 */
+  {
+    path: "/interview",
+    name: "interview",
+    meta: { title: "面试管理", keepAlive: true, scrollY: 0 ,flag: "shenheguanli" },
+    component: resolve => require(["../App.vue"], resolve),
+    children: [
+      {
+        path: "List",
+        name: "List",
+        meta: { title: "申请列表管理", haveParent: false, keepAlive: true },
+        component: resolve =>
+          require(["@/pages/application/index.vue"], resolve)
+      },
+      {
+        path: "invite",
+        name: "invite",
+        meta: { title: "邀请列表管理", haveParent: false, keepAlive: true },
+        component: resolve => require(["@/pages/invite/index.vue"], resolve)
+      }
+    ]
+  },
+  /* 面试邀请列表 */
+  // {
+  //   path: "/interview/invite",
+  //   name: "invite",
+  //   meta: { title: "邀请列表管理", haveParent: false, keepAlive: true },
+  //   component: resolve => require(["@/pages/invite/index.vue"], resolve)
+  // },
+  /* 面试申请列表 */
+  // {
+  //   path: "/interview/List",
+  //   name: "application",
+  //   meta: { title: "申请列表管理", haveParent: false, keepAlive: true },
+  //   component: resolve => require(["@/pages/application/index.vue"], resolve)
+  // },
+  /* 招聘官管理 */
+  //  {
+  //   path: "/check/recruitmentOfficer",
+  //   name: "recruitmentOfficer",
+  //   meta: { title: "招聘官管理", keepAlive: true },
+  //   component: resolve => require(["@/pages/officerManage/index.vue"], resolve)
+  // },
+  /* 公司审核管理 */
+  // {
+  //   path: "/check/companyCheck",
+  //   name: "companyCheck",
+  //   meta: { title: "公司审核管理", keepAlive: true, flag: "gongsiku" },
+  //   component: resolve => require(["@/pages/companyCheck/index.vue"], resolve)
+  // },
   /* 公司审核 */
   {
     path: "/check/companyCheck/verify",
@@ -49,13 +115,7 @@ export const routes = [
     },
     component: resolve => require(["@/pages/user/addUser.vue"], resolve)
   },
-  /* 招聘官管理 */
-  {
-    path: "/check/recruitmentOfficer",
-    name: "recruitmentOfficer",
-    meta: { title: "招聘官管理", keepAlive: true },
-    component: resolve => require(["@/pages/officerManage/index.vue"], resolve)
-  },
+
   /* 编辑申请招聘官用户信息 */
   {
     path: "/check/recruitmentOfficer/editUser/:id",
@@ -107,7 +167,6 @@ export const routes = [
     component: resolve => require(["@/pages/index/companyInfo.vue"], resolve)
   },
 
-  
   /* 职位管理 */
   {
     path: "/positionManage",
@@ -164,7 +223,7 @@ export const routes = [
     },
     component: resolve => require(["@/pages/createCompany/index.vue"], resolve)
   },
-  
+
   /* 编辑身份信息 */
   {
     path: "/index/editIdentity",
@@ -178,20 +237,7 @@ export const routes = [
     component: resolve =>
       require(["@/pages/editCompany/editIdentity.vue"], resolve)
   },
-  /* 面试申请列表 */
-  {
-    path: "/interview/List",
-    name: "application",
-    meta: { title: "申请列表管理", haveParent: false, keepAlive: true },
-    component: resolve => require(["@/pages/application/index.vue"], resolve)
-  },
-  /* 面试邀请列表 */
-  {
-    path: "/interview/invite",
-    name: "invite",
-    meta: { title: "邀请列表管理", haveParent: false, keepAlive: true },
-    component: resolve => require(["@/pages/invite/index.vue"], resolve)
-  },
+
   /* 用户列表 */
   {
     path: "/user",
