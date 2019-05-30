@@ -74,7 +74,7 @@
           </el-form>
         </div>
       </div>
-      <div class="resumeList" slot="dataList">
+      <div class="resumeList" id="scroll" slot="dataList">
         <div
           class="resumeItem"
           @click.stop="getDetail(item.uid,index)"
@@ -720,8 +720,9 @@ export default class resumeStore extends Vue {
   /* 翻页 */
   handlePageChange(nowPage) {
     console.log(nowPage);
-    this.$route.meta.scrollY = 0;
-    window.scrollTo(0, 0);
+    const el = document.getElementById("scroll");
+    console.log(el)
+    el.scrollTop= 0;
     this.form.page = nowPage;
     // this.getCompanyList();
     this.form.page = nowPage;
