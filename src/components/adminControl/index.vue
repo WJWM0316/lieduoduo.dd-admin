@@ -215,9 +215,6 @@ export default class adminBox extends Vue {
     }
     /* 绑定管理员 */
     async done () {
-        console.log('this.bindForm',this.bindForm)
-        console.log('this.companyInfo',this.companyInfo)
-        return
         let company=this.companyInfo;
         let NewcompanyInfo={...company,...this.bindForm}
         // console.log(NewcompanyInfo)
