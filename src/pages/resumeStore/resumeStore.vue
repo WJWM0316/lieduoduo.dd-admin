@@ -567,6 +567,7 @@ export default class resumeStore extends Vue {
     }
   }
   created() {
+    console.log('')
     this.degreeData();
     this.jobhuntStatus();
     this.ManageList();
