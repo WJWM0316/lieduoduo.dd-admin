@@ -225,14 +225,17 @@ export default class adminBox extends Vue {
         // console.log(this.AdduserInfo)
         // console.log('this.AdduserInfo.name',this.AdduserInfo.name)
         // console.log(this.newUserInfo.name)
-        console.log('this.companyInfo.id')
-        if (this.AdduserInfo.name==="") {
+        console.log('this.companyInfo.id',this.AdduserInfo)
+        if(this.AdduserInfo!==undefined){
+            if (this.AdduserInfo.name==="") {
             this.$message({
                 type: 'error',
                 message: '用户信息不完善，请先完善后再绑定！'
             })
             return
+            }
         }
+        
         if(this.isNewCompany){
             console.log('创建公司')
             return
