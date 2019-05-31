@@ -1,7 +1,6 @@
 import axios from "axios";
 import { Loading, Message } from "element-ui";
 import router from "@/router/index";
-const packjson = require("../../package.json");
 let loadingInstance = null;
 
 import { getAccessToken, removeAccessToken } from "./cacheService";
@@ -19,7 +18,7 @@ axios.interceptors.request.use(
     //  loadingInstance = Loading.service({})
     config.headers.common["Authorization-Admin"] = getAccessToken();
     /* 每次发版，此处+1 */
-    config.headers.common["Admin-Version"] = packjson.version;
+    config.headers.common["Admin-Version"] =100;
     return config;
   },
   error => {
