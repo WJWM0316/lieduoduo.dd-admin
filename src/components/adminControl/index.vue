@@ -89,6 +89,11 @@ import { checkIdentityApi, bindCompanyApi, deleteAdminApi, deleteRecruiterApi, c
         isBindAdmin: {
             type: Boolean
         },
+        // 是否是旧公司公司绑定管理员
+        isOldEdit:{
+            type:Boolean
+        },
+        // 公司信息
         companyInfo:{
             type:Object,
         },
@@ -106,6 +111,7 @@ import { checkIdentityApi, bindCompanyApi, deleteAdminApi, deleteRecruiterApi, c
             type: Number,
             default: 0
         },
+        // 当前公司招聘官名字,在点击移除管理员时使用
         companyName: {
             type: String,
             default: ''
@@ -141,6 +147,10 @@ export default class adminBox extends Vue {
         position: '', // 担任职务
         email: '',
         position:""
+    }
+    // 由于这个组件 数据太乱 ，把一些公用的数据放到这里自己取
+    commonFrom={
+        uid:'' ///管理员id
     }
     // wait
     nameRule = (rule, value, callback) => {
@@ -215,10 +225,9 @@ export default class adminBox extends Vue {
     }
     /* 绑定管理员 */
     async done () {
-        console.log('this.bindForm',this.bindForm)
-        console.log('this.companyInfo',this.companyInfo)
-        return
         let company=this.companyInfo;
+        console.log(company,'company')
+        
         let NewcompanyInfo={...company,...this.bindForm}
         // console.log(NewcompanyInfo)
         // return
@@ -230,8 +239,27 @@ export default class adminBox extends Vue {
             return
         }
         if (!this.isFromUser) {
-            console.log('正常创建走这里')
-            this.$refs['form'].validate(async (valid) => {
+            if(this.isOldEdit){
+                /* 旧公司绑定管理员 */
+                console.log('旧公司绑定管理员')
+                console.log(this.companyInfo,'this.bindCompanyId')
+                console.log(this.bindCompanyForm)
+                console.log(this.bindForm,'bindForm')
+                console.log('公用数据',this.commonFrom)
+                this.bindCompanyForm={
+                    email: this.bindForm.user_email,
+                    is_admin: "1",
+                    mobile: this.bindForm.mobile,
+                    position: this.bindForm.user_position,
+                    uid: this.commonFrom.uid
+                }
+                console.log('修改后的数据',this.bindCompanyForm)
+                let res = await bindCompanyApi(this.companyInfo.id, this.bindCompanyForm)
+                this.$message({type: 'success', message: '绑定成功'})
+                this.$emit('closeAdminWindow', {'needLoad': true})
+            }else{
+                /* 新公司创建 */
+                this.$refs['form'].validate(async (valid) => {
                 if (valid) {
                     let res = await createCompanyApi(NewcompanyInfo)
                     this.$message({type: 'success', message: '公司创建成功'})
@@ -240,6 +268,7 @@ export default class adminBox extends Vue {
                     return false
                 }
             })
+            }
         } else {
             console.log('绑定公司招聘官')
             this.$refs['bindCompanyForm'].validate(async (valid) => {
@@ -257,20 +286,28 @@ export default class adminBox extends Vue {
     cancel () {
         this.$emit('close')
     }
+    // 检测手机号码
     checkUser () {
         console.log()
         checkIdentityApi(this.bindForm.mobile).then(res => {
-            console.log(res.data.data)
             if (res.data.data.isExisted) {
                 if (!res.data.data.isAdmin && !res.data.data.companyId) {
+                    console.log('输入手机号码',res.data.data)
+                    console.log(this.bindCompanyForm)
                     this.isNewUser = true
                     this.toCretedUser = false
+                    // this.newUserInfo.name=res.data.data.name;
+                    // this.newUserInfo.gender=res.data.data.gender;
                     this.bindForm.real_name=res.data.data.realname
                     this.companyInfo.created_uid=res.data.data.uid
+                    // this.bindCompanyForm.uid=res.data.data.data.uid
+                    this.$set(this.commonFrom,'uid',res.data.data.uid)
+                    console.log(this.commonFrom)
                     this.newUserInfo = {
                         name: res.data.data.realname,
                         gender: res.data.data.gender === 1? '男' : '女'
                     }
+                    console.log(this.newUserInfo)
                 } else {
                     new Error(`该用户已绑定在${res.data.data.companyName},请重新绑定用户`)
                     this.toCretedUser = false
@@ -320,7 +357,10 @@ export default class adminBox extends Vue {
         }
         this.$emit('closeAdminWindow', {'needLoad': true})
     }
-    created () {}
+    async created () {
+        // console.log(this.companyInfo,'companyInfo')
+        // console.log(this.userInfo,'userInfo')
+    }
 }
 </script>
 

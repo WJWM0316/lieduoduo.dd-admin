@@ -8,7 +8,7 @@
           class="editAdminName"
           :class="{'active': isEditAdminName == true }"
           @click.self="tab"
-        >账户设置</div> -->
+        >账户设置</div>-->
       </div>
       <div class="editBox" v-if="isEditAdminName==false">
         <el-button
@@ -426,7 +426,6 @@ export default class addUser extends Vue {
   }
   /* 移出公司 */
   async removeUser() {
-    this.isRemove = true;
     this.showAdminWindow = true;
     if (!!this.companyInfo.isAdmin) {
       let param = {
@@ -443,7 +442,6 @@ export default class addUser extends Vue {
   }
   /* 绑定公司 */
   bindCompany() {
-    this.isRemove = false;
     this.showAdminWindow = true;
   }
   /* 关闭弹窗 */

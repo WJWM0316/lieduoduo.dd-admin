@@ -17,6 +17,8 @@ axios.interceptors.request.use(
   config => {
 //  loadingInstance = Loading.service({})
     config.headers.common['Authorization-Admin'] = getAccessToken()
+    /* 每次发版，此处+1 */
+    config.headers.common['cv'] = 100
     return config
   },
   error => {
