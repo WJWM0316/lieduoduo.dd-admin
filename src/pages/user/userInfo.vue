@@ -213,6 +213,7 @@
     <!-- 绑定与解绑模块 -->
     <div v-if="showAdminWindow" class="bindAdminWindo">
       <admin-control
+        :companyInfo="companyInfo"
         :isNewCompany="isNewCompany"
         @close="closeAdmin"
         :AdduserInfo="userInfo"
@@ -222,7 +223,7 @@
         :companyName="companyInfo? companyInfo.companyName : ''"
         :nextAdmin="nextAdmin"
         :isFromUser="true"
-        :isAdmin="companyInfo? companyInfo.isAdmin: 0"
+        :isAdmin="companyInfo? companyInfo.isAdmin: 1"
         :companyId="companyInfo? companyInfo.id : 0"
       ></admin-control>
     </div>
@@ -254,6 +255,7 @@ import {
   editAdminNameApi,
   getRecruitersListApi
 } from "API/company";
+import { userInfo } from "os";
 @Component({
   name: "userInfo",
   watch: {
@@ -284,8 +286,8 @@ export default class addUser extends Vue {
   userInfo = ""; // 请求回来的所有用户信息
   createPositionRight = false; // 是否有职位发布权限
   isDetection = ""; // 是否已校验身份证信息
-  isBindAdmin=0;
-  isNewCompany=false;
+  isBindAdmin = false;
+  isNewCompany = false;
   /* 身份证信息对象 */
   iDCard = {};
   /* 手机号码 */
@@ -324,9 +326,6 @@ export default class addUser extends Vue {
     passportFront: "" // 身份证正面照片
   };
   companyName = {};
-  companyInfo = {
-    companyName: {}
-  };
   saveParam = {
     admin_uid: "",
     group_id: ""
@@ -430,27 +429,31 @@ export default class addUser extends Vue {
   /* 移出公司 */
   async removeUser() {
     this.showAdminWindow = true;
-    this.isBindAdmin=2;
+    // this.is
+    this.isBindAdmin = true;
     // this.isNewCompany=false
-    console.log(this.companyInfo)
-    // if (!!this.companyInfo.isAdmin) {
-    //   let param = {
-    //     page: 1,
-    //     count: 2
-    //   };
-    //   let res = await getRecruitersListApi(this.companyInfo.id, param);
-    //   res.data.data.forEach(item => {
-    //     if (this.userInfo.uid !== item.uid) {
-    //       this.nextAdmin = item;
-    //     }
-    //   });
-    // }
+    this.companyInfo.realName=this.userInfo.name
+
+    console.log('this.companyInfo',this.companyInfo)
+    // console.log(this.userInfo);
+    if (!!this.companyInfo.isAdmin) {
+      let param = {
+        page: 1,
+        count: 2
+      };
+      let res = await getRecruitersListApi(this.companyInfo.id, param);
+      res.data.data.forEach(item => {
+        if (this.userInfo.uid !== item.uid) {
+          this.nextAdmin = item;
+        }
+      });
+    }
   }
   /* 绑定公司 */
   bindCompany() {
     this.showAdminWindow = true;
     this.isBindAdmin = false;
-    console.log(this.userInfo)
+    console.log(this.userInfo);
     // this.
   }
   /* 关闭弹窗 */
@@ -466,6 +469,7 @@ export default class addUser extends Vue {
     let userInfo = res.data.data;
     this.userInfo = userInfo;
     console.log("this.userInfo", this.userInfo);
+
     this.isDetection = !userInfo.needRealNameAuth;
     if (userInfo.companyInfo) {
       this.companyInfo = userInfo.companyInfo;

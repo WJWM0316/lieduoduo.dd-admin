@@ -57,8 +57,8 @@
         <header v-if="!!isAdmin || !isFromUser">移除并更换管理员</header>
         <header v-else>移除招聘官</header>
         <div class="removeAdmin">
-            <h2 v-if="!!isAdmin || !isFromUser">确定将<span class="companyName">【{{companyName}}】</span>移除该管理员并更换?</h2>
-            <h2 v-else>确定将<span class="companyName">【{{userName}}】</span>招聘官从<span class="companyName">【{{companyName}}】</span>移出吗?</h2>
+            <h2 v-if="!!isAdmin || !isFromUser">确定将<span class="companyName">【{{companyInfo.realName}}】</span>移除该管理员并更换?</h2>
+            <h2 v-else>确定将<span class="companyName">【{{userName}}】</span>招聘官从<span class="companyName">【{{companyInfo.realName}}】</span>移出吗?</h2>
             <p>解绑所属公司后，在平台上关联内容将如下处理，且数据永久保留</p>
             <ul>
                 <li>关闭与公司已绑定的所有职位</li>
@@ -337,8 +337,15 @@ export default class adminBox extends Vue {
     }
     /* 移除管理员 */
     async removeAdmin () {
+        console.log('移除管理员')
+        console.log( this.isFromUser,this.isAdmin)
+       
         if (!this.isFromUser || !!this.isAdmin) {
             // 从公司信息入口编辑或编辑管理员
+            
+            console.log('公司入口进入')
+            //  return
+            return
             let param = {
                 newAdmin: this.nextAdmin? this.nextAdmin.uid : 0
             }
@@ -350,6 +357,8 @@ export default class adminBox extends Vue {
             })
         } else {
             // 从用户入口编辑
+             console.log('从用户入口编辑')
+            //   return
             let param = {
                 uid: this.$route.params.id
             }
@@ -361,9 +370,10 @@ export default class adminBox extends Vue {
         }
         this.$emit('closeAdminWindow', {'needLoad': true})
     }
-    async created () {
-        // console.log(this.companyInfo,'companyInfo')
-        // console.log(this.userInfo,'userInfo')
+    created () {
+        console.log(this.companyInfo,'companyInfo')
+        console.log(this.isBindAdmin,'isBindAdmin')
+
     }
 }
 </script>
