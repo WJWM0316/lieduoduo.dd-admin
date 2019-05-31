@@ -237,7 +237,8 @@
       <admin-control
         :companyInfo="companyInfo"
         @close="closeAdmin"
-        :isBindAdmin="companyInfo.createdUid? true : false"
+        :isBindAdmin="isBindAdmin"
+        :isNewCompany="isNewCompany"
         :companyName="companyInfo.companyName"
         :nextAdmin="nextAdmin"
       ></admin-control>
