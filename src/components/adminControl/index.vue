@@ -344,8 +344,6 @@ export default class adminBox extends Vue {
             // 从公司信息入口编辑或编辑管理员
             
             console.log('公司入口进入')
-            //  return
-            return
             let param = {
                 newAdmin: this.nextAdmin? this.nextAdmin.uid : 0
             }
