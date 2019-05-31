@@ -1,58 +1,66 @@
-import axios from 'axios'
-import { Loading, Message } from 'element-ui'
-import router from '@/router/index'
-let loadingInstance = null
+import axios from "axios";
+import { Loading, Message } from "element-ui";
+import router from "@/router/index";
+const packjson = require("../../package.json");
+let loadingInstance = null;
 
-import { getAccessToken, removeAccessToken } from './cacheService'
+import { getAccessToken, removeAccessToken } from "./cacheService";
 
 //开发状态
-let isTest = false
-const API_ROOT = process.env.VUE_APP_API
+let isTest = false;
+const API_ROOT = process.env.VUE_APP_API;
 
 // 请求的跟地址
 // export const upload_api = `${API_ROOT}/attaches`
-axios.defaults.baseURL = API_ROOT
+axios.defaults.baseURL = API_ROOT;
 // 请求拦截器
 axios.interceptors.request.use(
   config => {
-//  loadingInstance = Loading.service({})
-    config.headers.common['Authorization-Admin'] = getAccessToken()
+    //  loadingInstance = Loading.service({})
+    config.headers.common["Authorization-Admin"] = getAccessToken();
     /* 每次发版，此处+1 */
-    // config.headers.common['cv'] = 100
-    return config
+    config.headers.common["Admin-Version"] = packjson.version;
+    return config;
   },
   error => {
-    return Promise.error(error)
+    return Promise.error(error);
   }
-)
+);
 // http response 拦截器
 axios.interceptors.response.use(
   res => {
-    if (loadingInstance) loadingInstance.close()
-    return res
+    if (loadingInstance) loadingInstance.close();
+    return res;
   },
   err => {
     // 登陆过期或者未登录
-    if(err.response.data.httpStatus === 401) {
-      router.push({name: 'login'})
-      removeAccessToken()
-      Message.error(`登录状态已过期,请重新登录`)
+    if (err.response.data.httpStatus === 401) {
+      router.push({ name: "login" });
+      removeAccessToken();
+      Message.error(`登录状态已过期,请重新登录`);
     }
-    if (loadingInstance) loadingInstance.close()
-    return Promise.reject(err.response)
+    if (loadingInstance) loadingInstance.close();
+    return Promise.reject(err.response);
   }
-)
+);
 
-export const request = ({type = 'post', url, data = {}, noGlobalLoading, config = {}} = {}) => {
+export const request = ({
+  type = "post",
+  url,
+  data = {},
+  noGlobalLoading,
+  config = {}
+} = {}) => {
   if (noGlobalLoading) {
   } else {
-    loadingInstance = Loading.service({})
+    loadingInstance = Loading.service({});
   }
-  return axios[type](url, type === 'get' ? { params: data } : data)
-  .catch(err => {
-    /* 通用的错误捕获可以在这里操作 */
-    // Message.error(`啊，好像出错了，数据跑到银河系外面去了。`)
-   Message.error(`${err.data.msg}`)
-   return Promise.reject(err)
-  })
-}
+  return axios[type](url, type === "get" ? { params: data } : data).catch(
+    err => {
+      /* 通用的错误捕获可以在这里操作 */
+      // Message.error(`啊，好像出错了，数据跑到银河系外面去了。`)
+      Message.error(`${err.data.msg}`);
+      return Promise.reject(err);
+    }
+  );
+};
