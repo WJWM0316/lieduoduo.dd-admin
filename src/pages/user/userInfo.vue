@@ -449,7 +449,7 @@ export default class addUser extends Vue {
   /* 绑定公司 */
   bindCompany() {
     this.showAdminWindow = true;
-    this.isBindAdmin = 1;
+    this.isBindAdmin = false;
     console.log(this.userInfo)
     // this.
   }
