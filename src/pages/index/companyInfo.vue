@@ -145,7 +145,7 @@
         :companyInfo="companyInfo"
         :isNewCompany="isNewCompany"
         @closeAdminWindow="close"
-        :isBindAdmin="isBindAdmin"
+        :isBindAdmin="companyInfo.createdUid? true : false"
         :nextAdmin="nextAdmin"
       ></admin-control>
     </div>
@@ -242,15 +242,13 @@ export default class createCompany extends Vue {
   async bindAdmin() {
     // this.isFromUser = !false;
     this.showAdminWindow = true;
-    this.isBindAdmin = this.companyInfo.createdUid ? 1 : 0;
+    this.isBindAdmin = this.companyInfo.createdUid ? true : false;
     this.isOldEdit = true;
     console.log(this.companyInfo.createdUid);
   }
   /* 移除已有公司的管理员 */
   async delateAdmin() {
     this.showAdminWindow = true;
-    this.isBindAdmin = 2;
-    this.isNewCompany = false;
     console.log(this.companyInfo);
     // 判断是否存在公司id，如果存在，则进入下一步
     if (this.companyInfo.createdUid) {
