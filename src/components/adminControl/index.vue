@@ -86,7 +86,7 @@ import { checkIdentityApi, bindCompanyApi, deleteAdminApi, deleteRecruiterApi, c
     props: {
         //0是绑定管理员，1是用户绑定公司，2是解绑管理员
         isBindAdmin: {
-            type: Number
+            type: Boolean
         },
         // 是否是旧公司公司绑定管理员
         isOldEdit:{
@@ -96,9 +96,10 @@ import { checkIdentityApi, bindCompanyApi, deleteAdminApi, deleteRecruiterApi, c
         companyInfo:{
             type:Object,
         },
-            type: Boolean,
-            default: false
-        },
+        // companyInfo:{
+        //     type: Boolean,
+        //     default: false
+        // },
         /* 用户当前身份 */
         isAdmin: {
             type: Number,
@@ -258,17 +259,18 @@ export default class adminBox extends Vue {
                 let res = await bindCompanyApi(this.companyInfo.id, this.bindCompanyForm)
                 this.$message({type: 'success', message: '绑定成功'})
                 this.$emit('closeAdminWindow', {'needLoad': true})
-            }else{
-                /* 新公司创建 */
-                this.$refs['form'].validate(async (valid) => {
-                if (valid) {
-                    let res = await createCompanyApi(NewcompanyInfo)
-                    this.$message({type: 'success', message: '公司创建成功'})
-                     this.$emit('close',{needLoad:true})
-                } else {
-                    return false
-                }
-            })
+                }else{
+                    /* 新公司创建 */
+                    this.$refs['form'].validate(async (valid) => {
+                    if (valid) {
+                        let res = await createCompanyApi(NewcompanyInfo)
+                        this.$message({type: 'success', message: '公司创建成功'})
+                        this.$emit('close',{needLoad:true})
+                    } else {
+                        return false
+                    }
+                })
+            }
         }else{
             console.log('绑定公司管理员')
             // console.log('',this.$ref['bindCompanyForm'])
