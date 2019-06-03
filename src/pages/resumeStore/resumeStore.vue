@@ -6,7 +6,7 @@
       :isShowMark="isShowMark"
       ref="methods"
     >
-      <div class="formSumbit" slot="formContent">
+      <div class="formSumbit"  slot="formContent" wx-if="isShowSearch">
         <div class="formReasult">
           <el-form ref="form" :model="form" class="form">
             <el-form-item label="模糊搜索" class="formItem" prop="keyword">
@@ -414,6 +414,9 @@ let lock = false;
     CustomSelect
   },
   watch: {
+    resumeScroll:function(newVal,oldval){
+
+    },
     nowCheck: function(newval, oldval) {
       const el = document.getElementById("historyScroll");
       let self = this;
@@ -444,6 +447,7 @@ export default class resumeStore extends Vue {
     total: 0,
     title: "简历库"
   };
+  isShowSearch=true;  //显示搜索区域
   lastPage = "";
   nowResumeMsg = {
     moreIntroduce: {
