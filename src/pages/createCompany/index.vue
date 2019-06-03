@@ -4,7 +4,7 @@
     <div class="header">
       <div class="creatTab" @click.stop="tab">
         <div class="Info" :class="{'active': active === 0 }">公司信息</div>
-        <div class="userInfo" :class="{'active': active === 1 }">账户设置</div>
+        <div class="userInfo"  v-if="isCreated!==true" :class="{'active': active === 1 }">账户设置</div>
       </div>
       <div>
         <el-button @click.stop="createdCompany" v-show="active === 0 && !isEdit">保存</el-button>
@@ -296,6 +296,7 @@ export default class createCompany extends Vue {
   companyName = {
     name: "" /* 检验公司名 */
   };
+  isCreated=false;
   can_company_input = true;
   pop = {
     isShow: false,
@@ -525,9 +526,10 @@ export default class createCompany extends Vue {
   mounted() {
     this.AdminShow = +sessionStorage.getItem("AdminShow");
     // console.log("this.AdminShow", this.AdminShow);
-    console.log(typeof this.$route.query.isCreated);
     if (this.$route.query.isCreated) {
+      this.isCreated=this.$route.query.isCreated;
       this.isShowCompany = true;
+      this.active=0;
     }
   }
   /* 保存跟进人 */
@@ -703,6 +705,8 @@ export default class createCompany extends Vue {
 
   created() {
     this.init();
+    console.log(this.active)
+    // if(this.$route.query)
   }
 }
 </script>

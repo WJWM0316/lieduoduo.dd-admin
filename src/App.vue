@@ -1,8 +1,6 @@
 <template>
   <div id="app">
-    <keep-alive>
-      <page-aside/>
-    </keep-alive>
+    <page-aside/>
 
     <page-header/>
     <!--<router-view/>-->

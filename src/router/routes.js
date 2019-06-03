@@ -15,7 +15,7 @@ export const routes = [
   {
     path: "/index",
     name: "index",
-    meta: { title: "公司库", keepAlive: true, scrollY: 0 },
+    meta: { title: "公司库", keepAlive: false, scrollY: 0 },
     component: resolve => require(["@/pages/index/index.vue"], resolve)
   },
   // 审核管理
@@ -45,7 +45,7 @@ export const routes = [
   {
     path: "/interview",
     name: "interview",
-    meta: { title: "面试管理", keepAlive: true, scrollY: 0 ,flag: "shenheguanli" },
+    meta: { title: "面试管理", keepAlive: false, scrollY: 0 ,flag: "shenheguanli" },
     component: resolve => require(["../App.vue"], resolve),
     children: [
       {

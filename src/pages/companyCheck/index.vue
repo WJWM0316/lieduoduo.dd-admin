@@ -235,7 +235,7 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import List from "@/components/list";
-import {getSalerListApi} from 'API/commont'
+import { getSalerListApi } from "API/commont";
 import { templistApi, companyTempUserList } from "API/company";
 @Component({
   name: "course-list",
@@ -248,7 +248,7 @@ export default class companyCheck extends Vue {
   pageCount = 0; // 请求回的数据共几页
   AdminShow = ""; //权限字段，限制搜索
   form = {
-    wherefrom:'',
+    wherefrom: "",
     is_license: "",
     admin_uid: "",
     keyword: "",
@@ -315,8 +315,8 @@ export default class companyCheck extends Vue {
   addCompany() {
     this.$router.push({
       path: "/index/createCompany",
-      query:{
-        isCreated:true
+      query: {
+        isCreated: true
       }
     });
     console.log("添加公司");
@@ -353,7 +353,6 @@ export default class companyCheck extends Vue {
     templistApi(this.form).then(res => {
       this.list = res.data.data;
       this.total = res.data.meta.total;
-      console.log('this.total',this.total)
       this.pageCount = res.data.meta.lastPage;
     });
   }
@@ -371,12 +370,12 @@ export default class companyCheck extends Vue {
     });
   }
   created() {
-    this.getTemplist();
     this.userList();
   }
   mounted() {
     this.AdminShow = +sessionStorage.getItem("AdminShow");
-    console.log(typeof this.AdminShow)
+    console.log(typeof this.AdminShow);
+    this.getTemplist();
   }
   userList() {
     console.log("---1------");

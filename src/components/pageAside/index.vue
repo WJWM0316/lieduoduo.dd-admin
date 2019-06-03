@@ -14,19 +14,19 @@
           >
             <div
               class="path"
-              :class="{'pathactive': item.path === onePath }"
+              :class="{'pathactive': onePath === item.path }"
               v-if="item.isShow===true"
             >
               <i
                 style="margin-right: 16px;"
                 class="icon iconfont icongongneng"
-                :class="isActive===index?'iconold':'iconNew'"
+                :class="onePath===item.path?'iconold':'iconNew'"
               ></i>
               <span>{{item.name}}</span>
               <i class="el-icon-arrow-up pathArrow" v-if="item.children.isShow==true"></i>
             </div>
             <!--  :class="{'pathactive': page.path === onePath }" -->
-            <ul v-show="item.children.isShow===true">
+            <ul v-if="item.children.isShow===true">
               <li
                 v-for="(page,index1) in item.children.list"
                 :key="index1"
@@ -54,9 +54,9 @@ import { routes } from "@/router/routes";
   watch: {
     $route: {
       handler(route) {
-        if (route.path !== "") {
-          this.onePath = route.path;
-        }
+        // if (route.path !== "") {
+        //   this.onePath = route.path;
+        // }
         this.AdminShow = +sessionStorage.getItem("AdminShow");
         if (/(5)/.test(this.AdminShow)) {
           // console.log('隐藏审核管理')
@@ -101,19 +101,28 @@ export default class PageAside extends Vue {
       path: "/index",
       name: "公司库",
       isShow: true,
-      children: []
+      children: {
+        isShow:false,
+        list:[]
+      }
     },
     {
       path: "/user",
       name: "用户管理",
       isShow: true,
-      children: []
+      children: {
+        isShow:false,
+        list:[]
+      }
     },
     {
       path: "/positionManage",
       name: "职位管理",
       isShow: true,
-      children: []
+      children: {
+        isShow:false,
+        list:[]
+      }
     },
     {
       path: "/",
@@ -123,12 +132,10 @@ export default class PageAside extends Vue {
         isShow: false,
         list: [
           {
-            isTwo: true,
             path: "/check/companyCheck",
             name: "公司审核管理"
           },
           {
-            isTwo: true,
             path: "/check/recruitmentOfficer",
             name: "招聘官审核"
           }
@@ -149,7 +156,6 @@ export default class PageAside extends Vue {
             name: "申请列表"
           },
           {
-            isTwo: true,
             isShow: false,
             path: "/interview/invite",
             name: "邀请列表"
@@ -161,7 +167,10 @@ export default class PageAside extends Vue {
       path: "/resumeStore",
       name: "简历库",
       isShow: true,
-      children: []
+      children: {
+         isShow: false,
+         list:[]
+      }
     }
   ];
   tabSwitch() {
@@ -177,35 +186,62 @@ export default class PageAside extends Vue {
       path: this.onePath
     });
   }
+  // 清空之前的操作
+  clearOperating() {
+    this.onePath = "";
+    for (let i = 0; i < this.itemList.length; i++) {
+      this.$set(this.itemList[i].children, "isShow", false);
+    }
+  }
   topath(index, index1, path) {
     console.log(index, index1, path);
-    this.isActive = index;
-    if (path == "/" || index1 !== "") {
-      console.log("存在二级目录");
-      this.onePath = "";
-      for (let i = 0; i < this.itemList.length; i++) {
-        this.itemList[i].children.isShow = false;
-      }
+    this.onePath = index;
+    this.clearOperating();
+    if (path == "/") {
+      // console.log("操作二级目录母菜单");
       this.itemList[index].children.isShow = true;
-      if (index1 !== "") {
-        console.log("进入子集");
-        this.itemList[index].children.isShow = true;
-        this.onePath = this.itemList[index].children.list[index1].path;
-        this.$router.replace({
-          path: this.onePath
-        });
-      }
+    } else if (index1 !== "") {
+      // console.log("操作中间层");
+      this.onePath = path;
+      this.itemList[index].children.isShow = true;
+      this.$router.push({
+        path: this.onePath
+      });
     } else {
-      console.log("一级目录");
-      console.log("----------1");
       for (let i = 0; i < this.itemList.length; i++) {
-        this.itemList[i].children.isShow = false;
+        console.log(this.itemList[i].children.isShow);
       }
       this.onePath = path;
       this.$router.push({
         path
       });
     }
+    // if (path === "/" || index1 !== "") {
+    //   console.log("存在二级目录");
+    //   this.onePath = "";
+    //   this.itemList[index].children.isShow = true;
+    //   if (index1 !== "") {
+    //     console.log("操作二级目录");
+    //     // this.onePath=path;
+    //     // // this.onePath = "";
+    //     // console.log("进入子集");
+    //     // // 分两种情况， 一种是子集
+    //     // for (let i = 0; i < this.itemList.length; i++) {
+    //     //   this.itemList[i].children.isShow = false;
+    //     // }
+    //     // this.itemList[index].children.isShow = true;
+    //     // // console.log(this.onePath,'this.onePath')
+    //     // this.$router.push({
+    //     //   path: this.onePath
+    //     // });
+
+    //     // // this.onePath = this.itemList[index].children.list[index1].path;
+    //     // this.$router.push({
+    //     //   path:this.onePath
+    //     // });
+    //   }
+    // } else {
+    // }
   }
   mounted() {
     console.log(this.isActive);
