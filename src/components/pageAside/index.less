@@ -35,28 +35,48 @@
           font-size: 14px;
           text-align: left;
           position: relative;
-
+          &:hover {
+            .path {
+              .iconNew {
+                color: #fff;
+              }
+            }
+          }
           .path {
-            padding-left: 22px;
+            padding-left: 46px;
             span {
               line-height: 55px;
               display: inline-block;
             }
+            .pathArrow {
+              font-size: 12px;
+              position: absolute;
+              right: 16px;
+              top: 23px;
+            }
           }
           ul {
+            transition: all ease 0.4s;
             .children {
+              transition: all 0.5s ease;
               font-weight: 300;
               color: #fff;
               height: 65px;
               // line-height: 60px;
               height: 55px;
               cursor: pointer;
-              transition: all ease 0.4s;
+             
               font-size: 14px;
               text-align: left;
+              box-sizing: border-box;
+              &:hover {
+                background: rgba(255, 255, 255, 0.1);
+              }
               .verify {
                 width: 100%;
                 display: inline-block;
+                padding-left: 78px;
+                position: relative;
                 span {
                   line-height: 55px;
                   display: inline-block;
@@ -71,7 +91,7 @@
           }
           &:hover {
             .path {
-              background: rgba(255, 226, 102, 0.12);
+              background: rgba(255, 255, 255, 0.1);
             }
           }
           .zike-icon {
@@ -108,7 +128,7 @@
   .interviewActive,
   .filter-tree {
     font-weight: 500;
-    background: rgba(255, 226, 102, 0.12);
+    background: rgba(255, 255, 255, 0.1);
     position: relative;
     color: #fff;
     .iconfont {
@@ -139,7 +159,14 @@
     // }
   }
 }
+.iconNew {
+  color: rgba(81, 62, 95, 1);
+}
+.iconold {
+  color: #fff;
+}
 .pathactive {
+  background: rgba(255, 255, 255, 0.1);
   &:before {
     background: #ffe266;
     content: "";

@@ -131,7 +131,7 @@
               </el-select>
             </el-form-item>
             <!-- 跟进人筛选 -->
-            <!-- <el-form-item class="area" label="跟进人" prop="admin_uid" label-width="70px">
+            <el-form-item class="area" label="跟进人" prop="admin_uid" label-width="70px">
               <el-select v-model="form.admin_uid" placeholder="请选择" style="margin-right: 10px;">
                 <el-option label="全部" value></el-option>
                 <el-option label="无" value="0"></el-option>
@@ -142,7 +142,7 @@
                   :value="item.id"
                 ></el-option>
               </el-select>
-            </el-form-item> -->
+            </el-form-item>
             <el-form-item class="btn">
               <el-button class="inquire" @click.stop="onSubmit">查询</el-button>
               <el-button @click.stop="resetForm('form')">重置</el-button>
@@ -366,11 +366,11 @@ export default class user extends Vue {
       label: "发布职位权益",
       width: 150
     },
-    // {
-    //   prop: "adminName",
-    //   label: "跟进人",
-    //   width: 150
-    // },
+    {
+      prop: "adminName",
+      label: "跟进人",
+      width: 150
+    },
     {
       prop: "identityAuth",
       label: "身份认证状态",

@@ -1,6 +1,9 @@
 <template>
   <div id="app">
-    <page-aside/>
+    <keep-alive>
+      <page-aside/>
+    </keep-alive>
+
     <page-header/>
     <!--<router-view/>-->
     <keep-alive>
@@ -25,7 +28,7 @@ import PageHeader from "COMPONENTS/pageHeader/index.vue";
   components: {
     PageAside,
     PageHeader
-  },
+  }
 })
 export default class App extends Vue {
   loadingInstance = null;

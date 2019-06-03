@@ -6,7 +6,7 @@
       :isShowMark="isShowMark"
       ref="methods"
     >
-      <div class="formSumbit"  slot="formContent" wx-if="isShowSearch">
+      <div class="formSumbit" slot="formContent" wx-if="isShowSearch">
         <div class="formReasult">
           <el-form ref="form" :model="form" class="form">
             <el-form-item label="模糊搜索" class="formItem" prop="keyword">
@@ -150,17 +150,15 @@
           <span class="total">共 {{lastPage}} 页，{{leftcontent.total}} 条记录</span>
         </footer>
       </div>
-      <transition name="el-fade-in-linear" v-show="isShowMark" slot="Mark">
+      <div v-show="isShowMark" slot="Mark">
+        <div class="left comstyle" @click.stop="LeftArrow">
+          <i class="el-icon-arrow-left"></i>
+        </div>
+        <div class="right comstyle" @click.stop="rightArrow">
+          <i class="el-icon-arrow-right"></i>
+        </div>
         <div class="Mask" @click.self="showMark">
           <div class="swiperList">
-            <div class="arrow">
-              <div class="left comstyle" @click.stop="LeftArrow">
-                <i class="el-icon-caret-left"></i>
-              </div>
-              <div class="right comstyle" @click.stop="rightArrow">
-                <i class="el-icon-caret-right"></i>
-              </div>
-            </div>
             <div class="swipertype">
               <div
                 class="common"
@@ -359,7 +357,7 @@
                     </div>
                     <p v-if="nowResumeMsg.wechat==''&&nowResumeMsg.mobile==''" class="noUpload">暂无上传</p>
                   </div>
-                  <div class="download row">
+                  <div class="download">
                     <p class="contactTitle">附件简历:</p>
                     <p v-if="nowResumeMsg.resumeAttach==null" class="noUpload">暂无上传</p>
                     <div class="Contact" @click.stop="seeFilesBtn" v-else>
@@ -371,7 +369,7 @@
             </div>
             <!-- 历史记录 -->
             <div class="nowResume" v-show="nowCheck==1">
-              <div class="Numbering">
+              <div class="Numbering"> 
                 <span>简历编号：{{nowResumeMsg.vkey}}</span>
                 <span>{{nowResumeMsg.resumeUpdateTime}}更新</span>
               </div>
@@ -385,7 +383,7 @@
             </div>
           </div>
         </div>
-      </transition>
+      </div>
     </lyout-content>
   </div>
 </template>
@@ -414,9 +412,7 @@ let lock = false;
     CustomSelect
   },
   watch: {
-    resumeScroll:function(newVal,oldval){
-
-    },
+    resumeScroll: function(newVal, oldval) {},
     nowCheck: function(newval, oldval) {
       const el = document.getElementById("historyScroll");
       let self = this;
@@ -447,7 +443,7 @@ export default class resumeStore extends Vue {
     total: 0,
     title: "简历库"
   };
-  isShowSearch=true;  //显示搜索区域
+  isShowSearch = true; //显示搜索区域
   lastPage = "";
   nowResumeMsg = {
     moreIntroduce: {
@@ -571,7 +567,7 @@ export default class resumeStore extends Vue {
     }
   }
   created() {
-    console.log('')
+    console.log("");
     this.degreeData();
     this.jobhuntStatus();
     this.ManageList();
@@ -724,9 +720,10 @@ export default class resumeStore extends Vue {
   /* 翻页 */
   handlePageChange(nowPage) {
     console.log(nowPage);
-    const el = document.getElementById("scroll");
-    console.log(el)
-    el.scrollTop= 0;
+    // const el = document.getElementById("scroll");
+    // console.log(el);
+    // el.scrollTop = 0;
+    this.$refs['methods'].scrollZero()
     this.form.page = nowPage;
     this.form.page = nowPage;
     this.getData();

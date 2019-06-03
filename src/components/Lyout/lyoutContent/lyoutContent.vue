@@ -20,7 +20,7 @@
       <slot name="pageList"></slot>
       <!-- 遮罩层，如有需要可在遮罩层添加块 -->
       <div class="Mark" v-if="isShowMark">
-        <slot name='Mark'></slot>
+        <slot name="Mark"></slot>
       </div>
     </section>
   </div>
@@ -33,11 +33,13 @@ import Component from "vue-class-component";
 @Component({
   name: "lyoutContent",
   props: {
-    isShowbtn: { //是否显示右侧按钮
+    isShowbtn: {
+      //是否显示右侧按钮
       type: Boolean,
       default: false
     },
-    leftcontent: { //标题，以及数据量
+    leftcontent: {
+      //标题，以及数据量
       type: Object,
       default: {
         title: "标题",
@@ -51,7 +53,13 @@ import Component from "vue-class-component";
   }
 })
 export default class lyoutContent extends Vue {
-  
+  scrollZero() {
+    console.log(' 我背触发')
+    window.scrollTo(0,0)
+    // const el = document.getElementById("lyoutScroll");
+    // console.log(el);
+    // el.scrollTop = 0;
+  }
 }
 </script>
 <style scoped lang="less">
@@ -61,13 +69,21 @@ export default class lyoutContent extends Vue {
   left: 200px;
   right: 0;
   z-index: 100;
-  height: 100%;
+  height: 846px;
+  overflow-y: scroll;
+  // .isScroll {
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  // }
+
   .contentStyle {
     margin: 22px;
     padding: 20px;
     padding-top: 0px;
+    padding-bottom: 0px;
     border: 1px solid rgb(238, 238, 238);
-    height: 100%;
+    background: #fff;
     .header {
       padding: 0px;
       background: #fff;
@@ -109,12 +125,12 @@ export default class lyoutContent extends Vue {
   }
 }
 .Mark {
-  position: absolute;
+  position: fixed;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(0,0,0,0.7);
-  z-index: 500;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
 }
 </style>

@@ -4,11 +4,11 @@
     <div class="header">
       <div class="creatTab">
         <div class="userInfo" :class="{'active': isEditAdminName == false }" @click.self="tab">基本信息</div>
-        <!-- <div
+        <div
           class="editAdminName"
           :class="{'active': isEditAdminName == true }"
           @click.self="tab"
-        >账户设置</div>-->
+        >账户设置</div>
       </div>
       <div class="editBox" v-if="isEditAdminName==false">
         <el-button

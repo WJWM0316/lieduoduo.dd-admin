@@ -32,7 +32,7 @@
   top: 0;
   left: 200px;
   right: 0;
-  z-index: 999;
+  z-index: 100;
   .el-icon-bell {
     font-size: 18px;
   }
