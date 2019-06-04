@@ -35,6 +35,8 @@
           font-size: 14px;
           text-align: left;
           position: relative;
+          height: 55px;
+          overflow: hidden;
           &:hover {
             .path {
               .iconNew {
@@ -54,6 +56,7 @@
               position: absolute;
               right: 16px;
               top: 23px;
+              transform: rotate(-180deg);
             }
           }
           ul {
@@ -166,7 +169,7 @@
 .iconold {
   color: #fff;
 }
-.pathactive {
+.active .pathactive {
   background: rgba(255, 255, 255, 0.1);
   &:before {
     background: #ffe266;
@@ -189,6 +192,35 @@
     border-style: solid;
     border-color: transparent transparent transparent #ffe266;
     display: block;
+    content: "";
+  }
+}
+
+.active.slide-down {
+  height: auto !important;
+}
+.slide-down > .pathactive {
+  &:before {
+    background: #ffe266;
+    content: "";
+    display: none;
+    left: 0;
+    position: absolute;
+    height: 55px;
+    width: 4px;
+  }
+  &:after {
+    width: 0;
+    height: 0;
+    border-color: red;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    border-width: 10px;
+    border-style: solid;
+    border-color: transparent transparent transparent #ffe266;
+    display: none;
     content: "";
   }
 }

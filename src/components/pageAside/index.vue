@@ -10,27 +10,29 @@
             v-for="(item, index) in itemList"
             :key="index"
             class="item"
-            @click.stop="topath(index,index1,item.path)"
+            :class="{'slide-down': item.children.length, 'active': item.isShow }"
+            @click.stop="topath('up', '', index, item)"
           >
-            <div class="path" :class="{'pathactive': onePath === item.path }" v-if="item.isShow">
+            <div class="path" :class="{'pathactive': item.isShow}">
               <i
                 style="margin-right: 16px;"
                 class="icon iconfont icongongneng"
                 :class="onePath===item.path?'iconold':'iconNew'"
               ></i>
-              <span>{{item.name}}</span>
-              <i class="el-icon-arrow-up pathArrow" v-if="item.children.isShow"></i>
+              <span>{{item.title}}</span>
+              <i class="el-icon-arrow-up pathArrow" v-show="item.children.length"></i>
             </div>
+
             <!--  :class="{'pathactive': page.path === onePath }" -->
-            <ul v-if="item.children.isShow">
+            <ul v-if="item.children.length">
               <li
-                v-for="(page,index1) in item.children.list"
+                v-for="(page,index1) in item.children"
                 :key="index1"
                 class="children"
-                @click.stop="topath(index,index1,page.path)"
+                @click.stop="topath('down', index, index1, page)"
               >
-                <div class="verify" :class="{'pathactive': page.path === onePath }">
-                  <span>{{page.name}}</span>
+                <div class="verify" :class="{'pathactive': page.isShow }">
+                  <span>{{page.title}}</span>
                 </div>
               </li>
             </ul>
@@ -50,42 +52,7 @@ import { routes } from "@/router/routes";
   watch: {
     $route: {
       handler(route) {
-        // if (route.path !== "") {
-        //   this.onePath = route.path;
-        // }
-        this.AdminShow = +sessionStorage.getItem("AdminShow");
-        if (/(5)/.test(this.AdminShow)) {
-          // console.log('隐藏审核管理')
-          this.$set(this.itemList, 3, {
-            path: "/check",
-            name: "审核管理",
-            isShow: false,
-            children: {
-              isShow: false
-            }
-          });
-        }
-        if (/(0|1|2|5|6)/.test(this.AdminShow)) {
-          // console.log("显示简历库");
-          this.$set(this.itemList, 5, {
-            path: "/resumeStore",
-            name: "简历库",
-            isShow: true,
-            children: {
-              isShow: false
-            }
-          });
-        } else {
-          // console.log("不显示简历库");
-          this.$set(this.itemList, 5, {
-            path: "/resumeStore",
-            name: "简历库",
-            isShow: false,
-            children: {
-              isShow: false
-            }
-          });
-        }
+        this.init()
       },
       immediate: true
     }
@@ -94,85 +61,85 @@ import { routes } from "@/router/routes";
 export default class PageAside extends Vue {
   routes = null;
   isActive = 0;
-  onePath = ""; //当前一级路由
+  onePath = "/index"; //当前一级路由
   SecondPath = ""; //当前二级路由
   index = "";
   index1 = "";
   itemList = [
     {
       path: "/index",
-      name: "公司库",
-      isShow: true,
-      children: {
-        isShow: false,
-        list: []
-      }
+      title: "公司库",
+      name: 'index',
+      isShow: false,
+      flag: 'index',
+      children: []
     },
     {
       path: "/user",
-      name: "用户管理",
-      isShow: true,
-      children: {
-        isShow: false,
-        list: []
-      }
+      title: "用户管理",
+      name: 'user',
+      isShow: false,
+      flag: 'user',
+      children: []
     },
     {
       path: "/positionManage",
-      name: "职位管理",
-      isShow: true,
-      children: {
-        isShow: false,
-        list: []
-      }
+      title: "职位管理",
+      name: 'positionManage',
+      isShow: false,
+      flag: 'positionManage',
+      children: []
     },
     {
       path: "/",
-      name: "审核管理",
-      isShow: true,
-      children: {
-        isShow: false,
-        list: [
-          {
-            path: "/check/companyCheck",
-            name: "公司审核管理"
-          },
-          {
-            path: "/check/recruitmentOfficer",
-            name: "招聘官审核"
-          }
-        ]
-      }
+      title: "审核管理",
+      isShow: false,
+      flag: 'check',
+      children: [
+        {
+          path: "/check/companyCheck",
+          title: "公司审核管理",
+          name: 'companyCheck',
+          flag: "check"
+        },
+        {
+          path: "/check/recruitmentOfficer",
+          title: "招聘官审核",
+          name: 'recruitmentOfficer',
+          flag: "check"
+        }
+      ]
     },
     {
       path: "/",
-      name: "面试管理",
-      isShow: true,
-      children: {
-        isShow: false,
-        list: [
-          {
-            isTwo: true,
-            isShow: false,
-            path: "/interview/List",
-            name: "申请列表"
-          },
-          {
-            isShow: false,
-            path: "/interview/invite",
-            name: "邀请列表"
-          }
-        ]
-      }
+      title: "面试管理",
+      isShow: false,
+      flag: 'interview',
+      children: [
+        {
+          isTwo: true,
+          isShow: false,
+          path: "/interview/List",
+          name: 'List',
+          title: "申请列表",
+          flag: 'interview'
+        },
+        {
+          isShow: false,
+          path: "/interview/invite",
+          name: 'invite',
+          title: "邀请列表",
+          flag: 'interview'
+        }
+      ]
     },
     {
       path: "/resumeStore",
-      name: "简历库",
-      isShow: true,
-      children: {
-        isShow: false,
-        list: []
-      }
+      title: "简历库",
+      flag: 'resume',
+      name: 'resumeStore',
+      isShow: false,
+      children: []
     }
   ];
   tabSwitch() {
@@ -188,49 +155,71 @@ export default class PageAside extends Vue {
       path: this.onePath
     });
   }
-  // 清空之前的操作
-  clearOperating() {
-    this.onePath = "";
-    for (let i = 0; i < this.itemList.length; i++) {
-      console.log(this.itemList[i].children);
-      this.$set(this.itemList[i].children, "isShow", false);
-    }
-  }
-  topath(index, index1, path) {
-    console.log(index, index1, path);
-
-    this.onePath = path;
-
-    if (path == "/") {
-      console.log("操作二级目录母菜单");
-      this.clearOperating();
-      this.onePath = "";
-      this.itemList[index].children.isShow = true;
-    } else if (index1 !== "") {
-      console.log("操作中间层");
-      this.onePath = path;
-      this.itemList[index].children.isShow = true;
-      this.$router.push({
-        path: this.onePath
-      });
+  topath(type, pIndex, cIndex, item) {
+    console.log(type, pIndex, cIndex, item)
+    this.onePath = item.path;
+    if(type === 'up') {
+      this.itemList.map(field => {
+        field.isShow = false
+        if(field.path === item.path) field.isShow = true
+      })
     } else {
-      console.log("-----");
-      this.clearOperating();
-      this.onePath = path;
-      // return;
-      this.$router.push({
-        path,
-        meta:{
-          keepAlive:true
-        }
-      });
+      this.itemList[pIndex].children.map((field, i) => field.isShow = i === cIndex ? true : false)
+    }
+
+    if(item.path == '/') {
+      this.itemList.map((field, i) => {
+        field.isShow = i === cIndex ? true : false
+      })
+    } else {
+      this.$router.push({name: item.name})
     }
   }
-  mounted() {
-    console.log(this.isActive);
-    // console.log(this.$store);
-    // this.AdminShow = sessionStorage.getItem("AdminShow");
-    // console.log("this.AdminShow", this.AdminShow);
+  // mounted() {
+  //   this.init()
+  // }
+  init() {
+    this.AdminShow = +sessionStorage.getItem("AdminShow");
+    let path = this.$route.path
+    // if (/(5)/.test(this.AdminShow)) {
+    //   this.$set(this.itemList, 3, {
+    //     path: "/check",
+    //     name: "审核管理",
+    //     isShow: false,
+    //     children: []
+    //   });
+    // }
+    // if (/(0|1|2|5|6)/.test(this.AdminShow)) {
+    //   this.$set(this.itemList, 5, {
+    //     path: "/resumeStore",
+    //     title: "简历库",
+    //     name: 'resumeStore',
+    //     isShow: false,
+    //     children: []
+    //   });
+    // } else {
+    //   this.$set(this.itemList, 5, {
+    //     path: "/resumeStore",
+    //     name: "简历库",
+    //     isShow: false,
+    //     children: []
+    //   });
+    // }
+    this.itemList.map((uRoute, uIndex, uArray) => {
+      if(Reflect.get(uRoute, 'path') === path) {
+        uRoute.isShow = true
+      } else {
+        uRoute.isShow = false
+        uRoute.children.map(cRoute => {
+          if(cRoute.path === path) {
+            cRoute.isShow = true
+            uArray.map(field => field.isShow = field.flag === cRoute.flag ? true : false)
+          } else {
+            cRoute.isShow = false
+          }
+        })
+      }
+    })
   }
   judge(adminGrade) {
     console.log("+adminGrade", +adminGrade);
