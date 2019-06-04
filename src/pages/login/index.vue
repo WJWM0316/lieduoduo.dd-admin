@@ -102,10 +102,10 @@ export default class login extends Vue {
     } else if (!isGroupAdmin && groupId === 4) {
       AdminShow = 3;
     } else if (isGroupAdmin && groupId === 5) {
-      console.log("顾问主管");
+      console.log("猎头主管");
       AdminShow = 5;
     } else if (!isGroupAdmin && groupId === 5) {
-      console.log("顾问组员");
+      console.log("猎头组员");
       AdminShow = 6;
     }
     return AdminShow;

@@ -54,8 +54,8 @@ import Component from "vue-class-component";
 })
 export default class lyoutContent extends Vue {
   scrollZero() {
-    console.log(' 我背触发')
-    window.scrollTo(0,0)
+    console.log(" 我背触发");
+    window.scrollTo(0, 0);
     // const el = document.getElementById("lyoutScroll");
     // console.log(el);
     // el.scrollTop = 0;
@@ -63,6 +63,16 @@ export default class lyoutContent extends Vue {
 }
 </script>
 <style scoped lang="less">
+// @media screen and (max-width: 1800px) {
+//   .lyoutContent {
+//     height: 846px;
+//   }
+// }
+@media screen and (min-width:1366px) and(max-width:1700px) {
+  .lyoutContent {
+    height: 636px !important;
+  }
+}
 .lyoutContent {
   position: fixed;
   top: 60px;

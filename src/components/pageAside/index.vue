@@ -181,6 +181,10 @@ export default class PageAside extends Vue {
   init() {
     this.AdminShow = +sessionStorage.getItem("AdminShow");
     let path = this.$route.path
+    let obj={
+
+    }
+    // this.itemList.splice
     // if (/(5)/.test(this.AdminShow)) {
     //   this.$set(this.itemList, 3, {
     //     path: "/check",

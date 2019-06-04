@@ -13,7 +13,7 @@
               <el-input placeholder="搜索姓名、手机号、公司名" v-model="form.keyword"></el-input>
             </el-form-item>
             <el-form-item label="求职状态" prop="jobStatus" class="formItem">
-              <el-select v-model="form.jobStatus" placeholder="请选择活动区域">
+              <el-select v-model="form.jobStatus" placeholder="请选择">
                 <el-option
                   v-for="(item,index) in jobhuntStatusList"
                   :key="index"
@@ -55,7 +55,7 @@
               ></el-cascader>
             </el-form-item>
             <el-form-item label="最高学历" class="formItem" prop="degree">
-              <el-select v-model="form.degree" placeholder="请选择活动区域">
+              <el-select v-model="form.degree" placeholder="请选择">
                 <el-option
                   v-for="(item,index) in degreeList"
                   :key="index"
