@@ -1,7 +1,7 @@
 {
   "name": "lieduoduo-bg",
   "version": "1.2.0",
-  "lieduoduoversion":"101",
+  "lieduoduoversion":"102",
   "private": true,
   "scripts": {
     "dev": "vue-cli-service serve --mode local",

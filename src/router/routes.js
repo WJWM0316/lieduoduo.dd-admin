@@ -15,6 +15,7 @@ export const routes = [
   {
     path: "/index",
     name: "index",
+    
     meta: { title: "公司库", keepAlive: false, scrollY: 0 },
     component: resolve => require(["@/pages/index/index.vue"], resolve)
   },
@@ -22,20 +23,20 @@ export const routes = [
   {
     path: "/check",
     name: "check",
-    meta: { title: "审核管理", keepAlive: true, scrollY: 0 },
+    meta: { title: "审核管理", keepAlive: true, scrollY: 0,flag:'check' },
     component: resolve => require(["../App.vue"], resolve),
     children: [
       {
         path: "companyCheck",
         name: "companyCheck",
-        meta: { title: "公司审核管理", keepAlive: true, flag: "shenheguanli" },
+        meta: { title: "公司审核管理", keepAlive: true, flag: "check" },
         component: resolve =>
           require(["@/pages/companyCheck/index.vue"], resolve)
       },
       {
         path: "recruitmentOfficer",
         name: "recruitmentOfficer",
-        meta: { title: "招聘官管理", keepAlive: true },
+        meta: { title: "招聘官管理", keepAlive: true,flag:'check' },
         component: resolve =>
           require(["@/pages/officerManage/index.vue"], resolve)
       }
@@ -45,53 +46,24 @@ export const routes = [
   {
     path: "/interview",
     name: "interview",
-    meta: { title: "面试管理", keepAlive: false, scrollY: 0 ,flag: "shenheguanli" },
+    meta: { title: "面试管理", keepAlive: false, scrollY: 0 ,flag: "shenheguanli",flag:'interview' },
     component: resolve => require(["../App.vue"], resolve),
     children: [
       {
         path: "List",
         name: "List",
-        meta: { title: "申请列表管理", haveParent: true, keepAlive: true },
+        meta: { title: "申请列表管理", haveParent: true, keepAlive: true,flag:'interview' },
         component: resolve =>
           require(["@/pages/application/index.vue"], resolve)
       },
       {
         path: "invite",
         name: "invite",
-        meta: { title: "邀请列表管理", haveParent: true, keepAlive: true },
+        meta: { title: "邀请列表管理", haveParent: true, keepAlive: true,flag:'interview' },
         component: resolve => require(["@/pages/invite/index.vue"], resolve)
       }
     ]
   },
-  /* 面试邀请列表 */
-  // {
-  //   path: "/interview/invite",
-  //   name: "invite",
-  //   meta: { title: "邀请列表管理", haveParent: false, keepAlive: true },
-  //   component: resolve => require(["@/pages/invite/index.vue"], resolve)
-  // },
-  /* 面试申请列表 */
-  // {
-  //   path: "/interview/List",
-  //   name: "application",
-  //   meta: { title: "申请列表管理", haveParent: false, keepAlive: true },
-  //   component: resolve => require(["@/pages/application/index.vue"], resolve)
-  // },
-  /* 招聘官管理 */
-  //  {
-  //   path: "/check/recruitmentOfficer",
-  //   name: "recruitmentOfficer",
-  //   meta: { title: "招聘官管理", keepAlive: true },
-  //   component: resolve => require(["@/pages/officerManage/index.vue"], resolve)
-  // },
-  /* 公司审核管理 */
-  // {
-  //   path: "/check/companyCheck",
-  //   name: "companyCheck",
-  //   meta: { title: "公司审核管理", keepAlive: true, flag: "gongsiku" },
-  //   component: resolve => require(["@/pages/companyCheck/index.vue"], resolve)
-  // },
-  /* 公司审核 */
   {
     path: "/check/companyCheck/verify",
     name: "companyCheckverify",

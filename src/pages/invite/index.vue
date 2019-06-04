@@ -301,6 +301,7 @@ export default class invite extends Vue {
   async creatLink(e, uid, index, type) {
     this.qrCode = "";
     // 是否已经加载过二维码
+    console.log("this.list[index]", this.list[index]);
     if (this.list[index].qrCode && type === 1) {
       this.qrCode = this.list[index].qrCode;
       this.$nextTick(() => {
@@ -318,7 +319,7 @@ export default class invite extends Vue {
       });
       return;
     } else if (this.list[index].jobQrCode && type === 3) {
-      this.qrCode = this.list[index].address;
+      this.qrCode = this.list[index].jobQrCode;
       this.$nextTick(() => {
         this.$refs["qrCode"].style.display = "block";
         this.$refs["qrCode"].style.left = e.clientX + "px";
