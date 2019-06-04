@@ -172,6 +172,7 @@ export default class adminBox extends Vue {
         if (!value) {
             return callback(new Error('邮箱不能为空'))
         }
+        console.log(emailReg.test(value),'emailReg.test(value)')
         setTimeout(() => {
             if (emailReg.test(value)) {
                 callback()
@@ -207,7 +208,7 @@ export default class adminBox extends Vue {
         "position": [
             { required: true, message: '请输入担任职务', trigger: 'blur' }
         ],
-        "email": [
+        "user_email": [
             { required: true, message: '请输入邮箱', trigger: 'blur'},
             { required: true, message: '请输入正确的邮箱', trigger: 'blur', validator:this.emailRule }
         ],

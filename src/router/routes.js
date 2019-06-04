@@ -51,14 +51,14 @@ export const routes = [
       {
         path: "List",
         name: "List",
-        meta: { title: "申请列表管理", haveParent: false, keepAlive: true },
+        meta: { title: "申请列表管理", haveParent: true, keepAlive: true },
         component: resolve =>
           require(["@/pages/application/index.vue"], resolve)
       },
       {
         path: "invite",
         name: "invite",
-        meta: { title: "邀请列表管理", haveParent: false, keepAlive: true },
+        meta: { title: "邀请列表管理", haveParent: true, keepAlive: true },
         component: resolve => require(["@/pages/invite/index.vue"], resolve)
       }
     ]
