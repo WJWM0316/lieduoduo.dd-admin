@@ -1,7 +1,7 @@
 {
   "name": "lieduoduo-bg",
   "version": "1.2.0",
-  "lieduoduoversion":"102",
+  "lieduoduoversion": "102",
   "private": true,
   "scripts": {
     "dev": "vue-cli-service serve --mode local",
@@ -30,6 +30,7 @@
     "@vue/cli-service": "^3.0.5",
     "less": "^3.0.4",
     "less-loader": "^4.1.0",
+    "uglifyjs-webpack-plugin": "^2.1.3",
     "vue-template-compiler": "^2.5.17"
   }
 }
