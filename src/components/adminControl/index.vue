@@ -296,7 +296,7 @@ export default class adminBox extends Vue {
         console.log()
         checkIdentityApi(this.bindForm.mobile).then(res => {
             if (res.data.data.isExisted) {
-                if(res.data.data.companyId===0||res.data.data.companyName===""){
+                if(res.data.data.companyId!==0||res.data.data.companyName!==""){
                     this.$message({
                         message:`该用户已经绑定了公司!`,
                         type: 'warning'
