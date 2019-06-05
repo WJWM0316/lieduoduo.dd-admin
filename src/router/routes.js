@@ -31,7 +31,7 @@ export const routes = [
         name: "list",
         meta: { title: "简历列表", keepAlive: true, flag: "resumeStore" },
         component: resolve =>
-          require(["@/pages/resumeStore/resumeStore.vue"], resolve)
+          require(["@/pages/resumeStore/page/list/list.vue"], resolve)
       }
     ]
   },

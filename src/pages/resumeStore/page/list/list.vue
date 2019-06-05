@@ -392,7 +392,7 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import lyoutContent from "COMPONENTS/Lyout/lyoutContent/lyoutContent.vue";
-import CustomSelect from "./components/CustomSelect/index.vue";
+import CustomSelect from "../../components/CustomSelect/index.vue";
 import { getLabelPositionListApi } from "API/position";
 import { getCityApi } from "API/company";
 import {
@@ -732,5 +732,5 @@ export default class resumeStore extends Vue {
 </script>
 
 <style scoped lang="less">
-@import "./resumeStore.less";
+@import "./list.less";
 </style>
