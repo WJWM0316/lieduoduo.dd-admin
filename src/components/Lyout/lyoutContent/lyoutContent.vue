@@ -68,9 +68,9 @@ export default class lyoutContent extends Vue {
 //     height: 846px;
 //   }
 // }
-@media screen and (min-width:1366px) and(max-width:1700px) {
+@media screen and (min-width: 1366px) and(max-width:1700px) {
   .lyoutContent {
-    height: 636px !important;
+    height: 610px !important;
   }
 }
 .lyoutContent {

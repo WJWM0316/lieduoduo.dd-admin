@@ -156,7 +156,7 @@ export default class PageAside extends Vue {
     });
   }
   topath(type, pIndex, cIndex, item) {
-    console.log(type, pIndex, cIndex, item)
+    // console.log(type, pIndex, cIndex, item)
     this.onePath = item.path;
     if(type === 'up') {
       this.itemList.map(field => {
@@ -226,9 +226,9 @@ export default class PageAside extends Vue {
     })
   }
   judge(adminGrade) {
-    console.log("+adminGrade", +adminGrade);
+    // console.log("+adminGrade", +adminGrade);
     if (/(0|1|2)/.test(+adminGrade)) {
-      console.log("显示简历库");
+      // console.log("显示简历库");
       this.$set(this.itemList, 5, {
         path: "/resumeStore",
         name: "简历库",
@@ -236,7 +236,7 @@ export default class PageAside extends Vue {
         children: []
       });
     } else {
-      console.log("不显示简历库");
+      // console.log("不显示简历库");
       this.$set(this.itemList, 5, {
         path: "/resumeStore",
         name: "简历库",

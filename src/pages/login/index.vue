@@ -41,6 +41,7 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import { loginApi } from "API/commont";
 import { saveAccessToken } from "API/cacheService";
+import {permission} from "UTIL/js/permissionRoute.js"
 @Component({
   name: "login"
 })
@@ -84,6 +85,11 @@ export default class login extends Vue {
   // 等级,身份
   judge(groupId, isAdmin, isGroupAdmin, userinfo) {
     let AdminShow;
+    const Identity=(isGroupAdmin,groupId)=>{
+      let result=permission.get('default')||permission.get(`${isGroupAdmin}_${groupId}`);
+      result.call(this);
+    }
+    console.log(result)
     if (isAdmin) {
       console.log("超管");
       AdminShow = 0;
@@ -115,6 +121,7 @@ export default class login extends Vue {
     this.loginForm.email = "";
   }
   created() {
+    console.log(permission)
     const email = sessionStorage.getItem("email") || "";
     if (email) {
       this.loginForm.email = email;
