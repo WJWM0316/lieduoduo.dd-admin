@@ -15,15 +15,31 @@ export const routes = [
   {
     path: "/index",
     name: "index",
-    
+
     meta: { title: "公司库", keepAlive: false, scrollY: 0 },
     component: resolve => require(["@/pages/index/index.vue"], resolve)
+  },
+  /* 简历库 */
+  {
+    path: "/resumeStore",
+    name: "resumeStore",
+    meta: { title: "简历库",flag: "resumeStore" },
+    component: resolve => require(["../App.vue"], resolve),
+    children: [
+      {
+        path: "list",
+        name: "list",
+        meta: { title: "简历列表", keepAlive: true, flag: "resumeStore" },
+        component: resolve =>
+          require(["@/pages/resumeStore/resumeStore.vue"], resolve)
+      }
+    ]
   },
   // 审核管理
   {
     path: "/check",
     name: "check",
-    meta: { title: "审核管理", keepAlive: true, scrollY: 0,flag:'check' },
+    meta: { title: "审核管理", keepAlive: true, scrollY: 0, flag: "check" },
     component: resolve => require(["../App.vue"], resolve),
     children: [
       {
@@ -36,7 +52,7 @@ export const routes = [
       {
         path: "recruitmentOfficer",
         name: "recruitmentOfficer",
-        meta: { title: "招聘官管理", keepAlive: true,flag:'check' },
+        meta: { title: "招聘官管理", keepAlive: true, flag: "check" },
         component: resolve =>
           require(["@/pages/officerManage/index.vue"], resolve)
       }
@@ -46,20 +62,36 @@ export const routes = [
   {
     path: "/interview",
     name: "interview",
-    meta: { title: "面试管理", keepAlive: false, scrollY: 0 ,flag: "shenheguanli",flag:'interview' },
+    meta: {
+      title: "面试管理",
+      keepAlive: false,
+      scrollY: 0,
+      flag: "shenheguanli",
+      flag: "interview"
+    },
     component: resolve => require(["../App.vue"], resolve),
     children: [
       {
         path: "List",
         name: "List",
-        meta: { title: "申请列表管理", haveParent: true, keepAlive: true,flag:'interview' },
+        meta: {
+          title: "申请列表管理",
+          haveParent: true,
+          keepAlive: true,
+          flag: "interview"
+        },
         component: resolve =>
           require(["@/pages/application/index.vue"], resolve)
       },
       {
         path: "invite",
         name: "invite",
-        meta: { title: "邀请列表管理", haveParent: true, keepAlive: true,flag:'interview' },
+        meta: {
+          title: "邀请列表管理",
+          haveParent: true,
+          keepAlive: true,
+          flag: "interview"
+        },
         component: resolve => require(["@/pages/invite/index.vue"], resolve)
       }
     ]
@@ -265,14 +297,7 @@ export const routes = [
     },
     component: resolve => require(["@/pages/user/editRecruiter.vue"], resolve)
   },
-  /* 简历库 */
-  {
-    path: "/resumeStore",
-    name: "resumeStore",
-    meta: { title: "简历库", haveParent: false, keepAlive: true },
-    component: resolve =>
-      require(["@/pages/resumeStore/resumeStore.vue"], resolve)
-  },
+
   /* 简历详情 */
   {
     path: "/resumeDetails",

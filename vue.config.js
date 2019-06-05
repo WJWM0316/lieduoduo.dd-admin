@@ -1,6 +1,5 @@
 const webpack = require("webpack");
 const path = require("path");
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const resolve = dir => {
   return path.join(__dirname, dir);
 };
@@ -28,17 +27,6 @@ module.exports = {
       }
     },
     plugins: [
-      new UglifyJsPlugin({
-        uglifyOptions: {
-          compress: {
-            drop_debugger: true, // console
-            drop_console: true,
-            pure_funcs:['console.log'] // 移除console
-          },
-        },
-        sourceMap: false,
-        parallel: true,
-      })
     ]
   },
   css: {},

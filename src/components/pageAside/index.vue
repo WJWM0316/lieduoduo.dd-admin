@@ -52,7 +52,7 @@ import { routes } from "@/router/routes";
   watch: {
     $route: {
       handler(route) {
-        this.init()
+        this.init();
       },
       immediate: true
     }
@@ -69,43 +69,43 @@ export default class PageAside extends Vue {
     {
       path: "/index",
       title: "公司库",
-      name: 'index',
+      name: "index",
       isShow: false,
-      flag: 'index',
+      flag: "index",
       children: []
     },
     {
       path: "/user",
       title: "用户管理",
-      name: 'user',
+      name: "user",
       isShow: false,
-      flag: 'user',
+      flag: "user",
       children: []
     },
     {
       path: "/positionManage",
       title: "职位管理",
-      name: 'positionManage',
+      name: "positionManage",
       isShow: false,
-      flag: 'positionManage',
+      flag: "positionManage",
       children: []
     },
     {
       path: "/",
       title: "审核管理",
       isShow: false,
-      flag: 'check',
+      flag: "check",
       children: [
         {
           path: "/check/companyCheck",
           title: "公司审核管理",
-          name: 'companyCheck',
+          name: "companyCheck",
           flag: "check"
         },
         {
           path: "/check/recruitmentOfficer",
           title: "招聘官审核",
-          name: 'recruitmentOfficer',
+          name: "recruitmentOfficer",
           flag: "check"
         }
       ]
@@ -114,32 +114,39 @@ export default class PageAside extends Vue {
       path: "/",
       title: "面试管理",
       isShow: false,
-      flag: 'interview',
+      flag: "interview",
       children: [
         {
           isTwo: true,
           isShow: false,
           path: "/interview/List",
-          name: 'List',
+          name: "List",
           title: "申请列表",
-          flag: 'interview'
+          flag: "interview"
         },
         {
           isShow: false,
           path: "/interview/invite",
-          name: 'invite',
+          name: "invite",
           title: "邀请列表",
-          flag: 'interview'
+          flag: "interview"
         }
       ]
     },
     {
-      path: "/resumeStore",
+      path: "/",
       title: "简历库",
-      flag: 'resume',
-      name: 'resumeStore',
+      flag: "resume",
       isShow: false,
-      children: []
+      children: [
+        {
+          isShow: false,
+          path: "/resumeStore/list",
+          name: "list",
+          title: "简历列表",
+          flag: "resume"
+        }
+      ]
     }
   ];
   tabSwitch() {
@@ -158,21 +165,24 @@ export default class PageAside extends Vue {
   topath(type, pIndex, cIndex, item) {
     // console.log(type, pIndex, cIndex, item)
     this.onePath = item.path;
-    if(type === 'up') {
+    if (type === "up") {
       this.itemList.map(field => {
-        field.isShow = false
-        if(field.path === item.path) field.isShow = true
-      })
+        field.isShow = false;
+        if (field.path === item.path) field.isShow = true;
+      });
     } else {
-      this.itemList[pIndex].children.map((field, i) => field.isShow = i === cIndex ? true : false)
+      this.itemList[pIndex].children.map(
+        (field, i) => (field.isShow = i === cIndex ? true : false)
+      );
     }
 
-    if(item.path == '/') {
+    if (item.path == "/") {
       this.itemList.map((field, i) => {
-        field.isShow = i === cIndex ? true : false
-      })
+        field.isShow = i === cIndex ? true : false;
+      });
     } else {
-      this.$router.push({name: item.name})
+      console.log(item.name,'------------')
+      this.$router.push({ name: item.name });
     }
   }
   // mounted() {
@@ -180,10 +190,8 @@ export default class PageAside extends Vue {
   // }
   init() {
     this.AdminShow = +sessionStorage.getItem("AdminShow");
-    let path = this.$route.path
-    let obj={
-
-    }
+    let path = this.$route.path;
+    let obj = {};
     // this.itemList.splice
     // if (/(5)/.test(this.AdminShow)) {
     //   this.$set(this.itemList, 3, {
@@ -210,20 +218,23 @@ export default class PageAside extends Vue {
     //   });
     // }
     this.itemList.map((uRoute, uIndex, uArray) => {
-      if(Reflect.get(uRoute, 'path') === path) {
-        uRoute.isShow = true
+      if (Reflect.get(uRoute, "path") === path) {
+        uRoute.isShow = true;
       } else {
-        uRoute.isShow = false
+        uRoute.isShow = false;
         uRoute.children.map(cRoute => {
-          if(cRoute.path === path) {
-            cRoute.isShow = true
-            uArray.map(field => field.isShow = field.flag === cRoute.flag ? true : false)
+          if (cRoute.path === path) {
+            cRoute.isShow = true;
+            uArray.map(
+              field =>
+                (field.isShow = field.flag === cRoute.flag ? true : false)
+            );
           } else {
-            cRoute.isShow = false
+            cRoute.isShow = false;
           }
-        })
+        });
       }
-    })
+    });
   }
   judge(adminGrade) {
     // console.log("+adminGrade", +adminGrade);
