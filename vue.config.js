@@ -1,6 +1,6 @@
 const webpack = require("webpack");
 const path = require("path");
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const resolve = dir => {
   return path.join(__dirname, dir);
 };
@@ -38,12 +38,6 @@ module.exports = {
         },
         sourceMap: false,
         parallel: true,
-      }),
-      new webpack.ProvidePlugin({
-        mapActions: ["vuex", "mapActions"],
-        mapMutations: ["vuex", "mapMutations"],
-        mapGetters: ["vuex", "mapGetters"],
-        mapState: ["vuex", "mapState"]
       })
     ]
   },
