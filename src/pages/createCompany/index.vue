@@ -278,7 +278,7 @@ import mapSearch from "@/components/map";
   watch: {
     "companyInfo.groupId": {
       handler(value) {
-        console.log(value);
+        // console.log(value);
         // this.companyInfo.groupId = tags
       },
       immediate: true
@@ -310,7 +310,7 @@ export default class createCompany extends Vue {
   showAdminWindow = false; //展示绑定管理员
   // 关闭
   closeAdmin(e) {
-    console.log("触发了么");
+    // console.log("触发了么");
 
     this.showAdminWindow = false;
 
@@ -329,14 +329,14 @@ export default class createCompany extends Vue {
   }
   /* 修改公司名 */
   editCompanyName() {
-    console.log("dsfsddf");
+    // console.log("dsfsddf");
   }
   ground(e) {
-    console.log(e);
+    // console.log(e);
     let result = this.salesList.find(field => field.id === e);
     this.companyInfo.groupId = result.groupId;
     this.companyInfo.admin_uid = result.id;
-    console.log(result);
+    // console.log(result);
   }
   /* 自定义公司名称校验规则 */
   companyNameRule = (rule, value, callback) => {
@@ -356,7 +356,7 @@ export default class createCompany extends Vue {
           }
         })
         .catch(err => {
-          console.log("err", err);
+          // console.log("err", err);
           this.companyName.name = "";
         });
     }
@@ -455,7 +455,7 @@ export default class createCompany extends Vue {
       if (this.salesList.length > 0) return;
       getSalerListApi().then(res => {
         this.salesList = res.data.data;
-        console.log(this.salesList);
+        // console.log(this.salesList);
       });
     } else {
       this.active = 0;
@@ -464,16 +464,16 @@ export default class createCompany extends Vue {
   /* 创建公司 */
   async createdCompany() {
     this.companyInfo.address = this.adressList;
-    console.log(this.$route.params);
+    // console.log(this.$route.params);
     this.$refs["companyInfo"].validate(async valid => {
       if (valid) {
         const { id, checkId } = this.$route.params;
 
-        console.log("是否处于编辑状态", this.isEdit);
+        // console.log("是否处于编辑状态", this.isEdit);
         if (this.isEdit) {
           // 编辑正式库
           if (id) {
-            console.log("编辑正式库", this.companyInfo);
+            // console.log("编辑正式库", this.companyInfo);
             delete this.companyInfo.adminUid;
             await editCompanyApi(id, this.companyInfo);
             this.$message({
@@ -482,7 +482,7 @@ export default class createCompany extends Vue {
             });
           } else {
             /* 编辑审核库 */
-            console.log("编辑审核库", this.companyInfo);
+            // console.log("编辑审核库", this.companyInfo);
             delete this.companyInfo.admin_uid;
 
             try {
@@ -492,7 +492,7 @@ export default class createCompany extends Vue {
                 type: "success"
               });
             } catch (err) {
-              console.log(err);
+              // console.log(err);
             }
           }
         } else {
@@ -501,7 +501,7 @@ export default class createCompany extends Vue {
           
           let admin_uid = sessionStorage.getItem("admin_uid");
           this.$set(this.companyInfo,'admin_uid',admin_uid)
-          console.log(this.companyInfo);
+          // console.log(this.companyInfo);
           this.showAdminWindow = true;
           this.isBindAdmin=0;
           this.isNewCompany=true
@@ -536,7 +536,7 @@ export default class createCompany extends Vue {
   async saveSaller() {
     const { id, checkId } = this.$route.params;
     // console.log(this.$route.params);
-    console.log("this.companyInfo", this.companyInfo);
+    // console.log("this.companyInfo", this.companyInfo);
     // return;
     if (id) {
       await editCompanyFollowUserApi(
@@ -633,10 +633,10 @@ export default class createCompany extends Vue {
   async getCompanyInfo() {
     console.log("this.$route.params", this.$route.params);
     const { id } = this.$route.params;
-    console.log("id", id);
+    // console.log("id", id);
     let res = await getCompanyInfoApi(id);
     let newCompanyInfo = res.data.data.companyInfo;
-    console.log("newCompanyInfo", newCompanyInfo);
+    // console.log("newCompanyInfo", newCompanyInfo);
     this.setCompanyInfo(newCompanyInfo);
   }
 
@@ -651,7 +651,7 @@ export default class createCompany extends Vue {
   /* 填充原公司数据 */
   setCompanyInfo(newCompanyInfo) {
     let admin_uid = sessionStorage.getItem("admin_uid");
-    console.log("newCompanyInfo", newCompanyInfo);
+    // console.log("newCompanyInfo", newCompanyInfo);
     this.companyInfo = {
       company_name: newCompanyInfo.companyName, // 公司名称
       company_shortname: newCompanyInfo.companyShortname, // 公司简称
@@ -705,7 +705,7 @@ export default class createCompany extends Vue {
 
   created() {
     this.init();
-    console.log(this.active)
+    // console.log(this.active)
     // if(this.$route.query)
   }
 }

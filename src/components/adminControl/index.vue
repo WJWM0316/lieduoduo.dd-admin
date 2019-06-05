@@ -172,7 +172,7 @@ export default class adminBox extends Vue {
         if (!value) {
             return callback(new Error('邮箱不能为空'))
         }
-        console.log(emailReg.test(value),'emailReg.test(value)')
+        // console.log(emailReg.test(value),'emailReg.test(value)')
         setTimeout(() => {
             if (emailReg.test(value)) {
                 callback()
@@ -231,7 +231,7 @@ export default class adminBox extends Vue {
     /* 绑定管理员 */
     async done () {
         let company=this.companyInfo;
-        console.log(company,'company')
+        // console.log(company,'company')
         
         let NewcompanyInfo={...company,...this.bindForm}
         // console.log(NewcompanyInfo)
@@ -246,11 +246,11 @@ export default class adminBox extends Vue {
         if (!this.isFromUser) {
             if(this.isOldEdit){
                 /* 旧公司绑定管理员 */
-                console.log('旧公司绑定管理员')
-                console.log(this.companyInfo,'this.bindCompanyId')
-                console.log(this.bindCompanyForm)
-                console.log(this.bindForm,'bindForm')
-                console.log('公用数据',this.commonFrom)
+                // console.log('旧公司绑定管理员')
+                // console.log(this.companyInfo,'this.bindCompanyId')
+                // console.log(this.bindCompanyForm)
+                // console.log(this.bindForm,'bindForm')
+                // console.log('公用数据',this.commonFrom)
                 this.bindCompanyForm={
                     email: this.bindForm.user_email,
                     is_admin: "1",
@@ -258,7 +258,7 @@ export default class adminBox extends Vue {
                     position: this.bindForm.user_position,
                     uid: this.commonFrom.uid
                 }
-                console.log('修改后的数据',this.bindCompanyForm)
+                // console.log('修改后的数据',this.bindCompanyForm)
                 let res = await bindCompanyApi(this.companyInfo.id, this.bindCompanyForm)
                 this.$message({type: 'success', message: '绑定成功'})
                 this.$emit('closeAdminWindow', {'needLoad': true})
@@ -302,8 +302,8 @@ export default class adminBox extends Vue {
                         type: 'warning'
                     })
                 }else if (!res.data.data.isAdmin && !res.data.data.companyId) {
-                    console.log('输入手机号码',res.data.data)
-                    console.log(this.bindCompanyForm)
+                    // console.log('输入手机号码',res.data.data)
+                    // console.log(this.bindCompanyForm)
                     this.isNewUser = true
                     this.toCretedUser = false
                     // this.newUserInfo.name=res.data.data.name;
@@ -312,12 +312,12 @@ export default class adminBox extends Vue {
                     this.companyInfo.created_uid=res.data.data.uid
                     // this.bindCompanyForm.uid=res.data.data.data.uid
                     this.$set(this.commonFrom,'uid',res.data.data.uid)
-                    console.log(this.commonFrom)
+                    // console.log(this.commonFrom)
                     this.newUserInfo = {
                         name: res.data.data.realname,
                         gender: res.data.data.gender === 1? '男' : '女'
                     }
-                    console.log(this.newUserInfo)
+                    // console.log(this.newUserInfo)
                 } else {
                     new Error(`该用户已绑定在${res.data.data.companyName},请重新绑定用户`)
                     this.toCretedUser = false
@@ -343,13 +343,13 @@ export default class adminBox extends Vue {
     }
     /* 移除管理员 */
     async removeAdmin () {
-        console.log('移除管理员')
-        console.log( this.isFromUser,this.isAdmin)
+        // console.log('移除管理员')
+        // console.log( this.isFromUser,this.isAdmin)
        
         if (!this.isFromUser || !!this.isAdmin) {
             // 从公司信息入口编辑或编辑管理员
             
-            console.log('公司入口进入')
+            // console.log('公司入口进入')
             let param = {
                 newAdmin: this.nextAdmin? this.nextAdmin.uid : 0
             }
@@ -361,7 +361,7 @@ export default class adminBox extends Vue {
             })
         } else {
             // 从用户入口编辑
-             console.log('从用户入口编辑')
+            //  console.log('从用户入口编辑')
             //   return
             let param = {
                 uid: this.$route.params.id
@@ -375,8 +375,8 @@ export default class adminBox extends Vue {
         this.$emit('closeAdminWindow', {'needLoad': true})
     }
     created () {
-        console.log(this.companyInfo,'companyInfo')
-        console.log(this.isBindAdmin,'isBindAdmin')
+        // console.log(this.companyInfo,'companyInfo')
+        // console.log(this.isBindAdmin,'isBindAdmin')
 
     }
 }

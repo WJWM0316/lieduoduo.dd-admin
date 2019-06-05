@@ -545,7 +545,7 @@ export default class resumeStore extends Vue {
   // 请求历史记录
   history(uid, form) {
     GetResumeHistory(uid, form).then(res => {
-      console.log(res);
+      // console.log(res);
       this.historyList = res.data.data;
     });
   }
@@ -561,13 +561,13 @@ export default class resumeStore extends Vue {
         count: 20
       });
     } else if (this.nowCheck === 0) {
-      console.log("简历详情");
-      console.log(this.nowResumeMsg.name);
+      // console.log("简历详情");
+      // console.log(this.nowResumeMsg.name);
       this.operating(this.nowResumeMsg.uid, { desc: "简历" });
     }
   }
   created() {
-    console.log("");
+    // console.log("");
     this.degreeData();
     this.jobhuntStatus();
     this.ManageList();
@@ -607,7 +607,7 @@ export default class resumeStore extends Vue {
   /* 查看简历附件 */
   seereResume(index) {
     let uid = this.itemList[index].uid;
-    console.log(this.itemList[index]);
+    // console.log(this.itemList[index]);
     this.seeFiles(this.itemList[index], uid);
     this.operating(uid, { desc: "简历附件" });
   }
@@ -647,7 +647,7 @@ export default class resumeStore extends Vue {
   degreeData() {
     degreeListAPI().then(res => {
       this.degreeList = res.data.data;
-      console.log("this.degreeList", this.degreeList);
+      // console.log("this.degreeList", this.degreeList);
     });
   }
   // 左边箭头
@@ -690,7 +690,7 @@ export default class resumeStore extends Vue {
   getDetail(uid, index) {
     this.isShowMark = true;
     this.nowIndex = index;
-    console.log("thisIndex", typeof this.nowIndex);
+    // console.log("thisIndex", typeof this.nowIndex);
     GetResumeDetailsAPI(uid).then(res => {
       this.nowResumeMsg = res.data.data;
       this.nowResumeMsg = Object.assign({}, this.nowResumeMsg, {
@@ -706,20 +706,20 @@ export default class resumeStore extends Vue {
       this.itemList = res.data.data;
       this.leftcontent.total = parseInt(res.data.meta.total);
       this.lastPage = parseInt(res.data.meta.lastPage);
-      console.log(this.lastPage);
+      // console.log(this.lastPage);
       // this.$nextTick(() => {
       //   this.$set(this.leftcontent, "total", Number(res.data.meta.total));
       //   this.$set(this.leftcontent, "lastPage", Number(res.data.meta.lastPage));
       // });
 
-      console.log("itemList", this.itemList);
-      console.log("this.leftcontent", this.leftcontent);
+      // console.log("itemList", this.itemList);
+      // console.log("this.leftcontent", this.leftcontent);
     });
   }
   // 翻页
   /* 翻页 */
   handlePageChange(nowPage) {
-    console.log(nowPage);
+    // console.log(nowPage);
     // const el = document.getElementById("scroll");
     // console.log(el);
     // el.scrollTop = 0;
