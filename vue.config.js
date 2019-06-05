@@ -28,16 +28,12 @@ module.exports = {
       }
     },
     plugins: [
-      new UglifyJsPlugin({
-        uglifyOptions: {
-          compress: {
-            drop_debugger: true, // console
-            drop_console: true,
-            pure_funcs:['console.log'] // 移除console
-          },
+      new webpack.optimize.UglifyJsPlugin({ 
+        compress: {
+          drop_debugger: true, //自动删除debugger
+          drop_console: true //自动删除console.log
         },
-        sourceMap: false,
-        parallel: true,
+        sourceMap: true
       }),
       new webpack.ProvidePlugin({
         mapActions: ["vuex", "mapActions"],
