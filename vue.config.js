@@ -11,18 +11,6 @@ module.exports = {
     entry: {
       vendors: ["vue", "vue-router", "axios", "vuex"]
     },
-    optimization: {
-      minimizer: [
-        new UglifyJsPlugin({
-          uglifyOptions: {
-            compress: {
-              drop_console: true, //consoledrop_debugger:false,
-              pure_funcs: ["console.log"] //移除console
-            }
-          }
-        })
-      ]
-    },
     resolve: {
       alias: {
         "@": resolve("src"),
@@ -50,5 +38,15 @@ module.exports = {
   css: {},
   chainWebpack: config => {
     config.plugins.delete("prefetch");
+    config.plugins.push(
+      new UglifyJsPlugin({
+        uglifyOptions: {
+          compress: {
+            drop_console: true, //consoledrop_debugger:false,
+            pure_funcs: ["console.log"] //移除console
+          }
+        }
+      })
+    )
   }
 };
