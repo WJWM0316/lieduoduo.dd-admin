@@ -29,6 +29,11 @@ module.exports = {
       }
     },
     plugins: [
+      new webpack.optimize.UglifyJsPlugin({
+        compress:{
+          drop_console:true
+        }
+      }),
       new webpack.ProvidePlugin({
         mapActions: ['vuex', 'mapActions'],
         mapMutations: ['vuex', 'mapMutations'],
