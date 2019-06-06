@@ -148,4 +148,15 @@ export default class lyoutContent extends Vue {
   background: rgba(0, 0, 0, 0.7);
   z-index: 1000;
 }
+.formSumbit {
+  background: #fff;
+
+  .BtnList {
+    width: 254px;
+    .inquire {
+      color: #ffffff;
+      background-color: #652791;
+    }
+  }
+}
 </style>

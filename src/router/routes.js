@@ -23,7 +23,7 @@ export const routes = [
   {
     path: "/resumeStore",
     name: "resumeStore",
-    meta: { title: "简历库",flag: "resumeStore" },
+    meta: { title: "简历库", flag: "resumeStore" },
     component: resolve => require(["../App.vue"], resolve),
     children: [
       {
@@ -32,9 +32,33 @@ export const routes = [
         meta: { title: "简历列表", keepAlive: true, flag: "resumeStore" },
         component: resolve =>
           require(["@/pages/resumeStore/page/list/list.vue"], resolve)
+      },
+      {
+        path: "recommendList",
+        name: "recommendList",
+        meta: { title: "推荐纪录", keepAlive: true, flag: "resumeStore" },
+        component: resolve =>
+          require([
+            "@/pages/resumeStore/page/recommendList/index.vue"
+          ], resolve),
+        children: [
+          {
+            path: "createOrder",
+            name: "createOrder",
+            meta: {
+              title: "新建推荐单",
+              haveParent: true,
+              keepAlive: true,
+              flag: "resumeStore"
+            },
+            component: resolve =>
+              require(["@/pages/resumeStore/page/TabBlock/index.vue"], resolve)
+          }
+        ]
       }
     ]
   },
+
   // 审核管理
   {
     path: "/check",
@@ -96,6 +120,7 @@ export const routes = [
       }
     ]
   },
+
   {
     path: "/check/companyCheck/verify",
     name: "companyCheckverify",

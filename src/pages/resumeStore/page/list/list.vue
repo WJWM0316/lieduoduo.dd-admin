@@ -6,7 +6,7 @@
       :isShowMark="isShowMark"
       ref="methods"
     >
-      <div class="formSumbit" slot="formContent" wx-if="isShowSearch">
+      <div class="formSumbit" slot="formContent">
         <div class="formReasult">
           <el-form ref="form" :model="form" class="form">
             <el-form-item label="模糊搜索" class="formItem" prop="keyword">
@@ -369,7 +369,7 @@
             </div>
             <!-- 历史记录 -->
             <div class="nowResume" v-show="nowCheck==1">
-              <div class="Numbering"> 
+              <div class="Numbering">
                 <span>简历编号：{{nowResumeMsg.vkey}}</span>
                 <span>{{nowResumeMsg.resumeUpdateTime}}更新</span>
               </div>
@@ -723,7 +723,7 @@ export default class resumeStore extends Vue {
     // const el = document.getElementById("scroll");
     // console.log(el);
     // el.scrollTop = 0;
-    this.$refs['methods'].scrollZero()
+    this.$refs["methods"].scrollZero();
     this.form.page = nowPage;
     this.form.page = nowPage;
     this.getData();

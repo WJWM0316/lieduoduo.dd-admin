@@ -145,6 +145,13 @@ export default class PageAside extends Vue {
           name: "list",
           title: "简历列表",
           flag: "resume"
+        },
+        {
+          isShow: false,
+          path: "/resumeStore/recommendList",
+          name: "recommendList",
+          title: "推荐列表",
+          flag: "resume"
         }
       ]
     }
