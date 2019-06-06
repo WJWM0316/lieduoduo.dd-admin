@@ -41,24 +41,37 @@ export const routes = [
           require([
             "@/pages/resumeStore/page/recommendList/index.vue"
           ], resolve),
-        children: [
-          {
-            path: "createOrder",
-            name: "createOrder",
-            meta: {
-              title: "新建推荐单",
-              haveParent: true,
-              keepAlive: true,
-              flag: "resumeStore"
-            },
-            component: resolve =>
-              require(["@/pages/resumeStore/page/TabBlock/index.vue"], resolve)
-          }
-        ]
       }
     ]
   },
-
+  /* 新建推荐单 */
+  {
+    path: "/resumeStore/recommendList/createOrder",
+    name: "createOrder",
+    meta: {
+      title: "新建推荐单",
+      haveParent: true,
+      parentName:'推荐纪录',
+      keepAlive: true,
+      flag: "resumeStore"
+    },
+    component: resolve =>
+      require(["@/pages/resumeStore/page/createOrder/index.vue"], resolve)
+  },
+  /* 推荐单详情 */
+  {
+    path: "/resumeStore/recommendList/OrderDetail",
+    name: "OrderDetail",
+    meta: {
+      title: "推荐单详情",
+      haveParent: true,
+      parentName:'推荐纪录',
+      keepAlive: true,
+      flag: "resumeStore"
+    },
+    component: resolve =>
+      require(["@/pages/resumeStore/page/OrderDetail/index.vue"], resolve)
+  },
   // 审核管理
   {
     path: "/check",

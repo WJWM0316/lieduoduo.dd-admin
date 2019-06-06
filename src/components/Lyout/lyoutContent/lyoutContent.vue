@@ -135,6 +135,7 @@ export default class lyoutContent extends Vue {
         border-radius: 4px;
         box-sizing: border-box;
         border: 1px solid #dcdfe6;
+        cursor: pointer;
       }
     }
   }
