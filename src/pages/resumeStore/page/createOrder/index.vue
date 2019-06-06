@@ -1,7 +1,11 @@
 <!--  -->
 <template>
   <div class="OrderDetail">
-    <tab-block :itemList="itemList" :isCreate="isCreate"></tab-block>
+    <tab-block :itemList="itemList" :isCreate="isCreate">
+      <div class="createOrder" slot="ShowContent">
+        <span>新建订单</span>
+      </div>
+    </tab-block>
   </div>
 </template>
 

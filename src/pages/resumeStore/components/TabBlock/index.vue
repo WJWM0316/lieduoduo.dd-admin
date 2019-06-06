@@ -13,9 +13,7 @@
           <span>{{item.name}}</span>
         </div>
       </div>
-      <div class="ShowContent">
-        <router-view></router-view>
-      </div>
+      <slot class="ShowContent" name="ShowContent"></slot>
     </div>
   </div>
 </template>
@@ -40,25 +38,20 @@ import Component from "vue-class-component";
 export default class TabBlock extends Vue {
   isActive = 0;
   mounted() {
-    // console.log(this.$route.query.isCreate,'route')
-    let result = this.itemList.every(item => item.name.indexOf("详情"));
-    console.log(this.Index(),'index')
-    if (this.$route.query.isCreate&&result) {
-      this.itemList.splice(1,this.Index())
+    if (this.$route.query.isCreate) {
+      this.itemList.splice(this.Index(), 1);
     }
   }
-  Index(){
-    let indexOf=0;
-    for(let i =0;i<this.itemList.length;i++){
-      if(this.itemList[i].name.indexOf("详情")){
-        indexOf=i;
+  Index() {
+    let indexOf = 0;
+    for (let i = 0; i < this.itemList.length; i++) {
+      if (this.itemList[i].name.indexOf("详情") != -1) {
+        indexOf = i;
       }
     }
-    console.log('indexOf',indexOf)
-    return indexOf
+    return indexOf;
   }
   ClickTab(index, path) {
-    console.log(path, "path");
     this.isActive = index;
     // this.$router.push({
     // path:
