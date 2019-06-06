@@ -58,7 +58,7 @@
         <header v-else>移除招聘官</header>
         <div class="removeAdmin">
             <h2 v-if="!!isAdmin || !isFromUser">确定将<span class="companyName">【{{companyInfo.realName}}】</span>移除该管理员并更换?</h2>
-            <h2 v-else>确定将<span class="companyName">【{{userName}}】</span>招聘官从<span class="companyName">【{{companyInfo.realName}}】</span>移出吗?</h2>
+            <h2 v-else>确定将<span class="companyName">【{{companyName}}】</span>招聘官从<span class="companyName">【{{companyInfo.realName}}】</span>移出吗?</h2>
             <p>解绑所属公司后，在平台上关联内容将如下处理，且数据永久保留</p>
             <ul>
                 <li>关闭与公司已绑定的所有职位</li>
