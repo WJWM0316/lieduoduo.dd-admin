@@ -1,42 +1,238 @@
 <!--  -->
 <template>
   <div class="OrderDetail">
-    <tab-block :itemList="itemList" :isCreate="isCreate">
-      <div class="createOrder" slot="ShowContent">
-        <span>新建订单</span>
+    <div class="TabView">
+      <div class="tabList">
+        <div
+          class="tabItem"
+          v-for="(item,index) in itemList"
+          :key="index"
+          @click.stop="ClickTab(index,item.path)"
+          :class="isCreate===index?'active':''"
+        >
+          <span>{{item}}</span>
+        </div>
       </div>
-    </tab-block>
+      <div class="createOrder">
+        <p class="title">新建推荐单</p>
+        <div class="CreateContent">
+          <el-form :model="form" :rules="rules" class="createForm">
+            <el-form-item label="职位ID" prop="positionId" style="width: 380px;" class="formItem">
+              <el-input
+                v-model.number="form.positionId"
+                placeholder="填写职位ID"
+                :maxlength="11"
+                @blur.stop="checkId(form.positionId)"
+              ></el-input>
+            </el-form-item>
+            <div class="positionMsg">
+              <div class="msg">
+                <span>职位名称:</span>
+                <span
+                  v-if="isShowmsg"
+                >{{postionObj.positionName}}| {{postionObj.city}} | {{postionObj.emolumentMin}}K-{{postionObj.emolumentMax}}K</span>
+              </div>
+              <div class="msg">
+                <span>公司名称:</span>
+                <span v-if="isShowmsg">{{postionObj.companyInfo.companyName}}</span>
+              </div>
+              <div class="msg">
+                <span>发布者:</span>
+                <span v-if="isShowmsg">{{postionObj.recruiterInfo.name}}</span>
+              </div>
+              <el-form-item label="简历编号:" prop="vkeys" class="formItem">
+                <el-input
+                  :autosize="{ minRows:3, maxRows: 10}"
+                  type="textarea"
+                  show-word-limit
+                  placeholder="请输入简历编号，多个编号用英文逗号区分"
+                  v-model="form.vkeys"
+                  size="mini"
+                  :rows="5"
+                  class="textarea"
+                ></el-input>
+              </el-form-item>
+            </div>
+          </el-form>
+          <div class="opeating">
+            <el-button class="inquire" @click.stop="onSubmit('up')">提交</el-button>
+            <el-button class="inquire" @click.stop="dialogVisible=true">取消</el-button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <el-dialog title="确认取消新建推荐单" :visible.sync="dialogVisible" width="30%" center>
+      <span>确认取消后将不保留当前数据</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button @click="$router.go(-1)" class="inquire">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- 推荐单 -->
+    <div class="PopForm" @click.stop="isShowForm=false" v-if="isShowForm">
+      <div class="allRusule">
+        <p class="title">提交结果</p>
+        <div class="resumeNums">
+          <span v-if="resultmsg.succeedNum">成功:{{resultmsg.succeedNum}}份</span>
+          <span v-if="resultmsg.failNum">失败:{{resultmsg.failNum}}份</span>
+        </div>
+        <div class="resultList">
+          <el-table height="400" max-height="400" :data="tableData">
+            <el-table-column align="center" prop="isSuccess" label="提交结果">
+              <template slot-scope="scope">
+                <div style="text-align:center">
+                  <i class="el-icon-circle-close" v-if="scope.row.isSuccess===0"></i>
+                  <i class="el-icon-circle-check" style="color:red;" v-if="scope.row.isSuccess===1"></i>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" prop="vkey" label="简历编号"></el-table-column>
+            <el-table-column align="center" prop="name" label="求职者"></el-table-column>
+            <el-table-column align="center" prop="reason" label="原因说明"></el-table-column>
+          </el-table>
+        </div>
+        <div class="okBtn" style="margin-top:20px;">
+          <el-button @click.stop="goPath">好的</el-button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import Vue from "vue";
 import Component from "vue-class-component";
-import TabBlock from "../../components/TabBlock/index.vue";
+import { createOrder, searchId } from "API/resumeStore";
+import { resultList } from "../../components/resultList/index.vue";
 @Component({
   name: "OrderDetail",
   components: {
-    TabBlock
+    resultList
   }
 })
 export default class OrderDetail extends Vue {
-  isCreate = true;
-  itemList = [
-    {
-      name: "推荐单详情",
-      path: "/resumeStore/recommendList/createOrder"
+  isCreate = 0;
+  isShowForm = false;
+  isShowmsg = false;
+  form = {
+    positionId: "",
+    vkeys: ""
+  };
+  postionObj = {
+    positionName: "",
+    city: "",
+    emolumentMin: "",
+    emolumentMax: "",
+    companyInfo: {
+      companyName: ""
     },
-    {
-      name: "新建推荐单",
-      path: "/resumeStore/recommendList/OrderDetail"
+    recruiterInfo: {
+      name: ""
     }
-  ];
-  isActive = 0;
+  };
+  rules = {
+    positionId: [
+      { type: "number", message: "id必须为数字" },
+      { type: "number", trigger: "blur", validator: this.verification_id }
+    ]
+  };
+  resultmsg = {
+    succeedNum: "",
+    failNum: ""
+  }; //成功后的订单
+  tableData = [];
+  dialogVisible = false;
+  itemList = ["新建推荐单"];
+  // 校验id
+  // verification_id = (rule, value, callback) => {
+  //   console.log(rule);
+  //   console.log(value);
+  //   console.log(callback);
+  // if (value === "") {
+  //   callback(new Error("请再次输入密码"));
+  // } else if (value !== this.ruleForm.pass) {
+  //   callback(new Error("两次输入密码不一致!"));
+  // } else {
+  //   callback();
+  // }
+  // };
+  goPath(e) {}
+  checkId(id) {
+    // 6512
+    searchId(id)
+      .then(res => {
+        this.postionObj = res.data.data;
+        this.isShowmsg = true;
+      })
+      .catch(err => {
+        if (JSON.stringify(err.data.data) === "[]") {
+          this.isShowmsg = false;
+        } else {
+          this.postionObj = err.data.data;
+          this.isShowmsg = true;
+        }
+      });
+  }
+  handleClose(done) {
+    this.dialogVisible = false;
+  }
+  onSubmit(status) {
+    let reg = /^[a-zA-Z0-9,]+$/;
+    if (status === "up") {
+      if (this.form.positionId === "") return;
+      else if (this.form.vkeys === "") {
+        this.$message({
+          message: "简历编号不可为空",
+          type: "warning"
+        });
+      } else if (!reg.test(this.form.vkeys)) {
+        this.$message({
+          message: "不可输除逗号以外的其他标点符号和特殊符号",
+          type: "warning"
+        });
+      } else {
+        console.log("成功通过");
+        createOrder(this.form.positionId, { vkeys: this.form.vkeys })
+          .then(res => {
+            this.$nextTick(() => {
+              this.isShowForm = true;
+            });
+            this.resultmsg = res.data.data.list;
+            this.tableData = res.data.data.result;
+            console.log(res);
+          })
+          .catch(err => {
+            this.isShowForm = true;
+            if (err.data.data.list === null) {
+              console.log("-----");
+              this.$set(this.resultmsg, "failNum", err.data.data.result.length);
+              // this.resultmsg.failNum = res.data.data.result.length;
+              console.log(this.resultmsg);
+            }
+            this.tableData = err.data.data.result;
+            console.log(this.tableData);
+          });
+      }
+    } else {
+    }
+  }
   ClickTab(index) {
-    this.isActive = index;
-    this.$router.push({
-      // path:
-    });
+    let result = this.itemList[index].name.indexOf("详情") != -1;
+    result ? (this.isCreate = 0) : (this.isCreate = 1);
+  }
+  created() {
+    if (this.$route.query.isCreate) {
+      this.itemList.splice(this.Index(), 1);
+    }
+  }
+  Index() {
+    let indexOf = 0;
+    for (let i = 0; i < this.itemList.length; i++) {
+      if (this.itemList[i].name.indexOf("详情") != -1) {
+        indexOf = i;
+      }
+    }
+    return indexOf;
   }
 }
 </script>

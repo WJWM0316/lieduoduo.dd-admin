@@ -112,8 +112,8 @@
         </div>
       </div>
       <div class="resumeList" id="scroll" slot="dataList">
-        <el-table height="670px" highlight-current-row :data="tableData" style="width: 100%">
-          <el-table-column fixed prop="date" label="批次" width="150"></el-table-column>
+        <el-table height="400px" highlight-current-row :data="tableData" style="width: 100%">
+          <el-table-column prop="date" label="批次" width="150"></el-table-column>
           <el-table-column prop="name" label="创建时间" width="120"></el-table-column>
           <el-table-column prop="province" label="管理员" width="120"></el-table-column>
           <el-table-column prop="city" label="推荐公司" width="300"></el-table-column>
@@ -121,6 +121,7 @@
           <el-table-column prop="zip" label="推荐成功" width="170"></el-table-column>
           <el-table-column prop="zip" label="推荐失败" width="170"></el-table-column>
           <el-table-column prop="zip" label="推荐负责人" width="170"></el-table-column>
+
           <el-table-column fixed="right" label="操作" width="100">
             <template slot-scope="scope">
               <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
@@ -204,19 +205,13 @@ export default class login extends Vue {
   };
   toTabBlock() {
     this.$router.push({
-      path: "/resumeStore/recommendList/createOrder",
-      query:{
-        isCreate:true
-      }
+      path: "/resumeStore/recommendList/createOrder"
     });
   }
   handleClick(row) {
-    console.log(row)
+    console.log(row);
     this.$router.push({
-      path: "/resumeStore/recommendList/createOrder",
-      query:{
-        isCreate:false
-      }
+      path: "/resumeStore/recommendList/OrderDetail"
     });
   }
 }
