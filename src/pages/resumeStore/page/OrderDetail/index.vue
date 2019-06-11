@@ -56,7 +56,7 @@
               <p class="companyName">我是很长的工作的名字已经超出了的公司名字</p>
               <div class="operation">
                 <span>查看简历</span>
-                <span @click.stop="">联系用户</span>
+                <span @click.stop>联系用户</span>
                 <!--电话号码展示框-->
                 <div class="phone">
                   <span>13922289159</span>
@@ -154,7 +154,7 @@
 <script>
 import Vue from "vue";
 import Component from "vue-class-component";
-import { stat } from "fs";
+import { recommendDetail } from "API/resumeStore";
 @Component({
   name: "OrderDetail",
   prop: ""
@@ -165,7 +165,7 @@ export default class OrderDetail extends Vue {
   isShowForm = false; //是否展示原因
   iseditResult = false; //如果是编辑就弹出编辑弹框，否则是原因弹框
   dialogTitle = "返点"; //弹框标题,四种情况 弹框唯一
-  centerDialogVisible = true; //原因弹框
+  centerDialogVisible = false; //原因弹框
   textarea2 = ""; //原因
   tableData = [
     {
@@ -175,8 +175,8 @@ export default class OrderDetail extends Vue {
       city: "普陀区",
       address: "上海市普陀区金沙江路 1518 弄",
       zip: 200333,
-      jobhunterInfo:{
-        mobile:13922289159
+      jobhunterInfo: {
+        mobile: 13922289159
       }
     },
     {
@@ -186,8 +186,8 @@ export default class OrderDetail extends Vue {
       city: "普陀区",
       address: "上海市普陀区金沙江路 1517 弄",
       zip: 200333,
-      jobhunterInfo:{
-        mobile:13922289159
+      jobhunterInfo: {
+        mobile: 13922289159
       }
     },
     {
@@ -197,8 +197,8 @@ export default class OrderDetail extends Vue {
       city: "普陀区",
       address: "上海市普陀区金沙江路 1519 弄",
       zip: 200333,
-      jobhunterInfo:{
-        mobile:13922289159
+      jobhunterInfo: {
+        mobile: 13922289159
       }
     },
     {
@@ -208,8 +208,8 @@ export default class OrderDetail extends Vue {
       city: "普陀区",
       address: "上海市普陀区金沙江路 1516 弄",
       zip: 200333,
-      jobhunterInfo:{
-        mobile:13922289159
+      jobhunterInfo: {
+        mobile: 13922289159
       }
     },
     {
@@ -219,8 +219,8 @@ export default class OrderDetail extends Vue {
       city: "普陀区",
       address: "上海市普陀区金沙江路 1517 弄",
       zip: 200333,
-      jobhunterInfo:{
-        mobile:13922289159
+      jobhunterInfo: {
+        mobile: 13922289159
       }
     },
     {
@@ -230,8 +230,8 @@ export default class OrderDetail extends Vue {
       city: "普陀区",
       address: "上海市普陀区金沙江路 1519 弄",
       zip: 200333,
-      jobhunterInfo:{
-        mobile:13922289159
+      jobhunterInfo: {
+        mobile: 13922289159
       }
     },
     {
@@ -241,8 +241,8 @@ export default class OrderDetail extends Vue {
       city: "普陀区",
       address: "上海市普陀区金沙江路 1516 弄",
       zip: 200333,
-      jobhunterInfo:{
-        mobile:13922289159
+      jobhunterInfo: {
+        mobile: 13922289159
       }
     },
     {
@@ -252,8 +252,8 @@ export default class OrderDetail extends Vue {
       city: "普陀区",
       address: "上海市普陀区金沙江路 1517 弄",
       zip: 200333,
-      jobhunterInfo:{
-        mobile:13922289159
+      jobhunterInfo: {
+        mobile: 13922289159
       }
     },
     {
@@ -263,8 +263,8 @@ export default class OrderDetail extends Vue {
       city: "普陀区",
       address: "上海市普陀区金沙江路 1519 弄",
       zip: 200333,
-      jobhunterInfo:{
-        mobile:13922289159
+      jobhunterInfo: {
+        mobile: 13922289159
       }
     },
     {
@@ -274,8 +274,8 @@ export default class OrderDetail extends Vue {
       city: "普陀区",
       address: "上海市普陀区金沙江路 1516 弄",
       zip: 200333,
-      jobhunterInfo:{
-        mobile:13922289159
+      jobhunterInfo: {
+        mobile: 13922289159
       }
     },
     {
@@ -285,8 +285,8 @@ export default class OrderDetail extends Vue {
       city: "普陀区",
       address: "上海市普陀区金沙江路 1517 弄",
       zip: 200333,
-      jobhunterInfo:{
-        mobile:13922289159
+      jobhunterInfo: {
+        mobile: 13922289159
       }
     },
     {
@@ -296,8 +296,8 @@ export default class OrderDetail extends Vue {
       city: "普陀区",
       address: "上海市普陀区金沙江路 1519 弄",
       zip: 200333,
-      jobhunterInfo:{
-        mobile:13922289159
+      jobhunterInfo: {
+        mobile: 13922289159
       }
     },
     {
@@ -307,8 +307,8 @@ export default class OrderDetail extends Vue {
       city: "普陀区",
       address: "上海市普陀区金沙江路 1516 弄",
       zip: 200333,
-      jobhunterInfo:{
-        mobile:13922289159
+      jobhunterInfo: {
+        mobile: 13922289159
       }
     }
   ];
@@ -320,6 +320,16 @@ export default class OrderDetail extends Vue {
     this.dialogTitle = title;
     this.centerDialogVisible = true;
     this.iseditResult = status;
+  }
+  created() {
+    this.getData();
+  }
+  getData() {
+    let { id } = this.$route.query;
+    console.log(id);
+    recommendDetail(id).then(res => {
+      console.log(res);
+    });
   }
 }
 </script>

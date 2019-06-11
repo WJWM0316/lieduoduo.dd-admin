@@ -78,17 +78,15 @@
         </div>
         <div class="resultList">
           <el-table height="400" max-height="400" :data="tableData">
-            <el-table-column align="center" prop="isSuccess" label="提交结果">
+            <el-table-column prop="vkey" label="简历编号"></el-table-column>
+            <el-table-column prop="name" label="求职者"></el-table-column>
+            <el-table-column prop="isSuccess" label="提交结果">
               <template slot-scope="scope">
-                <div style="text-align:center">
-                  <i class="el-icon-circle-close" v-if="scope.row.isSuccess===0"></i>
-                  <i class="el-icon-circle-check" style="color:red;" v-if="scope.row.isSuccess===1"></i>
-                </div>
+                <i class="el-icon-circle-close" v-if="scope.row.isSuccess===0"></i>
+                <i class="el-icon-circle-check" style="color:red;" v-if="scope.row.isSuccess===1"></i>
               </template>
             </el-table-column>
-            <el-table-column align="center" prop="vkey" label="简历编号"></el-table-column>
-            <el-table-column align="center" prop="name" label="求职者"></el-table-column>
-            <el-table-column align="center" prop="reason" label="原因说明"></el-table-column>
+            <el-table-column prop="reason" label="原因说明"></el-table-column>
           </el-table>
         </div>
         <div class="okBtn" style="margin-top:20px;">
@@ -156,7 +154,11 @@ export default class OrderDetail extends Vue {
   //   callback();
   // }
   // };
-  goPath(e) {}
+  goPath(e) {
+    // this.$router.push({
+    //   path: "/"
+    // });
+  }
   checkId(id) {
     // 6512
     searchId(id)
@@ -206,6 +208,7 @@ export default class OrderDetail extends Vue {
             if (err.data.data.list === null) {
               console.log("-----");
               this.$set(this.resultmsg, "failNum", err.data.data.result.length);
+              this.$set(this.resultmsg, "succeedNum", 0);
               // this.resultmsg.failNum = res.data.data.result.length;
               console.log(this.resultmsg);
             }

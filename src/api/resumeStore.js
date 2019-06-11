@@ -43,9 +43,21 @@ export const GetResumeHistory = (uid, data) =>
     noGlobalLoading: true,
     data
   });
-
+// 推荐清单列表
+export const recommendList = data =>
+  request({
+    url: `/advisor/recommend_lists`,
+    type: "get",
+    data
+  });
+// 推荐清单列表
+export const recommendDetail = uid =>
+  request({
+    url: `/advisor/recommend_list/${uid}`,
+    type: "get"
+  });
 // 添加简历历史记录
-export const addHistory = (uid, data) =>
+export const addHistory = uid =>
   request({
     url: `/resume/history/${uid}`,
     type: "post",
