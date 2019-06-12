@@ -102,12 +102,8 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import { createOrder, searchId } from "API/resumeStore";
-import { resultList } from "../../components/resultList/index.vue";
 @Component({
   name: "OrderDetail",
-  components: {
-    resultList
-  }
 })
 export default class OrderDetail extends Vue {
   isCreate = 0;
