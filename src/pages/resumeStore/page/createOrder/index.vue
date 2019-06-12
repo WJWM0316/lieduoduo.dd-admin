@@ -19,6 +19,7 @@
           <el-form :model="form" :rules="rules" class="createForm">
             <el-form-item label="职位ID" prop="positionId" style="width: 380px;" class="formItem">
               <el-input
+                :autofocus="true"
                 v-model.number="form.positionId"
                 placeholder="填写职位ID"
                 :maxlength="11"
@@ -141,19 +142,6 @@ export default class OrderDetail extends Vue {
   tableData = [];
   dialogVisible = false;
   itemList = ["新建推荐单"];
-  // 校验id
-  // verification_id = (rule, value, callback) => {
-  //   console.log(rule);
-  //   console.log(value);
-  //   console.log(callback);
-  // if (value === "") {
-  //   callback(new Error("请再次输入密码"));
-  // } else if (value !== this.ruleForm.pass) {
-  //   callback(new Error("两次输入密码不一致!"));
-  // } else {
-  //   callback();
-  // }
-  // };
   goPath(e) {
     // this.$router.push({
     //   path: "/"
@@ -223,7 +211,17 @@ export default class OrderDetail extends Vue {
     let result = this.itemList[index].name.indexOf("详情") != -1;
     result ? (this.isCreate = 0) : (this.isCreate = 1);
   }
+  checkFrom() {
+    let { frompostion } = this.$route.query;
+    let obj = JSON.parse(this.$route.query.obj);
+    if (frompostion) {
+      this.form.positionId = obj.id;
+      this.postionObj = obj;
+      this.isShowmsg = true;
+    }
+  }
   created() {
+    this.checkFrom();
     if (this.$route.query.isCreate) {
       this.itemList.splice(this.Index(), 1);
     }

@@ -5,17 +5,17 @@
       <div class="OrderDetail" style="padding:0px;">
         <div class="createTime">
           <span>推荐单详情</span>
-          <span>创建时间: 2019年5月24日 14:25:49</span>
+          <span>创建时间: {{baseMsg.createdTimeDesc}}</span>
         </div>
         <div class="result">
           <div class="success">
             <span>推荐成功:</span>
-            <span>3000</span>
+            <span>{{baseMsg.succeedNum}}</span>
             <span>份简历</span>
           </div>
           <div class="success">
             <span>推荐失败:</span>
-            <span>1200</span>
+            <span>{{baseMsg.failNum}}</span>
             <span>份简历</span>
           </div>
           <div class="success" @click.stop="isShowForm=true">查看原因</div>
@@ -23,37 +23,37 @@
         <div class="result">
           <div class="success">
             <span>职位ID:</span>
-            <span>产品经理 | 北京 | 20k-50k</span>
+            <span>{{baseMsg.positionId}}</span>
           </div>
           <div class="success">
             <span>推荐职位:</span>
-            <span>产品经理 | 北京 | 20k-50k</span>
+            <span>{{baseMsg.positionName}} | {{baseMsg.areaName}} | {{baseMsg.emolumentMin}}k-{{baseMsg.emolumentMax}}k</span>
           </div>
           <div class="success">
             <span>公司名称:</span>
-            <span>产品经理 | 北京 | 20k-50k</span>
+            <span>{{baseMsg.companyName}}</span>
           </div>
           <div class="success">
             <span>发布者:</span>
-            <span>产品经理 | 北京 | 20k-50k</span>
+            <span>{{baseMsg.advisorName}}</span>
           </div>
           <div class="success">
             <span>负责推荐人:</span>
-            <span>产品经理 | 北京 | 20k-50k</span>
+            <span>{{baseMsg.recruiterName}}</span>
           </div>
         </div>
         <div class="content"></div>
       </div>
       <div class="form">
         <el-table height="670px" highlight-current-row :data="tableData" style="width: 100%">
-          <el-table-column prop="date" label="简历ID" width="140"></el-table-column>
-          <el-table-column prop="name" label="求职者信息" width="270">
+          <el-table-column prop="jobhunter.resumeNum" label="简历ID" width="140"></el-table-column>
+          <el-table-column prop="jobhunter" label="求职者信息" width="270">
             <template slot-scope="scope">
               <div class="col_position">
-                <span>张三私立</span>
-                <span>我是很长的工作的名字已经超出了</span>
+                <span>{{scope.row.jobhunter.name}}</span>
+                <span>{{scope.row.jobhunter.lastPosition}}</span>
               </div>
-              <p class="companyName">我是很长的工作的名字已经超出了的公司名字</p>
+              <p class="companyName">{{scope.row.jobhunter.lastCompany}}</p>
               <div class="operation">
                 <span>查看简历</span>
                 <span @click.stop>联系用户</span>
@@ -166,6 +166,7 @@ export default class OrderDetail extends Vue {
   iseditResult = false; //如果是编辑就弹出编辑弹框，否则是原因弹框
   dialogTitle = "返点"; //弹框标题,四种情况 弹框唯一
   centerDialogVisible = false; //原因弹框
+  baseMsg = {}; //基础信息
   textarea2 = ""; //原因
   tableData = [
     {
@@ -329,6 +330,9 @@ export default class OrderDetail extends Vue {
     console.log(id);
     recommendDetail(id).then(res => {
       console.log(res);
+      this.baseMsg = res.data.data.listInfo;
+      this.tableData = res.data.data.recommends;
+      console.log(this.baseMsg);
     });
   }
 }

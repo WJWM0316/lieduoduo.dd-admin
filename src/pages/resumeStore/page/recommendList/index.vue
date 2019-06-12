@@ -114,7 +114,7 @@
         <el-table highlight-current-row :data="tableData" style="width: 100%">
           <el-table-column prop="id" label="批次" width="150"></el-table-column>
           <el-table-column prop="createdTimeDesc" label="创建时间" width="120"></el-table-column>
-          <el-table-column prop="recruiterName" label="管理员" width="120"></el-table-column>
+          <el-table-column prop="recruiterName" label="职位发布者" width="120"></el-table-column>
           <el-table-column prop="companyName" label="推荐公司" width="300"></el-table-column>
           <el-table-column prop="positionName" label="推荐职位" width="300"></el-table-column>
           <el-table-column prop="succeedNum" label="推荐成功" width="170"></el-table-column>
