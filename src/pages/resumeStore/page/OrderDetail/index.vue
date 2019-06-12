@@ -55,7 +55,7 @@
               </div>
               <p class="companyName">{{scope.row.jobhunter.lastCompany}}</p>
               <div class="operation">
-                <span>查看简历</span>
+                <span @click.stop="creatLink($event, scope.row.jobhunter.uid,scope.$index, 2)">扫码看简历</span>
                 <span
                   @click.stop="scope.row.jobhunter.isShowMobile=!scope.row.jobhunter.isShowMobile"
                 >联系用户</span>
@@ -87,7 +87,7 @@
               </div>
               <p class="companyName">{{scope.row.recrutier.companyName}}</p>
               <div class="operation">
-                <span>扫码看主页</span>
+                <span @click.stop="creatLink($event, scope.row.jobhunter.uid,scope.$index,1)">扫码看主页</span>
                 <span
                   @click.stop="scope.row.recrutier.isShowMobile=!scope.row.recrutier.isShowMobile"
                 >联系用户</span>
@@ -105,28 +105,49 @@
                   职位:
                   <span
                     class="positionName"
-                    @click="toPositionPath()"
+                    @click="toPositionPath(scope.row.interview.positionId)"
                   >{{scope.row.interview.positionName}}</span>
                   {{scope.row.interview.emolumentMin}}k-{{scope.row.interview.emolumentMax}}k
                 </p>
                 <p
                   class="companyName"
                 >{{scope.row.interview.address}}{{scope.row.interview.doorplate}}</p>
-                <p>时间:2019-05-25 16:00</p>
+                <p>时间:{{scope.row.interview.updatedAt}}</p>
               </div>
               <div v-else>
                 <p style="color:red;font-size：14px;">{{scope.row.dealStatusDesc}}</p>
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="zip" label="是否扣点" width="200"></el-table-column>
+          <el-table-column prop="chargeStatusDesc" label="是否扣点" width="200"></el-table-column>
           <el-table-column label="操作" width="100">
             <!-- slot-scope="scope" -->
-            <template>
-              <el-button @click.stop="handleClick(true,'扣点')" type="text" size="medium">扣点</el-button>
-              <el-button @click.stop="handleClick(true,'返点')" type="text" size="small">返点</el-button>
-              <p class="resultBtn" @click.stop="handleClick(false,'返点原因')">返点原因</p>
-              <p class="resultBtn" @click.stop="handleClick(false,'扣点原因')">扣点原因</p>
+            <template slot-scope="scope">
+              <div>
+                <el-button
+                  @click.stop="handleClick(true,'扣点')"
+                  type="text"
+                  size="medium"
+                  v-if="scope.row.chargeStatus===1"
+                >扣点</el-button>
+                <el-button
+                  @click.stop="handleClick(true,'返点')"
+                  type="text"
+                  size="small"
+                  v-if="scope.row.chargeStatus===1"
+                >返点</el-button>
+              </div>
+
+              <p
+                class="resultBtn"
+                @click.stop="handleClick(false,'返点原因')"
+                v-if="scope.row.chargeStatus===3"
+              >返点原因</p>
+              <p
+                class="resultBtn"
+                @click.stop="handleClick(false,'扣点原因')"
+                v-if="scope.row.chargeStatus===2"
+              >扣点原因</p>
             </template>
           </el-table-column>
         </el-table>
@@ -167,6 +188,22 @@
           <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
         </span>
       </el-dialog>
+      <!--小程序码展示框-->
+      <!--小程序码展示框-->
+      <div class="qrCode" ref="qrCode">
+        <img class="bg" src="../../../../assets/code_bg.png">
+        <div
+          style="height: 100%;display: flex; align-items: center;flex-direction: column;justify-content: center;"
+          v-if="!qrCode"
+        >
+          <img style="height: 38px;width: 38px;" src="../../../../assets/loading.gif">
+          <div class="txt">正在加载中…</div>
+        </div>
+        <div v-else>
+          <img class="Qr" :src="qrCode">
+          <div class="txt">微信扫码，打开小程序查看</div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -175,6 +212,7 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import { recommendDetail, resultList } from "API/resumeStore";
+import { getResumeCodeUrlApi, getRecruiterCodeUrlApi } from "API/interview";
 @Component({
   name: "OrderDetail",
   prop: ""
@@ -190,6 +228,7 @@ export default class OrderDetail extends Vue {
   textarea2 = ""; //原因
   nowSuccessNum = 0; //成功数
   nowFailNum = 0; //失败数
+  qrCode = ""; //二维码
   tableData = [];
   closeForm() {
     this.isShowForm = !this.isShowForm;
@@ -202,6 +241,30 @@ export default class OrderDetail extends Vue {
   }
   created() {
     this.getData();
+  }
+  /* 生成二维码 */
+  getQr(type, uid) {
+    switch (type) {
+      case 1:
+        // 招聘官主页
+        return getRecruiterCodeUrlApi({ id: uid });
+        break;
+      case 2:
+        // 简历二维码
+        return getResumeCodeUrlApi({ id: uid });
+        break;
+      case 3:
+        if (uid === 0) return;
+        return getPositionCodeUrlApi({ id: uid });
+        break;
+    }
+  }
+  toPositionPath(id) {
+    console.log(id);
+    this.$router.push({
+      path: "/positionManage/positionAuditDetail",
+      query: { id }
+    });
   }
   seeRusult() {
     const { id } = this.$route.query;
@@ -222,6 +285,56 @@ export default class OrderDetail extends Vue {
       });
       console.log(this.resultList);
     });
+  }
+  // 看二维码
+  /* 生成小程序码 */
+  async creatLink(e, uid, index, type) {
+    console.log(uid, index, type);
+    this.qrCode = "";
+    // 是否已经加载过二维码
+    console.log("this.tableData[index]", this.tableData[index]);
+    if (this.tableData[index].qrCode && type === 1) {
+      this.qrCode = this.tableData[index].qrCode;
+      this.$nextTick(() => {
+        this.$refs["qrCode"].style.display = "block";
+        this.$refs["qrCode"].style.left = e.clientX + "px";
+        this.$refs["qrCode"].style.top = e.clientY + window.scrollY + "px";
+      });
+      return;
+    } else if (this.tableData[index].resumeQrCode && type === 2) {
+      this.qrCode = this.tableData[index].resumeQrCode;
+      this.$nextTick(() => {
+        this.$refs["qrCode"].style.display = "block";
+        this.$refs["qrCode"].style.left = e.clientX + "px";
+        this.$refs["qrCode"].style.top = e.clientY + window.scrollY + "px";
+      });
+      return;
+    } else if (this.tableData[index].jobQrCode && type === 3) {
+      this.qrCode = this.tableData[index].jobQrCode;
+      this.$nextTick(() => {
+        this.$refs["qrCode"].style.display = "block";
+        this.$refs["qrCode"].style.left = e.clientX + "px";
+        this.$refs["qrCode"].style.top = e.clientY + window.scrollY + "px";
+      });
+      return;
+    }
+
+    this.$nextTick(() => {
+      this.$refs["qrCode"].style.display = "block";
+      this.$refs["qrCode"].style.left = e.clientX + "px";
+      this.$refs["qrCode"].style.top = e.clientY + window.scrollY + "px";
+    });
+    let res = await this.getQr(type, uid);
+    if (type === 1) {
+      this.qrCode = res.data.data.qrCodeUrl;
+      this.tableData[index].qrCode = res.data.data.qrCodeUrl;
+    } else if (type === 2) {
+      this.qrCode = res.data.data.qrCodeUrl;
+      this.tableData[index].resumeQrCode = res.data.data.qrCodeUrl;
+    } else {
+      this.qrCode = res.data.data.qrCodeUrl;
+      this.tableData[index].jobQrCode = res.data.data.qrCodeUrl;
+    }
   }
   getData() {
     let { id } = this.$route.query;
