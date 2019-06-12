@@ -1,6 +1,6 @@
 <!--  -->
 <template>
-  <div class="history">
+  <div class="recommendList">
     <lyout-content :leftcontent="leftcontent" :isShowbtn="true">
       <div class="class" slot="text" @click.stop="toTabBlock">新建推荐单</div>
       <div class="formSumbit" slot="formContent">
@@ -150,13 +150,13 @@ import Component from "vue-class-component";
 import lyoutContent from "COMPONENTS/Lyout/lyoutContent/lyoutContent.vue";
 import { recommendList } from "API/resumeStore";
 @Component({
-  name: "",
+  name: "recommendList",
   prop: "",
   components: {
     lyoutContent
   }
 })
-export default class login extends Vue {
+export default class recommend extends Vue {
   tableData = [
     {
       date: "2016-05-02",

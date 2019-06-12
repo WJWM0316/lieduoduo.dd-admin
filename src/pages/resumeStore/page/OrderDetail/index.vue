@@ -45,7 +45,7 @@
         <div class="content"></div>
       </div>
       <div class="form">
-        <el-table height="670px" highlight-current-row :data="tableData" style="width: 100%">
+        <el-table highlight-current-row :data="tableData" style="width: 100%">
           <el-table-column prop="jobhunter.resumeNum" label="简历ID" width="140"></el-table-column>
           <el-table-column prop="jobhunter" label="求职者信息" width="270">
             <template slot-scope="scope">
