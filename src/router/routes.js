@@ -45,7 +45,9 @@ export const routes = [
         name: "invitationProgress",
         meta: { title: "邀约进展", keepAlive: true, flag: "resumeStore" },
         component: resolve =>
-          require(["@/pages/resumeStore/page/invitationProgress/index.vue"], resolve)
+          require([
+            "@/pages/resumeStore/page/invitationProgress/index.vue"
+          ], resolve)
       }
     ]
   },

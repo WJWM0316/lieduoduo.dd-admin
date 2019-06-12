@@ -214,10 +214,10 @@ import Component from "vue-class-component";
 import { recommendDetail, resultList } from "API/resumeStore";
 import { getResumeCodeUrlApi, getRecruiterCodeUrlApi } from "API/interview";
 @Component({
-  name: "OrderDetail",
+  name: "invitationProgress",
   prop: ""
 })
-export default class OrderDetail extends Vue {
+export default class invitationProgress extends Vue {
   // itemList = ["推荐单详情"];
   isCreate = false; //是否创建
   isShowForm = false; //是否展示原因
