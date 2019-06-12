@@ -152,6 +152,13 @@ export default class PageAside extends Vue {
           name: "recommendList",
           title: "推荐列表",
           flag: "resume"
+        },
+        {
+          isShow: false,
+          path: "/resumeStore/invitationProgress",
+          name: "invitationProgress",
+          title: "邀约进展",
+          flag: "resume"
         }
       ]
     }

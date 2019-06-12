@@ -2,7 +2,7 @@
 <template>
   <div class="OrderDetail">
     <div class="TabView">
-      <div class="OrderDetail" style="padding:0px;">
+      <div class="Detail" style="padding:0px;">
         <div class="createTime">
           <span>推荐单详情</span>
           <span>创建时间: {{baseMsg.createdTimeDesc}}</span>
@@ -18,7 +18,7 @@
             <span>{{baseMsg.failNum}}</span>
             <span>份简历</span>
           </div>
-          <div class="success" @click.stop="isShowForm=true">查看原因</div>
+          <div class="success" @click.stop="seeRusult">查看原因</div>
         </div>
         <div class="result">
           <div class="success">
@@ -56,11 +56,13 @@
               <p class="companyName">{{scope.row.jobhunter.lastCompany}}</p>
               <div class="operation">
                 <span>查看简历</span>
-                <span @click.stop>联系用户</span>
-                <!--电话号码展示框-->
-                <div class="phone">
-                  <span>13922289159</span>
-                  <img class="phoneBg" src="../../../../assets/number_bg.png">
+                <span
+                  @click.stop="scope.row.jobhunter.isShowMobile=!scope.row.jobhunter.isShowMobile"
+                >联系用户</span>
+                <!--求职者电话号码展示框-->
+                <div class="phone" v-if="scope.row.jobhunter.isShowMobile">
+                  <p v-if="scope.row.jobhunter.mobile">{{scope.row.jobhunter.mobile}}</p>
+                  <p v-else>暂无</p>
                 </div>
               </div>
             </template>
@@ -80,29 +82,47 @@
           <el-table-column prop="city" label="面试官信息" width="300">
             <template slot-scope="scope">
               <div class="col_position">
-                <span>尼古斯丁卡拉王赞</span>
-                <span>我是很长的工作的名字已经超出了</span>
+                <span>{{scope.row.recrutier.name}}</span>
+                <span>{{scope.row.recrutier.position}}</span>
               </div>
-              <p class="companyName">我是很长的工作的名字已经超出了的公司名字</p>
+              <p class="companyName">{{scope.row.recrutier.companyName}}</p>
               <div class="operation">
                 <span>扫码看主页</span>
-                <span>联系用户</span>
+                <span
+                  @click.stop="scope.row.recrutier.isShowMobile=!scope.row.recrutier.isShowMobile"
+                >联系用户</span>
+                <div class="phone" v-if="scope.row.recrutier.isShowMobile">
+                  <p v-if="scope.row.recrutier.mobile">{{scope.row.recrutier.mobile}}</p>
+                  <p v-else>暂无</p>
+                </div>
               </div>
             </template>
           </el-table-column>
           <el-table-column prop="address" label="约面信息" width="300">
             <template slot-scope="scope">
-              <p class="positionName">
-                职位:
-                <span class="positionName">产品经理</span>30k-50k
-              </p>
-              <p class="companyName">我是很长的工作的名字已经超出了的公司名字</p>
-              <p>时间:2019-05-25 16:00</p>
+              <div v-if="scope.row.interview">
+                <p class="positionName">
+                  职位:
+                  <span
+                    class="positionName"
+                    @click="toPositionPath()"
+                  >{{scope.row.interview.positionName}}</span>
+                  {{scope.row.interview.emolumentMin}}k-{{scope.row.interview.emolumentMax}}k
+                </p>
+                <p
+                  class="companyName"
+                >{{scope.row.interview.address}}{{scope.row.interview.doorplate}}</p>
+                <p>时间:2019-05-25 16:00</p>
+              </div>
+              <div v-else>
+                <p style="color:red;font-size：14px;">{{scope.row.dealStatusDesc}}</p>
+              </div>
             </template>
           </el-table-column>
           <el-table-column prop="zip" label="是否扣点" width="200"></el-table-column>
           <el-table-column label="操作" width="100">
-            <template slot-scope="scope">
+            <!-- slot-scope="scope" -->
+            <template>
               <el-button @click.stop="handleClick(true,'扣点')" type="text" size="medium">扣点</el-button>
               <el-button @click.stop="handleClick(true,'返点')" type="text" size="small">返点</el-button>
               <p class="resultBtn" @click.stop="handleClick(false,'返点原因')">返点原因</p>
@@ -115,14 +135,14 @@
         <div class="allRusule">
           <p class="title">查看原因</p>
           <div class="resumeNums">
-            <span>成功:15份</span>
-            <span>失败:15份</span>
+            <span>成功:{{nowSuccessNum}}份</span>
+            <span>失败:{{nowFailNum}}份</span>
           </div>
           <div class="resultList">
-            <el-table height="400" max-height="400" :data="tableData" style="width: 100%">
-              <el-table-column align="center" prop="date" label="简历编号" width="380"></el-table-column>
-              <el-table-column align="center" prop="name" label="求职者" width="380"></el-table-column>
-              <el-table-column align="center" prop="address" label="原因说明" width="380"></el-table-column>
+            <el-table height="400" max-height="400" :data="resultList" style="width: 100%">
+              <el-table-column prop="vkey" label="简历编号" width="380"></el-table-column>
+              <el-table-column prop="name" label="求职者" width="380"></el-table-column>
+              <el-table-column prop="reason" label="原因说明" width="380"></el-table-column>
             </el-table>
           </div>
         </div>
@@ -154,7 +174,7 @@
 <script>
 import Vue from "vue";
 import Component from "vue-class-component";
-import { recommendDetail } from "API/resumeStore";
+import { recommendDetail, resultList } from "API/resumeStore";
 @Component({
   name: "OrderDetail",
   prop: ""
@@ -168,151 +188,9 @@ export default class OrderDetail extends Vue {
   centerDialogVisible = false; //原因弹框
   baseMsg = {}; //基础信息
   textarea2 = ""; //原因
-  tableData = [
-    {
-      date: "2016-05-02",
-      name: "王小虎",
-      province: "上海",
-      city: "普陀区",
-      address: "上海市普陀区金沙江路 1518 弄",
-      zip: 200333,
-      jobhunterInfo: {
-        mobile: 13922289159
-      }
-    },
-    {
-      date: "2016-05-04",
-      name: "王小虎",
-      province: "上海",
-      city: "普陀区",
-      address: "上海市普陀区金沙江路 1517 弄",
-      zip: 200333,
-      jobhunterInfo: {
-        mobile: 13922289159
-      }
-    },
-    {
-      date: "2016-05-01",
-      name: "王小虎",
-      province: "上海",
-      city: "普陀区",
-      address: "上海市普陀区金沙江路 1519 弄",
-      zip: 200333,
-      jobhunterInfo: {
-        mobile: 13922289159
-      }
-    },
-    {
-      date: "2016-05-03",
-      name: "王小虎",
-      province: "上海",
-      city: "普陀区",
-      address: "上海市普陀区金沙江路 1516 弄",
-      zip: 200333,
-      jobhunterInfo: {
-        mobile: 13922289159
-      }
-    },
-    {
-      date: "2016-05-04",
-      name: "王小虎",
-      province: "上海",
-      city: "普陀区",
-      address: "上海市普陀区金沙江路 1517 弄",
-      zip: 200333,
-      jobhunterInfo: {
-        mobile: 13922289159
-      }
-    },
-    {
-      date: "2016-05-01",
-      name: "王小虎",
-      province: "上海",
-      city: "普陀区",
-      address: "上海市普陀区金沙江路 1519 弄",
-      zip: 200333,
-      jobhunterInfo: {
-        mobile: 13922289159
-      }
-    },
-    {
-      date: "2016-05-03",
-      name: "王小虎",
-      province: "上海",
-      city: "普陀区",
-      address: "上海市普陀区金沙江路 1516 弄",
-      zip: 200333,
-      jobhunterInfo: {
-        mobile: 13922289159
-      }
-    },
-    {
-      date: "2016-05-04",
-      name: "王小虎",
-      province: "上海",
-      city: "普陀区",
-      address: "上海市普陀区金沙江路 1517 弄",
-      zip: 200333,
-      jobhunterInfo: {
-        mobile: 13922289159
-      }
-    },
-    {
-      date: "2016-05-01",
-      name: "王小虎",
-      province: "上海",
-      city: "普陀区",
-      address: "上海市普陀区金沙江路 1519 弄",
-      zip: 200333,
-      jobhunterInfo: {
-        mobile: 13922289159
-      }
-    },
-    {
-      date: "2016-05-03",
-      name: "王小虎",
-      province: "上海",
-      city: "普陀区",
-      address: "上海市普陀区金沙江路 1516 弄",
-      zip: 200333,
-      jobhunterInfo: {
-        mobile: 13922289159
-      }
-    },
-    {
-      date: "2016-05-04",
-      name: "王小虎",
-      province: "上海",
-      city: "普陀区",
-      address: "上海市普陀区金沙江路 1517 弄",
-      zip: 200333,
-      jobhunterInfo: {
-        mobile: 13922289159
-      }
-    },
-    {
-      date: "2016-05-01",
-      name: "王小虎",
-      province: "上海",
-      city: "普陀区",
-      address: "上海市普陀区金沙江路 1519 弄",
-      zip: 200333,
-      jobhunterInfo: {
-        mobile: 13922289159
-      }
-    },
-    {
-      date: "2016-05-03",
-      name: "王小虎",
-      province: "上海",
-      city: "普陀区",
-      address: "上海市普陀区金沙江路 1516 弄",
-      zip: 200333,
-      jobhunterInfo: {
-        mobile: 13922289159
-      }
-    }
-  ];
+  nowSuccessNum = 0; //成功数
+  nowFailNum = 0; //失败数
+  tableData = [];
   closeForm() {
     this.isShowForm = !this.isShowForm;
   }
@@ -325,6 +203,26 @@ export default class OrderDetail extends Vue {
   created() {
     this.getData();
   }
+  seeRusult() {
+    const { id } = this.$route.query;
+    this.isShowForm = true;
+    resultList(id).then(res => {
+      // console.log(res);
+      this.resultList = res.data.data;
+      this.nowSuccessNum = this.resultList.filter(
+        item => item.isSuccess === 1
+      ).length;
+      this.nowFailNum = this.resultList.filter(
+        item => item.isSuccess === 0
+      ).length;
+      this.resultList.forEach(item => {
+        if (item.isSuccess) {
+          item.reason = "推荐成功";
+        }
+      });
+      console.log(this.resultList);
+    });
+  }
   getData() {
     let { id } = this.$route.query;
     console.log(id);
@@ -332,7 +230,11 @@ export default class OrderDetail extends Vue {
       console.log(res);
       this.baseMsg = res.data.data.listInfo;
       this.tableData = res.data.data.recommends;
-      console.log(this.baseMsg);
+      this.tableData.forEach(item => {
+        item.jobhunter.isShowMobile = false;
+        item.recrutier.isShowMobile = false;
+      });
+      console.log(this.tableData);
     });
   }
 }

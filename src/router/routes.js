@@ -38,9 +38,14 @@ export const routes = [
         name: "recommendList",
         meta: { title: "推荐纪录", keepAlive: true, flag: "resumeStore" },
         component: resolve =>
-          require([
-            "@/pages/resumeStore/page/recommendList/index.vue"
-          ], resolve),
+          require(["@/pages/resumeStore/page/recommendList/index.vue"], resolve)
+      },
+      {
+        path: "invitationProgress",
+        name: "invitationProgress",
+        meta: { title: "邀约进展", keepAlive: true, flag: "resumeStore" },
+        component: resolve =>
+          require(["@/pages/resumeStore/page/invitationProgress/index.vue"], resolve)
       }
     ]
   },
@@ -51,7 +56,7 @@ export const routes = [
     meta: {
       title: "新建推荐单",
       haveParent: true,
-      parentName:'推荐纪录',
+      parentName: "推荐纪录",
       keepAlive: true,
       flag: "resumeStore"
     },
@@ -65,7 +70,7 @@ export const routes = [
     meta: {
       title: "推荐单详情",
       haveParent: true,
-      parentName:'推荐纪录',
+      parentName: "推荐纪录",
       keepAlive: true,
       flag: "resumeStore"
     },
@@ -287,6 +292,7 @@ export const routes = [
     meta: { title: "用户管理", haveParent: false, keepAlive: true },
     component: resolve => require(["@/pages/user/index.vue"], resolve)
   },
+
   /* 添加用户 */
   {
     path: "/user/addUser",

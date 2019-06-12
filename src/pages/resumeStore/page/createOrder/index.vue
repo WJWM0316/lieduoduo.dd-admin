@@ -103,7 +103,7 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import { createOrder, searchId } from "API/resumeStore";
 @Component({
-  name: "OrderDetail",
+  name: "OrderDetail"
 })
 export default class OrderDetail extends Vue {
   isCreate = 0;

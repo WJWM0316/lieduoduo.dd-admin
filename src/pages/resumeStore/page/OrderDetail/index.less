@@ -145,6 +145,22 @@
 }
 .operation {
   margin-top: 15px;
+  position: relative;
+  .phone {
+    background: url("../../../../assets/number_bg.png") no-repeat;
+    background-size: 100% 100%;
+    width: 144px;
+    height: 76px;
+    position: absolute;
+    right: 48px;
+    top: -70px;
+    text-align: center;
+    p {
+      font-size: 14px;
+      color: #000;
+      line-height: 75px;
+    }
+  }
   span {
     color: #652791;
     cursor: pointer;
@@ -172,45 +188,45 @@
     background: rgba(255, 255, 255, 1);
     border-radius: 15px;
     z-index: 10000;
-    
-    .title{
+
+    .title {
       text-align: center;
       color: #000;
       font-size: 20px;
       font-weight: 700;
       margin-top: 20px;
     }
-    .resumeNums{
+    .resumeNums {
       text-align: left;
       padding: 0 30px;
       margin-top: 20px;
-      span{
+      span {
         margin-right: 30px;
-        &:nth-child(1){
+        &:nth-child(1) {
           font-size: 20px;
           color: #000;
         }
-        &:nth-child(2){
+        &:nth-child(2) {
           font-size: 20px;
           color: red;
         }
       }
     }
-    .resultList{
+    .resultList {
       padding: 0 30px;
     }
   }
 }
-.resultBtn{
+.resultBtn {
   cursor: pointer;
-  color: #409EFF;
+  color: #409eff;
 }
-.resultDetail{
-  p{
+.resultDetail {
+  p {
     color: #000;
     font-size: 14px;
   }
-  span{
+  span {
     margin-top: 10px;
     display: inline-block;
   }

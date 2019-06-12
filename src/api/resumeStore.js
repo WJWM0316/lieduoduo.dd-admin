@@ -72,3 +72,10 @@ export const searchId = id =>
     type: "get",
     noGlobalLoading: true
   });
+// 推荐清单成功失败原因
+export const resultList = uid =>
+  request({
+    url: `/advisor/recommend_list/result/${uid}`,
+    type: "get",
+    noGlobalLoading: true
+  });
