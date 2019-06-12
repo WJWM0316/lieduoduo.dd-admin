@@ -125,13 +125,13 @@
             <template slot-scope="scope">
               <div>
                 <el-button
-                  @click.stop="handleClick(true,'扣点')"
+                  @click.stop="handleClick(true,'扣点',scope.row.id,1)"
                   type="text"
                   size="medium"
                   v-if="scope.row.chargeStatus===1"
                 >扣点</el-button>
                 <el-button
-                  @click.stop="handleClick(true,'返点')"
+                  @click.stop="handleClick(true,'返点',scope.row.id,2)"
                   type="text"
                   size="small"
                   v-if="scope.row.chargeStatus===1"
@@ -174,7 +174,7 @@
             type="textarea"
             :autosize="{ minRows: 2, maxRows: 4}"
             placeholder="请输入原因"
-            v-model="textarea2"
+            v-model="RusultForm.note"
           ></el-input>
         </div>
         <div class="resultDetail" v-if="!iseditResult">
@@ -185,7 +185,7 @@
         </div>
         <span slot="footer" class="dialog-footer">
           <el-button @click="centerDialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
+          <el-button type="primary" @click="checkNote">确 定</el-button>
         </span>
       </el-dialog>
       <!--小程序码展示框-->
@@ -211,13 +211,18 @@
 <script>
 import Vue from "vue";
 import Component from "vue-class-component";
-import { recommendDetail, resultList } from "API/resumeStore";
+import {
+  recommendDetail,
+  resultList,
+  recommendPay,
+  refund
+} from "API/resumeStore";
 import { getResumeCodeUrlApi, getRecruiterCodeUrlApi } from "API/interview";
 @Component({
-  name: "invitationProgress",
+  name: "OrderDetail",
   prop: ""
 })
-export default class invitationProgress extends Vue {
+export default class OrderDetail extends Vue {
   // itemList = ["推荐单详情"];
   isCreate = false; //是否创建
   isShowForm = false; //是否展示原因
@@ -230,14 +235,48 @@ export default class invitationProgress extends Vue {
   nowFailNum = 0; //失败数
   qrCode = ""; //二维码
   tableData = [];
+  RusultForm = {
+    recommendId: "",
+    note: "",
+    type: "" /* 1是扣点，2是返点 */
+  };
   closeForm() {
     this.isShowForm = !this.isShowForm;
   }
   /* status  是否处于编辑状态,title  标题 */
-  handleClick(status, title) {
+  handleClick(status, title, id, type) {
+    this.RusultForm.type = type;
+    this.RusultForm.recommendId = id;
     this.dialogTitle = title;
     this.centerDialogVisible = true;
     this.iseditResult = status;
+  }
+  // 确认扣返点
+  checkNote() {
+    if (this.RusultForm.note === "") {
+      this.$message({
+        message: "原因不能为空",
+        type: "warning"
+      });
+      return;
+    }
+    if (this.RusultForm.type === 1) {
+      console.log("扣点");
+      recommendPay(this.RusultForm.recommendId, {
+        note: this.RusultForm.note
+      }).then(res => {
+        console.log(res);
+      });
+      /* 扣点 */
+    } else if (this.RusultForm.type === 2) {
+      console.log("返点"); /* 返点 */
+      refund(this.RusultForm.recommendId, {
+        note: this.RusultForm.note
+      }).then(res => {
+        console.log(res);
+      });
+    }
+    console.log(this.RusultForm);
   }
   created() {
     this.getData();

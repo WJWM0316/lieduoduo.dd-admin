@@ -72,6 +72,20 @@ export const searchId = id =>
     type: "get",
     noGlobalLoading: true
   });
+  // 返点原因
+export const refund = (uid,data) =>
+  request({
+    url: `/advisor/recommend/refund/${uid}`,
+    type: "post",
+    data
+  });
+  // 扣点原因
+  export const recommendPay = (uid,data) =>
+  request({
+    url: `/advisor/recommend/pay/${uid}`,
+    type: "post",
+    data
+  });
 // 推荐清单成功失败原因
 export const resultList = uid =>
   request({
