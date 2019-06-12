@@ -191,6 +191,8 @@ export default class login extends Vue {
       zip: 200333
     }
   ];
+  page=1;
+  lastPage=20;
   form = {
     keyword: "",
     jobStatus: "",
@@ -229,6 +231,9 @@ export default class login extends Vue {
       console.log(res);
       this.tableData = res.data.data;
     });
+  }
+  handlePageChange(){
+
   }
   created() {
     this.getData(this.form);
