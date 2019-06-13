@@ -705,7 +705,6 @@ export default class resumeStore extends Vue {
     GetResumeAPI(this.form).then(res => {
       this.itemList = res.data.data;
       let a = this.itemList.map(item => item.vkey);
-      console.log(a.join(","));
       this.leftcontent.total = parseInt(res.data.meta.total);
       this.lastPage = parseInt(res.data.meta.lastPage);
       // console.log(this.lastPage);

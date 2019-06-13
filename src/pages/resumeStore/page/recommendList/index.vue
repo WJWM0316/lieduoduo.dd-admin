@@ -179,7 +179,6 @@ export default class recommend extends Vue {
   checkType(e) {
     // 创建键值
     this.form[`${e}`] = "";
-    console.log(this.searchType.key1);
   }
   // 第一个搜索
   checkInput(e) {
@@ -190,10 +189,8 @@ export default class recommend extends Vue {
     this.form.commonKey1 = "";
     this.form.isJobhunterApply = false;
     this.$refs[name].resetFields();
-    console.log(this.form);
   }
   handleClick(row) {
-    console.log(row);
     this.$router.push({
       path: "/resumeStore/recommendList/OrderDetail",
       query: {
@@ -224,7 +221,6 @@ export default class recommend extends Vue {
       form.endTime = endTime;
     }
     recommendList(obj).then(res => {
-      console.log(res);
       this.tableData = res.data.data;
     });
   }
@@ -236,7 +232,6 @@ export default class recommend extends Vue {
   getList() {
     userList().then(res => {
       this.userList = res.data.data;
-      // console.log(this.userList);
     });
   }
 }

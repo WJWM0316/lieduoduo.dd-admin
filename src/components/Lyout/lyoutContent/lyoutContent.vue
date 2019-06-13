@@ -63,31 +63,6 @@ export default class lyoutContent extends Vue {
 }
 </script>
 <style scoped lang="less">
-// @media screen and (max-width: 1800px) {
-//   .lyoutContent {
-//     height: 846px;
-//   }
-// }
-@media screen and (min-width: 1700px) and(max-width:1920px) {
-  .lyoutContent {
-    height: 800px !important;
-  }
-}
-@media screen and (min-width: 1500px) and(max-width:1700px) {
-  .lyoutContent {
-    height: 626px !important;
-  }
-}
-@media screen and (min-width: 1366px) and(max-width:1500px) {
-  .lyoutContent {
-    height: 700px !important;
-  }
-}
-@media screen and (min-width: 1000px) and (max-width:1366px) {
-  .lyoutContent {
-    height: 490px !important;
-  }
-}
 .lyoutContent {
   position: fixed;
   top: 60px;
@@ -95,7 +70,6 @@ export default class lyoutContent extends Vue {
   right: 0;
   bottom: 50px;
   z-index: 100;
-  height: 846px;
   overflow-y: scroll;
   // .isScroll {
   &::-webkit-scrollbar {

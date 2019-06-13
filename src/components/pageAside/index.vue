@@ -166,6 +166,9 @@ export default class PageAside extends Vue {
   tabSwitch() {
     this.isCLick = !this.isCLick;
   }
+  created(){
+    // console.log(JSON.stringify(this.itemList))
+  }
   clickChild(index, index1, path) {
     // console.log("我点击了自己");
     // console.log(this.itemList[index].children);
@@ -195,7 +198,7 @@ export default class PageAside extends Vue {
         field.isShow = i === cIndex ? true : false;
       });
     } else {
-      console.log(item.name,'------------')
+      console.log(item.name, "------------");
       this.$router.push({ name: item.name });
     }
   }
