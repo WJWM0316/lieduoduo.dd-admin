@@ -99,6 +99,7 @@ export default class lyoutContent extends Vue {
     padding-bottom: 0px;
     border: 1px solid rgb(238, 238, 238);
     background: #fff;
+    position: relative;
     .header {
       padding: 0px;
       background: #fff;

@@ -44,7 +44,7 @@
         </div>
         <div class="content"></div>
       </div>
-      <div class="form">
+      <div class="form" ref="form">
         <el-table highlight-current-row :data="tableData" style="width: 100%">
           <el-table-column prop="jobhunter.resumeNum" label="简历ID" width="140">
             <template slot-scope="scope">
@@ -346,7 +346,7 @@ export default class OrderDetail extends Vue {
   // 看二维码
   /* 生成小程序码 */
   async creatLink(e, uid, index, type) {
-    console.log(uid, index, type);
+    console.log("e", e.clientX);
     this.qrCode = "";
     // 是否已经加载过二维码
     console.log("this.tableData[index]", this.tableData[index]);

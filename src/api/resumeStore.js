@@ -90,7 +90,7 @@ export const recommendPay = (uid, data) =>
 export const userList = () =>
   request({
     url: `/advisor/user/list`,
-    type: "get",
+    type: "get"
   });
 // 推荐清单成功失败原因
 export const resultList = uid =>
@@ -98,4 +98,11 @@ export const resultList = uid =>
     url: `/advisor/recommend_list/result/${uid}`,
     type: "get",
     noGlobalLoading: true
+  });
+// 邀约进展列表
+export const interviewsList = data =>
+  request({
+    url: `/advisor/recommend/interviews/`,
+    type: "get",
+    data
   });

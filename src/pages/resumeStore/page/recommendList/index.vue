@@ -188,8 +188,7 @@ export default class recommend extends Vue {
   /* 清除列表选项 */
   resetForm(name) {
     this.form.commonKey1 = "";
-    this.form.startTime = "";
-    this.form.endTime = "";
+    this.form.isJobhunterApply = false;
     this.$refs[name].resetFields();
     console.log(this.form);
   }
@@ -216,7 +215,6 @@ export default class recommend extends Vue {
   }
   getData(form) {
     let obj = this.forEachKeys();
-    let params = Object.assign(this.form, {});
     if (form.startTime !== "") {
       var startTime = form.startTime.substring(0, 19).replace(/-/g, "/");
       var endTime = form.endTime.substring(0, 19).replace(/-/g, "/");
