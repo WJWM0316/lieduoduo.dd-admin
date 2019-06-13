@@ -46,7 +46,12 @@
       </div>
       <div class="form">
         <el-table highlight-current-row :data="tableData" style="width: 100%">
-          <el-table-column prop="jobhunter.resumeNum" label="简历ID" width="140"></el-table-column>
+          <el-table-column prop="jobhunter.resumeNum" label="简历ID" width="140">
+            <template slot-scope="scope">
+              <p v-if="scope.row.isJobhunterApply" class="Self-operation inquire">求职者已自行约面</p>
+              <p style="color:#000;font-size:14px;">{{scope.row.jobhunter.resumeNum}}</p>
+            </template>
+          </el-table-column>
           <el-table-column prop="jobhunter" label="求职者信息" width="270">
             <template slot-scope="scope">
               <div class="col_position">
@@ -69,14 +74,22 @@
           </el-table-column>
           <el-table-column prop="province" label="处理状态" width="200">
             <template slot-scope="scope">
-              <div class="col_position">
-                <i class="icon iconfont iconjiantou"></i>
+              <div v-if="scope.row.interview!=null">
+                <div class="col_position">
+                  <i class="icon iconfont iconjiantou" v-if="scope.row.dealStatus==1"></i>
+                  <i
+                    class="icon iconfont iconjiantouzuo"
+                    v-if="scope.row.dealStatus==2||scope.row.dealStatus==0"
+                  ></i>
+                </div>
+                <p class="companyName">
+                  <span>{{scope.row.dealStatusDesc}}</span>
+                </p>
+                <p>{{scope.row.interview.updatedAt}}</p>
               </div>
-              <p class="companyName">
-                面试官未查看
-                <span>原因</span>
-              </p>
-              <p>2019-05-25 16:16</p>
+              <div v-else>
+                <p>----------</p>
+              </div>
             </template>
           </el-table-column>
           <el-table-column prop="city" label="面试官信息" width="300">
@@ -100,7 +113,10 @@
           </el-table-column>
           <el-table-column prop="address" label="约面信息" width="300">
             <template slot-scope="scope">
-              <div v-if="scope.row.interview">
+              <div v-if="scope.row.isValid===0">
+                <p>{{scope.row.note}}</p>
+              </div>
+              <div v-else-if="scope.row.interview">
                 <p class="positionName">
                   职位:
                   <span
@@ -112,7 +128,9 @@
                 <p
                   class="companyName"
                 >{{scope.row.interview.address}}{{scope.row.interview.doorplate}}</p>
-                <p>时间:{{scope.row.interview.updatedAt}}</p>
+                <p
+                  v-if="scope.row.arrangementInfo"
+                >时间:{{scope.row.arrangementInfo.appointment_time}}</p>
               </div>
               <div v-else>
                 <p style="color:red;font-size：14px;">{{scope.row.dealStatusDesc}}</p>
