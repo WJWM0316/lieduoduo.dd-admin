@@ -10,36 +10,24 @@
               <el-input
                 type="text"
                 placeholder="请输入内容"
-                v-model="searchType.keyword1"
+                v-model="form.commonKey1"
                 class="inputSelect"
+                @blur.stop="checkInput()"
               >
                 <el-select
                   size="medium"
                   class="selectTitle"
-                  v-model="searchType.condition1"
+                  v-model="searchType.key1"
                   slot="prepend"
                   placeholder="公司名"
+                  @change="checkType(searchType.key1)"
                 >
-                  <el-option
-                    label="公司名"
-                    value="keyword"
-                    v-show="searchType.condition2 !== 'keyword'"
-                  ></el-option>
-                  <el-option
-                    label="招聘官"
-                    value="keyword"
-                    v-show="searchType.condition2 !== 'keyword'"
-                  ></el-option>
-                  <el-option
-                    label="推荐职位"
-                    value="mobile"
-                    v-show="searchType.condition2 !== 'mobile'"
-                  ></el-option>
-                  <el-option label="批次" value="mobile" v-show="searchType.condition2 !== 'mobile'"></el-option>
+                  <el-option label="公司名" value="companyName"></el-option>
+                  <el-option label="批次" value="listId" v-show="searchType.condition2 !== 'mobile'"></el-option>
                 </el-select>
               </el-input>
             </div>
-            <div class="searchTab">
+            <!-- <div class="searchTab">
               <el-input
                 type="text"
                 placeholder="推荐职位"
@@ -72,19 +60,24 @@
                   <el-option label="批次" value="mobile" v-show="searchType.condition2 !== 'mobile'"></el-option>
                 </el-select>
               </el-input>
-            </div>
-            <el-form-item label="推荐人" prop="jobStatus" class="formItem">
-              <el-select class="select" v-model="form.jobStatus" placeholder="请选择">
-                <el-option value="0">1</el-option>
+            </div>-->
+            <el-form-item label="推荐人" prop="advisorUid" class="formItem">
+              <el-select class="select" v-model="form.advisorUid" placeholder="请选择">
+                <el-option
+                  :label="item.realname"
+                  :value="item.id"
+                  v-for="item in userList"
+                  :key="item.id"
+                >{{item.realname}}</el-option>
               </el-select>
             </el-form-item>
-            <el-form-item class="time" label="创建时间" prop="start" label-width="100px">
+            <el-form-item class="time" label="创建时间" prop="startTime" label-width="100px">
               <el-col :span="11">
                 <el-date-picker
                   type="date"
                   placeholder="选择日期"
                   value-format="yyyy-MM-dd"
-                  v-model="form.start"
+                  v-model="form.startTime"
                   style="width: 142px;"
                 ></el-date-picker>
               </el-col>
@@ -94,13 +87,13 @@
                   type="date"
                   placeholder="选择日期"
                   value-format="yyyy-MM-dd"
-                  v-model="form.end"
+                  v-model="form.endTime"
                   style="width: 142px;"
                 ></el-date-picker>
               </el-col>
             </el-form-item>
             <!--用于代替清除结束时间-->
-            <el-form-item label-width="1px" label prop="end"></el-form-item>
+            <el-form-item label-width="1px" label prop="endTime"></el-form-item>
             <div class="BtnList">
               <el-form-item class="btn">
                 <el-button class="inquire" @click.stop="getData(form)">查询</el-button>
@@ -148,7 +141,7 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import lyoutContent from "COMPONENTS/Lyout/lyoutContent/lyoutContent.vue";
-import { recommendList } from "API/resumeStore";
+import { recommendList, userList } from "API/resumeStore";
 @Component({
   name: "recommendList",
   prop: "",
@@ -157,56 +150,22 @@ import { recommendList } from "API/resumeStore";
   }
 })
 export default class recommend extends Vue {
-  tableData = [
-    {
-      date: "2016-05-02",
-      name: "王小虎",
-      province: "上海",
-      city: "普陀区",
-      address: "上海市普陀区金沙江路 1518 弄",
-      zip: 200333
-    },
-    {
-      date: "2016-05-04",
-      name: "王小虎",
-      province: "上海",
-      city: "普陀区",
-      address: "上海市普陀区金沙江路 1517 弄",
-      zip: 200333
-    },
-    {
-      date: "2016-05-01",
-      name: "王小虎",
-      province: "上海",
-      city: "普陀区",
-      address: "上海市普陀区金沙江路 1519 弄",
-      zip: 200333
-    },
-    {
-      date: "2016-05-03",
-      name: "王小虎",
-      province: "上海",
-      city: "普陀区",
-      address: "上海市普陀区金沙江路 1516 弄",
-      zip: 200333
-    }
-  ];
+  tableData = [];
+  key1 = "companyName";
   page = 1;
+  userList = [];
   lastPage = 20;
   form = {
-    keyword: "",
-    jobStatus: "",
-    companyName: "",
-    listId: "",
     advisorUid: "",
+    commonKey1: "" /* 公共键  批次或者公司名*/,
     startTime: "",
     endTime: "",
     page: 1,
     count: 20
   };
   searchType = {
-    condition1: "",
-    condition2: ""
+    key1: "companyName" /* 第一个搜索条件的默认键 */
+    // key2: "line" /* 第二个搜索条件的默认键 */
   };
   leftcontent = {
     total: 0,
@@ -217,6 +176,23 @@ export default class recommend extends Vue {
       path: "/resumeStore/recommendList/createOrder"
     });
   }
+  checkType(e) {
+    // 创建键值
+    this.form[`${e}`] = "";
+    console.log(this.searchType.key1);
+  }
+  // 第一个搜索
+  checkInput(e) {
+    // this.form=
+  }
+  /* 清除列表选项 */
+  resetForm(name) {
+    this.form.commonKey1 = "";
+    this.form.startTime = "";
+    this.form.endTime = "";
+    this.$refs[name].resetFields();
+    console.log(this.form);
+  }
   handleClick(row) {
     console.log(row);
     this.$router.push({
@@ -226,8 +202,30 @@ export default class recommend extends Vue {
       }
     });
   }
+  forEachKeys() {
+    // 基础键，剩余键值对由用户选择
+    let param = {
+      count: 20,
+      page: 1,
+      endTime: this.form.endTime,
+      startTime: this.form.startTime,
+      advisorUid: this.form.advisorUid
+    };
+    param[this.searchType.key1] = this.form.commonKey1;
+    return param;
+  }
   getData(form) {
-    recommendList(form).then(res => {
+    let obj = this.forEachKeys();
+    let params = Object.assign(this.form, {});
+    if (form.startTime !== "") {
+      var startTime = form.startTime.substring(0, 19).replace(/-/g, "/");
+      var endTime = form.endTime.substring(0, 19).replace(/-/g, "/");
+      startTime = parseInt(new Date(startTime).getTime() / 1000);
+      endTime = parseInt(new Date(endTime).getTime() / 1000);
+      form.startTime = startTime;
+      form.endTime = endTime;
+    }
+    recommendList(obj).then(res => {
       console.log(res);
       this.tableData = res.data.data;
     });
@@ -235,6 +233,13 @@ export default class recommend extends Vue {
   handlePageChange() {}
   created() {
     this.getData(this.form);
+    this.getList();
+  }
+  getList() {
+    userList().then(res => {
+      this.userList = res.data.data;
+      // console.log(this.userList);
+    });
   }
 }
 </script>
