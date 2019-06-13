@@ -382,6 +382,13 @@ export default class invitPro extends Vue {
     this.centerDialogVisible = true;
     this.iseditResult = status;
   }
+  toPositionPath(id) {
+    console.log(id);
+    this.$router.push({
+      path: "/positionManage/positionAuditDetail",
+      query: { id }
+    });
+  }
   // 确认扣返点
   checkNote() {
     if (this.RusultForm.note === "") {
