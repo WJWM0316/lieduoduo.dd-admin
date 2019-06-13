@@ -68,14 +68,24 @@ export default class lyoutContent extends Vue {
 //     height: 846px;
 //   }
 // }
-@media screen and (min-width: 1366px) and(max-width:1700px) {
+@media screen and (min-width: 1700px) and(max-width:1920px) {
   .lyoutContent {
-    height: 610px !important;
+    height: 800px !important;
   }
 }
-@media screen and (min-width: 1200px) and(max-width:1300px) {
+@media screen and (min-width: 1500px) and(max-width:1700px) {
   .lyoutContent {
-    height: 610px !important;
+    height: 626px !important;
+  }
+}
+@media screen and (min-width: 1366px) and(max-width:1500px) {
+  .lyoutContent {
+    height: 700px !important;
+  }
+}
+@media screen and (min-width: 1000px) and (max-width:1366px) {
+  .lyoutContent {
+    height: 490px !important;
   }
 }
 .lyoutContent {
@@ -83,6 +93,7 @@ export default class lyoutContent extends Vue {
   top: 60px;
   left: 200px;
   right: 0;
+  bottom: 50px;
   z-index: 100;
   height: 846px;
   overflow-y: scroll;
@@ -97,9 +108,12 @@ export default class lyoutContent extends Vue {
     padding: 20px;
     padding-top: 0px;
     padding-bottom: 0px;
-    border: 1px solid rgb(238, 238, 238);
+    border: 1px solid #eeeeee;
     background: #fff;
     position: relative;
+    // overflow-y: scroll;
+    // height: 750px;+
+
     .header {
       padding: 0px;
       background: #fff;

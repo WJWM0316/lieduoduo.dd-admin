@@ -56,8 +56,8 @@
             </div>
           </el-form>
           <div class="opeating">
-            <el-button class="inquire" @click.stop="onSubmit('up')">提交</el-button>
-            <el-button class="inquire" @click.stop="dialogVisible=true">取消</el-button>
+            <el-button type="primary" @click.stop="onSubmit('up')">提交</el-button>
+            <el-button type="warning" @click.stop="dialogVisible=true">取消</el-button>
           </div>
         </div>
       </div>
@@ -113,6 +113,7 @@ export default class OrderDetail extends Vue {
     positionId: "",
     vkeys: ""
   };
+  httpStatus = 0;
   postionObj = {
     positionName: "",
     city: "",
@@ -151,6 +152,7 @@ export default class OrderDetail extends Vue {
         this.isShowmsg = true;
       })
       .catch(err => {
+        this.httpStatus = err.data.httpStatus;
         if (JSON.stringify(err.data.data) === "[]") {
           this.isShowmsg = false;
         } else {
@@ -166,6 +168,7 @@ export default class OrderDetail extends Vue {
     let reg = /^[a-zA-Z0-9,]+$/;
     if (status === "up") {
       if (this.form.positionId === "") return;
+      if (this.httpStatus === 400) return;
       else if (this.form.vkeys === "") {
         this.$message({
           message: "简历编号不可为空",
