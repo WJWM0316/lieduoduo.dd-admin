@@ -303,6 +303,7 @@ export default class OrderDetail extends Vue {
         note: this.RusultForm.note
       }).then(res => {
         console.log(res);
+        this.centerDialogVisible = false;
         this.getData();
       });
     }
