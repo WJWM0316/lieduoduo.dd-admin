@@ -113,7 +113,7 @@
             <template slot-scope="scope">
               <p
                 class="positionName"
-              >{{scope.row.positionId}}|{{scope.row.positionName}}|{{scope.row.emolumentMin}}~{{scope.row.emolumentMax}}|{{scope.row.areaName}}</p>
+              >{{scope.row.positionId}}|{{scope.row.positionName}}|{{scope.row.emolumentMin}}K~{{scope.row.emolumentMax}}K|{{scope.row.areaName}}</p>
             </template>
           </el-table-column>
           <el-table-column prop="succeedNum" label="推荐成功" width="170"></el-table-column>
