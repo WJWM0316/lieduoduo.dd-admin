@@ -1,7 +1,7 @@
 <!--  -->
 <template>
   <div class="invitPro" @click.stop="closeTopic">
-    <lyout-content :leftcontent="leftcontent">
+    <lyout-content :leftcontent="leftcontent" ref="methods">
       <div class="formSumbit" slot="formContent">
         <div class="formReasult">
           <el-form ref="form" :inline="true" :model="form" class="form">
@@ -102,7 +102,8 @@
                     ></i>
                   </div>
                   <p class="companyName">
-                    <span>{{scope.row.dealStatusDesc}}</span>
+                    <span v-if="scope.row.dealStatus!==1">{{scope.row.dealStatusDesc}}</span>
+                    <span v-else>{{scope.row.interview.statusDesc}}</span>
                   </p>
                   <p>{{scope.row.interview.updatedAt}}</p>
                 </div>
@@ -184,10 +185,19 @@
               </template>
             </el-table-column>
           </el-table>
+          <div class="pageList" slot="pageList">
+            <footer class="list-footer">
+              <el-pagination
+                layout="prev, pager, next, slot"
+                :current-page="page"
+                :page-size="20"
+                :total="leftcontent.total"
+                @current-change="handlePageChange"
+              ></el-pagination>
+              <span class="total">共 {{lastPage}} 页，{{leftcontent.total}} 条记录</span>
+            </footer>
+          </div>
         </div>
-
-        <!--小程序码展示框-->
-        <!--小程序码展示框-->
       </div>
     </lyout-content>
     <!--电话号码展示框-->
@@ -249,11 +259,13 @@ export default class invitPro extends Vue {
     page: 1,
     count: 20
   };
+  page = 1;
   mobile = "";
   searchType = {
     key1: "companyName",
     condition2: ""
   };
+  lastPage = 0;
   result = "";
   RusultForm = {
     recommendId: "",
@@ -270,6 +282,12 @@ export default class invitPro extends Vue {
     total: 0,
     title: "邀约进展"
   };
+  handlePageChange(nowPage) {
+    console.log(nowPage);
+    this.$refs["methods"].scrollZero();
+    this.form.page = nowPage;
+    this.getData(this.form);
+  }
   /* 清除列表选项 */
   resetForm(name) {
     this.form.commonKey1 = "";
@@ -284,21 +302,23 @@ export default class invitPro extends Vue {
       this.$refs["qrCode"].style.display = "none";
     });
   }
-  forEachKeys() {
+  forEachKeys(form) {
     // 基础键，剩余键值对由用户选择
 
     let param = {
       count: 20,
-      page: 1,
+      page:form.page,
       isJobhunterApply: this.form.isJobhunterApply == true ? 1 : 0
     };
     param[this.searchType.key1] = this.form.commonKey1;
     return param;
   }
-  getData(form) {
-    let obj = this.forEachKeys();
+  getData() {
+    let obj = this.forEachKeys(this.form);
     interviewsList(obj).then(res => {
       this.tableData = res.data.data;
+      this.lastPage = res.data.meta.lastPage;
+      this.leftcontent.total = res.data.meta.total;
       this.tableData.forEach(item => {
         item.jobhunter.isShowMobile = false;
         item.recrutier.isShowMobile = false;

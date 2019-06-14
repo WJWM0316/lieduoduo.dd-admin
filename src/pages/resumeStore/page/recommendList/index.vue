@@ -1,7 +1,7 @@
 <!--  -->
 <template>
   <div class="recommendList" @click.stop="hiddenQr">
-    <lyout-content :leftcontent="leftcontent" :isShowbtn="true">
+    <lyout-content :leftcontent="leftcontent" :isShowbtn="true" ref="methods">
       <div class="class" slot="text" @click.stop="toTabBlock">新建推荐单</div>
       <div class="formSumbit" slot="formContent">
         <div class="formReasult">
@@ -169,7 +169,7 @@ export default class recommend extends Vue {
     page: 1,
     count: 20
   };
-  tableData=[];
+  tableData = [];
   searchType = {
     key1: "companyName" /* 第一个搜索条件的默认键 */
     // key2: "line" /* 第二个搜索条件的默认键 */
@@ -223,7 +223,7 @@ export default class recommend extends Vue {
     // 基础键，剩余键值对由用户选择
     let param = {
       count: 20,
-      page: 1,
+      page:form.page,
       endTime: this.form.endTime,
       startTime: this.form.startTime,
       advisorUid: this.form.advisorUid
@@ -235,10 +235,18 @@ export default class recommend extends Vue {
     let obj = this.forEachKeys(this.form);
     recommendList(obj).then(res => {
       this.tableData = res.data.data;
-      console.log(tableData)
+      this.lastPage = res.data.meta.lastPage;
+      this.leftcontent.total = res.data.meta.total;
+      console.log(tableData);
     });
   }
-  handlePageChange() {}
+  handlePageChange(nowPage) {
+    console.log(nowPage);
+    this.$refs['methods'].scrollZero();
+    this.form.page = nowPage;
+    this.form.page = nowPage;
+    this.getData(this.form);
+  }
   created() {
     this.getData(this.form);
     this.getList();
