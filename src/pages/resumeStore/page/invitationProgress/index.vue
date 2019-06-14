@@ -16,7 +16,7 @@
                 >
                   <el-option label="公司名" value="companyName"></el-option>
                   <el-option label="职位名" value="positionName"></el-option>
-                  <el-option label="面试ID" value="interviewId"></el-option>
+                  <!-- <el-option label="简历ID" value="interviewId"></el-option> -->
                 </el-select>
               </el-input>
             </div>
@@ -104,6 +104,11 @@
                   <p class="companyName">
                     <span v-if="scope.row.dealStatus!==1">{{scope.row.dealStatusDesc}}</span>
                     <span v-else>{{scope.row.interview.statusDesc}}</span>
+                    <span
+                      class="StatusResult"
+                      v-if="scope.row.dealStatus!==1"
+                      @click.stop="handleClick(false,'不感兴趣原因',scope.row.id)"
+                    >原因</span>
                   </p>
                   <p>{{scope.row.interview.updatedAt}}</p>
                 </div>
@@ -229,6 +234,9 @@
         ></el-input>
       </div>
       <div class="resultDetail" v-if="!iseditResult">
+        <div class="iconItem">
+          <span v-for="item in iconList" :key="item" class="itemIcon">{{item}}</span>
+        </div>
         <span>{{result}}</span>
       </div>
       <span slot="footer" class="dialog-footer" v-if="iseditResult">
@@ -272,6 +280,7 @@ export default class invitPro extends Vue {
     note: "",
     type: "" /* 1是扣点，2是返点 */
   };
+  iconList = []; /* 不感兴趣标签栏 */
   centerDialogVisible = false; //原因弹框
   qrCode = ""; //二维码
   tableData = []; //数据
@@ -307,7 +316,7 @@ export default class invitPro extends Vue {
 
     let param = {
       count: 20,
-      page:form.page,
+      page: form.page,
       isJobhunterApply: this.form.isJobhunterApply == true ? 1 : 0
     };
     param[this.searchType.key1] = this.form.commonKey1;
@@ -413,9 +422,13 @@ export default class invitPro extends Vue {
   /* status  是否处于编辑状态,title  标题 */
   handleClick(status, title, id, type) {
     console.log(id);
+    let nowRow = this.tableData.filter(item => item.id === id)[0];
     this.RusultForm.type = type;
     this.RusultForm.recommendId = id;
-    this.result = this.tableData.filter(item => item.id === id)[0].chargeNote;
+    this.result = nowRow.chargeNote || nowRow.interview.comment.extraDesc;
+    this.iconList = nowRow.interview.comment.reason.split(",");
+
+    console.log(this.iconList, "iconList");
     console.log(this.result, "rssult");
     this.dialogTitle = title;
     this.centerDialogVisible = true;

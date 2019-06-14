@@ -83,6 +83,11 @@
                 <p class="companyName">
                   <span v-if="scope.row.dealStatus!==1">{{scope.row.dealStatusDesc}}</span>
                   <span v-else>{{scope.row.interview.statusDesc}}</span>
+                  <span
+                    class="StatusResult"
+                    v-if="scope.row.dealStatus!==1"
+                    @click.stop="handleClick(false,'不感兴趣原因',scope.row.id)"
+                  >原因</span>
                 </p>
                 <p>{{scope.row.interview.updatedAt}}</p>
               </div>
@@ -189,6 +194,9 @@
           ></el-input>
         </div>
         <div class="resultDetail" v-if="!iseditResult">
+          <div class="iconItem">
+            <span v-for="item in iconList" :key="item" class="itemIcon">{{item}}</span>
+          </div>
           <span>{{result}}</span>
         </div>
         <span slot="footer" class="dialog-footer" v-if="iseditResult">
@@ -249,6 +257,7 @@ export default class OrderDetail extends Vue {
   qrCode = ""; //二维码
   mobile = "";
   result = "";
+  iconList = []; /* 不感兴趣标签栏 */
   tableData = [];
   RusultForm = {
     recommendId: "",
@@ -259,12 +268,17 @@ export default class OrderDetail extends Vue {
     this.isShowForm = !this.isShowForm;
   }
   /* status  是否处于编辑状态,title  标题  id 原因id  type类型*/
+  /* status  是否处于编辑状态,title  标题 */
   handleClick(status, title, id, type) {
+    console.log(id);
+    let nowRow = this.tableData.filter(item => item.id === id)[0];
     this.RusultForm.type = type;
     this.RusultForm.recommendId = id;
-    console.log(id, "id");
-    this.result = this.tableData.filter(item => item.id == id)[0].chargeNote;
-    console.log(this.result, "result");
+    this.result = nowRow.chargeNote || nowRow.interview.comment.extraDesc;
+    this.iconList = nowRow.interview.comment.reason.split(",");
+
+    console.log(this.iconList, "iconList");
+    console.log(this.result, "rssult");
     this.dialogTitle = title;
     this.centerDialogVisible = true;
     this.iseditResult = status;
@@ -278,7 +292,7 @@ export default class OrderDetail extends Vue {
   }
   /* 展示手机 */
   showPhone(e, mobile) {
-    console.log(mobile)
+    console.log(mobile);
     if (this.timeout !== null) clearTimeout(this.timeout);
     this.mobile = mobile || "用户未绑定手机";
     this.$nextTick(() => {
