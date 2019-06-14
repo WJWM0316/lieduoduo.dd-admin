@@ -4,7 +4,7 @@
     <section class="contentStyle">
       <el-header class="header" style="text-align: right; font-size: 15px;">
         <!-- 标题区域 -->
-        <div class="lyoutTitle" >
+        <div class="lyoutTitle">
           <span class="title">{{leftcontent.title}}({{leftcontent.total}})</span>
         </div>
         <!-- 右上角按钮区域 -->
@@ -68,7 +68,6 @@ export default class lyoutContent extends Vue {
   left: 200px;
   right: 0;
   bottom: 50px;
-  z-index: 100;
   overflow-y: scroll;
   // .isScroll {
   &::-webkit-scrollbar {

@@ -1,6 +1,6 @@
 <!--  -->
 <template>
-  <div class="recommendList">
+  <div class="recommendList" @click.stop="hiddenQr">
     <lyout-content :leftcontent="leftcontent" :isShowbtn="true">
       <div class="class" slot="text" @click.stop="toTabBlock">新建推荐单</div>
       <div class="formSumbit" slot="formContent">
@@ -109,7 +109,13 @@
           <el-table-column prop="createdTimeDesc" label="创建时间" width="120"></el-table-column>
           <el-table-column prop="recruiterName" label="职位发布者" width="120"></el-table-column>
           <el-table-column prop="companyName" label="推荐公司" width="300"></el-table-column>
-          <el-table-column prop="positionName" label="推荐职位" width="300"></el-table-column>
+          <el-table-column prop="positionName" label="推荐职位" width="300">
+            <template slot-scope="scope">
+              <p
+                class="positionName"
+              >{{scope.row.positionId}}|{{scope.row.positionName}}|{{scope.row.emolumentMin}}~{{scope.row.emolumentMax}}|{{scope.row.areaName}}</p>
+            </template>
+          </el-table-column>
           <el-table-column prop="succeedNum" label="推荐成功" width="170"></el-table-column>
           <el-table-column prop="failNum" label="推荐失败" width="170"></el-table-column>
           <el-table-column prop="advisorName" label="推荐负责人" width="170"></el-table-column>
@@ -176,6 +182,12 @@ export default class recommend extends Vue {
       path: "/resumeStore/recommendList/createOrder"
     });
   }
+  /* 关闭二维码弹窗 */
+  hiddenQr() {
+    this.$nextTick(() => {
+      this.$refs["qrCode"].style.display = "none";
+    });
+  }
   checkType(e) {
     // 创建键值
     this.form[`${e}`] = "";
@@ -198,7 +210,15 @@ export default class recommend extends Vue {
       }
     });
   }
-  forEachKeys() {
+  forEachKeys(form) {
+    if (form.startTime !== "") {
+      var startTime = form.startTime.substring(0, 19).replace(/-/g, "/");
+      var endTime = form.endTime.substring(0, 19).replace(/-/g, "/");
+      startTime = parseInt(new Date(startTime).getTime() / 1000);
+      endTime = parseInt(new Date(endTime).getTime() / 1000);
+      form.startTime = startTime;
+      form.endTime = endTime;
+    }
     // 基础键，剩余键值对由用户选择
     let param = {
       count: 20,
@@ -210,18 +230,11 @@ export default class recommend extends Vue {
     param[this.searchType.key1] = this.form.commonKey1;
     return param;
   }
-  getData(form) {
-    let obj = this.forEachKeys();
-    if (form.startTime !== "") {
-      var startTime = form.startTime.substring(0, 19).replace(/-/g, "/");
-      var endTime = form.endTime.substring(0, 19).replace(/-/g, "/");
-      startTime = parseInt(new Date(startTime).getTime() / 1000);
-      endTime = parseInt(new Date(endTime).getTime() / 1000);
-      form.startTime = startTime;
-      form.endTime = endTime;
-    }
+  getData() {
+    let obj = this.forEachKeys(this.form);
     recommendList(obj).then(res => {
       this.tableData = res.data.data;
+      console.log(tableData)
     });
   }
   handlePageChange() {}

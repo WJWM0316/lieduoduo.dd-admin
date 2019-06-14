@@ -1,6 +1,6 @@
 <!--  -->
 <template>
-  <div class="OrderDetail">
+  <div class="OrderDetail" @click.stop="closeTopic">
     <div class="TabView">
       <div class="Detail" style="padding:0px;">
         <div class="createTime">
@@ -35,11 +35,11 @@
           </div>
           <div class="success">
             <span>发布者:</span>
-            <span>{{baseMsg.advisorName}}</span>
+            <span>{{baseMsg.recruiterName}}</span>
           </div>
           <div class="success">
             <span>负责推荐人:</span>
-            <span>{{baseMsg.recruiterName}}</span>
+            <span>{{baseMsg.advisorName}}</span>
           </div>
         </div>
         <div class="content"></div>
@@ -83,7 +83,8 @@
                   ></i>
                 </div>
                 <p class="companyName">
-                  <span>{{scope.row.dealStatusDesc}}</span>
+                  <span v-if="scope.row.dealStatus!==1">{{scope.row.dealStatusDesc}}</span>
+                  <span v-else>{{scope.row.interview.statusDesc}}</span>
                 </p>
                 <p>{{scope.row.interview.updatedAt}}</p>
               </div>
@@ -158,12 +159,12 @@
 
               <p
                 class="resultBtn"
-                @click.stop="handleClick(false,'返点原因')"
+                @click.stop="handleClick(false,'返点原因',scope.row.id)"
                 v-if="scope.row.chargeStatus===3"
               >返点原因</p>
               <p
                 class="resultBtn"
-                @click.stop="handleClick(false,'扣点原因')"
+                @click.stop="handleClick(false,'扣点原因',scope.row.id)"
                 v-if="scope.row.chargeStatus===2"
               >扣点原因</p>
             </template>
@@ -196,12 +197,9 @@
           ></el-input>
         </div>
         <div class="resultDetail" v-if="!iseditResult">
-          <p>原因:工作经历不符合</p>
-          <span
-            s
-          >说明：没联系一般就是不合适，还有种情况是可要可不要没有让面试感兴趣的闪光点特长之处留作储备运气好会联系入职（但也只是抱着试试用的心态招进去）运气不好就雪藏了。。公司真的招人的话碰到合适的一定会最快速度拉进来沟通入职事宜的。</span>
+          <span>{{result}}</span>
         </div>
-        <span slot="footer" class="dialog-footer">
+        <span slot="footer" class="dialog-footer" v-if="!result">
           <el-button @click="centerDialogVisible = false">取 消</el-button>
           <el-button type="primary" @click="checkNote">确 定</el-button>
         </span>
@@ -252,6 +250,7 @@ export default class OrderDetail extends Vue {
   nowSuccessNum = 0; //成功数
   nowFailNum = 0; //失败数
   qrCode = ""; //二维码
+  result = "";
   tableData = [];
   RusultForm = {
     recommendId: "",
@@ -261,13 +260,23 @@ export default class OrderDetail extends Vue {
   closeForm() {
     this.isShowForm = !this.isShowForm;
   }
-  /* status  是否处于编辑状态,title  标题 */
+  /* status  是否处于编辑状态,title  标题  id 原因id  type类型*/
   handleClick(status, title, id, type) {
     this.RusultForm.type = type;
     this.RusultForm.recommendId = id;
+    console.log(id, "id");
+    this.result = this.tableData.filter(item => item.id == id)[0].chargeNote;
+    console.log(this.result, "result");
     this.dialogTitle = title;
     this.centerDialogVisible = true;
     this.iseditResult = status;
+  }
+  /* 关闭二维码弹窗 */
+  closeTopic() {
+    this.$nextTick(() => {
+      // this.$refs['mobile'].style.display = 'none'
+      this.$refs["qrCode"].style.display = "none";
+    });
   }
   // 确认扣返点
   checkNote() {
@@ -284,6 +293,8 @@ export default class OrderDetail extends Vue {
         note: this.RusultForm.note
       }).then(res => {
         console.log(res);
+        this.centerDialogVisible = false;
+        this.getData();
       });
       /* 扣点 */
     } else if (this.RusultForm.type === 2) {
@@ -292,6 +303,7 @@ export default class OrderDetail extends Vue {
         note: this.RusultForm.note
       }).then(res => {
         console.log(res);
+        this.getData();
       });
     }
     console.log(this.RusultForm);

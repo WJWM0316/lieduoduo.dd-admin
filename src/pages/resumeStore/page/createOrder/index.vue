@@ -87,10 +87,15 @@
                 <i class="el-icon-circle-check" style="color:red;" v-if="scope.row.isSuccess===1"></i>
               </template>
             </el-table-column>
-            <el-table-column prop="reason" label="原因说明"></el-table-column>
+            <el-table-column prop="reason" label="原因说明">
+              <template slot-scope="scope">
+                <p style="color:#000;font-size:14px;" v-if="scope.row.isSuccess===1">推荐成功</p>
+                <p style="color:#000;font-size:14px;" v-if="scope.row.isSuccess===0">{{scope.row.reason}}</p>
+              </template>
+            </el-table-column>
           </el-table>
         </div>
-        <div class="okBtn" style="margin-top:20px;">
+        <div class="okBtn" style="margin-top:20px;" v-if="sumbitRusult">
           <el-button @click.stop="goPath">好的</el-button>
         </div>
       </div>
@@ -106,7 +111,7 @@ import { createOrder, searchId } from "API/resumeStore";
   name: "OrderDetail"
 })
 export default class OrderDetail extends Vue {
-  isFocus=false;
+  isFocus = false;
   isCreate = 0;
   isShowForm = false;
   isShowmsg = false;
@@ -133,6 +138,7 @@ export default class OrderDetail extends Vue {
       { type: "number", trigger: "blur", validator: this.verification_id }
     ]
   };
+  sumbitRusult=false;
   resultmsg = {
     succeedNum: "",
     failNum: ""
@@ -141,9 +147,12 @@ export default class OrderDetail extends Vue {
   dialogVisible = false;
   itemList = ["新建推荐单"];
   goPath(e) {
-    // this.$router.push({
-    //   path: "/"
-    // });
+    this.$router.push({
+      path: "/resumeStore/recommendList/OrderDetail",
+      query:{
+        id:this.resultmsg.id
+      }
+    });
   }
   checkId(id) {
     // 6512
@@ -189,6 +198,7 @@ export default class OrderDetail extends Vue {
             });
             this.resultmsg = res.data.data.list;
             this.tableData = res.data.data.result;
+            this.sumbitRusult=true
             console.log(res);
           })
           .catch(err => {
