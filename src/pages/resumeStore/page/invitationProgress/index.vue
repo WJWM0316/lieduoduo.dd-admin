@@ -107,7 +107,7 @@
                     <span
                       class="StatusResult"
                       v-if="scope.row.interview.comment!==''"
-                      @click.stop="handleClick(false,'不感兴趣原因',scope.row.id)"
+                      @click.stop="handleClick(false,'不感兴趣原因',scope.row.id,5)"
                     >原因</span>
                   </p>
                   <p>{{scope.row.interview.updatedAt}}</p>
@@ -162,7 +162,8 @@
             <el-table-column label="操作" width="100">
               <!-- slot-scope="scope" -->
               <template slot-scope="scope">
-                <div>
+                <!-- 如果不是系统自动，则显示操作列表 -->
+                <div v-if="scope.row.interview.status!==55">
                   <el-button
                     @click.stop="handleClick(true,'扣点',scope.row.id,1)"
                     type="text"
@@ -175,18 +176,17 @@
                     size="small"
                     v-if="scope.row.chargeStatus===1"
                   >返点</el-button>
+                  <p
+                    class="resultBtn"
+                    @click.stop="handleClick(false,'返点原因',scope.row.id,3)"
+                    v-if="scope.row.chargeStatus===3"
+                  >返点原因</p>
+                  <p
+                    class="resultBtn"
+                    @click.stop="handleClick(false,'扣点原因',scope.row.id,4)"
+                    v-if="scope.row.chargeStatus===2"
+                  >扣点原因</p>
                 </div>
-
-                <p
-                  class="resultBtn"
-                  @click.stop="handleClick(false,'返点原因',scope.row.id)"
-                  v-if="scope.row.chargeStatus===3"
-                >返点原因</p>
-                <p
-                  class="resultBtn"
-                  @click.stop="handleClick(false,'扣点原因',scope.row.id)"
-                  v-if="scope.row.chargeStatus===2"
-                >扣点原因</p>
               </template>
             </el-table-column>
           </el-table>
@@ -332,7 +332,9 @@ export default class invitPro extends Vue {
         item.jobhunter.isShowMobile = false;
         item.recrutier.isShowMobile = false;
       });
-      console.log(this.tableData);
+      console.log(
+        this.tableData.filter(item => item.jobhunter.resumeNum === "gbiomx2o")
+      );
     });
   }
   created() {
@@ -420,22 +422,59 @@ export default class invitPro extends Vue {
     }
   }
   /* status  是否处于编辑状态,title  标题 */
+  /*  */
+  choiceType(type) {
+    return {};
+  }
+  /* status 是否出现编辑弹框 */
+  /* type  1 扣点  2 返点，3返点原因  4扣点原因 5 不合适原因 */
   handleClick(status, title, id, type) {
-    console.log(id);
-    let nowRow = this.tableData.filter(item => item.id === id)[0];
-    this.RusultForm.type = type;
-    this.RusultForm.recommendId = id;
-    if (nowRow.interview.comment !== "") {
-      console.log("点击原因");
-      this.result = nowRow.interview.comment.extraDesc;
-      this.iconList = nowRow.interview.comment.reason.split(",");
-    } else {
-      console.log("点击扣返点");
-      this.result = nowRow.chargeNote;
-    }
+    console.log(status, title, id, type);
     this.dialogTitle = title;
     this.centerDialogVisible = true;
-    this.iseditResult = status;
+    this.iconList = [];
+    let nowRow = this.tableData.filter(item => item.id === id)[0];
+    console.log(nowRow.chargeNote);
+    switch (type) {
+      case 1:
+        this.RusultForm.type = type;
+        this.RusultForm.recommendId = id;
+        this.iseditResult = status;
+        break;
+      case 2:
+        this.RusultForm.type = type;
+        this.RusultForm.recommendId = id;
+        this.iseditResult = status;
+        break;
+      case 3:
+        this.iseditResult = status;
+        this.result = nowRow.chargeNote;
+        break;
+      case 4:
+        this.iseditResult = status;
+        this.result = nowRow.chargeNote;
+        break;
+      case 5:
+        this.result = nowRow.interview.comment.extraDesc;
+        this.iconList = nowRow.interview.comment.reason.split(",");
+        break;
+    }
+
+    // [0];
+    //
+    //
+    // if (nowRow.interview.comment !== ""&&type===undefined) {
+    //   console.log("点击原因");
+    //
+    //
+    // } else {
+    //   console.log("点击扣返点");
+    //   this.iconList=[];
+    //
+    // }
+    //
+    //
+    //
   }
   toPositionPath(id) {
     console.log(id);
