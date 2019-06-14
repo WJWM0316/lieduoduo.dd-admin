@@ -102,11 +102,11 @@
                     ></i>
                   </div>
                   <p class="companyName">
-                    <span v-if="scope.row.dealStatus!==1">{{scope.row.dealStatusDesc}}</span>
+                    <span v-if="!scope.row.dealStatus">{{scope.row.dealStatusDesc}}</span>
                     <span v-else>{{scope.row.interview.statusDesc}}</span>
                     <span
                       class="StatusResult"
-                      v-if="scope.row.dealStatus!==1"
+                      v-if="scope.row.interview.comment!==''"
                       @click.stop="handleClick(false,'不感兴趣原因',scope.row.id)"
                     >原因</span>
                   </p>

@@ -720,7 +720,7 @@ export default class resumeStore extends Vue {
   // 翻页
   /* 翻页 */
   handlePageChange(nowPage) {
-    this.$refs['methods'].scrollZero();
+    this.$refs["methods"].scrollZero();
     this.form.page = nowPage;
     this.form.page = nowPage;
     this.getData();
