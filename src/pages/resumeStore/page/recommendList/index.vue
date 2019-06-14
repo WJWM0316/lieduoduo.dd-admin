@@ -169,6 +169,7 @@ export default class recommend extends Vue {
     page: 1,
     count: 20
   };
+  tableData=[];
   searchType = {
     key1: "companyName" /* 第一个搜索条件的默认键 */
     // key2: "line" /* 第二个搜索条件的默认键 */

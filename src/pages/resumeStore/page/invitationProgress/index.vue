@@ -1,6 +1,6 @@
 <!--  -->
 <template>
-  <div class="invitPro">
+  <div class="invitPro" @click.stop="closeTopic">
     <lyout-content :leftcontent="leftcontent">
       <div class="formSumbit" slot="formContent">
         <div class="formReasult">
@@ -82,9 +82,7 @@
                   <span
                     @click.stop="creatLink($event, scope.row.jobhunter.uid,scope.$index, 2)"
                   >扫码看简历</span>
-                  <span
-                    @click.stop="scope.row.jobhunter.isShowMobile=!scope.row.jobhunter.isShowMobile"
-                  >联系用户</span>
+                  <span @click.stop="showPhone($event, scope.row.jobhunter.mobile)">联系用户</span>
                   <!--求职者电话号码展示框-->
                   <div class="phone" v-if="scope.row.jobhunter.isShowMobile">
                     <p v-if="scope.row.jobhunter.mobile">{{scope.row.jobhunter.mobile}}</p>
@@ -124,13 +122,7 @@
                   <span
                     @click.stop="creatLink($event, scope.row.jobhunter.uid,scope.$index,1)"
                   >扫码看主页</span>
-                  <span
-                    @click.stop="scope.row.recrutier.isShowMobile=!scope.row.recrutier.isShowMobile"
-                  >联系用户</span>
-                  <div class="phone" v-if="scope.row.recrutier.isShowMobile">
-                    <p v-if="scope.row.recrutier.mobile">{{scope.row.recrutier.mobile}}</p>
-                    <p v-else>暂无</p>
-                  </div>
+                  <span @click.stop="showPhone($event, scope.row.recrutier.mobile)">联系用户</span>
                 </div>
               </template>
             </el-table-column>
@@ -181,12 +173,12 @@
 
                 <p
                   class="resultBtn"
-                  @click.stop="handleClick(false,'返点原因')"
+                  @click.stop="handleClick(false,'返点原因',scope.row.id)"
                   v-if="scope.row.chargeStatus===3"
                 >返点原因</p>
                 <p
                   class="resultBtn"
-                  @click.stop="handleClick(false,'扣点原因')"
+                  @click.stop="handleClick(false,'扣点原因',scope.row.id)"
                   v-if="scope.row.chargeStatus===2"
                 >扣点原因</p>
               </template>
@@ -198,6 +190,11 @@
         <!--小程序码展示框-->
       </div>
     </lyout-content>
+    <!--电话号码展示框-->
+    <div class="phone" ref="mobile">
+      <span>{{mobile}}</span>
+      <img class="phoneBg" src="../../../../assets/number_bg.png">
+    </div>
     <div class="qrCode" ref="qrCode">
       <img class="bg" src="../../../../assets/code_bg.png">
       <div
@@ -222,10 +219,9 @@
         ></el-input>
       </div>
       <div class="resultDetail" v-if="!iseditResult">
-        <p>原因:工作经历不符合</p>
-        <span>说明：没联系一般就是不合适，还有种情况是可要可不要没有让面试感兴趣的闪光点特长之处留作储备运气好会联系入职（但也只是抱着试试用的心态招进去）运气不好就雪藏了。。公司真的招人的话碰到合适的一定会最快速度拉进来沟通入职事宜的。</span>
+        <span>{{result}}</span>
       </div>
-      <span slot="footer" class="dialog-footer">
+      <span slot="footer" class="dialog-footer" v-if="iseditResult">
         <el-button @click="centerDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="checkNote">确 定</el-button>
       </span>
@@ -237,7 +233,7 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import lyoutContent from "COMPONENTS/Lyout/lyoutContent/lyoutContent.vue";
-import { interviewsList } from "API/resumeStore";
+import { interviewsList, recommendPay, refund } from "API/resumeStore";
 import { getResumeCodeUrlApi, getRecruiterCodeUrlApi } from "API/interview";
 @Component({
   name: "invitPro",
@@ -253,10 +249,12 @@ export default class invitPro extends Vue {
     page: 1,
     count: 20
   };
+  mobile = "";
   searchType = {
     key1: "companyName",
     condition2: ""
   };
+  result = "";
   RusultForm = {
     recommendId: "",
     note: "",
@@ -278,6 +276,13 @@ export default class invitPro extends Vue {
     this.form.isJobhunterApply = false;
     this.$refs[name].resetFields();
     console.log(this.form);
+  }
+  /* 关闭二维码弹窗 */
+  closeTopic() {
+    this.$nextTick(() => {
+      this.$refs["mobile"].style.display = "none";
+      this.$refs["qrCode"].style.display = "none";
+    });
   }
   forEachKeys() {
     // 基础键，剩余键值对由用户选择
@@ -323,6 +328,17 @@ export default class invitPro extends Vue {
   }
   // 看二维码
   /* 生成小程序码 */
+  /* 展示手机 */
+  showPhone(e, mobile) {
+    console.log(mobile);
+    if (this.timeout !== null) clearTimeout(this.timeout);
+    this.mobile = mobile || "用户未绑定手机";
+    this.$nextTick(() => {
+      this.$refs["mobile"].style.display = "block";
+      this.$refs["mobile"].style.left = e.clientX + "px";
+      this.$refs["mobile"].style.top = e.clientY + window.scrollY + "px";
+    });
+  }
   async creatLink(e, uid, index, type) {
     console.log(e);
     // console.log(uid, index, type);
@@ -376,8 +392,11 @@ export default class invitPro extends Vue {
   }
   /* status  是否处于编辑状态,title  标题 */
   handleClick(status, title, id, type) {
+    console.log(id);
     this.RusultForm.type = type;
     this.RusultForm.recommendId = id;
+    this.result = this.tableData.filter(item => item.id === id)[0].chargeNote;
+    console.log(this.result, "rssult");
     this.dialogTitle = title;
     this.centerDialogVisible = true;
     this.iseditResult = status;
@@ -389,6 +408,7 @@ export default class invitPro extends Vue {
       query: { id }
     });
   }
+  // 确认扣返点
   // 确认扣返点
   checkNote() {
     if (this.RusultForm.note === "") {
@@ -404,6 +424,8 @@ export default class invitPro extends Vue {
         note: this.RusultForm.note
       }).then(res => {
         console.log(res);
+        this.centerDialogVisible = false;
+        this.getData();
       });
       /* 扣点 */
     } else if (this.RusultForm.type === 2) {
@@ -412,6 +434,8 @@ export default class invitPro extends Vue {
         note: this.RusultForm.note
       }).then(res => {
         console.log(res);
+        this.centerDialogVisible = false;
+        this.getData();
       });
     }
     console.log(this.RusultForm);

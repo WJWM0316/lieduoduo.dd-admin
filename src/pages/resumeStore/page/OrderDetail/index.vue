@@ -61,9 +61,7 @@
               <p class="companyName">{{scope.row.jobhunter.lastCompany}}</p>
               <div class="operation">
                 <span @click.stop="creatLink($event, scope.row.jobhunter.uid,scope.$index, 2)">扫码看简历</span>
-                <span
-                  @click.stop="scope.row.jobhunter.isShowMobile=!scope.row.jobhunter.isShowMobile"
-                >联系用户</span>
+                <span @click.stop="showPhone($event, scope.row.jobhunter.mobile)">联系用户</span>
                 <!--求职者电话号码展示框-->
                 <div class="phone" v-if="scope.row.jobhunter.isShowMobile">
                   <p v-if="scope.row.jobhunter.mobile">{{scope.row.jobhunter.mobile}}</p>
@@ -101,14 +99,8 @@
               </div>
               <p class="companyName">{{scope.row.recrutier.companyName}}</p>
               <div class="operation">
-                <span @click.stop="creatLink($event, scope.row.jobhunter.uid,scope.$index,1)">扫码看主页</span>
-                <span
-                  @click.stop="scope.row.recrutier.isShowMobile=!scope.row.recrutier.isShowMobile"
-                >联系用户</span>
-                <div class="phone" v-if="scope.row.recrutier.isShowMobile">
-                  <p v-if="scope.row.recrutier.mobile">{{scope.row.recrutier.mobile}}</p>
-                  <p v-else>暂无</p>
-                </div>
+                <span @click.stop="creatLink($event, scope.row.recrutier.uid,scope.$index,1)">扫码看主页</span>
+                <span @click.stop="showPhone($event, scope.row.recrutier.mobile)">联系用户</span>
               </div>
             </template>
           </el-table-column>
@@ -204,7 +196,12 @@
           <el-button type="primary" @click="checkNote">确 定</el-button>
         </span>
       </el-dialog>
-      <!--小程序码展示框-->
+      <!--电话号码展示框-->
+      <div class="phone" ref="mobile">
+        <span>{{mobile}}</span>
+
+        <img class="phoneBg" src="../../../../assets/number_bg.png">
+      </div>
       <!--小程序码展示框-->
       <div class="qrCode" ref="qrCode">
         <img class="bg" src="../../../../assets/code_bg.png">
@@ -250,6 +247,7 @@ export default class OrderDetail extends Vue {
   nowSuccessNum = 0; //成功数
   nowFailNum = 0; //失败数
   qrCode = ""; //二维码
+  mobile = "";
   result = "";
   tableData = [];
   RusultForm = {
@@ -274,8 +272,19 @@ export default class OrderDetail extends Vue {
   /* 关闭二维码弹窗 */
   closeTopic() {
     this.$nextTick(() => {
-      // this.$refs['mobile'].style.display = 'none'
+      this.$refs["mobile"].style.display = "none";
       this.$refs["qrCode"].style.display = "none";
+    });
+  }
+  /* 展示手机 */
+  showPhone(e, mobile) {
+    console.log(mobile)
+    if (this.timeout !== null) clearTimeout(this.timeout);
+    this.mobile = mobile || "用户未绑定手机";
+    this.$nextTick(() => {
+      this.$refs["mobile"].style.display = "block";
+      this.$refs["mobile"].style.left = e.clientX + "px";
+      this.$refs["mobile"].style.top = e.clientY + window.scrollY + "px";
     });
   }
   // 确认扣返点
