@@ -163,7 +163,7 @@
               <!-- slot-scope="scope" -->
               <template slot-scope="scope">
                 <!-- 如果不是系统自动，则显示操作列表 -->
-                <div v-if="scope.row.interview.status!==55">
+                <div v-if="scope.row.interview.status!==55&&scope.row.interview.status!==54">
                   <el-button
                     @click.stop="handleClick(true,'扣点',scope.row.id,1)"
                     type="text"
