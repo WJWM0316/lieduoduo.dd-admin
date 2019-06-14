@@ -199,7 +199,7 @@
         <div class="resultDetail" v-if="!iseditResult">
           <span>{{result}}</span>
         </div>
-        <span slot="footer" class="dialog-footer" v-if="!result">
+        <span slot="footer" class="dialog-footer" v-if="iseditResult">
           <el-button @click="centerDialogVisible = false">取 消</el-button>
           <el-button type="primary" @click="checkNote">确 定</el-button>
         </span>
