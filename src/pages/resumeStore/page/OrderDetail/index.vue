@@ -269,16 +269,20 @@ export default class OrderDetail extends Vue {
   }
   /* status  是否处于编辑状态,title  标题  id 原因id  type类型*/
   /* status  是否处于编辑状态,title  标题 */
+ /* status  是否处于编辑状态,title  标题 */
   handleClick(status, title, id, type) {
     console.log(id);
     let nowRow = this.tableData.filter(item => item.id === id)[0];
     this.RusultForm.type = type;
     this.RusultForm.recommendId = id;
-    this.result = nowRow.chargeNote || nowRow.interview.comment.extraDesc;
-    this.iconList = nowRow.interview.comment.reason.split(",");
-
-    console.log(this.iconList, "iconList");
-    console.log(this.result, "rssult");
+    if (nowRow.interview.comment !== "") {
+      // console.log("点击原因");
+      this.result = nowRow.interview.comment.extraDesc;
+      this.iconList = nowRow.interview.comment.reason.split(",");
+    } else {
+      // console.log("点击扣返点");
+      this.result = nowRow.chargeNote;
+    }
     this.dialogTitle = title;
     this.centerDialogVisible = true;
     this.iseditResult = status;
