@@ -234,10 +234,10 @@
         ></el-input>
       </div>
       <div class="resultDetail" v-if="!iseditResult">
-        <div class="iconItem">
+        <div class="iconItem" v-if="iconList.length>0">
           <span v-for="item in iconList" :key="item" class="itemIcon">{{item}}</span>
         </div>
-        <span>{{result}}</span>
+        <span v-if="result">{{result}}</span>
       </div>
       <span slot="footer" class="dialog-footer" v-if="iseditResult">
         <el-button @click="centerDialogVisible = false">取 消</el-button>
@@ -425,11 +425,14 @@ export default class invitPro extends Vue {
     let nowRow = this.tableData.filter(item => item.id === id)[0];
     this.RusultForm.type = type;
     this.RusultForm.recommendId = id;
-    this.result = nowRow.chargeNote || nowRow.interview.comment.extraDesc;
-    this.iconList = nowRow.interview.comment.reason.split(",");
-
-    console.log(this.iconList, "iconList");
-    console.log(this.result, "rssult");
+    if (nowRow.interview.comment !== "") {
+      console.log("点击原因");
+      this.result = nowRow.interview.comment.extraDesc;
+      this.iconList = nowRow.interview.comment.reason.split(",");
+    } else {
+      console.log("点击扣返点");
+      this.result = nowRow.chargeNote;
+    }
     this.dialogTitle = title;
     this.centerDialogVisible = true;
     this.iseditResult = status;
