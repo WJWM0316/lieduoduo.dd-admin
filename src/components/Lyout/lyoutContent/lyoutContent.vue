@@ -1,10 +1,10 @@
 <!--  -->
 <template>
-  <div class="lyoutContent">
+  <div class="lyoutContent" id="lyoutScroll">
     <section class="contentStyle">
       <el-header class="header" style="text-align: right; font-size: 15px;">
         <!-- 标题区域 -->
-        <div class="lyoutTitle">
+        <div class="lyoutTitle" >
           <span class="title">{{leftcontent.title}}({{leftcontent.total}})</span>
         </div>
         <!-- 右上角按钮区域 -->
@@ -54,11 +54,10 @@ import Component from "vue-class-component";
 })
 export default class lyoutContent extends Vue {
   scrollZero() {
-    console.log(" 我背触发");
     window.scrollTo(0, 0);
-    // const el = document.getElementById("lyoutScroll");
-    // console.log(el);
-    // el.scrollTop = 0;
+    const el = document.getElementById("lyoutScroll");
+    console.log(el);
+    el.scrollTop = 0;
   }
 }
 </script>

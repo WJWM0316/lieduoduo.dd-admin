@@ -363,12 +363,13 @@ export default class companyCheck extends Vue {
     });
   }
   toPath(row) {
-    let obj=JSON.stringify(row)
+    let obj = JSON.stringify(row);
     this.$router.push({
       path: "/resumeStore/recommendList/createOrder",
       query: {
         obj,
-        frompostion: true
+        frompostion: true,
+        isFocus: true
       }
     });
   }

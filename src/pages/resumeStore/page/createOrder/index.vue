@@ -19,7 +19,7 @@
           <el-form :model="form" :rules="rules" class="createForm">
             <el-form-item label="职位ID" prop="positionId" style="width: 380px;" class="formItem">
               <el-input
-                :autofocus="true"
+                :autofocus="isFocus"
                 v-model.number="form.positionId"
                 placeholder="填写职位ID"
                 :maxlength="11"
@@ -106,6 +106,7 @@ import { createOrder, searchId } from "API/resumeStore";
   name: "OrderDetail"
 })
 export default class OrderDetail extends Vue {
+  isFocus=false;
   isCreate = 0;
   isShowForm = false;
   isShowmsg = false;

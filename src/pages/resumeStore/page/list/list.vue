@@ -704,10 +704,10 @@ export default class resumeStore extends Vue {
   getData() {
     GetResumeAPI(this.form).then(res => {
       this.itemList = res.data.data;
-      let a = this.itemList.map(item => item.vkey);
+      // let a = this.itemList.map(item => item.vkey);
       this.leftcontent.total = parseInt(res.data.meta.total);
       this.lastPage = parseInt(res.data.meta.lastPage);
-      // console.log(this.lastPage);
+      console.log(this.itemList.length);
       // this.$nextTick(() => {
       //   this.$set(this.leftcontent, "total", Number(res.data.meta.total));
       //   this.$set(this.leftcontent, "lastPage", Number(res.data.meta.lastPage));
@@ -720,6 +720,7 @@ export default class resumeStore extends Vue {
   // 翻页
   /* 翻页 */
   handlePageChange(nowPage) {
+    this.$refs['methods'].scrollZero();
     this.form.page = nowPage;
     this.form.page = nowPage;
     this.getData();
