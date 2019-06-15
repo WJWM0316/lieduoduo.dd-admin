@@ -347,8 +347,8 @@ export default class invitPro extends Vue {
           item.interview.isAutomatic = false;
         }
       });
-      // console.log(this.tableData);
-      console.log(this.tableData.filter(item => item.jobhunter.resumeNum === "opcp91m5"));
+      console.log('该页数据所有系统操作的名单')
+      console.log(this.tableData.filter(item =>/(55|54|57|58|60)/.test(item.interview.status)));
     });
   }
   created() {
