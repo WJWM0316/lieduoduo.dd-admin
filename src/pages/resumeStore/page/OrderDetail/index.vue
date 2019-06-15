@@ -148,18 +148,20 @@
               <!-- -->
               <div v-if="scope.row.interview!==null">
                 <div v-if="!scope.row.interview.isAutomatic">
-                  <el-button
+                  <p
                     @click.stop="handleClick(true,'扣点',scope.row.id,1)"
                     type="text"
                     size="medium"
                     v-if="scope.row.chargeStatus===1"
-                  >扣点</el-button>
-                  <el-button
+                    class="opeatingBtn"
+                  >扣点</p>
+                  <p
                     @click.stop="handleClick(true,'返点',scope.row.id,2)"
                     type="text"
                     size="small"
                     v-if="scope.row.chargeStatus===1"
-                  >返点</el-button>
+                    class="opeatingBtn"
+                  >返点</p>
                   <p
                     class="resultBtn"
                     @click.stop="handleClick(false,'返点原因',scope.row.id,3)"
