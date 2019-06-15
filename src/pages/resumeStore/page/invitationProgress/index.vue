@@ -134,9 +134,13 @@
             </el-table-column>
             <el-table-column prop="address" label="约面信息" width="300">
               <template slot-scope="scope">
+                <!-- 推荐到其他地方 -->
                 <div v-if="scope.row.isValid===0">
                   <p>{{scope.row.note}}</p>
                 </div>
+                <div v-else-if="scope.row.interview.positionId==''">
+                  <p style="text-align:center">--------------------------------</p>
+                  </div>
                 <div v-else-if="scope.row.interview">
                   <p class="positionName">
                     职位:
@@ -333,7 +337,7 @@ export default class invitPro extends Vue {
         item.recrutier.isShowMobile = false;
       });
       console.log(
-        this.tableData.filter(item => item.jobhunter.resumeNum === "gbiomx2o")
+        this.tableData.filter(item => item.jobhunter.resumeNum === "mh0p5hos")
       );
     });
   }

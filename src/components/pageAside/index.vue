@@ -46,6 +46,7 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import { routes } from "@/router/routes";
+import { admin_menu } from "API/commont";
 
 @Component({
   name: "page-asise",
@@ -65,6 +66,7 @@ export default class PageAside extends Vue {
   SecondPath = ""; //当前二级路由
   index = "";
   index1 = "";
+  itemList=[];
   itemList = [
     {
       path: "/index",
@@ -166,8 +168,15 @@ export default class PageAside extends Vue {
   tabSwitch() {
     this.isCLick = !this.isCLick;
   }
-  created(){
+  created() {
+    // this.getMenu();
     // console.log(JSON.stringify(this.itemList))
+  }
+  getMenu() {
+    admin_menu().then(res => {
+      this.itemList = res.data.data;
+      console.log(res, "res");
+    });
   }
   clickChild(index, index1, path) {
     // console.log("我点击了自己");
