@@ -76,10 +76,9 @@
                 <el-date-picker
                   type="date"
                   placeholder="选择日期"
-                  value-format="timestamp"
                   v-model="form.startTime"
+                  value-format="yyyy-MM-dd"
                   style="width: 142px;"
-                  @change="changeTime(form.startTime,'startTime')"
                 ></el-date-picker>
               </el-col>
               <el-col class="line" :span="1">—</el-col>
@@ -87,10 +86,9 @@
                 <el-date-picker
                   type="date"
                   placeholder="选择日期"
-                  value-format="timestamp"
+                  value-format="yyyy-MM-dd"
                   v-model="form.endTime"
                   style="width: 142px;"
-                  @change="changeTime(form.endTime,'endTime')"
                 ></el-date-picker>
               </el-col>
             </el-form-item>
@@ -189,12 +187,10 @@ export default class recommend extends Vue {
     // 创建键值
     this.form[`${e}`] = "";
   }
-  changeTime(e, keys) {
-    console.log(e);
-    this.form[keys] = e;
-  }
   /* 清除列表选项 */
   resetForm(name) {
+    this.form.startTime = "";
+    this.form.endTime = "";
     this.form.commonKey1 = "";
     this.form.isJobhunterApply = false;
     this.$refs[name].resetFields();
@@ -208,14 +204,12 @@ export default class recommend extends Vue {
     });
   }
   forEachKeys(form) {
-    let startTime = parseInt(form.startTime / 1000);
-    let endTime = parseInt(form.endTime / 1000);
     // 基础键，剩余键值对由用户选择
     let param = {
       count: 20,
       page: form.page,
-      endTime,
-      startTime,
+      endTime: form.endTime,
+      startTime: form.startTime,
       advisorUid: this.form.advisorUid
     };
     param[this.searchType.key1] = this.form.commonKey1;
@@ -229,7 +223,7 @@ export default class recommend extends Vue {
       this.tableData = res.data.data;
       this.lastPage = res.data.meta.lastPage;
       this.leftcontent.total = res.data.meta.total;
-      
+
       // console.log(this.tableData);
     });
   }
