@@ -56,7 +56,7 @@ export default class lyoutContent extends Vue {
   scrollZero() {
     window.scrollTo(0, 0);
     const el = document.getElementById("lyoutScroll");
-    console.log(el);
+    // console.log(el);
     el.scrollTop = 0;
   }
 }

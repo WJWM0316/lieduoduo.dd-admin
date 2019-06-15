@@ -336,9 +336,10 @@ export default class invitPro extends Vue {
         item.jobhunter.isShowMobile = false;
         item.recrutier.isShowMobile = false;
       });
-      console.log(
-        this.tableData.filter(item => item.jobhunter.resumeNum === "mh0p5hos")
-      );
+      console.log(this.tableData);
+      // console.log(
+      //   this.tableData.filter(item => item.jobhunter.resumeNum === "mh0p5hos")
+      // );
     });
   }
   created() {
