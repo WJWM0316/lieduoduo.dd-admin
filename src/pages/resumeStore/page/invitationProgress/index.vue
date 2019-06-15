@@ -341,14 +341,18 @@ export default class invitPro extends Vue {
       this.tableData.forEach(item => {
         item.jobhunter.isShowMobile = false;
         item.recrutier.isShowMobile = false;
-        if (/(55|54|57|58|60)/.test(item.interview.status)) {
+        if (/(55|54|57|58|60|61)/.test(item.interview.status)) {
           item.interview.isAutomatic = true;
         } else {
           item.interview.isAutomatic = false;
         }
       });
-      console.log('该页数据所有系统操作的名单')
-      console.log(this.tableData.filter(item =>/(55|54|57|58|60|61)/.test(item.interview.status)));
+      console.log("该页数据所有系统操作的名单");
+      console.log(
+        this.tableData.filter(item =>
+          /(55|54|57|58|60|61)/.test(item.interview.status)
+        )
+      );
     });
   }
   created() {
@@ -515,6 +519,7 @@ export default class invitPro extends Vue {
         console.log(res);
         this.centerDialogVisible = false;
         this.getData();
+        this.result = "";
       });
       /* 扣点 */
     } else if (this.RusultForm.type === 2) {
@@ -525,6 +530,7 @@ export default class invitPro extends Vue {
         console.log(res);
         this.centerDialogVisible = false;
         this.getData();
+        this.result = "";
       });
     }
     console.log(this.RusultForm);
