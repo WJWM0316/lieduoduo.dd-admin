@@ -16,7 +16,7 @@ export const routes = [
     path: "/index",
     name: "index",
 
-    meta: { title: "公司库", keepAlive: false, scrollY: 0 },
+    meta: { title: "公司库", keepAlive: false, scrollY: 0,Aside:false },
     component: resolve => require(["@/pages/index/index.vue"], resolve)
   },
   /* 简历库 */

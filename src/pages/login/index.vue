@@ -39,7 +39,7 @@
 <script>
 import Vue from "vue";
 import Component from "vue-class-component";
-import { loginApi } from "API/commont";
+import { loginApi, admin_menu } from "API/commont";
 import { saveAccessToken } from "API/cacheService";
 // import {permission} from "UTIL/js/permissionRoute.js"
 @Component({
@@ -58,6 +58,7 @@ export default class login extends Vue {
         sessionStorage.setItem("avar", res.data.data.avatarInfo.smallUrl);
         sessionStorage.setItem("name", res.data.data.realname);
         sessionStorage.setItem("admin_uid", res.data.data.id);
+        sessionStorage.removeItem("itemList");
         saveAccessToken(res.data.data.adminToken);
         let AdminShow = this.judge(
           groupId,
@@ -70,6 +71,7 @@ export default class login extends Vue {
         this.$store.dispatch("update_userinfo", {
           userInfo
         });
+        console.log();
         this.$message({
           message: "登录成功",
           type: "success"
@@ -102,6 +104,9 @@ export default class login extends Vue {
       AdminShow = 2;
     } else if (!isGroupAdmin && groupId === 3) {
       console.log("商务组员");
+      AdminShow = 3;
+    } else if (isGroupAdmin && groupId === 3) {
+      console.log("商务组长");
       AdminShow = 3;
     } else if (isGroupAdmin && groupId === 4) {
       console.log("商务组长");

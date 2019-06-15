@@ -53,11 +53,13 @@ import { admin_menu } from "API/commont";
   watch: {
     $route: {
       handler(route) {
+        this.getMenu();
         this.init();
       },
       immediate: true
     }
-  }
+  },
+  props: {}
 })
 export default class PageAside extends Vue {
   routes = null;
@@ -66,130 +68,134 @@ export default class PageAside extends Vue {
   SecondPath = ""; //当前二级路由
   index = "";
   index1 = "";
-  itemList=[];
-  itemList = [
-    {
-      path: "/index",
-      title: "公司库",
-      name: "index",
-      isShow: false,
-      flag: "index",
-      children: []
-    },
-    {
-      path: "/user",
-      title: "用户管理",
-      name: "user",
-      isShow: false,
-      flag: "user",
-      children: []
-    },
-    {
-      path: "/positionManage",
-      title: "职位管理",
-      name: "positionManage",
-      isShow: false,
-      flag: "positionManage",
-      children: []
-    },
-    {
-      path: "/",
-      title: "审核管理",
-      isShow: false,
-      flag: "check",
-      children: [
-        {
-          path: "/check/companyCheck",
-          title: "公司审核管理",
-          name: "companyCheck",
-          flag: "check"
-        },
-        {
-          path: "/check/recruitmentOfficer",
-          title: "招聘官审核",
-          name: "recruitmentOfficer",
-          flag: "check"
-        }
-      ]
-    },
-    {
-      path: "/",
-      title: "面试管理",
-      isShow: false,
-      flag: "interview",
-      children: [
-        {
-          isTwo: true,
-          isShow: false,
-          path: "/interview/List",
-          name: "List",
-          title: "申请列表",
-          flag: "interview"
-        },
-        {
-          isShow: false,
-          path: "/interview/invite",
-          name: "invite",
-          title: "邀请列表",
-          flag: "interview"
-        }
-      ]
-    },
-    {
-      path: "/",
-      title: "简历库",
-      flag: "resume",
-      isShow: false,
-      children: [
-        {
-          isShow: false,
-          path: "/resumeStore/list",
-          name: "list",
-          title: "简历列表",
-          flag: "resume"
-        },
-        {
-          isShow: false,
-          path: "/resumeStore/recommendList",
-          name: "recommendList",
-          title: "推荐列表",
-          flag: "resume"
-        },
-        {
-          isShow: false,
-          path: "/resumeStore/invitationProgress",
-          name: "invitationProgress",
-          title: "邀约进展",
-          flag: "resume"
-        }
-      ]
-    }
-  ];
+  AdminShow = 0;
+  itemList = [];
+  // itemList = [
+  //   {
+  //     path: "/index",
+  //     title: "公司库",
+  //     name: "index",
+  //     isShow: false,
+  //     flag: "index",
+  //     children: []
+  //   },
+  //   {
+  //     path: "/user",
+  //     title: "用户管理",
+  //     name: "user",
+  //     isShow: false,
+  //     flag: "user",
+  //     children: []
+  //   },
+  //   {
+  //     path: "/positionManage",
+  //     title: "职位管理",
+  //     name: "positionManage",
+  //     isShow: false,
+  //     flag: "positionManage",
+  //     children: []
+  //   },
+  //   {
+  //     path: "/",
+  //     title: "审核管理",
+  //     isShow: false,
+  //     flag: "check",
+  //     children: [
+  //       {
+  //         path: "/check/companyCheck",
+  //         title: "公司审核管理",
+  //         name: "companyCheck",
+  //         flag: "check"
+  //       },
+  //       {
+  //         path: "/check/recruitmentOfficer",
+  //         title: "招聘官审核",
+  //         name: "recruitmentOfficer",
+  //         flag: "check"
+  //       }
+  //     ]
+  //   },
+  //   {
+  //     path: "/",
+  //     title: "面试管理",
+  //     isShow: false,
+  //     flag: "interview",
+  //     children: [
+  //       {
+  //         isTwo: true,
+  //         isShow: false,
+  //         path: "/interview/List",
+  //         name: "List",
+  //         title: "申请列表",
+  //         flag: "interview"
+  //       },
+  //       {
+  //         isShow: false,
+  //         path: "/interview/invite",
+  //         name: "invite",
+  //         title: "邀请列表",
+  //         flag: "interview"
+  //       }
+  //     ]
+  //   },
+  //   {
+  //     path: "/",
+  //     title: "简历库",
+  //     flag: "resume",
+  //     isShow: false,
+  //     children: [
+  //       {
+  //         isShow: false,
+  //         path: "/resumeStore/list",
+  //         name: "list",
+  //         title: "简历列表",
+  //         flag: "resume"
+  //       },
+  //       {
+  //         isShow: false,
+  //         path: "/resumeStore/recommendList",
+  //         name: "recommendList",
+  //         title: "推荐列表",
+  //         flag: "resume"
+  //       },
+  //       {
+  //         isShow: false,
+  //         path: "/resumeStore/invitationProgress",
+  //         name: "invitationProgress",
+  //         title: "邀约进展",
+  //         flag: "resume"
+  //       }
+  //     ]
+  //   }
+  // ];
   tabSwitch() {
     this.isCLick = !this.isCLick;
   }
-  created() {
+  mounted() {
+    this.AdminShow = sessionStorage.getItem("AdminShow");
+    // console.log("sdfsddfds");
     // this.getMenu();
     // console.log(JSON.stringify(this.itemList))
   }
   getMenu() {
-    admin_menu().then(res => {
-      this.itemList = res.data.data;
-      console.log(res, "res");
-    });
-  }
-  clickChild(index, index1, path) {
-    // console.log("我点击了自己");
-    // console.log(this.itemList[index].children);
-    this.itemList[index].children.isShow = true;
-    this.onePath = this.itemList[index].children.list[index1].path;
-    // console.log(this.onePath)
-    this.$router.replace({
-      path: this.onePath
-    });
+    if (this.$route.path !== "/login" && this.$route.path !== "/") {
+      let itemList = JSON.parse(sessionStorage.getItem("itemList"));
+      console.log(itemList, "itemList");
+      if (itemList !== null) {
+        this.itemList = JSON.parse(sessionStorage.getItem("itemList"));
+      } else {
+        admin_menu().then(res => {
+          this.itemList = res.data.data;
+          sessionStorage.setItem("itemList", JSON.stringify(res.data.data));
+        });
+      }
+    } else {
+    }
   }
   topath(type, pIndex, cIndex, item) {
+    console.log(this.itemList);
     // console.log(type, pIndex, cIndex, item)
+    console.log(this.itemList);
     this.onePath = item.path;
     if (type === "up") {
       this.itemList.map(field => {
@@ -207,6 +213,7 @@ export default class PageAside extends Vue {
         field.isShow = i === cIndex ? true : false;
       });
     } else {
+      console.log(this.itemList);
       console.log(item.name, "------------");
       this.$router.push({ name: item.name });
     }
@@ -214,35 +221,10 @@ export default class PageAside extends Vue {
   // mounted() {
   //   this.init()
   // }
+  show() {}
   init() {
-    this.AdminShow = +sessionStorage.getItem("AdminShow");
     let path = this.$route.path;
     let obj = {};
-    // this.itemList.splice
-    // if (/(5)/.test(this.AdminShow)) {
-    //   this.$set(this.itemList, 3, {
-    //     path: "/check",
-    //     name: "审核管理",
-    //     isShow: false,
-    //     children: []
-    //   });
-    // }
-    // if (/(0|1|2|5|6)/.test(this.AdminShow)) {
-    //   this.$set(this.itemList, 5, {
-    //     path: "/resumeStore",
-    //     title: "简历库",
-    //     name: 'resumeStore',
-    //     isShow: false,
-    //     children: []
-    //   });
-    // } else {
-    //   this.$set(this.itemList, 5, {
-    //     path: "/resumeStore",
-    //     name: "简历库",
-    //     isShow: false,
-    //     children: []
-    //   });
-    // }
     this.itemList.map((uRoute, uIndex, uArray) => {
       if (Reflect.get(uRoute, "path") === path) {
         uRoute.isShow = true;

@@ -348,7 +348,7 @@ export default class invitPro extends Vue {
         }
       });
       console.log('该页数据所有系统操作的名单')
-      console.log(this.tableData.filter(item =>/(55|54|57|58|60)/.test(item.interview.status)));
+      console.log(this.tableData.filter(item =>/(55|54|57|58|60|61)/.test(item.interview.status)));
     });
   }
   created() {
