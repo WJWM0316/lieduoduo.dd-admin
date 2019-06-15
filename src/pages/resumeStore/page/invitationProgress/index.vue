@@ -451,6 +451,7 @@ export default class invitPro extends Vue {
     this.dialogTitle = title;
     this.centerDialogVisible = true;
     this.iconList = [];
+    this.RusultForm.note = "";
     let nowRow = this.tableData.filter(item => item.id === id)[0];
     console.log(nowRow.chargeNote);
     switch (type) {
@@ -519,7 +520,7 @@ export default class invitPro extends Vue {
         console.log(res);
         this.centerDialogVisible = false;
         this.getData();
-        this.result = "";
+        this.RusultForm.note = "";
       });
       /* 扣点 */
     } else if (this.RusultForm.type === 2) {
@@ -530,7 +531,7 @@ export default class invitPro extends Vue {
         console.log(res);
         this.centerDialogVisible = false;
         this.getData();
-        this.result = "";
+        this.RusultForm.note = "";
       });
     }
     console.log(this.RusultForm);
