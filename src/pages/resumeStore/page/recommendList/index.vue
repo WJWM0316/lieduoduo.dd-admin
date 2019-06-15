@@ -1,6 +1,6 @@
 <!--  -->
 <template>
-  <div class="recommendList" @click.stop="hiddenQr">
+  <div class="recommendList">
     <lyout-content :leftcontent="leftcontent" :isShowbtn="true" ref="methods">
       <div class="class" slot="text" @click.stop="toTabBlock">新建推荐单</div>
       <div class="formSumbit" slot="formContent">
@@ -76,9 +76,10 @@
                 <el-date-picker
                   type="date"
                   placeholder="选择日期"
-                  value-format="yyyy-MM-dd"
+                  value-format="timestamp"
                   v-model="form.startTime"
                   style="width: 142px;"
+                  @change="changeTime(form.startTime,'startTime')"
                 ></el-date-picker>
               </el-col>
               <el-col class="line" :span="1">—</el-col>
@@ -86,9 +87,10 @@
                 <el-date-picker
                   type="date"
                   placeholder="选择日期"
-                  value-format="yyyy-MM-dd"
+                  value-format="timestamp"
                   v-model="form.endTime"
                   style="width: 142px;"
+                  @change="changeTime(form.endTime,'endTime')"
                 ></el-date-picker>
               </el-col>
             </el-form-item>
@@ -183,19 +185,13 @@ export default class recommend extends Vue {
       path: "/resumeStore/recommendList/createOrder"
     });
   }
-  /* 关闭二维码弹窗 */
-  hiddenQr() {
-    this.$nextTick(() => {
-      this.$refs["qrCode"].style.display = "none";
-    });
-  }
   checkType(e) {
     // 创建键值
     this.form[`${e}`] = "";
   }
-  // 第一个搜索
-  checkInput(e) {
-    // this.form=
+  changeTime(e, keys) {
+    console.log(e);
+    this.form[keys] = e;
   }
   /* 清除列表选项 */
   resetForm(name) {
@@ -212,37 +208,33 @@ export default class recommend extends Vue {
     });
   }
   forEachKeys(form) {
-    if (form.startTime !== "") {
-      var startTime = form.startTime.substring(0, 19).replace(/-/g, "/");
-      var endTime = form.endTime.substring(0, 19).replace(/-/g, "/");
-      startTime = parseInt(new Date(startTime).getTime() / 1000);
-      endTime = parseInt(new Date(endTime).getTime() / 1000);
-      form.startTime = startTime;
-      form.endTime = endTime;
-    }
+    let startTime = parseInt(form.startTime / 1000);
+    let endTime = parseInt(form.endTime / 1000);
     // 基础键，剩余键值对由用户选择
     let param = {
       count: 20,
-      page:form.page,
-      endTime: this.form.endTime,
-      startTime: this.form.startTime,
+      page: form.page,
+      endTime,
+      startTime,
       advisorUid: this.form.advisorUid
     };
     param[this.searchType.key1] = this.form.commonKey1;
     return param;
   }
   getData() {
+    // console.log("this.form", this.form);
     let obj = this.forEachKeys(this.form);
+    console.log("ob", obj);
     recommendList(obj).then(res => {
       this.tableData = res.data.data;
       this.lastPage = res.data.meta.lastPage;
       this.leftcontent.total = res.data.meta.total;
-      console.log(tableData);
+      console.log(this.tableData);
     });
   }
   handlePageChange(nowPage) {
     console.log(nowPage);
-    this.$refs['methods'].scrollZero();
+    this.$refs["methods"].scrollZero();
     this.form.page = nowPage;
     this.form.page = nowPage;
     this.getData(this.form);

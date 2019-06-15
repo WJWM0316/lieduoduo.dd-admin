@@ -140,7 +140,7 @@
                 </div>
                 <div v-else-if="scope.row.interview.positionId==''">
                   <p style="text-align:center">--------------------------------</p>
-                  </div>
+                </div>
                 <div v-else-if="scope.row.interview">
                   <p class="positionName">
                     职位:
