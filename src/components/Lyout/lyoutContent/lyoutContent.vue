@@ -69,6 +69,7 @@ export default class lyoutContent extends Vue {
   right: 0;
   bottom: 50px;
   overflow-y: scroll;
+  z-index: 200;
   // .isScroll {
   &::-webkit-scrollbar {
     display: none;
