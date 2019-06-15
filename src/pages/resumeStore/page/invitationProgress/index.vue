@@ -138,25 +138,29 @@
                 <div v-if="scope.row.isValid===0">
                   <p>{{scope.row.note}}</p>
                 </div>
-                <div v-else-if="scope.row.interview.positionId==''">
-                  <p style="text-align:center">--------------------------------</p>
-                </div>
                 <div v-else-if="scope.row.interview">
-                  <p class="positionName">
-                    职位:
-                    <span
-                      class="positionName"
-                      @click="toPositionPath(scope.row.interview.positionId)"
-                    >{{scope.row.interview.positionName}}</span>
-                    {{scope.row.interview.emolumentMin}}k-{{scope.row.interview.emolumentMax}}k
-                  </p>
                   <p
-                    class="companyName"
-                  >{{scope.row.interview.address}}{{scope.row.interview.doorplate}}</p>
-                  <p
-                    v-if="scope.row.arrangementInfo"
-                  >时间:{{scope.row.arrangementInfo.appointment_time}}</p>
+                    style="text-align:center"
+                    v-if="scope.row.interview.positionId===''"
+                  >--------------------------------</p>
+                  <div v-else>
+                    <p class="positionName">
+                      职位:
+                      <span
+                        class="positionName"
+                        @click="toPositionPath(scope.row.interview.positionId)"
+                      >{{scope.row.interview.positionName}}</span>
+                      {{scope.row.interview.emolumentMin}}k-{{scope.row.interview.emolumentMax}}k
+                    </p>
+                    <p
+                      class="companyName"
+                    >{{scope.row.interview.address}}{{scope.row.interview.doorplate}}</p>
+                    <p
+                      v-if="scope.row.arrangementInfo"
+                    >时间:{{scope.row.arrangementInfo.appointment_time}}</p>
+                  </div>
                 </div>
+
                 <div v-else>
                   <p style="color:red;font-size：14px;">{{scope.row.dealStatusDesc}}</p>
                 </div>
@@ -167,29 +171,31 @@
               <!-- slot-scope="scope" -->
               <template slot-scope="scope">
                 <!-- 如果不是系统自动，则显示操作列表 -->
-                <div v-if="scope.row.interview.status!==55&&scope.row.interview.status!==54">
-                  <el-button
-                    @click.stop="handleClick(true,'扣点',scope.row.id,1)"
-                    type="text"
-                    size="medium"
-                    v-if="scope.row.chargeStatus===1"
-                  >扣点</el-button>
-                  <el-button
-                    @click.stop="handleClick(true,'返点',scope.row.id,2)"
-                    type="text"
-                    size="small"
-                    v-if="scope.row.chargeStatus===1"
-                  >返点</el-button>
-                  <p
-                    class="resultBtn"
-                    @click.stop="handleClick(false,'返点原因',scope.row.id,3)"
-                    v-if="scope.row.chargeStatus===3"
-                  >返点原因</p>
-                  <p
-                    class="resultBtn"
-                    @click.stop="handleClick(false,'扣点原因',scope.row.id,4)"
-                    v-if="scope.row.chargeStatus===2"
-                  >扣点原因</p>
+                <div v-if="scope.row.interview!==null">
+                  <div v-if="scope.row.interview.status!==55&&scope.row.interview.status!==54">
+                    <el-button
+                      @click.stop="handleClick(true,'扣点',scope.row.id,1)"
+                      type="text"
+                      size="medium"
+                      v-if="scope.row.chargeStatus===1"
+                    >扣点</el-button>
+                    <el-button
+                      @click.stop="handleClick(true,'返点',scope.row.id,2)"
+                      type="text"
+                      size="small"
+                      v-if="scope.row.chargeStatus===1"
+                    >返点</el-button>
+                    <p
+                      class="resultBtn"
+                      @click.stop="handleClick(false,'返点原因',scope.row.id,3)"
+                      v-if="scope.row.chargeStatus===3"
+                    >返点原因</p>
+                    <p
+                      class="resultBtn"
+                      @click.stop="handleClick(false,'扣点原因',scope.row.id,4)"
+                      v-if="scope.row.chargeStatus===2"
+                    >扣点原因</p>
+                  </div>
                 </div>
               </template>
             </el-table-column>
