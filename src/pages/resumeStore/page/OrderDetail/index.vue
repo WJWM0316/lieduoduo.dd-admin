@@ -479,18 +479,25 @@ export default class OrderDetail extends Vue {
       // console.log(res);
       this.baseMsg = res.data.data.listInfo;
       this.tableData = res.data.data.recommends;
-      console.log(this.tableData.filter(item =>/(55|54|57|58|60|61)/.test(item.interview.status)));
+      // console.log(
+      //   this.tableData.filter(item =>
+      //     /(55|54|57|58|60|61)/.test(item.interview.status)
+      //   )
+      // );
       // console.log(this.tableData.find(item=>item.jobhunter.resumeNum==="opcp91m5"))
       this.tableData.forEach(item => {
         item.jobhunter.isShowMobile = false;
         item.recrutier.isShowMobile = false;
-        if (/(55|54|57|58|60|61)/.test(item.interview.status)) {
-          item.interview.isAutomatic = true;
-        } else {
-          item.interview.isAutomatic = false;
+        console.log(item.interview);
+        if (item.interview !== null) {
+          if (/(55|54|57|58|60|61)/.test(item.interview.status)) {
+            item.interview.isAutomatic = true;
+          } else {
+            item.interview.isAutomatic = false;
+          }
         }
       });
-      // console.log(this.tableData);
+      console.log(this.tableData);
     });
   }
 }
