@@ -145,9 +145,9 @@
             <template slot-scope="scope">
               <!-- 如果不是系统自动，则显示操作列表 -->
               <!--  -->
-              <!--  -->
+              <!-- -->
               <div v-if="scope.row.interview!==null">
-                <div v-if="scope.row.interview.status!==55&&scope.row.interview.status!==54">
+                <div v-if="!scope.row.interview.isAutomatic">
                   <el-button
                     @click.stop="handleClick(true,'扣点',scope.row.id,1)"
                     type="text"
@@ -265,6 +265,7 @@ export default class OrderDetail extends Vue {
   qrCode = ""; //二维码
   mobile = "";
   result = "";
+  isAutomatic = true; /* 是否系统自动   false 显示操作栏 true 不显示操作栏 */
   iconList = []; /* 不感兴趣标签栏 */
   tableData = [];
   RusultForm = {
@@ -278,12 +279,12 @@ export default class OrderDetail extends Vue {
   /* status 是否出现编辑弹框 */
   /* type  1 扣点  2 返点，3返点原因  4扣点原因 5 不合适原因 */
   handleClick(status, title, id, type) {
-    console.log(status, title, id, type);
+    // console.log(status, title, id, type);
     this.dialogTitle = title;
     this.centerDialogVisible = true;
     this.iconList = [];
     let nowRow = this.tableData.filter(item => item.id === id)[0];
-    console.log(nowRow.chargeNote);
+    // console.log(nowRow.chargeNote);
     switch (type) {
       case 1:
         this.RusultForm.type = type;
@@ -314,7 +315,7 @@ export default class OrderDetail extends Vue {
     //
     // if (nowRow.interview.comment !== ""&&type===undefined) {
     //   console.log("点击原因");
-    //
+    //d
     //
     // } else {
     //   console.log("点击扣返点");
@@ -418,7 +419,7 @@ export default class OrderDetail extends Vue {
           item.reason = "推荐成功";
         }
       });
-      console.log(this.resultList);
+      // console.log(this.resultList);
     });
   }
   // 看二维码
@@ -475,14 +476,21 @@ export default class OrderDetail extends Vue {
     let { id } = this.$route.query;
     console.log(id);
     recommendDetail(id).then(res => {
-      console.log(res);
+      // console.log(res);
       this.baseMsg = res.data.data.listInfo;
       this.tableData = res.data.data.recommends;
+      console.log(this.tableData.filter(item =>/(55|54|57|58|60)/.test(item.interview.status)));
+      // console.log(this.tableData.find(item=>item.jobhunter.resumeNum==="opcp91m5"))
       this.tableData.forEach(item => {
         item.jobhunter.isShowMobile = false;
         item.recrutier.isShowMobile = false;
+        if (/(55|54|57|58|60)/.test(item.interview.status)) {
+          item.interview.isAutomatic = true;
+        } else {
+          item.interview.isAutomatic = false;
+        }
       });
-      console.log(this.tableData);
+      // console.log(this.tableData);
     });
   }
 }

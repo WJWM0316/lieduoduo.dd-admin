@@ -150,6 +150,7 @@
           <span class="total">共 {{lastPage}} 页，{{leftcontent.total}} 条记录</span>
         </footer>
       </div>
+      <!-- 遮罩 -->
       <div v-show="isShowMark" slot="Mark">
         <div class="left comstyle" @click.stop="LeftArrow">
           <i class="el-icon-arrow-left"></i>

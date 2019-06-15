@@ -172,7 +172,7 @@
               <template slot-scope="scope">
                 <!-- 如果不是系统自动，则显示操作列表 -->
                 <div v-if="scope.row.interview!==null">
-                  <div v-if="scope.row.interview.status!==55&&scope.row.interview.status!==54">
+                  <div v-if="!scope.row.interview.isAutomatic">
                     <el-button
                       @click.stop="handleClick(true,'扣点',scope.row.id,1)"
                       type="text"
@@ -341,11 +341,14 @@ export default class invitPro extends Vue {
       this.tableData.forEach(item => {
         item.jobhunter.isShowMobile = false;
         item.recrutier.isShowMobile = false;
+        if (/(55|54|57|58|60)/.test(item.interview.status)) {
+          item.interview.isAutomatic = true;
+        } else {
+          item.interview.isAutomatic = false;
+        }
       });
-      console.log(this.tableData);
-      // console.log(
-      //   this.tableData.filter(item => item.jobhunter.resumeNum === "mh0p5hos")
-      // );
+      // console.log(this.tableData);
+      console.log(this.tableData.filter(item => item.jobhunter.resumeNum === "opcp91m5"));
     });
   }
   created() {

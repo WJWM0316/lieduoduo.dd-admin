@@ -224,12 +224,13 @@ export default class recommend extends Vue {
   getData() {
     // console.log("this.form", this.form);
     let obj = this.forEachKeys(this.form);
-    console.log("ob", obj);
+    // console.log("ob", obj);
     recommendList(obj).then(res => {
       this.tableData = res.data.data;
       this.lastPage = res.data.meta.lastPage;
       this.leftcontent.total = res.data.meta.total;
-      console.log(this.tableData);
+      
+      // console.log(this.tableData);
     });
   }
   handlePageChange(nowPage) {
