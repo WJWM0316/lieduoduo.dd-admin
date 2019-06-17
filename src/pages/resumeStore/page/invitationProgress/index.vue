@@ -141,17 +141,17 @@
                 <div v-else-if="scope.row.interview">
                   <p
                     style="text-align:center"
-                    v-if="scope.row.interview.positionId===''"
-                  >--------------------------------</p>
+                    v-if="scope.row.interview.positionId===0"
+                  >------------------------</p>
                   <div v-else>
-                    <p class="positionName">
-                      职位:
+                    <div class="positionRow">
+                      <span style>职位:</span>
                       <span
                         class="positionName"
                         @click="toPositionPath(scope.row.interview.positionId)"
                       >{{scope.row.interview.positionName}}</span>
-                      {{scope.row.interview.emolumentMin}}k-{{scope.row.interview.emolumentMax}}k
-                    </p>
+                      <span>{{scope.row.interview.emolumentMin}}k-{{scope.row.interview.emolumentMax}}k</span>
+                    </div>
                     <p
                       class="companyName"
                     >{{scope.row.interview.address}}{{scope.row.interview.doorplate}}</p>

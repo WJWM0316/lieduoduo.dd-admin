@@ -183,18 +183,30 @@
     }
   }
 }
-.positionName {
-  color: #000;
-  font-size: 14px;
+.positionRow {
+  display: flex;
+  justify-content:flex-start;
+  align-items: flex-start;
   span {
-    color: #652791;
-    cursor: pointer;
-    font-size: 14px;
-    padding: 0 10px;
-    width: 100px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    &:nth-child(1) {
+      font-size: 14px;
+      color: #000;
+    }
+    &:nth-child(2) {
+      color: #000;
+      font-size: 14px;
+      color: #000;
+      font-size: 14px;
+      color: #652791;
+      cursor: pointer;
+      font-size: 14px;
+      padding: 0 10px;
+      width: 100px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: inline-block;
+    }
   }
 }
 .companyName {
@@ -318,7 +330,7 @@
   position: absolute;
   top: -999px;
   left: -999px;
-  z-index: 3;
+  z-index: 300;
   line-height: 60px;
   .phoneBg {
     display: block;
@@ -376,21 +388,21 @@
   justify-content: center;
   align-items: center;
 }
-.itemIcon{
-   border-radius: 10px;
-   background: #652791;
-   color: #fff;
-   font-size: 14px;
-   display: inline-block;
-   padding: 2px 6px;
-   margin-right: 8px;
-   &:last-child{
-     margin-right: 0px;
-   }
+.itemIcon {
+  border-radius: 10px;
+  background: #652791;
+  color: #fff;
+  font-size: 14px;
+  display: inline-block;
+  padding: 2px 6px;
+  margin-right: 8px;
+  &:last-child {
+    margin-right: 0px;
+  }
 }
-.opeatingBtn{
+.opeatingBtn {
   display: block;
-  color: #409EFF;
+  color: #409eff;
   font-size: 14px;
   cursor: pointer;
 }

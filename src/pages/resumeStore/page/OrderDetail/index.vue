@@ -363,6 +363,7 @@ export default class OrderDetail extends Vue {
         console.log(res);
         this.centerDialogVisible = false;
         this.getData();
+        this.RusultForm.note="";
       });
       /* 扣点 */
     } else if (this.RusultForm.type === 2) {
@@ -373,6 +374,7 @@ export default class OrderDetail extends Vue {
         console.log(res);
         this.centerDialogVisible = false;
         this.getData();
+        this.RusultForm.note="";
       });
     }
     console.log(this.RusultForm);
