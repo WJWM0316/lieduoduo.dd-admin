@@ -16,9 +16,9 @@ axios.defaults.baseURL = API_ROOT;
 axios.interceptors.request.use(
   config => {
     //  loadingInstance = Loading.service({})
-    config.defaults.headers.common["Authorization-Admin"] = getAccessToken();
+    config.headers.common["Authorization-Admin"] = getAccessToken();
     /* 每次发版，此处+1 */
-    config.defaults.headers.common["Admin-Version"] =packjson.lieduoduoversion;
+    config.headers.common["Admin-Version"] =packjson.lieduoduoversion;
     console.log(config.headers.common)
     return config;
   },
