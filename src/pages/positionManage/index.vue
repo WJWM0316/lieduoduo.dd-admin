@@ -97,6 +97,11 @@
               <div>
                 <span class="check" @click="check(props.scope.row.id)">查看</span>
               </div>
+              <span
+                v-if="AdminShow==5||AdminShow==6||AdminShow==0"
+                class="createOrder"
+                @click="toPath(props.scope.row)"
+              >创建推荐单</span>
               <div
                 style="width: 100%; cursor: pointer; color: #652791;"
                 @click.stop="creatLink($event, props.scope.row.id, props.scope.$index)"
@@ -222,6 +227,7 @@ export default class companyCheck extends Vue {
   total = 0; // 筛查结果数量
   pageCount = 0; // 请求回的数据共几页
   qrCode = "";
+  AdminShow = 0;
   searchType = {
     condition1: "name",
     condition2: "name2",
@@ -356,7 +362,17 @@ export default class companyCheck extends Vue {
       this.pageCount = res.data.meta.lastPage;
     });
   }
-
+  toPath(row) {
+    let obj = JSON.stringify(row);
+    this.$router.push({
+      path: "/resumeStore/recommendList/createOrder",
+      query: {
+        obj,
+        frompostion: true,
+        isFocus: true
+      }
+    });
+  }
   /* 关闭浮窗 */
   closeTopic() {
     this.$nextTick(() => {
@@ -405,6 +421,7 @@ export default class companyCheck extends Vue {
     });
   }
   created() {
+    this.AdminShow = +sessionStorage.getItem("AdminShow");
     this.getTemplist();
     this.ManageList();
   }
@@ -541,7 +558,6 @@ export default class companyCheck extends Vue {
     align-items: center;
     justify-content: flex-start;
     .check {
-      line-height: 48px;
       color: #652791;
       cursor: pointer;
     }

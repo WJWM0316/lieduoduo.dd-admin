@@ -7,11 +7,11 @@
     <router-view></router-view>
     <!-- <keep-alive>
       <router-view v-if="$route.meta.keepAlive">
-        <! 这里是会被缓存的视图组件！ -->
-      <!-- </router-view>
-    </keep-alive> -->
+    <! 这里是会被缓存的视图组件！-->
+    <!-- </router-view>
+    </keep-alive>-->
     <!-- <router-view v-if="!$route.meta.keepAlive"> -->
-      <!-- 这里是不被缓存的视图组件！ -->
+    <!-- 这里是不被缓存的视图组件！ -->
     <!-- </router-view> -->
   </div>
 </template>
@@ -27,19 +27,27 @@ import PageHeader from "COMPONENTS/pageHeader/index.vue";
   components: {
     PageAside,
     PageHeader
+  },
+  watch: {
+    isAjax: {
+      handler(res) {
+        this.showAside(res);
+      }
+    }
   }
 })
 export default class App extends Vue {
   loadingInstance = null;
   showResetPsw = false;
-
+  isAjax = false;
+  showAside(res) {
+    this.isAjax = res;
+  }
+  changeStatus(e) {
+    console.log(e);
+  }
   mounted() {
-    //  this.loadingInstance = Loading.service({})
-    //  const code  = Cookies.get('code') ? Cookies.get('code') : process.env.VUE_APP__TEST_COMPANY
-    //  this.loginApi({code, 'Authorization-Sso': Cookies.get('Authorization-Sso')})
-    //      .then(() => {
-    //        this.loadingInstance.close()
-    //      })
+    // if(sessionStorage.getItem(''))
   }
 }
 </script>

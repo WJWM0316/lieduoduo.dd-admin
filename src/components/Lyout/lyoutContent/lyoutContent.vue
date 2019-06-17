@@ -1,6 +1,6 @@
 <!--  -->
 <template>
-  <div class="lyoutContent">
+  <div class="lyoutContent" id="lyoutScroll">
     <section class="contentStyle">
       <el-header class="header" style="text-align: right; font-size: 15px;">
         <!-- 标题区域 -->
@@ -54,38 +54,22 @@ import Component from "vue-class-component";
 })
 export default class lyoutContent extends Vue {
   scrollZero() {
-    console.log(" 我背触发");
     window.scrollTo(0, 0);
-    // const el = document.getElementById("lyoutScroll");
+    const el = document.getElementById("lyoutScroll");
     // console.log(el);
-    // el.scrollTop = 0;
+    el.scrollTop = 0;
   }
 }
 </script>
 <style scoped lang="less">
-// @media screen and (max-width: 1800px) {
-//   .lyoutContent {
-//     height: 846px;
-//   }
-// }
-@media screen and (min-width: 1366px) and(max-width:1700px) {
-  .lyoutContent {
-    height: 610px !important;
-  }
-}
-@media screen and (min-width: 1200px) and(max-width:1300px) {
-  .lyoutContent {
-    height: 610px !important;
-  }
-}
 .lyoutContent {
   position: fixed;
   top: 60px;
   left: 200px;
   right: 0;
-  z-index: 100;
-  height: 846px;
+  bottom: 50px;
   overflow-y: scroll;
+  z-index: 200;
   // .isScroll {
   &::-webkit-scrollbar {
     display: none;
@@ -97,8 +81,12 @@ export default class lyoutContent extends Vue {
     padding: 20px;
     padding-top: 0px;
     padding-bottom: 0px;
-    border: 1px solid rgb(238, 238, 238);
+    border: 1px solid #eeeeee;
     background: #fff;
+    position: relative;
+    // overflow-y: scroll;
+    // height: 750px;+
+
     .header {
       padding: 0px;
       background: #fff;
@@ -135,6 +123,7 @@ export default class lyoutContent extends Vue {
         border-radius: 4px;
         box-sizing: border-box;
         border: 1px solid #dcdfe6;
+        cursor: pointer;
       }
     }
   }
@@ -147,5 +136,16 @@ export default class lyoutContent extends Vue {
   right: 0;
   background: rgba(0, 0, 0, 0.7);
   z-index: 1000;
+}
+.formSumbit {
+  background: #fff;
+
+  .BtnList {
+    width: 254px;
+    .inquire {
+      color: #ffffff;
+      background-color: #652791;
+    }
+  }
 }
 </style>

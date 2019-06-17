@@ -16,14 +16,14 @@ export const routes = [
     path: "/index",
     name: "index",
 
-    meta: { title: "公司库", keepAlive: false, scrollY: 0 },
+    meta: { title: "公司库", keepAlive: false, scrollY: 0,Aside:false },
     component: resolve => require(["@/pages/index/index.vue"], resolve)
   },
   /* 简历库 */
   {
     path: "/resumeStore",
     name: "resumeStore",
-    meta: { title: "简历库",flag: "resumeStore" },
+    meta: { title: "简历库", flag: "resumeStore" },
     component: resolve => require(["../App.vue"], resolve),
     children: [
       {
@@ -32,8 +32,52 @@ export const routes = [
         meta: { title: "简历列表", keepAlive: true, flag: "resumeStore" },
         component: resolve =>
           require(["@/pages/resumeStore/page/list/list.vue"], resolve)
+      },
+      {
+        path: "recommendList",
+        name: "recommendList",
+        meta: { title: "推荐纪录", keepAlive: true, flag: "resumeStore" },
+        component: resolve =>
+          require(["@/pages/resumeStore/page/recommendList/index.vue"], resolve)
+      },
+      {
+        path: "invitationProgress",
+        name: "invitationProgress",
+        meta: { title: "邀约进展", keepAlive: true, flag: "resumeStore" },
+        component: resolve =>
+          require([
+            "@/pages/resumeStore/page/invitationProgress/index.vue"
+          ], resolve)
       }
     ]
+  },
+  /* 新建推荐单 */
+  {
+    path: "/resumeStore/recommendList/createOrder",
+    name: "createOrder",
+    meta: {
+      title: "新建推荐单",
+      haveParent: true,
+      parentName: "推荐纪录",
+      keepAlive: true,
+      flag: "resumeStore"
+    },
+    component: resolve =>
+      require(["@/pages/resumeStore/page/createOrder/index.vue"], resolve)
+  },
+  /* 推荐单详情 */
+  {
+    path: "/resumeStore/recommendList/OrderDetail",
+    name: "OrderDetail",
+    meta: {
+      title: "推荐单详情",
+      haveParent: true,
+      parentName: "推荐纪录",
+      keepAlive: true,
+      flag: "resumeStore"
+    },
+    component: resolve =>
+      require(["@/pages/resumeStore/page/OrderDetail/index.vue"], resolve)
   },
   // 审核管理
   {
@@ -96,6 +140,7 @@ export const routes = [
       }
     ]
   },
+
   {
     path: "/check/companyCheck/verify",
     name: "companyCheckverify",
@@ -249,6 +294,7 @@ export const routes = [
     meta: { title: "用户管理", haveParent: false, keepAlive: true },
     component: resolve => require(["@/pages/user/index.vue"], resolve)
   },
+
   /* 添加用户 */
   {
     path: "/user/addUser",

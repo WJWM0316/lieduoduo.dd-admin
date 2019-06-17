@@ -20,14 +20,17 @@ dd {
   /*字体设置*/
   font-size: 14px;
   font-family: "Microsoft Yahei", sans-serif;
-  color: #ccc;
   /* 去掉列表的原点 */
   list-style: none;
   /* 默认鼠标 */
   cursor: default;
 }
-body{
-  background: #FBFBFF;
+body {
+  background: #fbfbff;
+}
+.inquire {
+  color: #ffffff !important;
+  background-color: #652791;
 }
 .pic-img {
   width: 767px;
@@ -46,10 +49,6 @@ body{
 }
 
 /*行内块元素*/
-img {
-  // max-width: 90% !important;
-  // max-height: 90% !important;
-}
 
 input,
 img {
@@ -59,7 +58,9 @@ img {
   outline-style: none;
   vertical-align: bottom;
 }
-
+.el-input--medium {
+  width: 114px !important;
+}
 /*行内元素*/
 a,
 a:active,
@@ -86,12 +87,12 @@ i {
   /*文字样式*/
   font-style: normal;
 }
-.row{
+.row {
   display: flex;
   justify-content: flex-start;
   align-items: center;
 }
-.column{
+.column {
   display: flex;
   justify-content: center;
   align-content: center;
@@ -243,7 +244,6 @@ ul {
     }
   }
 }
-
 .page-position {
   font-size: 16px;
   color: #000;
@@ -274,9 +274,9 @@ ul {
   opacity: 0;
 }
 
-.el-button--primary {
-  color: #354048 !important;
-}
+// .el-button--primary {
+//   color: #354048 !important;
+// }
 
 .el-checkbox__inner {
   border-radius: 50% !important;

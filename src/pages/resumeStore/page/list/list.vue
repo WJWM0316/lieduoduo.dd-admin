@@ -6,7 +6,7 @@
       :isShowMark="isShowMark"
       ref="methods"
     >
-      <div class="formSumbit" slot="formContent" wx-if="isShowSearch">
+      <div class="formSumbit" slot="formContent">
         <div class="formReasult">
           <el-form ref="form" :model="form" class="form">
             <el-form-item label="模糊搜索" class="formItem" prop="keyword">
@@ -14,6 +14,7 @@
             </el-form-item>
             <el-form-item label="求职状态" prop="jobStatus" class="formItem">
               <el-select v-model="form.jobStatus" placeholder="请选择">
+                <el-option label="无" value="0"></el-option>
                 <el-option
                   v-for="(item,index) in jobhuntStatusList"
                   :key="index"
@@ -150,6 +151,7 @@
           <span class="total">共 {{lastPage}} 页，{{leftcontent.total}} 条记录</span>
         </footer>
       </div>
+      <!-- 遮罩 -->
       <div v-show="isShowMark" slot="Mark">
         <div class="left comstyle" @click.stop="LeftArrow">
           <i class="el-icon-arrow-left"></i>
@@ -369,7 +371,7 @@
             </div>
             <!-- 历史记录 -->
             <div class="nowResume" v-show="nowCheck==1">
-              <div class="Numbering"> 
+              <div class="Numbering">
                 <span>简历编号：{{nowResumeMsg.vkey}}</span>
                 <span>{{nowResumeMsg.resumeUpdateTime}}更新</span>
               </div>
@@ -704,9 +706,10 @@ export default class resumeStore extends Vue {
   getData() {
     GetResumeAPI(this.form).then(res => {
       this.itemList = res.data.data;
+      // let a = this.itemList.map(item => item.vkey);
       this.leftcontent.total = parseInt(res.data.meta.total);
       this.lastPage = parseInt(res.data.meta.lastPage);
-      // console.log(this.lastPage);
+      // console.log(this.itemList.length);
       // this.$nextTick(() => {
       //   this.$set(this.leftcontent, "total", Number(res.data.meta.total));
       //   this.$set(this.leftcontent, "lastPage", Number(res.data.meta.lastPage));
@@ -719,11 +722,7 @@ export default class resumeStore extends Vue {
   // 翻页
   /* 翻页 */
   handlePageChange(nowPage) {
-    // console.log(nowPage);
-    // const el = document.getElementById("scroll");
-    // console.log(el);
-    // el.scrollTop = 0;
-    this.$refs['methods'].scrollZero()
+    this.$refs["methods"].scrollZero();
     this.form.page = nowPage;
     this.form.page = nowPage;
     this.getData();
