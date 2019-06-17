@@ -488,20 +488,18 @@ export default class OrderDetail extends Vue {
       //     /(55|54|57|58|60|61)/.test(item.interview.status)
       //   )
       // );
-      // console.log(this.tableData.find(item=>item.jobhunter.resumeNum==="opcp91m5"))
+      console.log(this.tableData.find(item=>item.jobhunter.resumeNum==="vfnehufq"))
       this.tableData.forEach(item => {
         item.jobhunter.isShowMobile = false;
         item.recrutier.isShowMobile = false;
-        console.log(item.interview);
         if (item.interview !== null) {
-          if (/(55|54|57|58|60|61)/.test(item.interview.status)) {
+          if (/(55|54|57|58|60|61|100)/.test(item.interview.status)) {
             item.interview.isAutomatic = true;
           } else {
             item.interview.isAutomatic = false;
           }
         }
       });
-      console.log(this.tableData);
     });
   }
 }
