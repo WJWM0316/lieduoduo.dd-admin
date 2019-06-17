@@ -14,7 +14,7 @@
             </el-form-item>
             <el-form-item label="求职状态" prop="jobStatus" class="formItem">
               <el-select v-model="form.jobStatus" placeholder="请选择">
-                <el-option label="无" value></el-option>
+                <el-option label="无" value="0"></el-option>
                 <el-option
                   v-for="(item,index) in jobhuntStatusList"
                   :key="index"

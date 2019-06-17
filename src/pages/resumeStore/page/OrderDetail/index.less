@@ -114,18 +114,30 @@
     }
   }
 }
-.positionName {
-  color: #000;
-  font-size: 14px;
+.positionRow {
+  display: flex;
+  justify-content:flex-start;
+  align-items: flex-start;
   span {
-    color: #652791;
-    cursor: pointer;
-    font-size: 14px;
-    padding: 0 10px;
-    width: 100px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    &:nth-child(1) {
+      font-size: 14px;
+      color: #000;
+    }
+    &:nth-child(2) {
+      color: #000;
+      font-size: 14px;
+      color: #000;
+      font-size: 14px;
+      color: #652791;
+      cursor: pointer;
+      font-size: 14px;
+      padding: 0 10px;
+      width: 100px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: inline-block;
+    }
   }
 }
 .companyName {

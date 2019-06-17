@@ -119,14 +119,14 @@
                 <p style="text-align:center">--------------------------------</p>
               </div>-->
               <div v-else-if="scope.row.interview">
-                <p class="positionName">
-                  职位:
+                <div class="positionRow">
+                  <span style>职位:</span>
                   <span
                     class="positionName"
                     @click="toPositionPath(scope.row.interview.positionId)"
                   >{{scope.row.interview.positionName}}</span>
-                  {{scope.row.interview.emolumentMin}}k-{{scope.row.interview.emolumentMax}}k
-                </p>
+                  <span>{{scope.row.interview.emolumentMin}}k-{{scope.row.interview.emolumentMax}}k</span>
+                </div>
                 <p
                   class="companyName"
                 >{{scope.row.interview.address}}{{scope.row.interview.doorplate}}</p>
@@ -363,7 +363,7 @@ export default class OrderDetail extends Vue {
         console.log(res);
         this.centerDialogVisible = false;
         this.getData();
-        this.RusultForm.note="";
+        this.RusultForm.note = "";
       });
       /* 扣点 */
     } else if (this.RusultForm.type === 2) {
@@ -374,7 +374,7 @@ export default class OrderDetail extends Vue {
         console.log(res);
         this.centerDialogVisible = false;
         this.getData();
-        this.RusultForm.note="";
+        this.RusultForm.note = "";
       });
     }
     console.log(this.RusultForm);
