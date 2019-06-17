@@ -115,11 +115,12 @@
               <div v-if="scope.row.isValid===0">
                 <p>{{scope.row.note}}</p>
               </div>
-              <!-- <div v-else-if="scope.row.interview.positionId==''">
-                <p style="text-align:center">--------------------------------</p>
-              </div>-->
+
               <div v-else-if="scope.row.interview">
-                <div class="positionRow">
+                <div v-if="scope.row.interview.positionId==0">
+                  <p style="text-align:left">--------------------</p>
+                </div>
+                <div class="positionRow" v-else>
                   <span style>职位:</span>
                   <span
                     class="positionName"
@@ -488,7 +489,9 @@ export default class OrderDetail extends Vue {
       //     /(55|54|57|58|60|61)/.test(item.interview.status)
       //   )
       // );
-      console.log(this.tableData.find(item=>item.jobhunter.resumeNum==="vfnehufq"))
+      console.log(
+        this.tableData.find(item => item.jobhunter.resumeNum === "vfnehufq")
+      );
       this.tableData.forEach(item => {
         item.jobhunter.isShowMobile = false;
         item.recrutier.isShowMobile = false;

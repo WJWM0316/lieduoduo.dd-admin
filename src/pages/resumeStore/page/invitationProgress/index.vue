@@ -140,7 +140,7 @@
                 </div>
                 <div v-else-if="scope.row.interview">
                   <p
-                    style="text-align:center"
+                    style="text-align:left"
                     v-if="scope.row.interview.positionId===0"
                   >------------------------</p>
                   <div v-else>
