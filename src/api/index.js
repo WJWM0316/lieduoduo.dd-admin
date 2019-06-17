@@ -20,7 +20,6 @@ axios.interceptors.request.use(
     config.headers.common["Authorization-Admin"] = getAccessToken();
     /* 每次发版，此处+1 */
     config.headers.common["Admin-Version"] =Version;
-    console.log(config.headers.common)
     return config;
   },
   error => {
