@@ -2,7 +2,8 @@ import axios from "axios";
 import { Loading, Message } from "element-ui";
 import router from "@/router/index";
 let loadingInstance = null;
-const packjson=require('../../package.json');
+// const packjson=require('../../package.json');
+const Version=106;
 import { getAccessToken, removeAccessToken } from "./cacheService";
 
 //开发状态
@@ -18,7 +19,7 @@ axios.interceptors.request.use(
     //  loadingInstance = Loading.service({})
     config.headers.common["Authorization-Admin"] = getAccessToken();
     /* 每次发版，此处+1 */
-    config.headers.common["Admin-Version"] =packjson.lieduoduoversion;
+    config.headers.common["Admin-Version"] =Version;
     console.log(config.headers.common)
     return config;
   },
