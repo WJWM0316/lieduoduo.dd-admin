@@ -75,6 +75,7 @@
             <div class="name">
               <span
                 style="font-weight: bold;display: inline-block; max-width: 120px;overflow: hidden;text-overflow: ellipsis;white-space:nowrap;cursor:pointer;"
+                @click.stop="showResume(props.scope.row)"
               >{{props.scope.row.jobhunterInfo.realname}}</span>
               <span
                 style="display: inline-block; max-width: 200px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;"
@@ -91,7 +92,10 @@
               <span
                 @click.stop="creatLink($event, props.scope.row.jobhunterInfo.uid, props.scope.$index, 2)"
               >扫码看简历</span>
-              <span @click.stop="showPhone($event, props.scope.row.jobhunterInfo.mobile)">联系用户</span>
+              <span
+                @click.stop="showPhone($event, props.scope.row.jobhunterInfo.mobile)"
+                v-if="AdminShow!==3&&AdminShow!==4"
+              >联系用户</span>
             </div>
           </div>
           <!-- 状态 -->
@@ -123,7 +127,10 @@
               <span
                 @click.stop="creatLink($event, props.scope.row.recruiterInfo.uid, props.scope.$index, 1)"
               >扫码看主页</span>
-              <span @click.stop="showPhone($event, props.scope.row.recruiterInfo.mobile)">联系用户</span>
+              <span
+                @click.stop="showPhone($event, props.scope.row.recruiterInfo.mobile)"
+                v-if="AdminShow!==3&&AdminShow!==4"
+              >联系用户</span>
             </div>
           </div>
           <!-- 约面信息 -->
@@ -257,7 +264,9 @@ export default class invite extends Vue {
   mobile = ""; // 当前查看的手机号码
   qrCode = "";
   address = ""; // 当前弹窗地址
+  AdminShow = "";
   created() {
+    this.AdminShow = +sessionStorage.getItem("AdminShow");
     this.init();
   }
   showCallback(val) {
@@ -286,7 +295,20 @@ export default class invite extends Vue {
       this.$refs["mobile"].style.top = e.clientY + window.scrollY + "px";
     });
   }
-
+  showResume(row) {
+    if (this.AdminShow == 3 || this.AdminShow == 4) {
+      this.$message({
+        message: "用户暂无权限"
+      });
+    } else {
+      console.log(row.jobhunterInfo.uid);
+      this.resumeId = String(row.jobhunterInfo.uid);
+      this.isShow = true;
+      this.$nextTick(() => {
+        this.$refs["resume"].getResume();
+      });
+    }
+  }
   /* 展示地址 */
   showAddress(e, address) {
     if (this.timeout !== null) clearTimeout(this.timeout);

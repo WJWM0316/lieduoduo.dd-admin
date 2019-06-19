@@ -124,7 +124,10 @@
               <span
                 @click.stop="creatLink($event, props.scope.row.recruiterInfo.uid, props.scope.$index, 1)"
               >扫码看主页</span>
-              <span v-if="AdminShow!==3&&AdminShow!==4" @click.stop="showPhone($event, props.scope.row.recruiterInfo.mobile)">联系用户</span>
+              <span
+                v-if="AdminShow!==3&&AdminShow!==4"
+                @click.stop="showPhone($event, props.scope.row.recruiterInfo.mobile)"
+              >联系用户</span>
             </div>
           </div>
           <!-- 约面信息 -->
@@ -285,12 +288,18 @@ export default class application extends Vue {
     this.getInterviewList();
   }
   showResume(row) {
-    console.log(row.jobhunterInfo.uid);
-    this.resumeId = String(row.jobhunterInfo.uid);
-    this.isShow = true;
-    this.$nextTick(() => {
-      this.$refs["resume"].getResume();
-    });
+    if (this.AdminShow == 3 || this.AdminShow == 4) {
+      this.$message({
+        message: "用户暂无权限"
+      });
+    } else {
+      console.log(row.jobhunterInfo.uid);
+      this.resumeId = String(row.jobhunterInfo.uid);
+      this.isShow = true;
+      this.$nextTick(() => {
+        this.$refs["resume"].getResume();
+      });
+    }
   }
   /* 获取列表数据 */
   getInterviewList() {
