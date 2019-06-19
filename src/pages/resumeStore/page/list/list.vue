@@ -2,10 +2,11 @@
   <div class="resumeStore">
     <lyout-content
       :leftcontent="leftcontent"
-      :isShowbtn="false"
+      :isShowbtn="true"
       ref="methods"
       @handlePageChange="handlePageChange"
     >
+      <div class="class" slot="text" @click.stop=" ">新建微简历</div>
       <div class="formSumbit" slot="formContent">
         <div class="formReasult">
           <el-form ref="form" :model="form" class="form">
@@ -360,7 +361,7 @@ export default class resumeStore extends Vue {
   }
 
   getDetail(uid, index) {
-    this.resumeId = uid;
+    this.resumeId = String(uid);
     this.isShow = true;
     this.showArrow = true;
     this.nowIndex = index;

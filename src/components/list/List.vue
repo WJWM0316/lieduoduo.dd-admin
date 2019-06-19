@@ -77,7 +77,7 @@ export default List;
 
   .list-footer {
     box-sizing: border-box;
-    z-index: 999;
+    z-index: 200;
     position: fixed;
     left: 200px;
     bottom: 0;

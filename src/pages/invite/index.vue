@@ -74,7 +74,7 @@
           <div class="jobhunter" v-if="props.scope.column.property === 'jobhunterInfo'">
             <div class="name">
               <span
-                style="font-weight: bold;display: inline-block; max-width: 120px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;"
+                style="font-weight: bold;display: inline-block; max-width: 120px;overflow: hidden;text-overflow: ellipsis;white-space:nowrap;cursor:pointer;"
               >{{props.scope.row.jobhunterInfo.realname}}</span>
               <span
                 style="display: inline-block; max-width: 200px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;"
@@ -90,7 +90,7 @@
             <div class="btn">
               <span
                 @click.stop="creatLink($event, props.scope.row.jobhunterInfo.uid, props.scope.$index, 2)"
-              >查看简历</span>
+              >扫码看简历</span>
               <span @click.stop="showPhone($event, props.scope.row.jobhunterInfo.mobile)">联系用户</span>
             </div>
           </div>
@@ -122,7 +122,7 @@
             <div class="btn">
               <span
                 @click.stop="creatLink($event, props.scope.row.recruiterInfo.uid, props.scope.$index, 1)"
-              >查看主页</span>
+              >扫码看主页</span>
               <span @click.stop="showPhone($event, props.scope.row.recruiterInfo.mobile)">联系用户</span>
             </div>
           </div>
@@ -182,6 +182,7 @@
     </div>
     <!--地址弹窗-->
     <div class="addressBox" ref="address">{{address}}</div>
+    <resume-popup :resumeId="resumeId" :isShow="isShow" @showCallback="showCallback" ref="resume"></resume-popup>
   </div>
 </template>
 
@@ -195,15 +196,19 @@ import {
   getPositionCodeUrlApi
 } from "API/interview";
 import List from "@/components/list";
+import resumePopup from "COMPONENTS/resumePopup/resumePopup";
 @Component({
   name: "invite",
   components: {
-    List
+    List,
+    resumePopup
   }
 })
 export default class invite extends Vue {
   timeout = null; // 防抖
   total = 0;
+  resumeId = ""; //当前简历id
+  isShow = false;
   fields = [
     {
       prop: "interviewId",
@@ -255,7 +260,9 @@ export default class invite extends Vue {
   created() {
     this.init();
   }
-
+  showCallback(val) {
+    this.isShow = false;
+  }
   init() {
     this.getInterviewList();
   }
@@ -412,6 +419,7 @@ export default class invite extends Vue {
 </script>
 
 <style lang="less" scoped="scoped">
+@import "./index.less";
 @import "../../style/iconfont.less";
 .application {
   margin-left: 200px;

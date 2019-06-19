@@ -9,10 +9,15 @@
         <!--筛选-->
         <div class="selectionBox" @keyup.enter="onSubmit">
           <el-form ref="form" :model="form" label-width="80px" validate="validate">
-
             <el-form-item class="content" prop="content" label-width="0">
-              <el-input type='text' placeholder="请输入内容" v-model="form.content" class="inputSelect">
-                <el-select class="selectTitle" v-model="form.searchType" slot="prepend" placeholder="请选择" @change="changeProvince">
+              <el-input type="text" placeholder="请输入内容" v-model="form.content" class="inputSelect">
+                <el-select
+                  class="selectTitle"
+                  v-model="form.searchType"
+                  slot="prepend"
+                  placeholder="请选择"
+                  @change="changeProvince"
+                >
                   <el-option label="面试ID" value="id"></el-option>
                   <el-option label="求职者" value="jobhunter"></el-option>
                   <el-option label="面试官" value="recruiter"></el-option>
@@ -27,7 +32,12 @@
             </el-form-item>
 
             <el-form-item class="state" label="状态" prop="status">
-              <el-select class="selectState" v-model="form.status" placeholder="全部状态" @change="changeProvince">
+              <el-select
+                class="selectState"
+                v-model="form.status"
+                placeholder="全部状态"
+                @change="changeProvince"
+              >
                 <el-option label="全部状态" value="0"></el-option>
                 <el-option label="待面试官处理" value="11"></el-option>
                 <el-option label="待求职者确认" value="31"></el-option>
@@ -48,325 +58,408 @@
         <!--筛选-->
       </el-main>
       <list
-          :fields="fields"
-          :list="list"
-          :total="total"
-          :page="form.page"
-          :page-count="pageCount"
-          :rowspan="3"
-          @page-change="handlePageChange">
-          
-          <template slot-scope="props" slot="columns">
-            <!-- 求职者信息 -->
-            <div class="jobhunter" v-if="props.scope.column.property === 'jobhunterInfo'">
-              <!--<div class="name">{{props.scope.row.jobhunterInfo.realname}}</div>-->
-              <div class="name">
-                <span style="font-weight: bold;display: inline-block; max-width: 120px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
-                {{props.scope.row.jobhunterInfo.realname}}
-                </span>
-                <span style="display: inline-block; max-width: 200px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;" v-if="props.scope.row.jobhunterInfo.lastPosition">
-                   · {{props.scope.row.jobhunterInfo.lastPosition}}
-                </span>
-              </div>
-              <div class="info" v-if="props.scope.row.jobhunterInfo.lastCompanyName || props.scope.row.jobhunterInfo.lastPosition"><span>{{props.scope.row.jobhunterInfo.lastCompanyName}}</span></div>
-              <div class="btn"><span @click.stop="creatLink($event, props.scope.row.jobhunterInfo.uid, props.scope.$index, 2)">查看简历</span>  <span @click.stop="showPhone($event, props.scope.row.jobhunterInfo.mobile)">联系用户</span></div>
+        :fields="fields"
+        :list="list"
+        :total="total"
+        :page="form.page"
+        :page-count="pageCount"
+        :rowspan="3"
+        @page-change="handlePageChange"
+      >
+        <template slot-scope="props" slot="columns">
+          <!-- 求职者信息 -->
+          <div class="jobhunter" v-if="props.scope.column.property === 'jobhunterInfo'">
+            <!--<div class="name">{{props.scope.row.jobhunterInfo.realname}}</div>-->
+            <div class="name">
+              <span
+                @click.stop="showResume(props.scope.row)"
+              >{{props.scope.row.jobhunterInfo.realname}}</span>
+              <span
+                style="display: inline-block; max-width: 200px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;"
+                v-if="props.scope.row.jobhunterInfo.lastPosition"
+              >· {{props.scope.row.jobhunterInfo.lastPosition}}</span>
             </div>
-            <!-- 状态 -->
-            <div class="jobhunter" v-else-if="props.scope.column.property === 'statusDesc'">
-              <div class="name arrow" v-if="props.scope.row.status !== 51">
-                <i class="icon iconfont iconjiantouzuo" v-if="props.scope.row.status === 31 || props.scope.row.status === 52"></i>
-                <i class="icon iconfont iconjiantou" v-else></i>
-              </div>
-              <div class="info status">{{props.scope.row.statusDesc}}</div>
-              <div class="btn time">{{props.scope.row.updatedAtTime * 1000 | date}}</div>
+            <div
+              class="info"
+              v-if="props.scope.row.jobhunterInfo.lastCompanyName || props.scope.row.jobhunterInfo.lastPosition"
+            >
+              <span>{{props.scope.row.jobhunterInfo.lastCompanyName}}</span>
             </div>
-            <!-- 面试官信息 -->
-            <div class="jobhunter" v-else-if="props.scope.column.property === 'recruiterInfo'">
-              <div class="name">
-                <span style="font-weight: bold;display: inline-block; max-width: 120px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
-                {{props.scope.row.recruiterInfo.realname}}
-                </span>
-                <span style="display: inline-block; max-width: 200px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
-                   · {{props.scope.row.recruiterInfo.position}}
-                </span>
-              </div>
-              <div class="info" v-if="props.scope.row.recruiterInfo.companyName"><span>{{props.scope.row.recruiterInfo.companyName}}</span>
-                
-              </div>
-              <div class="btn"><span @click.stop="creatLink($event, props.scope.row.recruiterInfo.uid, props.scope.$index, 1)">查看主页</span>  <span @click.stop="showPhone($event, props.scope.row.recruiterInfo.mobile)">联系用户</span></div>
+            <div class="btn">
+              <span
+                @click.stop="creatLink($event, props.scope.row.jobhunterInfo.uid, props.scope.$index, 2)"
+              >扫码看简历</span>
+              <span
+                v-if="AdminShow!==3&&AdminShow!==4"
+                @click.stop="showPhone($event, props.scope.row.jobhunterInfo.mobile)"
+              >联系用户</span>
             </div>
-            <!-- 约面信息 -->
-            <div class="jobhunter" v-else-if="props.scope.column.property === 'interviewInfo'">
-              <div class="name" v-if="props.scope.row.positionName">职位：<span class="btn positionName" @click.stop="creatLink($event, props.scope.row.positionId, props.scope.$index, 3)">{{props.scope.row.positionName}}</span><span style="display: inline-block;">{{props.scope.row.emolument}}</span></div>
-              <div class="name" v-else><span>职位：直接约面</span></div>
-              <div class="info"><span style="position: relative;" @mousemove="showAddress($event, props.scope.row.address)" @mouseout="debounce(100)">地址：{{props.scope.row.address || '未设置面试地址'}} <span class="addre"></span></span></div>
-              <div class="btn" v-if="props.scope.row.arrangementInfo && props.scope.row.arrangementInfo.appointmentTime">时间：{{props.scope.row.arrangementInfo.appointmentTime*1000 | date}}</div>
+          </div>
+          <!-- 状态 -->
+          <div class="jobhunter" v-else-if="props.scope.column.property === 'statusDesc'">
+            <div class="name arrow" v-if="props.scope.row.status !== 51">
+              <i
+                class="icon iconfont iconjiantouzuo"
+                v-if="props.scope.row.status === 31 || props.scope.row.status === 52"
+              ></i>
+              <i class="icon iconfont iconjiantou" v-else></i>
             </div>
-            <template v-else><span :class="{'row-delete': props.scope.row.status !== 1}">{{props.scope.row[props.scope.column.property]}}</span></template>
+            <div class="info status">{{props.scope.row.statusDesc}}</div>
+            <div class="btn time">{{props.scope.row.updatedAtTime * 1000 | date}}</div>
+          </div>
+          <!-- 面试官信息 -->
+          <div class="jobhunter" v-else-if="props.scope.column.property === 'recruiterInfo'">
+            <div class="name">
+              <span
+                style="font-weight: bold;display: inline-block; max-width: 120px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;"
+              >{{props.scope.row.recruiterInfo.realname}}</span>
+              <span
+                style="display: inline-block; max-width: 200px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;"
+              >· {{props.scope.row.recruiterInfo.position}}</span>
+            </div>
+            <div class="info" v-if="props.scope.row.recruiterInfo.companyName">
+              <span>{{props.scope.row.recruiterInfo.companyName}}</span>
+            </div>
+            <div class="btn">
+              <span
+                @click.stop="creatLink($event, props.scope.row.recruiterInfo.uid, props.scope.$index, 1)"
+              >扫码看主页</span>
+              <span v-if="AdminShow!==3&&AdminShow!==4" @click.stop="showPhone($event, props.scope.row.recruiterInfo.mobile)">联系用户</span>
+            </div>
+          </div>
+          <!-- 约面信息 -->
+          <div class="jobhunter" v-else-if="props.scope.column.property === 'interviewInfo'">
+            <div class="name" v-if="props.scope.row.positionName">
+              职位：
+              <span
+                class="btn positionName"
+                @click.stop="toPath(props.scope.row.positionId)"
+              >{{props.scope.row.positionName}}</span>
+              <span style="display: inline-block;">{{props.scope.row.emolument}}</span>
+              <span
+                class="btn positionName"
+                @click.stop="creatLink($event, props.scope.row.positionId, props.scope.$index, 3)"
+              >扫码看职位</span>
+            </div>
+            <div class="name" v-else>
+              <span style="cursor:auto">职位：直接约面</span>
+            </div>
+            <div class="info">
+              <span
+                style="position: relative;"
+                @mousemove="showAddress($event, props.scope.row.address)"
+                @mouseout="debounce(100)"
+              >
+                地址：{{props.scope.row.address || '未设置面试地址'}}
+                <span class="addre"></span>
+              </span>
+            </div>
+            <div
+              class="btn"
+              v-if="props.scope.row.arrangementInfo && props.scope.row.arrangementInfo.appointmentTime"
+            >时间：{{props.scope.row.arrangementInfo.appointmentTime*1000 | date}}</div>
+          </div>
+          <template v-else>
+            <span
+              :class="{'row-delete': props.scope.row.status !== 1}"
+            >{{props.scope.row[props.scope.column.property]}}</span>
           </template>
+        </template>
       </list>
     </el-container>
     <!--电话号码展示框-->
     <div class="phone" ref="mobile">
       {{mobile}}
-      <img class="phoneBg" src="../../assets/number_bg.png"/>
+      <img class="phoneBg" src="../../assets/number_bg.png">
     </div>
     <!--小程序码展示框-->
     <div class="qrCode" ref="qrCode">
-      <img class="bg" src="../../assets/code_bg.png"/>
-      <div style="height: 100%;display: flex; align-items: center;flex-direction: column;justify-content: center;" v-if="!qrCode">
-        <img style="height: 38px;width: 38px;" src="../../assets/loading.gif"/>
+      <img class="bg" src="../../assets/code_bg.png">
+      <div
+        style="height: 100%;display: flex; align-items: center;flex-direction: column;justify-content: center;"
+        v-if="!qrCode"
+      >
+        <img style="height: 38px;width: 38px;" src="../../assets/loading.gif">
         <div class="txt">正在加载中…</div>
       </div>
       <div v-else>
-        <img class="Qr" :src="qrCode"/>
+        <img class="Qr" :src="qrCode">
         <div class="txt">微信扫码，打开小程序查看</div>
       </div>
     </div>
     <!--地址弹窗-->
-    <div class="addressBox" ref="address">
-      {{address}}
-    </div>
+    <div class="addressBox" ref="address">{{address}}</div>
+    <resume-popup :resumeId="resumeId" :isShow="isShow" @showCallback="showCallback" ref="resume"></resume-popup>
   </div>
 </template>
 
 <script>
-  import Vue from 'vue'
-  import Component from 'vue-class-component'
-  import { getApplyListApi, getResumeCodeUrlApi, getRecruiterCodeUrlApi, getPositionCodeUrlApi } from 'API/interview'
-  import List from '@/components/list'
-  @Component({
-  name: 'application',
+import Vue from "vue";
+import Component from "vue-class-component";
+import resumePopup from "COMPONENTS/resumePopup/resumePopup";
+import {
+  getApplyListApi,
+  getResumeCodeUrlApi,
+  getRecruiterCodeUrlApi,
+  getPositionCodeUrlApi
+} from "API/interview";
+import List from "@/components/list";
+@Component({
+  name: "application",
   components: {
-    List
+    List,
+    resumePopup
   }
 })
-  export default class application extends Vue {
-    timeout = null // 防抖
-    total = 0
-    fields = [
+export default class application extends Vue {
+  timeout = null; // 防抖
+  total = 0;
+  resumeId = "";
+  isShow = false;
+  fields = [
     {
-      prop: 'interviewId',
-      label: '面试ID',
-      minWidth: '8%'
-//    width: 100
+      prop: "interviewId",
+      label: "面试ID",
+      minWidth: "8%"
+      //    width: 100
     },
     {
-      prop: 'jobhunterInfo',
-      label: '求职者信息',
-      minWidth: '25%',
-//    width: 300,
-      align: 'left'
+      prop: "jobhunterInfo",
+      label: "求职者信息",
+      minWidth: "25%",
+      //    width: 300,
+      align: "left"
     },
     {
-      prop: 'statusDesc',
-      label: '状态',
-      minWidth: '20%'
-//    width: 200
+      prop: "statusDesc",
+      label: "状态",
+      minWidth: "20%"
+      //    width: 200
     },
     {
-      prop: 'recruiterInfo',
-      label: '面试官信息',
-      minWidth: '25%',
-//    width: 300,
-      align: 'left'
+      prop: "recruiterInfo",
+      label: "面试官信息",
+      minWidth: "25%",
+      //    width: 300,
+      align: "left"
     },
     {
-      prop: 'interviewInfo',
-      label: '约面信息',
-      minWidth: '31%',
-//    width: 500,
-      align: 'left'
+      prop: "interviewInfo",
+      label: "约面信息",
+      minWidth: "31%",
+      //    width: 500,
+      align: "left"
     }
-  ]
-    form = {
-      searchType: 'id',
-      content: '',
-      status: '0',
-      companyName: '',
-      page: 1,
-      count: 20
-    }
-    list = []
-    pageCount = 0 // 请求回的数据共几页
-    mobile = '' // 当前查看的手机号码
-    qrCode = ''
-    address = ''
-    created () {
-      this.init()
-    }
-    
-    init () {
-      this.getInterviewList()
-    }
-    
-    /* 获取列表数据 */
-    getInterviewList () {
-      getApplyListApi(this.form).then(res => {
-        this.list = res.data.data
-        this.total = res.data.meta.total
-        this.pageCount = res.data.meta.lastPage
-      })
-    }
-    
-    /* 展示手机 */
-    showPhone (e, mobile) {
-      if(this.timeout !== null) clearTimeout(this.timeout)
-      this.mobile = mobile || '用户未绑定手机'
+  ];
+  form = {
+    searchType: "id",
+    content: "",
+    status: "0",
+    companyName: "",
+    page: 1,
+    count: 20
+  };
+  list = [];
+  pageCount = 0; // 请求回的数据共几页
+  mobile = ""; // 当前查看的手机号码
+  qrCode = "";
+  AdminShow = ""; /* 权限字段 */
+  address = "";
+  toPath(id) {
+    console.log(id);
+    let routeUrl = this.$router.resolve({
+      path: "/positionManage/positionAuditDetail",
+      query: { id }
+    });
+    window.open(routeUrl.href, "_blank");
+  }
+  showCallback(val) {
+    this.isShow = false;
+  }
+  created() {
+    this.AdminShow = +sessionStorage.getItem("AdminShow");
+    this.init();
+  }
+
+  init() {
+    this.getInterviewList();
+  }
+  showResume(row) {
+    console.log(row.jobhunterInfo.uid);
+    this.resumeId = String(row.jobhunterInfo.uid);
+    this.isShow = true;
+    this.$nextTick(() => {
+      this.$refs["resume"].getResume();
+    });
+  }
+  /* 获取列表数据 */
+  getInterviewList() {
+    getApplyListApi(this.form).then(res => {
+      this.list = res.data.data;
+      this.total = res.data.meta.total;
+      this.pageCount = res.data.meta.lastPage;
+    });
+  }
+
+  /* 展示手机 */
+  showPhone(e, mobile) {
+    if (this.timeout !== null) clearTimeout(this.timeout);
+    this.mobile = mobile || "用户未绑定手机";
+    this.$nextTick(() => {
+      this.$refs["mobile"].style.display = "block";
+      this.$refs["mobile"].style.left = e.clientX + "px";
+      this.$refs["mobile"].style.top = e.clientY + window.scrollY + "px";
+    });
+  }
+
+  /* 展示地址 */
+  showAddress(e, address) {
+    if (this.timeout !== null) clearTimeout(this.timeout);
+    this.address = address;
+    this.$nextTick(() => {
+      this.$refs["address"].style.display = "block";
+      this.$refs["address"].style.left = e.clientX + "px";
+      this.$refs["address"].style.top = e.clientY + 20 + window.scrollY + "px";
+    });
+  }
+  hideAdress() {
+    this.address = "";
+    this.$nextTick(() => {
+      this.$refs["address"].style.display = "none";
+    });
+  }
+
+  /* 生成小程序码 */
+  async creatLink(e, uid, index, type) {
+    this.qrCode = "";
+    // 是否已经加载过二维码
+    if (this.list[index].qrCode && type === 1) {
+      this.qrCode = this.list[index].qrCode;
       this.$nextTick(() => {
-        this.$refs['mobile'].style.display = 'block'
-        this.$refs['mobile'].style.left = e.clientX + 'px'
-        this.$refs['mobile'].style.top = e.clientY + window.scrollY + 'px'
-      })
-    }
-    
-    /* 展示地址 */
-    showAddress (e, address) {
-      if(this.timeout !== null) clearTimeout(this.timeout)
-      this.address = address
+        this.$refs["qrCode"].style.display = "block";
+        this.$refs["qrCode"].style.left = e.clientX + "px";
+        this.$refs["qrCode"].style.top = e.clientY + window.scrollY + "px";
+      });
+      return;
+    } else if (this.list[index].resumeQrCode && type === 2) {
+      this.qrCode = this.list[index].resumeQrCode;
       this.$nextTick(() => {
-        this.$refs['address'].style.display = 'block'
-        this.$refs['address'].style.left = e.clientX + 'px'
-        this.$refs['address'].style.top = e.clientY + 20 + window.scrollY +  'px'
-      })
-    }
-    hideAdress () {
-      this.address = ''
+        this.$refs["qrCode"].style.display = "block";
+        this.$refs["qrCode"].style.left = e.clientX + "px";
+        this.$refs["qrCode"].style.top = e.clientY + window.scrollY + "px";
+      });
+      return;
+    } else if (this.list[index].jobQrCode && type === 3) {
+      this.qrCode = this.list[index].jobQrCode;
       this.$nextTick(() => {
-        this.$refs['address'].style.display = 'none'
-      })
+        this.$refs["qrCode"].style.display = "block";
+        this.$refs["qrCode"].style.left = e.clientX + "px";
+        this.$refs["qrCode"].style.top = e.clientY + window.scrollY + "px";
+      });
+      return;
     }
-    
-    /* 生成小程序码 */
-    async creatLink (e, uid, index, type) {
-      this.qrCode = ''
-      // 是否已经加载过二维码
-      if (this.list[index].qrCode && type === 1) {
-        this.qrCode = this.list[index].qrCode
-        this.$nextTick(() => {
-          this.$refs['qrCode'].style.display = 'block'
-          this.$refs['qrCode'].style.left = e.clientX + 'px'
-          this.$refs['qrCode'].style.top = e.clientY + window.scrollY + 'px'
-        })
-        return
-      } else if (this.list[index].resumeQrCode && type === 2) {
-        this.qrCode = this.list[index].resumeQrCode
-        this.$nextTick(() => {
-          this.$refs['qrCode'].style.display = 'block'
-          this.$refs['qrCode'].style.left = e.clientX + 'px'
-          this.$refs['qrCode'].style.top = e.clientY + window.scrollY + 'px'
-        })
-        return
-      } else if (this.list[index].jobQrCode && type === 3) {
-        this.qrCode = this.list[index].jobQrCode
-        this.$nextTick(() => {
-          this.$refs['qrCode'].style.display = 'block'
-          this.$refs['qrCode'].style.left = e.clientX + 'px'
-          this.$refs['qrCode'].style.top = e.clientY + window.scrollY + 'px'
-        })
-        return
-      }
-      this.$nextTick(() => {
-        this.$refs['qrCode'].style.display = 'block'
-        this.$refs['qrCode'].style.left = e.clientX + 'px'
-        this.$refs['qrCode'].style.top = e.clientY + window.scrollY + 'px'
-      })
-      let res = await this.getQr(type, uid)
-      if (type === 1) {
-        this.qrCode = res.data.data.qrCodeUrl
-        this.list[index].qrCode = res.data.data.qrCodeUrl
-      } else if (type === 2) {
-        this.qrCode = res.data.data.qrCodeUrl
-        this.list[index].resumeQrCode = res.data.data.qrCodeUrl
-      } else {
-        this.qrCode = res.data.data.qrCodeUrl
-        this.list[index].jobQrCode = res.data.data.qrCodeUrl
-      }
-    }
-    
-    /* 生成二维码 */
-    getQr (type, uid) {
-      switch (type) {
-        case 1:
-          return getRecruiterCodeUrlApi({id: uid})
-          break;
-        case 2:
-          return getResumeCodeUrlApi({id: uid})
-          break;
-        case 3: 
-          if (uid === 0) return
-          return getPositionCodeUrlApi({id: uid})
-          break;
-      }
-    }
-    
-    hiddenPhone () {
-      this.$nextTick(() => {
-        this.$refs['mobile'].style.display = 'none'
-      })
-    }
-    
-    hiddenQr () {
-      this.$nextTick(() => {
-        this.$refs['qrCode'].style.display = 'none'
-      })
-    }
-    
-    /* 关闭浮窗 */
-    closeTopic () {
-      this.$nextTick(() => {
-        this.$refs['mobile'].style.display = 'none'
-        this.$refs['qrCode'].style.display = 'none'
-      })
-    }
-    
-    /* 查询 */
-    onSubmit () {
-      this.form.page = 1
-      this.getInterviewList()
-    }
-    /* 选择变更 */
-    changeProvince (e) {}
-    
-    /* 清除列表选项 */
-    resetForm (name) {
-      this.$refs[name].resetFields()
-    }
-    
-    /* 翻页 */
-    handlePageChange (nowPage) {
-      this.$route.meta.scrollY = 0
-      window.scrollTo(0, 0)
-      this.form.page = nowPage
-      this.getInterviewList()
-    }
-    /* 防抖 */
-    debounce (wait) {
-      let that = this
-      if(this.timeout !== null) clearTimeout(that.timeout)
-      this.timeout = setTimeout(that.hideAdress, wait)
+    this.$nextTick(() => {
+      this.$refs["qrCode"].style.display = "block";
+      this.$refs["qrCode"].style.left = e.clientX + "px";
+      this.$refs["qrCode"].style.top = e.clientY + window.scrollY + "px";
+    });
+    let res = await this.getQr(type, uid);
+    if (type === 1) {
+      this.qrCode = res.data.data.qrCodeUrl;
+      this.list[index].qrCode = res.data.data.qrCodeUrl;
+    } else if (type === 2) {
+      this.qrCode = res.data.data.qrCodeUrl;
+      this.list[index].resumeQrCode = res.data.data.qrCodeUrl;
+    } else {
+      this.qrCode = res.data.data.qrCodeUrl;
+      this.list[index].jobQrCode = res.data.data.qrCodeUrl;
     }
   }
+
+  /* 生成二维码 */
+  getQr(type, uid) {
+    switch (type) {
+      case 1:
+        return getRecruiterCodeUrlApi({ id: uid });
+        break;
+      case 2:
+        return getResumeCodeUrlApi({ id: uid });
+        break;
+      case 3:
+        if (uid === 0) return;
+        return getPositionCodeUrlApi({ id: uid });
+        break;
+    }
+  }
+
+  hiddenPhone() {
+    this.$nextTick(() => {
+      this.$refs["mobile"].style.display = "none";
+    });
+  }
+
+  hiddenQr() {
+    this.$nextTick(() => {
+      this.$refs["qrCode"].style.display = "none";
+    });
+  }
+
+  /* 关闭浮窗 */
+  closeTopic() {
+    this.$nextTick(() => {
+      this.$refs["mobile"].style.display = "none";
+      this.$refs["qrCode"].style.display = "none";
+    });
+  }
+
+  /* 查询 */
+  onSubmit() {
+    this.form.page = 1;
+    this.getInterviewList();
+  }
+  /* 选择变更 */
+  changeProvince(e) {}
+
+  /* 清除列表选项 */
+  resetForm(name) {
+    this.$refs[name].resetFields();
+  }
+
+  /* 翻页 */
+  handlePageChange(nowPage) {
+    this.$route.meta.scrollY = 0;
+    window.scrollTo(0, 0);
+    this.form.page = nowPage;
+    this.getInterviewList();
+  }
+  /* 防抖 */
+  debounce(wait) {
+    let that = this;
+    if (this.timeout !== null) clearTimeout(that.timeout);
+    this.timeout = setTimeout(that.hideAdress, wait);
+  }
+}
 </script>
 
 <style lang="less" scoped="scoped">
 @import "../../style/iconfont.less";
+@import "./index.less";
 .application {
   margin-left: 200px;
-  .container{
+  .container {
     min-width: 1000px;
     margin: 22px;
   }
-  .header{
+  .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    .title{
+    .title {
       display: flex;
       align-items: center;
       position: relative;
       font-size: 15px;
-      &::before{
+      &::before {
         background: #ffe266;
         content: "";
         display: inline-block;
@@ -377,48 +470,48 @@
         width: 6px;
       }
     }
-    .creatBtn{
+    .creatBtn {
       font-size: 14px;
       padding: 12px 20px;
       background-color: #ffe266;
       border-radius: 4px;
     }
   }
-  .el-form{
-    .el-input{
+  .el-form {
+    .el-input {
       width: 200px;
     }
-    
+
     &::after {
-      content: '';
+      content: "";
       display: block;
       height: 0;
       clear: both;
     }
   }
-  .el-form-item{
+  .el-form-item {
     float: left;
   }
   /* 按钮 */
-  .btn{
+  .btn {
     float: right;
-    .inquire{
-      color: #FFFFFF;
+    .inquire {
+      color: #ffffff;
       background-color: #652791;
     }
-    span{
+    span {
       white-space: nowrap;
-      user-select:none;
+      user-select: none;
       cursor: pointer;
       line-height: 12px;
       color: #652791;
     }
   }
   /* 筛选 */
-  .inputSelect{
+  .inputSelect {
     width: 400px !important;
-    background-color: #FFFFFF;
-    .el-select{
+    background-color: #ffffff;
+    .el-select {
       width: 120px;
       margin-top: -2px;
       border: none;
@@ -428,10 +521,10 @@
       background-color: #fff;
     }
   }
-  .selectState{
+  .selectState {
     float: left;
   }
-  .jobhunter{
+  .jobhunter {
     .name,
     .info,
     .btn {
@@ -444,16 +537,16 @@
     }
     .arrow,
     .status,
-    .time{
+    .time {
       justify-content: flex-start;
       text-align: start;
     }
-    
+
     .status {
       font-weight: 500;
       color: #282828;
     }
-    
+
     .name {
       display: flex;
       height: 22px;
@@ -461,25 +554,25 @@
       /*line-height: 16px;*/
       .btn {
         white-space: nowrap;
-        user-select:none;
+        user-select: none;
         cursor: pointer;
         color: #652791;
       }
       .positionName {
         display: inline-block;
-        max-width: 200px;
+        max-width: 76px;
         white-space: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;
       }
-      &.arrow{
-        color: #BCBCBC;
+      &.arrow {
+        color: #bcbcbc;
       }
     }
     span {
       margin-right: 10px;
     }
-    .btn{
+    .btn {
       float: none;
       position: relative;
       font-size: 15px;
@@ -491,7 +584,7 @@
     }
     .mobile {
       display: inline-block;
-      background-color: #FFFFFF;
+      background-color: #ffffff;
       color: #652791;
       position: absolute;
       top: 0;
@@ -524,12 +617,12 @@
     height: 300px;
     /*background-color: #CCCCCC;*/
     transform: translateY(-100%) translateX(-50%);
-    .Qr{
+    .Qr {
       width: 200px;
       height: 200px;
       margin-top: 30px;
     }
-    .bg{
+    .bg {
       width: 100%;
       height: 100%;
       max-width: 100%;
@@ -539,14 +632,14 @@
       left: 0;
       z-index: -1;
     }
-    .txt{
+    .txt {
       line-height: normal;
-      color: #5C565D;
+      color: #5c565d;
       margin-top: 5px;
     }
   }
   /* 地址弹窗  */
-  .addressBox{
+  .addressBox {
     text-align: left;
     position: absolute;
     padding: 6px 8px;
@@ -556,9 +649,9 @@
     top: 0;
     left: 0;
     color: #354048;
-    background-color: #F8F8F8;
-    box-shadow:0px 6px 8px 0px rgba(0,0,0,0.24);
-    border:1px solid rgba(237,237,237,1);
+    background-color: #f8f8f8;
+    box-shadow: 0px 6px 8px 0px rgba(0, 0, 0, 0.24);
+    border: 1px solid rgba(237, 237, 237, 1);
     z-index: 999;
   }
 }

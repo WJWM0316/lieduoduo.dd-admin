@@ -21,7 +21,7 @@
           </span>
         </div>
         <div class="editBox">
-          <div v-if="AdminShow==0||AdminShow==1||AdminShow==2" style="display:inline-block;">
+          <div v-if="AdminShow==0||AdminShow==1||AdminShow==2" style="display:inline-block;margin-right:10px;">
             <el-button
               class="inquire"
               @click="Review(positionData.id)"

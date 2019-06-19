@@ -105,7 +105,7 @@
               <div
                 style="width: 100%; cursor: pointer; color: #652791;"
                 @click.stop="creatLink($event, props.scope.row.id, props.scope.$index)"
-              >查看职位</div>
+              >扫码看职位</div>
             </div>
 
             <div
@@ -363,15 +363,25 @@ export default class companyCheck extends Vue {
     });
   }
   toPath(row) {
-    let obj = JSON.stringify(row);
-    this.$router.push({
-      path: "/resumeStore/recommendList/createOrder",
-      query: {
-        obj,
-        frompostion: true,
-        isFocus: true
-      }
-    });
+    if (!row.companyInfo.consultant) {
+      this.$message({
+        message: "没开通服务"
+      });
+    } else if (row.isOnline === 2) {
+      this.$message({
+        message: "职位已下线"
+      });
+    } else {
+      let obj = JSON.stringify(row);
+      this.$router.push({
+        path: "/resumeStore/recommendList/createOrder",
+        query: {
+          obj,
+          frompostion: true,
+          isFocus: true
+        }
+      });
+    }
   }
   /* 关闭浮窗 */
   closeTopic() {
