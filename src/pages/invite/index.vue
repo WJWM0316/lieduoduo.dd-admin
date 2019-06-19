@@ -203,7 +203,7 @@ import {
   getPositionCodeUrlApi
 } from "API/interview";
 import List from "@/components/list";
-import resumePopup from "COMPONENTS/resumePopup/resumePopup";
+import resumePopup from "COMPONENTS/resumePopup/resumePopup.vue";
 @Component({
   name: "invite",
   components: {

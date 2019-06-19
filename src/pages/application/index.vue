@@ -199,7 +199,7 @@
 <script>
 import Vue from "vue";
 import Component from "vue-class-component";
-import resumePopup from "COMPONENTS/resumePopup/resumePopup";
+import resumePopup from "COMPONENTS/resumePopup/resumePopup.vue";
 import {
   getApplyListApi,
   getResumeCodeUrlApi,
