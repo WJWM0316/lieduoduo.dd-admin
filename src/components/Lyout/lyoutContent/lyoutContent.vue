@@ -17,11 +17,21 @@
       <!-- 数据table -->
       <slot name="dataList"></slot>
       <!-- 分页 -->
-      <slot name="pageList"></slot>
-      <!-- 遮罩层，如有需要可在遮罩层添加块 -->
-      <div class="Mark" v-if="isShowMark">
-        <slot name="Mark"></slot>
+      <div class="pageList" slot="pageList">
+        <!-- v-if="hasPagination" v-show="total > 0" -->
+        <footer class="list-footer">
+          <el-pagination
+            layout="prev, pager, next, slot"
+            :current-page="leftcontent.page"
+            :page-size="20"
+            :total="leftcontent.total"
+            @current-change="handlePageChange"
+          ></el-pagination>
+          <span class="total">共 {{leftcontent.lastPage}} 页，{{leftcontent.total}} 条记录</span>
+        </footer>
       </div>
+      <!-- 遮罩层，如有需要可在遮罩层添加块 -->
+      <!-- <div class="Mark" v-if="isShowMark"></div> -->
     </section>
   </div>
 </template>
@@ -46,9 +56,9 @@ import Component from "vue-class-component";
         total: 0
       }
     },
-    isShowMark: {
-      type: Boolean, //是否展示遮罩
-      default: false
+    lastPage: {
+      type: String,
+      default: ""
     }
   }
 })
@@ -58,6 +68,9 @@ export default class lyoutContent extends Vue {
     const el = document.getElementById("lyoutScroll");
     // console.log(el);
     el.scrollTop = 0;
+  }
+  handlePageChange(nowPage) {
+    this.$emit("handlePageChange", nowPage);
   }
 }
 </script>
@@ -128,15 +141,7 @@ export default class lyoutContent extends Vue {
     }
   }
 }
-.Mark {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(0, 0, 0, 0.7);
-  z-index: 1000;
-}
+
 .formSumbit {
   background: #fff;
 
@@ -147,5 +152,23 @@ export default class lyoutContent extends Vue {
       background-color: #652791;
     }
   }
+}
+.list-footer {
+  box-sizing: border-box;
+  z-index: 999;
+  position: fixed;
+  left: 200px;
+  bottom: 0;
+  padding-left: 200px;
+  padding: 8px;
+  padding-left: 52px;
+  width: 100%;
+  background-color: #ffffff;
+  box-shadow: 0px -1px 0px 0px rgba(232, 233, 235, 1);
+  border: 1px solid #e8e9eb;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
 }
 </style>

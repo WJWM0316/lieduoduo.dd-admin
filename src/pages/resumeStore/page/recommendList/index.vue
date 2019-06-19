@@ -1,7 +1,7 @@
 <!--  -->
 <template>
   <div class="recommendList">
-    <lyout-content :leftcontent="leftcontent" :isShowbtn="true" ref="methods">
+    <lyout-content :leftcontent="leftcontent" :isShowbtn="true" ref="methods" @handlePageChange="handlePageChange">
       <div class="class" slot="text" @click.stop="toTabBlock">新建推荐单</div>
       <div class="formSumbit" slot="formContent">
         <div class="formReasult">
@@ -127,18 +127,6 @@
           </el-table-column>
         </el-table>
       </div>
-      <div class="pageList" slot="pageList">
-        <footer class="list-footer">
-          <el-pagination
-            layout="prev, pager, next, slot"
-            :current-page="page"
-            :page-size="20"
-            :total="leftcontent.total"
-            @current-change="handlePageChange"
-          ></el-pagination>
-          <span class="total">共 {{lastPage}} 页，{{leftcontent.total}} 条记录</span>
-        </footer>
-      </div>
     </lyout-content>
   </div>
 </template>
@@ -176,7 +164,9 @@ export default class recommend extends Vue {
   };
   leftcontent = {
     total: 0,
-    title: "推荐列表"
+    title: "推荐列表",
+    lastPage: "",
+    page: 1 //当前显示页
   };
   toTabBlock() {
     this.$router.push({
@@ -221,14 +211,14 @@ export default class recommend extends Vue {
     // console.log("ob", obj);
     recommendList(obj).then(res => {
       this.tableData = res.data.data;
-      this.lastPage = res.data.meta.lastPage;
+      this.leftcontent.lastPage = res.data.meta.lastPage;
       this.leftcontent.total = res.data.meta.total;
 
       // console.log(this.tableData);
     });
   }
   handlePageChange(nowPage) {
-    console.log(nowPage);
+    // console.log(nowPage);
     this.$refs["methods"].scrollZero();
     this.form.page = nowPage;
     this.form.page = nowPage;

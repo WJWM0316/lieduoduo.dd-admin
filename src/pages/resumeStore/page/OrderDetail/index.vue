@@ -338,7 +338,7 @@ export default class OrderDetail extends Vue {
   }
   /* 展示手机 */
   showPhone(e, mobile) {
-    console.log(mobile);
+    // console.log(mobile);
     if (this.timeout !== null) clearTimeout(this.timeout);
     this.mobile = mobile || "用户未绑定手机";
     this.$nextTick(() => {
@@ -357,28 +357,28 @@ export default class OrderDetail extends Vue {
       return;
     }
     if (this.RusultForm.type === 1) {
-      console.log("扣点");
+      // console.log("扣点");
       recommendPay(this.RusultForm.recommendId, {
         note: this.RusultForm.note
       }).then(res => {
-        console.log(res);
+        // console.log(res);
         this.centerDialogVisible = false;
         this.getData();
         this.RusultForm.note = "";
       });
       /* 扣点 */
     } else if (this.RusultForm.type === 2) {
-      console.log("返点"); /* 返点 */
+      // console.log("返点"); /* 返点 */
       refund(this.RusultForm.recommendId, {
         note: this.RusultForm.note
       }).then(res => {
-        console.log(res);
+        // console.log(res);
         this.centerDialogVisible = false;
         this.getData();
         this.RusultForm.note = "";
       });
     }
-    console.log(this.RusultForm);
+    // console.log(this.RusultForm);
   }
   created() {
     this.getData();
@@ -401,7 +401,7 @@ export default class OrderDetail extends Vue {
     }
   }
   toPositionPath(id) {
-    console.log(id);
+    // console.log(id);
     this.$router.push({
       path: "/positionManage/positionAuditDetail",
       query: { id }
@@ -479,21 +479,13 @@ export default class OrderDetail extends Vue {
   }
   getData() {
     let { id } = this.$route.query;
-    console.log(id);
+    // console.log(id);
     recommendDetail(id).then(res => {
       // console.log(res);
       this.baseMsg = res.data.data.listInfo;
       this.tableData = res.data.data.recommends;
-      // console.log(
-      //   this.tableData.filter(item =>
-      //     /(55|54|57|58|60|61)/.test(item.interview.status)
-      //   )
-      // );
-      console.log(
-        this.tableData.find(item => item.jobhunter.resumeNum === "vfnehufq")
-      );
       this.tableData.forEach(item => {
-        item.jobhunter.isShowMobile = false;
+          item.jobhunter.isShowMobile = false;
         item.recrutier.isShowMobile = false;
         if (item.interview !== null) {
           if (/(55|54|57|58|60|61)/.test(item.interview.status)) {

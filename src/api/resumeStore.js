@@ -57,7 +57,7 @@ export const recommendDetail = uid =>
     type: "get"
   });
 // 添加简历历史记录
-export const addHistory = (uid,data) =>
+export const addHistory = (uid, data) =>
   request({
     url: `/resume/history/${uid}`,
     type: "post",

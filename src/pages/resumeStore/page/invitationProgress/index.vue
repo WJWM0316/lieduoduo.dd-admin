@@ -1,7 +1,7 @@
 <!--  -->
 <template>
   <div class="invitPro" @click.stop="closeTopic">
-    <lyout-content :leftcontent="leftcontent" ref="methods">
+    <lyout-content :leftcontent="leftcontent" ref="methods" @handlePageChange="handlePageChange">
       <div class="formSumbit" slot="formContent">
         <div class="formReasult">
           <el-form ref="form" :inline="true" :model="form" class="form">
@@ -202,18 +202,6 @@
               </template>
             </el-table-column>
           </el-table>
-          <div class="pageList" slot="pageList">
-            <footer class="list-footer">
-              <el-pagination
-                layout="prev, pager, next, slot"
-                :current-page="page"
-                :page-size="20"
-                :total="leftcontent.total"
-                @current-change="handlePageChange"
-              ></el-pagination>
-              <span class="total">共 {{lastPage}} 页，{{leftcontent.total}} 条记录</span>
-            </footer>
-          </div>
         </div>
       </div>
     </lyout-content>
@@ -301,7 +289,9 @@ export default class invitPro extends Vue {
 
   leftcontent = {
     total: 0,
-    title: "邀约进展"
+    title: "邀约进展",
+    lastPage:"",
+    page:1
   };
   handlePageChange(nowPage) {
     // console.log(nowPage);
@@ -338,7 +328,7 @@ export default class invitPro extends Vue {
     let obj = this.forEachKeys(this.form);
     interviewsList(obj).then(res => {
       this.tableData = res.data.data;
-      this.lastPage = res.data.meta.lastPage;
+      this.leftcontent.lastPage = res.data.meta.lastPage;
       this.leftcontent.total = res.data.meta.total;
       this.tableData.forEach(item => {
         item.jobhunter.isShowMobile = false;
