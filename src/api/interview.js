@@ -9,7 +9,11 @@ export const getApplyListApi = data => request({
   type: 'get',
   data
 })
-
+/* 获取不合适评价内容 */
+export const getInterviewComment = uid => request({
+  url: `/interview/getInterviewComment?interviewId=${uid}`,
+  type: 'get',
+})
 /* 面试邀请列表 */
 export const getInviteListApi = data => request({
   url: '/interview/invite',

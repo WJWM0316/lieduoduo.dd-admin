@@ -104,6 +104,11 @@
               ></i>
               <i class="icon iconfont iconjiantou" v-else></i>
             </div>
+            <span
+              class="disContents"
+              v-if="props.scope.row.status===52"
+              @click.stop="sayResult(props.scope.row.interviewId)"
+            >原因</span>
             <div class="info status">{{props.scope.row.statusDesc}}</div>
             <div class="btn time">{{props.scope.row.updatedAtTime * 1000 | date}}</div>
           </div>
@@ -192,6 +197,9 @@
     </div>
     <!--地址弹窗-->
     <div class="addressBox" ref="address">{{address}}</div>
+    <el-dialog title="不合适原因" :visible.sync="centerDialogVisible" width="30%" center>
+      <span>{{reason}}</span>
+    </el-dialog>
     <resume-popup :resumeId="resumeId" :isShow="isShow" @showCallback="showCallback" ref="resume"></resume-popup>
   </div>
 </template>
@@ -204,7 +212,8 @@ import {
   getApplyListApi,
   getResumeCodeUrlApi,
   getRecruiterCodeUrlApi,
-  getPositionCodeUrlApi
+  getPositionCodeUrlApi,
+  getInterviewComment
 } from "API/interview";
 import List from "@/components/list";
 @Component({
@@ -218,6 +227,8 @@ export default class application extends Vue {
   timeout = null; // 防抖
   total = 0;
   resumeId = "";
+  centerDialogVisible = false;
+  reason = "";
   isShow = false;
   fields = [
     {
@@ -268,6 +279,14 @@ export default class application extends Vue {
   qrCode = "";
   AdminShow = ""; /* 权限字段 */
   address = "";
+  /* 说出不合适原因 */
+  sayResult(interviewId) {
+    console.log(interviewId);
+    getInterviewComment(interviewId).then(res => {
+      this.reason = res.data.data.reason;
+      this.centerDialogVisible = true;
+    });
+  }
   toPath(id) {
     console.log(id);
     let routeUrl = this.$router.resolve({
@@ -298,6 +317,7 @@ export default class application extends Vue {
       this.isShow = true;
       this.$nextTick(() => {
         this.$refs["resume"].getResume();
+        this.$refs["resume"].operating(this.resumeId, { desc: "简历" });
       });
     }
   }

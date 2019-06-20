@@ -286,6 +286,7 @@ export default class resumePopup extends Vue {
   AdminShow = ""; //权限
   // 查看操作
   async operating(uid, param) {
+    console.log('sdf')
     await addHistory(uid, param);
   }
   created() {

@@ -74,7 +74,6 @@
           <div class="jobhunter" v-if="props.scope.column.property === 'jobhunterInfo'">
             <div class="name">
               <span
-                style="font-weight: bold;display: inline-block; max-width: 120px;overflow: hidden;text-overflow: ellipsis;white-space:nowrap;cursor:pointer;"
                 @click.stop="showResume(props.scope.row)"
               >{{props.scope.row.jobhunterInfo.realname}}</span>
               <span
@@ -108,6 +107,11 @@
               <i class="icon iconfont iconjiantou" v-else></i>
             </div>
             <div class="info status">{{props.scope.row.statusDesc}}</div>
+            <span
+              class="disContents"
+              v-if="props.scope.row.status===52"
+              @click.stop="sayResult(props.scope.row.interviewId)"
+            >原因</span>
             <div class="btn time">{{props.scope.row.updatedAtTime * 1000 | date}}</div>
           </div>
           <!-- 面试官信息 -->
@@ -193,6 +197,9 @@
     </div>
     <!--地址弹窗-->
     <div class="addressBox" ref="address">{{address}}</div>
+    <el-dialog title="不合适原因" :visible.sync="centerDialogVisible" width="30%" center>
+      <span>{{reason}}</span>
+    </el-dialog>
     <resume-popup :resumeId="resumeId" :isShow="isShow" @showCallback="showCallback" ref="resume"></resume-popup>
   </div>
 </template>
@@ -204,7 +211,8 @@ import {
   getInviteListApi,
   getRecruiterCodeUrlApi,
   getResumeCodeUrlApi,
-  getPositionCodeUrlApi
+  getPositionCodeUrlApi,
+  getInterviewComment
 } from "API/interview";
 import List from "@/components/list";
 import resumePopup from "COMPONENTS/resumePopup/resumePopup.vue";
@@ -220,6 +228,7 @@ export default class invite extends Vue {
   total = 0;
   resumeId = ""; //当前简历id
   isShow = false;
+  centerDialogVisible = false; /* 控制不合适原因 */
   fields = [
     {
       prop: "interviewId",
@@ -263,6 +272,7 @@ export default class invite extends Vue {
     page: 1,
     count: 20
   };
+  reason = "";
   list = [];
   pageCount = 0; // 请求回的数据共几页
   mobile = ""; // 当前查看的手机号码
@@ -283,6 +293,14 @@ export default class invite extends Vue {
       query: { id }
     });
     window.open(routeUrl.href, "_blank");
+  }
+  /* 说出不合适原因 */
+  sayResult(interviewId) {
+    console.log(interviewId);
+    getInterviewComment(interviewId).then(res => {
+      this.reason = res.data.data.reason;
+      this.centerDialogVisible = true;
+    });
   }
   init() {
     this.getInterviewList();
@@ -318,6 +336,7 @@ export default class invite extends Vue {
       this.isShow = true;
       this.$nextTick(() => {
         this.$refs["resume"].getResume();
+        this.$refs["resume"].operating(this.resumeId, { desc: "简历" });
       });
     }
   }

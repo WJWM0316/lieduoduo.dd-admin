@@ -1,7 +1,26 @@
 .name {
   span {
+    font-weight: bold;
+    display: inline-block;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+    color: #652791;
     &:nth-child(1) {
       cursor: pointer;
     }
   }
+}
+.jobhunter {
+  position: relative;
+}
+.disContents {
+  position: absolute;
+  left: 147px;
+  top: 23px;
+  color: #652791;
+  font-size: 14px;
+  cursor: pointer;
 }
