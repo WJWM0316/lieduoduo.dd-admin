@@ -278,7 +278,7 @@ import {
   }
 })
 export default class resumePopup extends Vue {
-  nowCheck = 0; //当前点击
+  nowCheck = 0; //当前点击 
   historyList = []; /* 历史记录 */
   // 点击切换
   nowResumeMsg = {}; /* 当前简历详情 */

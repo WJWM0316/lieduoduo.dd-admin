@@ -139,9 +139,13 @@
               职位：
               <span
                 class="btn positionName"
-                @click.stop="creatLink($event, props.scope.row.positionId, props.scope.$index, 3)"
+                @click.stop="toPath(props.scope.row.positionId)"
               >{{props.scope.row.positionName}}</span>
               <span style="display: inline-block;">{{props.scope.row.emolument}}</span>
+              <span
+                class="btn positionName"
+                @click.stop="creatLink($event, props.scope.row.positionId, props.scope.$index, 3)"
+              >扫码看职位</span>
             </div>
             <div class="name" v-else>
               <span>职位：直接约面</span>
@@ -271,6 +275,14 @@ export default class invite extends Vue {
   }
   showCallback(val) {
     this.isShow = false;
+  }
+  toPath(id) {
+    console.log(id);
+    let routeUrl = this.$router.resolve({
+      path: "/positionManage/positionAuditDetail",
+      query: { id }
+    });
+    window.open(routeUrl.href, "_blank");
   }
   init() {
     this.getInterviewList();
