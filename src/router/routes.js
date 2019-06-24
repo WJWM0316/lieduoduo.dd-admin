@@ -16,7 +16,7 @@ export const routes = [
     path: "/index",
     name: "index",
 
-    meta: { title: "公司库", keepAlive: false, scrollY: 0,Aside:false },
+    meta: { title: "公司库", keepAlive: false, scrollY: 0, Aside: false },
     component: resolve => require(["@/pages/index/index.vue"], resolve)
   },
   /* 简历库 */
@@ -50,6 +50,20 @@ export const routes = [
           ], resolve)
       }
     ]
+  },
+  /* 新建微简历 */
+  {
+    path: "/resumeStore/list/createNewResume",
+    name: "createNewResume",
+    meta: {
+      title: "新建微简历",
+      haveParent: true,
+      parentName: "简历列表",
+      keepAlive: true,
+      flag: "resumeStore"
+    },
+    component: resolve =>
+      require(["@/pages/resumeStore/page/createNewResume/index.vue"], resolve)
   },
   /* 新建推荐单 */
   {

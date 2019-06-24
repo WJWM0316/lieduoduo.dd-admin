@@ -13,6 +13,12 @@ export const GetResumeDetailsAPI = data =>
     url: `/resume/detail/uid/${data}`,
     type: "get"
   });
+/* 简历详情 */
+export const delateResume = uid =>
+  request({
+    url: `/resume/attach/${uid}`,
+    type: "DELETE"
+  });
 
 // 获取所有学历定义
 export const degreeListAPI = () =>
@@ -20,7 +26,18 @@ export const degreeListAPI = () =>
     url: `/degree/all`,
     type: "get"
   });
-
+// 创建微简历
+export const createResume = (data) =>
+  request({
+    url: `/jobhunter/card/${data}`,
+    type: "post"
+  });
+  // 校验手机号码
+export const haveMobile = (mobile) =>
+request({
+  url: `/jobhunter/card/have/${mobile}`,
+  type: "get"
+});
 // 求职状态列表
 export const jobhuntStatusAPI = data =>
   request({

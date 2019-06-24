@@ -111,7 +111,7 @@
                   <div
                     class="workItem"
                     v-for="(item,index) in nowResumeMsg.careers"
-                    :key="item.company"
+                    :key="item.id"
                     :style="index===nowResumeMsg.careers.length-1?'margin-bottom:0px;':''"
                   >
                     <div class="workTime">
@@ -219,7 +219,7 @@
                 >上传附件</p>
                 <div class="Contact" @click.stop="seeFilesBtn" v-else>
                   <span>查看附件</span>
-                  <i class="el-icon-delete" @click.stop="delateFile"></i>
+                  <i class="el-icon-delete" @click.stop="delateFile(nowResumeMsg.uid)"></i>
                 </div>
               </div>
             </div>
@@ -250,7 +250,8 @@ import Component from "vue-class-component";
 import {
   addHistory,
   GetResumeHistory,
-  GetResumeDetailsAPI
+  GetResumeDetailsAPI,
+  delateResume
 } from "API/resumeStore.js";
 @Component({
   name: "resume-popup",
@@ -278,7 +279,7 @@ import {
   }
 })
 export default class resumePopup extends Vue {
-  nowCheck = 0; //当前点击 
+  nowCheck = 0; //当前点击
   historyList = []; /* 历史记录 */
   // 点击切换
   nowResumeMsg = {}; /* 当前简历详情 */
@@ -286,7 +287,7 @@ export default class resumePopup extends Vue {
   AdminShow = ""; //权限
   // 查看操作
   async operating(uid, param) {
-    console.log('sdf')
+    console.log("sdf");
     await addHistory(uid, param);
   }
   created() {
@@ -303,8 +304,12 @@ export default class resumePopup extends Vue {
       console.log(this.nowResumeMsg);
     });
   }
-  delateFile() {
-    console.log("删除简历");
+  delateFile(e) {
+    console.log(e);
+    delateResume(e).then(res => {
+      console.log(res);
+      this.getResume();
+    });
   }
   // 上传简历
   uploadFile() {

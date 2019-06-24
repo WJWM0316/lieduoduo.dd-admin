@@ -97,6 +97,7 @@ export default class lyoutContent extends Vue {
     border: 1px solid #eeeeee;
     background: #fff;
     position: relative;
+    height: 100%;
     // overflow-y: scroll;
     // height: 750px;+
 
