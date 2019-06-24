@@ -16,11 +16,65 @@
                 >
                   <el-option label="公司名" value="companyName"></el-option>
                   <el-option label="职位名" value="positionName"></el-option>
+                  <el-option label="求职者" value="jobhunter"></el-option>
+                  <el-option label="面试官" value="recruiter"></el-option>
+                  <el-option label="简历编号" value="resumeId"></el-option>
                   <!-- <el-option label="简历ID" value="interviewId"></el-option> -->
                 </el-select>
               </el-input>
             </div>
 
+            <el-form-item label="处理状态" prop="dealStatusId" class="formItem">
+              <el-select
+                class="select"
+                v-model="form.dealStatusId"
+                placeholder="请选择"
+                @change="choiceStatus"
+              >
+                <el-option
+                  v-for="(item,index) in dealStatusList"
+                  :key="index"
+                  :label="item.value"
+                  :value="item.id"
+                  @change="choiceStatus"
+                ></el-option>
+              </el-select>
+              <el-select
+                class="select"
+                v-model="form.dealStatusReasonId"
+                placeholder="请选择"
+                style="margin-left:20px;"
+                v-if="showSecond"
+              >
+                <el-option
+                  v-for="(item,index) in reason"
+                  :key="index"
+                  :label="item.value"
+                  :value="item.id"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item class="time" label="面试日期" prop="startTime" label-width="100px">
+              <el-col :span="11">
+                <el-date-picker
+                  type="date"
+                  placeholder="选择日期"
+                  v-model="form.startTime"
+                  value-format="yyyy-MM-dd"
+                  style="width: 142px;"
+                ></el-date-picker>
+              </el-col>
+              <el-col class="line" :span="1">—</el-col>
+              <el-col :span="11">
+                <el-date-picker
+                  type="date"
+                  placeholder="选择日期"
+                  value-format="yyyy-MM-dd"
+                  v-model="form.endTime"
+                  style="width: 142px;"
+                ></el-date-picker>
+              </el-col>
+            </el-form-item>
             <!-- <el-form-item label="处理状态" prop="jobStatus" class="formItem">
               <el-select class="select" v-model="form.jobStatus" placeholder="请选择">
                 <el-option value="0">求职者未到场</el-option>
@@ -251,7 +305,12 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import lyoutContent from "COMPONENTS/Lyout/lyoutContent/lyoutContent.vue";
-import { interviewsList, recommendPay, refund } from "API/resumeStore";
+import {
+  interviewsList,
+  recommendPay,
+  refund,
+  dealStatus
+} from "API/resumeStore";
 import { getResumeCodeUrlApi, getRecruiterCodeUrlApi } from "API/interview";
 @Component({
   name: "invitPro",
@@ -261,8 +320,13 @@ import { getResumeCodeUrlApi, getRecruiterCodeUrlApi } from "API/interview";
   }
 })
 export default class invitPro extends Vue {
+  showSecond = false; /* 当选择不合适才出现第二级 */
   form = {
     commonKey1: "",
+    dealStatusId: "",
+    dealStatusReasonId: "",
+    startTime: "",
+    endTime: "",
     isJobhunterApply: "",
     page: 1,
     count: 20
@@ -273,6 +337,8 @@ export default class invitPro extends Vue {
     key1: "companyName",
     condition2: ""
   };
+  reason = []; /* 理由 */
+  dealStatusList = []; /* 理由 */
   lastPage = 0;
   result = "";
   RusultForm = {
@@ -290,8 +356,8 @@ export default class invitPro extends Vue {
   leftcontent = {
     total: 0,
     title: "邀约进展",
-    lastPage:"",
-    page:1
+    lastPage: "",
+    page: 1
   };
   handlePageChange(nowPage) {
     // console.log(nowPage);
@@ -299,9 +365,15 @@ export default class invitPro extends Vue {
     this.form.page = nowPage;
     this.getData(this.form);
   }
+  /* 选择二级状态 */
+  choiceStatus(e) {
+    e == 1052 ? (this.showSecond = true) : (this.showSecond = false);
+  }
   /* 清除列表选项 */
   resetForm(name) {
     this.form.commonKey1 = "";
+    this.form.dealStatusId = "";
+    this.form.dealStatusReasonId = "";
     this.form.isJobhunterApply = false;
     this.$refs[name].resetFields();
     // console.log(this.form);
@@ -319,6 +391,10 @@ export default class invitPro extends Vue {
     let param = {
       count: 20,
       page: form.page,
+      dealStatusId: form.dealStatusId,
+      dealStatusReasonId: form.dealStatusReasonId,
+      startTime: form.startTime,
+      endTime: form.endTime,
       isJobhunterApply: this.form.isJobhunterApply == true ? 1 : 0
     };
     param[this.searchType.key1] = this.form.commonKey1;
@@ -326,6 +402,7 @@ export default class invitPro extends Vue {
   }
   getData() {
     let obj = this.forEachKeys(this.form);
+    console.log(obj, "sdfsdf");
     interviewsList(obj).then(res => {
       this.tableData = res.data.data;
       this.leftcontent.lastPage = res.data.meta.lastPage;
@@ -345,6 +422,13 @@ export default class invitPro extends Vue {
   }
   created() {
     this.getData(this.form);
+    this.dealStatus();
+  }
+  dealStatus() {
+    dealStatus().then(res => {
+      this.dealStatusList = res.data.data.dealStatus;
+      this.reason = res.data.data.reason;
+    });
   }
   /* 生成二维码 */
   getQr(type, uid) {

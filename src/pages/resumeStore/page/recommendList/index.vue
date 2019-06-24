@@ -1,7 +1,12 @@
 <!--  -->
 <template>
   <div class="recommendList">
-    <lyout-content :leftcontent="leftcontent" :isShowbtn="true" ref="methods" @handlePageChange="handlePageChange">
+    <lyout-content
+      :leftcontent="leftcontent"
+      :isShowbtn="true"
+      ref="methods"
+      @handlePageChange="handlePageChange"
+    >
       <div class="class" slot="text" @click.stop="toTabBlock">新建推荐单</div>
       <div class="formSumbit" slot="formContent">
         <div class="formReasult">
@@ -23,7 +28,9 @@
                   @change="checkType(searchType.key1)"
                 >
                   <el-option label="公司名" value="companyName"></el-option>
-                  <el-option label="批次" value="listId" v-show="searchType.condition2 !== 'mobile'"></el-option>
+                  <el-option label="批次" value="listId"></el-option>
+                  <el-option label="职位发布者" value="recruiter"></el-option>
+                  <el-option label="推荐职位" value="position"></el-option>
                 </el-select>
               </el-input>
             </div>

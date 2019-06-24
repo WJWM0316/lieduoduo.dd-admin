@@ -64,6 +64,22 @@
                 @change="choiceCity"
               ></el-cascader>
             </el-form-item>
+            <el-form-item label="期望行业" prop="expectFieldId" class="formItem">
+              <el-select
+                multiple
+                clearable
+                collapse-tags
+                v-model="form.expectFieldId"
+                placeholder="请选择"
+              >
+                <el-option
+                  :label="item.name"
+                  :value="item.labelId"
+                  v-for="item in fieldList"
+                  :key="item.labelId"
+                ></el-option>
+              </el-select>
+            </el-form-item>
             <custom-select
               :typeName="'自定义薪资'"
               :selectName="'期望薪资'"
@@ -135,6 +151,7 @@
                 ></el-date-picker>
               </el-col>
             </el-form-item>
+
             <el-form-item class="time" label="访问时间" prop="visitTimeLower" label-width="100px">
               <el-col :span="11">
                 <el-date-picker
@@ -156,6 +173,7 @@
                 ></el-date-picker>
               </el-col>
             </el-form-item>
+            <filter-answer :labelName="'简历完整度'"></filter-answer>
             <div class="BtnList">
               <el-form-item class="btn">
                 <el-button class="inquire" @click.stop="onSubmit">查询</el-button>
@@ -253,8 +271,10 @@ import Component from "vue-class-component";
 import lyoutContent from "COMPONENTS/Lyout/lyoutContent/lyoutContent.vue";
 import resumePopup from "COMPONENTS/resumePopup/resumePopup";
 import CustomSelect from "../../components/CustomSelect/index.vue";
+import filterAnswer from "../../components/filterAnswer/index.vue";
 import { getLabelPositionListApi } from "API/position";
 import { getCityApi } from "API/company";
+import { fieldApi } from "API/commont";
 import {
   GetResumeAPI,
   degreeListAPI,
@@ -269,7 +289,8 @@ let lock = false;
   components: {
     lyoutContent,
     CustomSelect,
-    resumePopup
+    resumePopup,
+    filterAnswer
   },
 
   watch: {
@@ -308,7 +329,41 @@ export default class resumeStore extends Vue {
     page: 1 //当前显示页
   };
   closelift = false; /* 工作经验 */
-
+  /* 简历来源 */
+  Completion = [
+    {
+      labelId: "0",
+      value: "不限条件"
+    },
+    {
+      labelId: "1",
+      value: "全部条件"
+    },
+    {
+      labelId: "completeExpect",
+      value: "求职意向"
+    },
+    {
+      labelId: "completeCareer",
+      value: "工作经历"
+    },
+    {
+      labelId: "completeEducation",
+      value: "教育经历"
+    },
+    {
+      labelId: "completeProject",
+      value: "项目经历"
+    },
+    {
+      labelId: "completeMoreIntro",
+      value: "更多介绍"
+    },
+    {
+      labelId: "completeResumeAttach",
+      value: "附件简历"
+    }
+  ];
   /* isSection 表示是否有价格区间 */
   workLiftList = [
     {
@@ -375,6 +430,7 @@ export default class resumeStore extends Vue {
       introduce: ""
     }
   }; /* 简历详情 */
+  fieldList = []; /* 期望行业 */
   options = []; //期待职位信息
   itemList = []; //简历数组
   historyList = []; //历史记录数组
@@ -393,8 +449,8 @@ export default class resumeStore extends Vue {
     isStudent: "", //在校生、无工作经验。无工作经验时，该值为1，否则为0。该值为1时，忽略工作经验
     updateTimeLower: "" /* 简历更新时间下限 */,
     updateTimeUpper: "" /*简历更新时间上限  */,
-    visitTimeLower: "", /* 最近访问时间下限 */
-    visitTimeUpper: "", /* 最近访问时间上限 */
+    visitTimeLower: "" /* 最近访问时间下限 */,
+    visitTimeUpper: "" /* 最近访问时间上限 */,
     workExpLower: "", //工作经验下限，单位“年”
     workExpUpper: "", //工作经验上限，单位“年”
     salaryLower: "" /* 薪资下限 */,
@@ -404,7 +460,8 @@ export default class resumeStore extends Vue {
     wherefrom:
       "" /* 10:平台用户在小程序上自行创建简历，20:后台用户创建微简历完成 */,
     resumeLabel: "", //简历标签名
-    count: 20 //每页条数
+    count: 20, //每页条数
+    expectFieldId: "" /* 期望行业 */
   };
   historyCount = 1;
   pageCount = 20; //请求回来的数据量
@@ -414,7 +471,24 @@ export default class resumeStore extends Vue {
   isShowbtn = false;
   isShow = false; //展示简历详情
   closeWork = false; /* 关闭工作经验弹框 */
-
+  CompletionDisabled = false;
+  /* 完整度 */
+  CompletionCheck(e) {
+    /* 不限条件 0  全部条件1 */
+    let isAll = e.includes("1");
+    let empty = e.includes("0");
+    if (empty || isAll) {
+      console.log("ds");
+      this.CompletionDisabled = true;
+    }
+  }
+  /* 清空 */
+  removeTag(e) {
+    if (e === undefined) {
+      this.CompletionDisabled = false;
+    }
+    console.log(e);
+  }
   // 时间选择器
   TimeResult(e) {
     console.log(e, "最终提交数据");
@@ -526,6 +600,13 @@ export default class resumeStore extends Vue {
     this.ManageList();
     this.CityData();
     this.getData();
+    this.field();
+  }
+  field() {
+    fieldApi().then(res => {
+      this.fieldList = res.data.data;
+      console.log(res, "sdfsfsd");
+    });
   }
   CityData() {
     getCityApi().then(res => {

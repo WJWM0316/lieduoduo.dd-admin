@@ -27,17 +27,23 @@ export const degreeListAPI = () =>
     type: "get"
   });
 // 创建微简历
-export const createResume = (data) =>
+export const createResume = data =>
   request({
     url: `/jobhunter/card/${data}`,
     type: "post"
   });
-  // 校验手机号码
-export const haveMobile = (mobile) =>
-request({
-  url: `/jobhunter/card/have/${mobile}`,
-  type: "get"
-});
+// 校验手机号码
+export const haveMobile = mobile =>
+  request({
+    url: `/jobhunter/card/have/${mobile}`,
+    type: "get"
+  });
+// 顾问推荐邀约列表 - 处理状态列表、不合适原因列表 （作为邀约列表搜索条件）
+export const dealStatus = () =>
+  request({
+    url: `/advisor/recommend/deal_status`,
+    type: "get"
+  });
 // 求职状态列表
 export const jobhuntStatusAPI = data =>
   request({
@@ -63,7 +69,7 @@ export const GetResumeHistory = (uid, data) =>
 // 推荐清单列表
 export const recommendList = data =>
   request({
-    url: `/advisor/recommend_lists`,
+    url: `/advisor/recommend_lists/search`,
     type: "get",
     data
   });
@@ -119,7 +125,7 @@ export const resultList = uid =>
 // 邀约进展列表
 export const interviewsList = data =>
   request({
-    url: `/advisor/recommend/interviews/`,
+    url: `/advisor/recommend/interviews/search`,
     type: "get",
     data
   });
