@@ -3,7 +3,7 @@ import { Loading, Message } from "element-ui";
 import router from "@/router/index";
 let loadingInstance = null;
 // const packjson=require('../../package.json');
-const Version=106;
+const Version=107;
 import { getAccessToken, removeAccessToken } from "./cacheService";
 
 //开发状态
