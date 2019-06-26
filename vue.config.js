@@ -4,7 +4,6 @@ const resolve = dir => {
   return path.join(__dirname, dir);
 };
 
-
 module.exports = {
   lintOnSave: false,
   configureWebpack: {
@@ -13,6 +12,7 @@ module.exports = {
     },
     resolve: {
       alias: {
+        PACKJSON: resolve("./"),
         "@": resolve("src"),
         IMAGES: resolve("src/assets/images"),
         UTIL: resolve("src/util"),
@@ -26,8 +26,7 @@ module.exports = {
         COLORS: resolve("src/eleui/colors")
       }
     },
-    plugins: [
-    ]
+    plugins: []
   },
   css: {},
   chainWebpack: config => {

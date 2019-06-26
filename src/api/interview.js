@@ -14,6 +14,16 @@ export const getInterviewComment = uid => request({
   url: `/interview/getInterviewComment?interviewId=${uid}`,
   type: 'get',
 })
+/* 获取面试状态列表 */
+export const getInterviewStatusType = uid => request({
+  url: `/interview/getInterviewStatusType`,
+  type: 'get',
+})
+/* 获取不合适二级列表 */
+export const getNotSuitTypeList = uid => request({
+  url: `/interview/getNotSuitTypeList`,
+  type: 'get',
+})
 /* 面试邀请列表 */
 export const getInviteListApi = data => request({
   url: '/interview/invite',

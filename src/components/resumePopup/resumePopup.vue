@@ -226,11 +226,16 @@
               </div>
               <div class="download">
                 <p class="contactTitle">附件简历:</p>
-                <p
+                <!-- <p
+                ></p>-->
+                <el-upload
                   v-if="nowResumeMsg.resumeAttach==null"
-                  class="Contact"
-                  @click.stop="uploadFile"
-                >上传附件</p>
+                  action="https://admin-api.lieduoduo.ziwork.com/attaches"
+                  :limit="1"
+                  :http-request="UploadImage"
+                >
+                  <el-button size="small" type="primary">上传附件</el-button>
+                </el-upload>
                 <div class="Contact" @click.stop="seeFilesBtn" v-else>
                   <span>查看附件</span>
                   <i class="el-icon-delete" @click.stop="delateFile(nowResumeMsg.uid)"></i>
@@ -263,6 +268,9 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import resumeAddtab from "../resumeAddtab/index";
+import { getAccessToken } from "API/cacheService";
+import { uploadApi } from "API/commont";
+const packjson = require("PACKJSON/package.json");
 import {
   addHistory,
   GetResumeHistory,
@@ -302,9 +310,12 @@ export default class resumePopup extends Vue {
   nowCheck = 0; //当前点击
   historyList = []; /* 历史记录 */
   // 点击切换
+  fileList = [];
   nowResumeMsg = {}; /* 当前简历详情 */
   nowIndex = ""; //当itemList不为空时，记录当前点击的简历id
   AdminShow = ""; //权限
+  uploadParam = {}; /* 上传参数 */
+  headers = {}; /* 上传头部 */
   /* 打开标签组件 */
   addTab() {
     this.$refs.addTab.showSelect();
@@ -317,6 +328,19 @@ export default class resumePopup extends Vue {
   }
   created() {
     this.AdminShow = +sessionStorage.getItem("AdminShow");
+    this.getUploadParam();
+  }
+  /* 上传文件 */
+  UploadImage(param) {
+    console.log(param);
+    const formData = new FormData();
+    formData.append("Authorization", sessionStorage.getItem("adminToken")); //
+    formData.append("attach_type", "doc");
+    formData.append("img1", param.file);
+    console.log("formData", formData);
+    uploadApi(formData).then(res => {
+      console.log(res);
+    });
   }
   // 获取简历
   getResume() {
@@ -336,7 +360,10 @@ export default class resumePopup extends Vue {
       this.getResume();
     });
   }
-  // 上传简历
+  beoforeUpload(e) {
+    console.log(e);
+  }
+  // 上传简历f
   uploadFile() {
     console.log("上传简历");
   }
@@ -451,7 +478,13 @@ export default class resumePopup extends Vue {
       this.operating(this.nowResumeMsg.uid, { desc: "简历" });
     }
   }
-
+  // 获取上传参数
+  getUploadParam() {
+    this.headers = {
+      "Authorization-Admin": getAccessToken(),
+      "Admin-Version": packjson.lieduoduoversion
+    };
+  }
   // 请求历史记录
   history(uid, form) {
     GetResumeHistory(uid, form).then(res => {

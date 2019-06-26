@@ -39,13 +39,26 @@
                 @change="changeProvince"
               >
                 <el-option label="全部状态" value="0"></el-option>
-                <el-option label="待面试官处理" value="11"></el-option>
-                <el-option label="待求职者确认" value="31"></el-option>
-                <el-option label="待面试官修改" value="32"></el-option>
-                <el-option label="已确定面试日程" value="41"></el-option>
-                <el-option label="不合适" value="52"></el-option>
-                <el-option label="待面试官安排时间" value="21"></el-option>
-                <el-option label="面试已结束" value="51"></el-option>
+                <el-option
+                  v-for="item in stutusList"
+                  :key="item.status"
+                  :label="item.desc"
+                  :value="item.status"
+                ></el-option>
+              </el-select>
+              <el-select
+                v-if="showSecond"
+                class="selectState"
+                v-model="form.last_status"
+                placeholder="全部状态"
+              >
+                <el-option label="全部状态" value="0"></el-option>
+                <el-option
+                  v-for="item in reasonList"
+                  :key="item.status"
+                  :label="item.desc"
+                  :value="item.status"
+                ></el-option>
               </el-select>
             </el-form-item>
 
@@ -213,7 +226,9 @@ import {
   getResumeCodeUrlApi,
   getRecruiterCodeUrlApi,
   getPositionCodeUrlApi,
-  getInterviewComment
+  getInterviewComment,
+  getInterviewStatusType,
+  getNotSuitTypeList
 } from "API/interview";
 import List from "@/components/list";
 @Component({
@@ -230,6 +245,9 @@ export default class application extends Vue {
   centerDialogVisible = false;
   reason = "";
   isShow = false;
+  stutusList = [];
+  showSecond = false;
+  reasonList = [];
   fields = [
     {
       prop: "interviewId",
@@ -301,8 +319,29 @@ export default class application extends Vue {
   created() {
     this.AdminShow = +sessionStorage.getItem("AdminShow");
     this.init();
+    this.getInterviewStatusType();
   }
-
+  getNotSuitTypeList() {
+    getNotSuitTypeList().then(res => {
+      console.log(res);
+      this.reasonList = res.data.data;
+    });
+  }
+  /* 选择变更 */
+  changeProvince(e) {
+    console.log(e);
+    if (e === 52) {
+      this.getNotSuitTypeList();
+      this.showSecond = true;
+    } else {
+      this.showSecond = false;
+    }
+  }
+  getInterviewStatusType() {
+    getInterviewStatusType().then(res => {
+      this.stutusList = res.data.data;
+    });
+  }
   init() {
     this.getInterviewList();
   }
@@ -446,8 +485,6 @@ export default class application extends Vue {
     this.form.page = 1;
     this.getInterviewList();
   }
-  /* 选择变更 */
-  changeProvince(e) {}
 
   /* 清除列表选项 */
   resetForm(name) {
