@@ -127,6 +127,7 @@
               ref="diywork"
               @callback="TimeResult"
             ></custom-select>
+            <filter-answer ref="Satisfaction" :labelName="'简历完整度'" @returnKeys="returnKeys"></filter-answer>
             <el-form-item label="简历来源" prop="wherefrom" class="formItem">
               <el-select v-model="form.wherefrom" placeholder="请选择">
                 <el-option label="用户创建" value="10"></el-option>
@@ -176,7 +177,7 @@
                 ></el-date-picker>
               </el-col>
             </el-form-item>
-            <filter-answer ref="Satisfaction" :labelName="'简历完整度'" @returnKeys="returnKeys"></filter-answer>
+
             <div class="BtnList">
               <el-button class="inquire" @click.stop="onSubmit">查询</el-button>
               <el-button @click.stop="resetForm('form')">重置</el-button>
@@ -184,6 +185,7 @@
           </el-form>
         </div>
         <div class="tabSearch">
+          <span>标签筛选:</span>
           <div class="tabList">
             <div class="tabItem" v-for="(item,index) in searchList" :key="index">
               <span>{{item}}</span>
@@ -374,7 +376,7 @@ let lock = false;
 })
 export default class resumeStore extends Vue {
   nowCheckListTab = []; /* 添加标签数组 */
-  closeSelectStore = true;
+  closeSelectStore = false;
   diyTabName = ""; /* 自定义标签名 */
   //
   typeList = ["简历详情", "历史记录"];
@@ -563,7 +565,9 @@ export default class resumeStore extends Vue {
   /* 点击确认 */
   checkTab() {
     this.searchList = this.nowCheckListTab.map(item => item.name);
-    this.form.resumeLabelIds = this.nowCheckListTab.map(item => item.id).join(",");
+    this.form.resumeLabelIds = this.nowCheckListTab
+      .map(item => item.id)
+      .join(",");
     this.closeSelectStore = false;
   }
   /* 选择标签 */
@@ -727,7 +731,6 @@ export default class resumeStore extends Vue {
   }
 
   created() {
-    this.Tabresumelist();
     this.isShow = this.degreeData();
     this.jobhuntStatus();
     this.ManageList();
