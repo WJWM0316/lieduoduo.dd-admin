@@ -27,9 +27,9 @@
                   @change="checkType(searchType.key1)"
                 >
                   <el-option label="意向职位" value="expectPosition"></el-option>
-                  <el-option label="姓名" value="listId"></el-option>
-                  <el-option label="手机号" value="listId"></el-option>
-                  <el-option label="公司名" value="listId"></el-option>
+                  <el-option label="姓名" value="name"></el-option>
+                  <el-option label="手机号" value="mobile"></el-option>
+                  <el-option label="公司名" value="company"></el-option>
                 </el-select>
               </el-input>
             </div>
@@ -84,13 +84,15 @@
               :typeName="'自定义薪资'"
               :selectName="'期望薪资'"
               :selectList="MoneyList"
+              :SubpType="'money'"
               ref="Money"
               @callback="MoneyChoice"
             ></custom-select>
             <custom-select
               :typeName="'自定义年龄'"
-              :selectName="'期望年龄'"
+              :selectName="'年龄'"
               :selectList="AgeList"
+              :SubpType="'age'"
               ref="age"
               @callback="AgeChoice"
             ></custom-select>
@@ -121,6 +123,7 @@
               :selectName="'工作经验'"
               :selectList="workLiftList"
               :isCheck="closelift"
+              :SubpType="'work'"
               ref="diywork"
               @callback="TimeResult"
             ></custom-select>
@@ -173,14 +176,23 @@
                 ></el-date-picker>
               </el-col>
             </el-form-item>
-            <filter-answer :labelName="'简历完整度'"></filter-answer>
+            <filter-answer ref="Satisfaction" :labelName="'简历完整度'" @returnKeys="returnKeys"></filter-answer>
             <div class="BtnList">
-              <el-form-item class="btn">
-                <el-button class="inquire" @click.stop="onSubmit">查询</el-button>
-                <el-button @click.stop="resetForm('form')">重置</el-button>
-              </el-form-item>
+              <el-button class="inquire" @click.stop="onSubmit">查询</el-button>
+              <el-button @click.stop="resetForm('form')">重置</el-button>
             </div>
           </el-form>
+        </div>
+        <div class="tabSearch">
+          <div class="tabList">
+            <div class="tabItem" v-for="(item,index) in searchList" :key="index">
+              <span>{{item}}</span>
+              <i class="el-icon-circle-close" @click.stop="delateSearch(index)"></i>
+            </div>
+            <div class="addTab" @click.stop="addTab()">
+              <i class="el-icon-circle-plus-outline"></i>
+            </div>
+          </div>
         </div>
       </div>
       <div class="resumeList" id="scroll" slot="dataList">
@@ -254,6 +266,46 @@
         </div>
       </div>
     </lyout-content>
+    <!-- 标签展示控件 -->
+    <div class="tabSelect" v-if="closeSelectStore">
+      <div class="tabContent">
+        <div class="TabHeader">
+          <span>选择标签</span>
+          <i class="el-icon-circle-close" @click.stop="closeSelectStore=false"></i>
+        </div>
+        <div class="Selecting">
+          <p class="selectNums">已选择 ({{nowCheckListTab.length}}/15)</p>
+          <div class="successSelectList" style="overflow:auto">
+            <div
+              :class="['common',item.status?'itemfocus':'nofocus']"
+              v-for="(item,index) in nowCheckListTab"
+              :key="index"
+              @click.stop="choiceTab(index)"
+            >
+              <span>{{item.name}}</span>
+              <i class="el-icon-circle-close" style="color:#652791" @click.stop="delateTab(index)"></i>
+            </div>
+          </div>
+        </div>
+        <div class="Selecting">
+          <p class="selectNums">标签库</p>
+          <div class="successSelectList">
+            <div
+              v-for="(item,index) in tabList"
+              :key="index"
+              :class="['common',item.status?'itemfocus':'nofocus']"
+              @click.stop="choiceTab(index)"
+            >
+              <span>{{item.name}}</span>
+            </div>
+          </div>
+        </div>
+        <div class="resumeTabBtn">
+          <el-button type="primary" @click="checkTab()">确定</el-button>
+          <el-button @click.stop="showAddResumeTab=false">取消</el-button>
+        </div>
+      </div>
+    </div>
     <resume-popup
       :resumeId="resumeId"
       :typeList="typeList"
@@ -271,7 +323,7 @@ import Component from "vue-class-component";
 import lyoutContent from "COMPONENTS/Lyout/lyoutContent/lyoutContent.vue";
 import resumePopup from "COMPONENTS/resumePopup/resumePopup";
 import CustomSelect from "../../components/CustomSelect/index.vue";
-import filterAnswer from "../../components/filterAnswer/index.vue";
+import filterAnswer from "COMPONENTS/filterAnswer/index.vue";
 import { getLabelPositionListApi } from "API/position";
 import { getCityApi } from "API/company";
 import { fieldApi } from "API/commont";
@@ -280,7 +332,8 @@ import {
   degreeListAPI,
   jobhuntStatusAPI,
   GetResumeHistory,
-  addHistory
+  addHistory,
+  resumelist
 } from "API/resumeStore.js";
 
 let lock = false;
@@ -320,6 +373,10 @@ let lock = false;
   }
 })
 export default class resumeStore extends Vue {
+  nowCheckListTab = []; /* 添加标签数组 */
+  closeSelectStore = true;
+  diyTabName = ""; /* 自定义标签名 */
+  //
   typeList = ["简历详情", "历史记录"];
   resumeId = ""; /* 简历详情id */
   leftcontent = {
@@ -371,7 +428,7 @@ export default class resumeStore extends Vue {
       isSection: false
     },
     {
-      text: "无经验",
+      text: "无限制",
       isSection: false
     },
     {
@@ -382,6 +439,10 @@ export default class resumeStore extends Vue {
     }
   ];
   AgeList = [
+    {
+      text: "不限",
+      isSection: false
+    },
     {
       min: "20",
       max: "25",
@@ -403,21 +464,25 @@ export default class resumeStore extends Vue {
   ];
   MoneyList = [
     {
+      text: "不限",
+      isSection: false
+    },
+    {
       min: "3",
       max: "5",
-      text: "3-5",
+      text: "3K-5K",
       isSection: true
     },
     {
       min: "5",
       max: "8",
-      text: "5-8",
+      text: "5K-8K",
       isSection: true
     },
     {
       min: "8",
       max: "12",
-      text: "8-12",
+      text: "8K-12K",
       isSection: true
     }
   ];
@@ -430,6 +495,7 @@ export default class resumeStore extends Vue {
       introduce: ""
     }
   }; /* 简历详情 */
+  searchList = []; /* 简历标签 */
   fieldList = []; /* 期望行业 */
   options = []; //期待职位信息
   itemList = []; //简历数组
@@ -457,21 +523,20 @@ export default class resumeStore extends Vue {
     salaryUpper: "" /* 薪资上限 */,
     ageLower: "" /* 年龄下限 */,
     ageUpper: "" /* 年龄上限*/,
-    wherefrom:
-      "" /* 10:平台用户在小程序上自行创建简历，20:后台用户创建微简历完成 */,
+    wherefrom: "" /* 10:平台用户在小程序上自行创建简历，20:后台用户创建 */,
     resumeLabel: "", //简历标签名
     count: 20, //每页条数
     expectFieldId: "" /* 期望行业 */
   };
+  tabList = []; /* 标签栏 */
   historyCount = 1;
-  pageCount = 20; //请求回来的数据量
-  page = 1;
   nowCheck = 0; //当前点击详情上方的tab
   nowIndex = ""; //当前点击的简历索引
   isShowbtn = false;
   isShow = false; //展示简历详情
   closeWork = false; /* 关闭工作经验弹框 */
   CompletionDisabled = false;
+  TabShow = true;
   /* 完整度 */
   CompletionCheck(e) {
     /* 不限条件 0  全部条件1 */
@@ -482,18 +547,55 @@ export default class resumeStore extends Vue {
       this.CompletionDisabled = true;
     }
   }
-  /* 清空 */
-  removeTag(e) {
-    if (e === undefined) {
-      this.CompletionDisabled = false;
-    }
-    console.log(e);
+  /* 删除已选择的标签 */
+  delateTab(index) {
+    this.resetStoreStatus(index);
+    this.nowCheckListTab.splice(index, 1);
   }
+  /* 重置标签库 */
+  resetStoreStatus(index) {
+    for (let i = 0; i < this.tabList.length; i++) {
+      if (this.nowCheckListTab[index].id === this.tabList[i].id) {
+        this.tabList[i].status = false;
+      }
+    }
+  }
+  /* 点击确认 */
+  checkTab() {
+    this.searchList = this.nowCheckListTab.map(item => item.name);
+    this.form.resumeLabelIds = this.nowCheckListTab.map(item => item.id).join(",");
+    this.closeSelectStore = false;
+  }
+  /* 选择标签 */
+  choiceTab(index) {
+    let isCheck = this.nowCheckListTab.filter(
+      item => item.name === this.tabList[index].name
+    );
+    if (isCheck.length > 0) return;
+    if (this.nowCheckListTab.length >= 15) return;
+    if (!this.tabList[index].status) {
+      let param = {
+        status: !this.tabList[index].status,
+        name: this.tabList[index].name,
+        id: this.tabList[index].id
+      };
+      this.$nextTick(() => {
+        this.tabList[index].status = true;
+        this.nowCheckListTab.push(param);
+      });
+    } else {
+      this.$nextTick(() => {
+        this.tabList[index].status = false;
+      });
+    }
+  }
+
   // 时间选择器
   TimeResult(e) {
+    console.log(e);
     console.log(e, "最终提交数据");
     /* workExpLower 最小年限 workExpUpper 最大 */
-    let { isStudent, min, max } = e;
+    let { SubpType, isStudent, min, max } = e;
     this.form.isStudent = isStudent == undefined ? "" : isStudent;
     this.form.workExpLower = min == undefined ? "" : min;
     this.form.workExpUpper = max == undefined ? "" : max;
@@ -501,7 +603,7 @@ export default class resumeStore extends Vue {
     this.$refs["diywork"].closeSelect();
   }
   MoneyChoice(e) {
-    let { isStudent, min, max } = e;
+    let { SubpType, isStudent, min, max } = e;
     this.form.isStudent = isStudent == undefined ? "" : isStudent;
     this.form.salaryLower = min == undefined ? "" : min;
     this.form.salaryUpper = max == undefined ? "" : max;
@@ -509,13 +611,26 @@ export default class resumeStore extends Vue {
     this.$refs["Money"].closeSelect();
   }
   AgeChoice(e) {
-    let { isStudent, min, max } = e;
+    let { SubpType, isStudent, min, max } = e;
     this.form.isStudent = isStudent == undefined ? "" : isStudent;
     this.form.ageLower = min == undefined ? "" : min;
     this.form.ageUpper = max == undefined ? "" : max;
     this.$refs["age"].checkTime = e.value;
     this.$refs["age"].closeSelect();
     console.log(this.form);
+  }
+  addTab() {
+    this.closeSelectStore = true;
+    this.Tabresumelist();
+  }
+  Tabresumelist() {
+    resumelist().then(res => {
+      this.tabList = res.data.data;
+      this.tabList.forEach(item => {
+        item.status = false;
+      });
+      console.log(this.tabList, "简历标签库");
+    });
   }
   // 新建微简历
   createNewResume() {
@@ -527,31 +642,43 @@ export default class resumeStore extends Vue {
     });
     window.open(routeUrl.href, "_blank");
   }
+
   /* 手动关闭事件 */
   closeSubEvent() {
     this.closelift = false;
     this.$refs["diywork"].closeSelect();
     this.$refs["Money"].closeSelect();
     this.$refs["age"].closeSelect();
+    this.$refs["Satisfaction"].closeSelect();
   }
   checkType(e) {
     this.form[`${e}`] = "";
   }
+  delateSearch(index) {
+    this.searchList.splice(index, 1);
+  }
   /* 清除列表选项 */
   resetForm(name) {
+    console.log(this.form);
     this.$refs[name].resetFields();
     this.form.page = 1;
+    for (let key in this.form) {
+      this.form[key] = null;
+    }
     this.form.isStudent = "";
     this.form.workExpLower = "";
     this.form.workExpUpper = "";
-
     this.form.expectCityNum = "";
+    this.form.updateTimeUpper = "";
+    this.form.visitTimeUpper = "";
     this.$nextTick(() => {
       let obj = {};
       obj.stopPropagation = () => {};
       this.$refs.cascader.clearValue(obj);
       this.$refs.cityChoice.clearValue(obj);
-      this.$refs.custom.clearValue();
+      this.$refs.diywork.clearValue();
+      this.$refs.Money.clearValue();
+      this.$refs.age.clearValue();
     });
   }
   showCallback(val) {
@@ -567,7 +694,6 @@ export default class resumeStore extends Vue {
   choiceCity(e) {
     this.form.expectCityNum = e[e.length - 1];
   }
-
   // 查询按钮
   onSubmit() {
     this.form.page = 1;
@@ -579,6 +705,11 @@ export default class resumeStore extends Vue {
       // console.log(res);
       this.historyList = res.data.data;
     });
+  }
+  /* 满意度 */
+  returnKeys(obj) {
+    this.form = { ...this.form, ...obj };
+    console.log(this.form);
   }
   // 点击切换
   check(index) {
@@ -594,7 +725,9 @@ export default class resumeStore extends Vue {
       this.operating(this.nowResumeMsg.uid, { desc: "简历" });
     }
   }
+
   created() {
+    this.Tabresumelist();
     this.isShow = this.degreeData();
     this.jobhuntStatus();
     this.ManageList();
@@ -605,7 +738,6 @@ export default class resumeStore extends Vue {
   field() {
     fieldApi().then(res => {
       this.fieldList = res.data.data;
-      console.log(res, "sdfsfsd");
     });
   }
   CityData() {

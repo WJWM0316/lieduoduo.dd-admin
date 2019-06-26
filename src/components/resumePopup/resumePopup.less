@@ -104,6 +104,40 @@
               }
             }
           }
+          .TabSelect {
+            margin-top: 20px;
+            .tabList {
+              display: flex;
+              justify-content: flex-start;
+              align-items: flex-start;
+              margin-left: 23px;
+              flex-direction: column;
+              .tabItem {
+                padding: 5px 10px;
+                border: 1px solid #929292;
+                border-radius: 4px;
+                display: inline-block;
+                margin-bottom: 8px;
+                span {
+                  font-size: 14px;
+                  color: #000;
+                }
+                i {
+                  margin-left: 5px;
+                  cursor: pointer;
+                }
+              }
+            }
+            .addTab {
+              text-align: left;
+              margin-left: 23px;
+              font-size: 14px;
+              color: #2878ff;
+              margin-bottom: 10px;
+              font-weight: 700;
+              cursor: pointer;
+            }
+          }
           .ContactInformation {
             margin-top: 52px;
             .contactTitle {
@@ -206,7 +240,7 @@
                 cursor: pointer;
                 transition: all 0.5s ease;
                 &:hover {
-                  transform: scale(1.6)
+                  transform: scale(1.6);
                 }
               }
               span {
@@ -621,3 +655,4 @@
   z-index: 1001;
   cursor: pointer;
 }
+

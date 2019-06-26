@@ -198,6 +198,20 @@
                 <img :src="nowResumeMsg.resumeQrCode" alt v-if="nowResumeMsg.resumeQrCode">
                 <span>扫码进入</span>
               </div>
+
+              <div class="TabSelect">
+                <p class="addTab" @click="addTab">打标签</p>
+                <div class="tabList" v-if="nowResumeMsg.resumeLabels">
+                  <div class="tabItem" v-for="item in nowResumeMsg.resumeLabels" :key="item.id">
+                    <span>{{item.labelName}}</span>
+                    <i
+                      class="el-icon-circle-close"
+                      @click.stop="delateLabelBtn(item.id,nowResumeMsg.uid)"
+                    ></i>
+                  </div>
+                </div>
+              </div>
+
               <div class="ContactInformation" v-if="AdminShow!==3||AdminShow!==4">
                 <p class="contactTitle">联系方式:</p>
                 <div class="Contact" @click.stop="seeMobile" v-if="nowResumeMsg.mobile!=''">
@@ -241,17 +255,20 @@
         </div>
       </div>
     </div>
+    <resume-addtab ref="addTab" :uid="nowResumeMsg.uid" @CallbackDetail="getResume()"></resume-addtab>
   </div>
 </template>
 
 <script>
 import Vue from "vue";
 import Component from "vue-class-component";
+import resumeAddtab from "../resumeAddtab/index";
 import {
   addHistory,
   GetResumeHistory,
   GetResumeDetailsAPI,
-  delateResume
+  delateResume,
+  delateLabel
 } from "API/resumeStore.js";
 @Component({
   name: "resume-popup",
@@ -276,6 +293,9 @@ import {
       type: Array,
       default: () => ["简历详情", "历史记录"]
     }
+  },
+  components: {
+    resumeAddtab
   }
 })
 export default class resumePopup extends Vue {
@@ -285,6 +305,11 @@ export default class resumePopup extends Vue {
   nowResumeMsg = {}; /* 当前简历详情 */
   nowIndex = ""; //当itemList不为空时，记录当前点击的简历id
   AdminShow = ""; //权限
+  /* 打开标签组件 */
+  addTab() {
+    this.$refs.addTab.showSelect();
+    this.$refs.addTab.Tabresumelist();
+  }
   // 查看操作
   async operating(uid, param) {
     console.log("sdf");
@@ -314,6 +339,15 @@ export default class resumePopup extends Vue {
   // 上传简历
   uploadFile() {
     console.log("上传简历");
+  }
+  /* 删除标签 */
+  async delateLabelBtn(labelId, uid) {
+    console.log(uid, labelId);
+    let res = await delateLabel(uid, labelId);
+    this.$message({
+      type: "success",
+      message: "删除成功!"
+    });
   }
   // 左边箭头
   LeftArrow() {

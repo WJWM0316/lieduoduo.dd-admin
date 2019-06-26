@@ -36,6 +36,10 @@ import Component from "vue-class-component";
 @Component({
   name: "CustomSelect",
   props: {
+    /* 类型 */
+    SubpType: {
+      type: String
+    },
     /* 自定义名字 */
     typeName: {
       type: String
@@ -74,6 +78,7 @@ export default class CustomSelect extends Vue {
   }
   choice(item, index) {
     let obj = {
+      SubpType: this.SubpType,
       isStudent: undefined,
       min: "",
       max: "",
@@ -102,12 +107,21 @@ export default class CustomSelect extends Vue {
       obj.value = `${obj.min}-${obj.max}`;
     } else if (!item.isSection) {
       /*   特殊字段处理， 如 无   不限 */
-      if (item.text === "不限") {
-        obj.isStudent = 0;
-        obj.value = `无`;
-      } else if (item.text === "无经验") {
-        obj.isStudent = 1;
-        obj.value = `无限制`;
+      console.log("this.SubType", this.SubpType);
+      if (this.SubpType === "work") {
+        if (item.text === "不限") {
+          obj.isStudent = 0;
+          obj.value = `不限`;
+        } else if (item.text === "无限制") {
+          obj.isStudent = 1;
+          obj.value = `无限制`;
+        }
+      } else {
+        if (item.text === "不限") {
+          obj.value = `不限`;
+        } else if (item.text === "无限制") {
+          obj.value = `无限制`;
+        }
       }
     }
     this.closeSelect();

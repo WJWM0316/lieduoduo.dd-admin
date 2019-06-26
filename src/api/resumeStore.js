@@ -17,9 +17,36 @@ export const GetResumeDetailsAPI = data =>
 export const delateResume = uid =>
   request({
     url: `/resume/attach/${uid}`,
-    type: "DELETE"
+    type: "get"
   });
+/* 简历标签 列表 */
+export const resumelist = uid =>
+  request({
+    url: `/label/resume/list`,
+    type: "get"
+  });
+/* 创建标签  */
+export const createLabel = data =>
+  request({
+    url: `/label/resume`,
+    type: "post",
+    data
+  });
+/* 删除简历标签  */
+export const delateLabel = (uid, id) => {
+  request({
+    url: `/resume/label/${uid}?id=${id}`,
+    type: "delete",
+  });
+};
 
+/* 批量设置标签  */
+export const confgiLabel = (uid, data) =>
+  request({
+    url: `/resume/labels/${uid}`,
+    type: "post",
+    data
+  });
 // 获取所有学历定义
 export const degreeListAPI = () =>
   request({
@@ -27,10 +54,11 @@ export const degreeListAPI = () =>
     type: "get"
   });
 // 创建微简历
-export const createResume = data =>
+export const createResume = (mobile, data) =>
   request({
-    url: `/jobhunter/card/${data}`,
-    type: "post"
+    url: `/jobhunter/card/${mobile}`,
+    type: "post",
+    data
   });
 // 校验手机号码
 export const haveMobile = mobile =>

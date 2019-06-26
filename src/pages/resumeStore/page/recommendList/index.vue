@@ -34,6 +34,29 @@
                 </el-select>
               </el-input>
             </div>
+            <div class="searchTab">
+              <el-input
+                type="text"
+                placeholder="请输入内容"
+                v-model="form.commonKey1"
+                class="inputSelect"
+                @blur.stop="checkInput()"
+              >
+                <el-select
+                  size="medium"
+                  class="selectTitle"
+                  v-model="searchType.key2"
+                  slot="prepend"
+                  placeholder="推荐职位"
+                  @change="checkType(searchType.key1)"
+                >
+                  <el-option label="推荐职位" value="position"></el-option>
+                  <el-option label="公司名" value="companyName"></el-option>
+                  <el-option label="批次" value="listId"></el-option>
+                  <el-option label="职位发布者" value="recruiter"></el-option>
+                </el-select>
+              </el-input>
+            </div>
             <!-- <div class="searchTab">
               <el-input
                 type="text"
@@ -166,8 +189,8 @@ export default class recommend extends Vue {
   };
   tableData = [];
   searchType = {
-    key1: "companyName" /* 第一个搜索条件的默认键 */
-    // key2: "line" /* 第二个搜索条件的默认键 */
+    key1: "companyName" /* 第一个搜索条件的默认键 */,
+    key2: "position" /* 第二个搜索条件的默认键 */
   };
   leftcontent = {
     total: 0,

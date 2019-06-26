@@ -1,0 +1,174 @@
+/* 添加标签 */
+.addTab {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 600;
+  .addConttent {
+    background: #fff;
+    width: 940px;
+    border: 1px solid #42334d;
+    position: relative;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    padding-bottom: 20px;
+    transform: translate(-50%, -50%);
+    .resumeTabBtn {
+      position: absolute;
+      bottom: 16px;
+      right: 30px;
+    }
+    .TabHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 10px 50px 10px 50px;
+      span {
+        font-size: 20px;
+        color: #5c565d;
+        font-weight: 600;
+      }
+      i {
+        color: #652791;
+        font-size: 20px;
+        cursor: pointer;
+      }
+    }
+    .SearchInput {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      flex-wrap: wrap;
+      position: relative;
+      margin: 0 50px;
+      .adding {
+        margin-left: 10px;
+      }
+      .nowCheck {
+        font-size: 14px;
+        color: #5c565d;
+        display: block;
+        width: 100%;
+        text-align: left;
+        margin-bottom: 8px;
+      }
+      .nowCheckTabList {
+        position: relative;
+        margin-top: 30px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        width: 100%;
+        .focusItem {
+          padding: 5px 10px;
+          border: 1px solid #2878ff;
+          border-radius: 4px;
+          display: inline-block;
+          cursor: pointer;
+          margin-right: 10px;
+          margin-bottom: 10px;
+          span {
+            font-size: 14px;
+            color: #000;
+          }
+          i {
+            margin-left: 5px;
+            cursor: pointer;
+            &:hover {
+              transform: scale(1.2);
+            }
+          }
+        }
+        .tabItem {
+          padding: 5px 10px;
+          border: 1px solid #929292;
+          border-radius: 4px;
+          display: inline-block;
+          cursor: pointer;
+          margin-right: 10px;
+          span {
+            font-size: 14px;
+            color: #000;
+          }
+          i {
+            margin-left: 5px;
+            cursor: pointer;
+            &:hover {
+              transform: scale(1.2);
+            }
+          }
+        }
+      }
+    }
+    .tabStore {
+      margin-top: 33px;
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+      flex-direction: column;
+      margin-left: 50px;
+
+      width: 713px;
+
+      .tabList {
+        height: 118px;
+        overflow: scroll;
+        margin-top: 10px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        &::-webkit-scrollbar {
+          display: none;
+        }
+        .tabItem {
+          padding: 5px 10px;
+          border: 1px solid #929292;
+          border-radius: 4px;
+          display: inline-block;
+          cursor: pointer;
+          margin-right: 10px;
+          margin-bottom: 10px;
+          span {
+            font-size: 14px;
+            color: #000;
+          }
+          i {
+            margin-left: 5px;
+            cursor: pointer;
+            &:hover {
+              transform: scale(1.2);
+            }
+          }
+        }
+        .focusItem {
+          padding: 5px 10px;
+          border: 1px solid #2878ff;
+          border-radius: 4px;
+          display: inline-block;
+          cursor: pointer;
+          margin-right: 10px;
+          margin-bottom: 10px;
+          span {
+            font-size: 14px;
+            color: #000;
+          }
+          i {
+            margin-left: 5px;
+            cursor: pointer;
+            &:hover {
+              transform: scale(1.2);
+            }
+          }
+        }
+      }
+    }
+  }
+}

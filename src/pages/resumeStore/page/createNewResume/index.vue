@@ -35,8 +35,9 @@
                 type="date"
                 placeholder="选择日期"
                 v-model="form.birth"
-                value-format="yyyy-MM-dd"
+                value-format="timestamp"
                 style="width: 142px;"
+                @change="changeTimeStamp(form.birth,'birth')"
               ></el-date-picker>
             </el-form-item>
             <el-form-item prop="startWorkYear" label="参加工作时间" class="formItem" required>
@@ -44,8 +45,9 @@
                 type="date"
                 placeholder="选择日期"
                 v-model="form.startWorkYear"
-                value-format="yyyy-MM-dd"
+                value-format="timestamp"
                 style="width: 180px;margin-left:56px;"
+                @change="changeTimeStamp(form.startWorkYear,'startWorkYear')"
               ></el-date-picker>
             </el-form-item>
             <el-form-item required label="最近任职公司" class="formItem">
@@ -94,7 +96,11 @@
             <el-form-item required label="期望薪资" class="formItem">
               <el-row style="margin-left:85px;">
                 <el-col :span="6">
-                  <el-select v-model="form.expectSalaryCeil" placeholder="最低薪资" @change="choiceMin">
+                  <el-select
+                    v-model="form.expectSalaryFloor "
+                    placeholder="最低薪资"
+                    @change="choiceMin"
+                  >
                     <el-option v-for="item in minSalary" :key="item" :label="item" :value="item"></el-option>
                   </el-select>
                 </el-col>
@@ -102,7 +108,7 @@
                 <el-col :span="6">
                   <el-form-item>
                     <el-select
-                      v-model="form.expectSalaryFloor"
+                      v-model="form.expectSalaryCeil"
                       placeholder="最高薪资"
                       @change="choiceMax"
                     >
@@ -130,15 +136,13 @@
             </el-form-item>
             <el-form-item label="附件简历(选填)" class="formItem" prop="name">
               <el-upload
-                class="upload-demo"
-                style="margin-left:56px;"
-                drag
                 action="https://admin-api.lieduoduo.ziwork.com/attaches"
-                multiple
                 :data="uploadParam"
-                :auto-upload="false"
-                :before-upload="beforeUpload"
-                :on-success="uploadImg"
+                :limit="1"
+                drag
+                multiple
+                :headers="headers"
+                :on-success="handleFileSuccess"
               >
                 <i class="el-icon-upload"></i>
                 <div class="el-upload__text">
@@ -219,6 +223,8 @@ import {
 import { getLabelPositionListApi } from "API/position";
 import { getCityApi } from "API/company";
 import { fieldApi, uploadApi } from "API/commont";
+import { getAccessToken } from "API/cacheService";
+const packjson = require("../../../../../package.json");
 @Component({
   name: "OrderDetail"
 })
@@ -228,13 +234,8 @@ export default class OrderDetail extends Vue {
   PopTitle = "验证手机号码";
   isFocus = false;
   dialogVisible = false;
-  uploadParam = {
-    Authorization: "",
-    attach_type: "doc",
-    private: 0,
-    setwater: 0,
-    img1:1,
-  };
+  /* 提示语 */
+  nowUserMsg = {}; /* 当前操作的用户数据 */
   closeModel = false;
   autoUpload = false;
   showClose = false;
@@ -245,6 +246,7 @@ export default class OrderDetail extends Vue {
   maxSalary = []; /* 最大薪资 */
   isShowmsg = false;
   getCityList = []; //省市列表
+  headers = {};
   form = {
     mobile: "" /* 手机号 */,
     avatar: "" /* 头像附件id */,
@@ -313,12 +315,19 @@ export default class OrderDetail extends Vue {
       }
     });
   }
+  /* 上传文件 */
+  handleFileSuccess(e) {
+    console.log(e);
+  }
   /* 修改手机号码 */
   editMoile() {
     this.dialogVisible = true;
     this.PopTitle = "修改手机号码";
     this.showClose = true;
     this.closeModel = true;
+  }
+  verificationMobile() {
+    console.log(this.checkMobileVal);
   }
   /* 清除列表选项 */
   resetForm(name) {
@@ -339,13 +348,16 @@ export default class OrderDetail extends Vue {
     });
     // });
   }
+  changeTimeStamp(e, type) {
+    this.form[type] = parseInt(e / 1000);
+  }
   /* 文件上传成功 */
   uploadImg(e) {
     console.log(e);
   }
   /* 选择文件 */
   beforeUpload(e) {
-    console.log(e, "选择文件");
+    this.form.resumeAttachId = e.data[0].id;
   }
   /* 验证手机号码 */
   checkMobile(e) {
@@ -359,8 +371,11 @@ export default class OrderDetail extends Vue {
         console.log(res);
         if (!res.data.data.userExist) {
           this.$message({
-            message: "该用户不存在",
+            message: "该用户不存在，请去创建用户",
             type: "warning"
+          });
+          this.$router.push({
+            path: "/user/addUser"
           });
         } else if (res.data.data.userExist && res.data.data.haveCard) {
           this.$message({
@@ -370,6 +385,7 @@ export default class OrderDetail extends Vue {
         } else {
           this.form.mobile = e;
           this.dialogVisible = false;
+          this.nowUserMsg = res.data.data.cardInfo;
         }
         // if(res)
       });
@@ -380,6 +396,17 @@ export default class OrderDetail extends Vue {
   }
   submitForm(form) {
     console.log(this.form);
+    this.form.expectFieldIds = String(this.form.expectFieldIds);
+    createResume(this.form.mobile, this.form).then(res => {
+      console.log(res);
+      this.$message({
+        message: "创建成功",
+        type: "success"
+      });
+      this.$router.push({
+        path: "/resumeStore/list"
+      });
+    });
   }
   choicePostion(e) {
     this.form.expectPositionId = e[e.length - 1];
@@ -430,8 +457,20 @@ export default class OrderDetail extends Vue {
       this.fieldList = res.data.data;
     });
   }
+  getUploadParam() {
+    this.uploadParam = {
+      Authorization: sessionStorage.getItem("adminToken"),
+      attach_type: "doc",
+      img1: ""
+    };
+    this.headers = {
+      "Authorization-Admin": getAccessToken(),
+      "Admin-Version": packjson.lieduoduoversion
+    };
+  }
   created() {
-    // if (!Number(this.$route.query.isEdit)) this.dialogVisible = true;
+    this.getUploadParam();
+    if (!Number(this.$route.query.isEdit)) this.dialogVisible = true;
     this.salary();
     this.field();
     this.CityData();

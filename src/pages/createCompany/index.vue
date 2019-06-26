@@ -4,7 +4,7 @@
     <div class="header">
       <div class="creatTab" @click.stop="tab">
         <div class="Info" :class="{'active': active === 0 }">公司信息</div>
-        <div class="userInfo"  v-if="isCreated!==true" :class="{'active': active === 1 }">账户设置</div>
+        <div class="userInfo" v-if="isCreated!==true" :class="{'active': active === 1 }">账户设置</div>
       </div>
       <div>
         <el-button @click.stop="createdCompany" v-show="active === 0 && !isEdit">保存</el-button>
@@ -291,12 +291,12 @@ export default class createCompany extends Vue {
   active = 0; //0表示现在在填公司信息页  1表示不是在填公司信息页
   adressList = []; // 地址列表
   isShowCompany = false; /* 展示修改公司名 */
-  isBindAdmin=0;
-  isNewCompany=false;
+  isBindAdmin = 0;
+  isNewCompany = false;
   companyName = {
     name: "" /* 检验公司名 */
   };
-  isCreated=false;
+  isCreated = false;
   can_company_input = true;
   pop = {
     isShow: false,
@@ -498,13 +498,13 @@ export default class createCompany extends Vue {
         } else {
           // 新建公司
           console.log("开始预创建公司，绑定公司管理员");
-          
+
           let admin_uid = sessionStorage.getItem("admin_uid");
-          this.$set(this.companyInfo,'admin_uid',admin_uid)
+          this.$set(this.companyInfo, "admin_uid", admin_uid);
           // console.log(this.companyInfo);
           this.showAdminWindow = true;
-          this.isBindAdmin=0;
-          this.isNewCompany=true
+          this.isBindAdmin = 0;
+          this.isNewCompany = true;
         }
         // this.$message({
         //   message: this.isEdit ? "编辑成功" : "公司创建成功",
@@ -527,9 +527,9 @@ export default class createCompany extends Vue {
     this.AdminShow = +sessionStorage.getItem("AdminShow");
     // console.log("this.AdminShow", this.AdminShow);
     if (this.$route.query.isCreated) {
-      this.isCreated=this.$route.query.isCreated;
+      this.isCreated = this.$route.query.isCreated;
       this.isShowCompany = true;
-      this.active=0;
+      this.active = 0;
     }
   }
   /* 保存跟进人 */
