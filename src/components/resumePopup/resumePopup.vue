@@ -225,7 +225,7 @@
                 <p v-if="nowResumeMsg.wechat==''&&nowResumeMsg.mobile==''" class="noUpload">暂无上传</p>
               </div>
               <div class="download" v-if="AdminShow!==3||AdminShow!==4">
-                <p class="contactTitle">附件简历: {{nowResumeMsg.resumeAttach.whereFromDesc}}</p>
+                <p class="contactTitle">附件简历: <span v-if="nowResumeMsg.resumeAttach">{{nowResumeMsg.resumeAttach.whereFromDesc}}</span></p>
                 <el-upload
                   v-if="nowResumeMsg.resumeAttach==null"
                   action="https://admin-api.lieduoduo.ziwork.com/attaches"
@@ -384,6 +384,8 @@ export default class resumePopup extends Vue {
       type: "success",
       message: "删除成功!"
     });
+    this.getResume();
+    this.$emit('updata')
   }
   // 左边箭头
   LeftArrow() {

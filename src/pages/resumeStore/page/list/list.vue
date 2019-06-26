@@ -9,7 +9,7 @@
       <div class="class" slot="text" @click.stop="createNewResume">新建微简历</div>
       <div class="formSumbit" slot="formContent">
         <div class="formReasult">
-          <el-form ref="form" :model="form.keyword" class="form">
+          <el-form ref="form" :model="form" class="form">
             <el-form-item label="模糊搜索">
               <el-input v-model="form.keyword" placeholder="搜索简历ID/姓名/公司/手机号/求职意向"></el-input>
             </el-form-item>
@@ -238,7 +238,7 @@
               </div>
             </div>
           </div>
-          <div class="tabList">
+          <div class="tabList" v-if="item.resumeLabels.length>0">
             <div class="tabItem" v-for="(tab) in item.resumeLabels" :key="tab.id">
               <span>{{tab.labelName}}</span>
             </div>
@@ -299,6 +299,7 @@
       :isShow="isShow"
       :itemList="itemList"
       @showCallback="showCallback"
+      @updata="getData"
       ref="resume"
     ></resume-popup>
   </div>
