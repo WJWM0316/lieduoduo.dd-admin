@@ -345,6 +345,7 @@ export default class resumePopup extends Vue {
       .then(resumeAttachId => {
         saveResume(this.nowResumeMsg.uid, { resumeAttachId }).then(res => {
           this.getResume();
+          this.operating(this.nowResumeMsg.uid, { desc: "简历附件" });
           this.$message({
             message: `${res.data.msg}`
           });

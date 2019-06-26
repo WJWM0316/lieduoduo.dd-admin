@@ -36,8 +36,8 @@
                 placeholder="选择日期"
                 v-model="form.birth"
                 value-format="timestamp"
+                format="yyyy 年 MM 月 dd 日"
                 style="width: 142px;"
-                @change="changeTimeStamp(form.birth,'birth')"
               ></el-date-picker>
             </el-form-item>
             <el-form-item prop="startWorkYear" label="参加工作时间" class="formItem" required>
@@ -47,7 +47,6 @@
                 v-model="form.startWorkYear"
                 value-format="timestamp"
                 style="width: 180px;margin-left:56px;"
-                @change="changeTimeStamp(form.startWorkYear,'startWorkYear')"
               ></el-date-picker>
             </el-form-item>
             <el-form-item required label="最近任职公司" class="formItem">
@@ -137,12 +136,10 @@
             <el-form-item label="附件简历(选填)" class="formItem" prop="name">
               <el-upload
                 action="https://admin-api.lieduoduo.ziwork.com/attaches"
-                :data="uploadParam"
                 :limit="1"
+                :http-request="UploadImage"
                 drag
                 multiple
-                :headers="headers"
-                :on-success="handleFileSuccess"
               >
                 <i class="el-icon-upload"></i>
                 <div class="el-upload__text">
@@ -246,7 +243,9 @@ export default class OrderDetail extends Vue {
   maxSalary = []; /* 最大薪资 */
   isShowmsg = false;
   getCityList = []; //省市列表
+  resumeAttachId = ""; /* 附件id */
   headers = {};
+  resumeAttachId = "";
   form = {
     mobile: "" /* 手机号 */,
     avatar: "" /* 头像附件id */,
@@ -359,6 +358,17 @@ export default class OrderDetail extends Vue {
   beforeUpload(e) {
     this.form.resumeAttachId = e.data[0].id;
   }
+  UploadImage(param) {
+    const formData = new FormData();
+    formData.append("Authorization", sessionStorage.getItem("adminToken")); //
+    formData.append("attach_type", "doc");
+    formData.append("img1", param.file);
+    console.log("formData", formData);
+    uploadApi(formData).then(res => {
+      const resumeAttachId = res.data.data[0].id;
+      this.form.resumeAttachId = resumeAttachId;
+    });
+  }
   /* 验证手机号码 */
   checkMobile(e) {
     if (!/^1(3|4|5|6|7|8|9)\d{9}$/.test(e)) {
@@ -395,8 +405,10 @@ export default class OrderDetail extends Vue {
     console.log(e);
   }
   submitForm(form) {
-    console.log(this.form);
     this.form.expectFieldIds = String(this.form.expectFieldIds);
+    this.changeTimeStamp(this.form.birth, "birth");
+    this.changeTimeStamp(this.form.startWorkYear, "startWorkYear");
+    console.log(this.form);
     createResume(this.form.mobile, this.form).then(res => {
       console.log(res);
       this.$message({

@@ -289,7 +289,7 @@
         </div>
         <div class="resumeTabBtn">
           <el-button type="primary" @click="checkTab()">确定</el-button>
-          <el-button @click.stop="showAddResumeTab=false">取消</el-button>
+          <el-button @click.stop="closeSelectStore=false">取消</el-button>
         </div>
       </div>
     </div>
@@ -658,6 +658,7 @@ export default class resumeStore extends Vue {
       this.form[key] = null;
     }
     this.form.expectFieldId = "";
+    this.form.keyword = "";
     this.form.isStudent = "";
     this.form.workExpLower = "";
     this.form.workExpUpper = "";
