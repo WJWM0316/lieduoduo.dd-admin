@@ -224,10 +224,8 @@
                 </div>
                 <p v-if="nowResumeMsg.wechat==''&&nowResumeMsg.mobile==''" class="noUpload">暂无上传</p>
               </div>
-              <div class="download">
-                <p class="contactTitle">附件简历:</p>
-                <!-- <p
-                ></p>-->
+              <div class="download" v-if="AdminShow!==3||AdminShow!==4">
+                <p class="contactTitle">附件简历: {{nowResumeMsg.resumeAttach.whereFromDesc}}</p>
                 <el-upload
                   v-if="nowResumeMsg.resumeAttach==null"
                   action="https://admin-api.lieduoduo.ziwork.com/attaches"

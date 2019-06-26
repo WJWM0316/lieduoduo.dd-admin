@@ -9,30 +9,10 @@
       <div class="class" slot="text" @click.stop="createNewResume">新建微简历</div>
       <div class="formSumbit" slot="formContent">
         <div class="formReasult">
-          <el-form ref="form" :model="form" class="form">
-            <div class="searchTab">
-              <el-input
-                type="text"
-                placeholder="请输入内容"
-                v-model="form.commonKey1"
-                class="inputSelect"
-                @blur.stop="checkInput()"
-              >
-                <el-select
-                  size="medium"
-                  class="selectTitle"
-                  v-model="searchType.key1"
-                  slot="prepend"
-                  placeholder="公司名"
-                  @change="checkType(searchType.key1)"
-                >
-                  <el-option label="意向职位" value="expectPosition"></el-option>
-                  <el-option label="姓名" value="name"></el-option>
-                  <el-option label="手机号" value="mobile"></el-option>
-                  <el-option label="公司名" value="company"></el-option>
-                </el-select>
-              </el-input>
-            </div>
+          <el-form ref="form" :model="form.keyword" class="form">
+            <el-form-item label="模糊搜索">
+              <el-input v-model="form.keyword" placeholder="公司名，姓名，简历编号"></el-input>
+            </el-form-item>
             <!-- 职位来源 -->
             <el-form-item label-width="120px" label="期望职位类型" prop="expectPositionId">
               <el-cascader
@@ -506,6 +486,7 @@ export default class resumeStore extends Vue {
   getCityList = []; //省市列表
   jobhuntStatusList = []; //求职状态
   form = {
+    keyword: "" /* 模糊搜索 */,
     name: "",
     keyword: "", //关键字
     expectPositionId: "", //期望职位类型id
