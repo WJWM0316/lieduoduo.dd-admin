@@ -89,7 +89,7 @@
                 @click.stop="showResume(props.scope.row)"
               >{{props.scope.row.jobhunterInfo.realname}}</span>
               <span
-                style="display: inline-block; max-width: 200px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;"
+                style="display: inline-block;max-width: 200px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;color: #282828;"
                 v-if="props.scope.row.jobhunterInfo.lastPosition"
               >· {{props.scope.row.jobhunterInfo.lastPosition}}</span>
             </div>
@@ -133,7 +133,7 @@
                 style="font-weight: bold;display: inline-block; max-width: 120px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;"
               >{{props.scope.row.recruiterInfo.realname}}</span>
               <span
-                style="display: inline-block; max-width: 200px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;"
+                style="display: inline-block; max-width: 200px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;color:#282828;"
               >· {{props.scope.row.recruiterInfo.position}}</span>
             </div>
             <div class="info" v-if="props.scope.row.recruiterInfo.companyName">
@@ -157,7 +157,7 @@
                 class="btn positionName"
                 @click.stop="toPath(props.scope.row.positionId)"
               >{{props.scope.row.positionName}}</span>
-              <span style="display: inline-block;">{{props.scope.row.emolument}}</span>
+              <span style="display: inline-block;color:#282828;">{{props.scope.row.emolument}}</span>
               <span
                 class="btn positionName"
                 @click.stop="creatLink($event, props.scope.row.positionId, props.scope.$index, 3)"
@@ -492,6 +492,7 @@ export default class invite extends Vue {
   resetForm(name) {
     this.$refs[name].resetFields();
     this.form.last_status = "";
+    this.form.companyName = "";
   }
 
   /* 翻页 */

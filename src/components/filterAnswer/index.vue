@@ -124,6 +124,10 @@ export default class filterAnswer extends Vue {
   /*  */
   forEachStatus() {
     this.checkObj = {};
+    let checkall = this.cities.filter(item => item.status);
+    if (checkall.length === this.cities.length) {
+      this.noreason = 0;
+    }
     this.cities.forEach(item => {
       if (!item.status) {
         this.noreason = 3;

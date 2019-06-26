@@ -489,6 +489,7 @@ export default class application extends Vue {
   /* 清除列表选项 */
   resetForm(name) {
     this.$refs[name].resetFields();
+    this.form.companyName = "";
   }
 
   /* 翻页 */
