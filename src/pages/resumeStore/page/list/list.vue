@@ -11,7 +11,7 @@
         <div class="formReasult">
           <el-form ref="form" :model="form.keyword" class="form">
             <el-form-item label="模糊搜索">
-              <el-input v-model="form.keyword" placeholder="公司名，姓名，简历编号"></el-input>
+              <el-input v-model="form.keyword" placeholder="搜索简历ID/姓名/公司/手机号/求职意向"></el-input>
             </el-form-item>
             <!-- 职位来源 -->
             <el-form-item label-width="120px" label="期望职位类型" prop="expectPositionId">
@@ -167,8 +167,8 @@
         <div class="tabSearch">
           <span>标签筛选:</span>
           <div class="tabList">
-            <div class="tabItem" v-for="(item,index) in searchList" :key="index">
-              <span>{{item}}</span>
+            <div class="tabItem" v-for="(item,index) in searchList " :key="index">
+              <span>{{item.name}}</span>
               <i class="el-icon-circle-close" @click.stop="delateSearch(index)"></i>
             </div>
             <div class="addTab" @click.stop="addTab()">
@@ -236,6 +236,11 @@
               >
                 <el-button>查看简历附件</el-button>
               </div>
+            </div>
+          </div>
+          <div class="tabList">
+            <div class="tabItem" v-for="(tab) in item.resumeLabels" :key="tab.id">
+              <span>{{tab.labelName}}</span>
             </div>
           </div>
         </div>
@@ -410,13 +415,13 @@ export default class resumeStore extends Vue {
       isSection: false
     },
     {
-      text: "无限制",
+      text: "无经验",
       isSection: false
     },
     {
-      min: "3000",
-      max: "5000",
-      text: "3000-5000",
+      min: "3",
+      max: "5",
+      text: "3-5",
       isSection: true
     }
   ];
@@ -545,7 +550,7 @@ export default class resumeStore extends Vue {
   }
   /* 点击确认 */
   checkTab() {
-    this.searchList = this.nowCheckListTab.map(item => item.name);
+    this.searchList = this.nowCheckListTab;
     this.form.resumeLabelIds = this.nowCheckListTab
       .map(item => item.id)
       .join(",");
@@ -641,6 +646,7 @@ export default class resumeStore extends Vue {
   }
   delateSearch(index) {
     this.searchList.splice(index, 1);
+    this.nowCheckListTab = this.searchList;
   }
   /* 清除列表选项 */
   resetForm(name) {
@@ -650,6 +656,7 @@ export default class resumeStore extends Vue {
     for (let key in this.form) {
       this.form[key] = null;
     }
+    this.form.expectFieldId = "";
     this.form.isStudent = "";
     this.form.workExpLower = "";
     this.form.workExpUpper = "";
@@ -760,7 +767,33 @@ export default class resumeStore extends Vue {
     this.seeFiles(this.itemList[index], uid);
     this.operating(uid, { desc: "简历附件" });
   }
+  seeFiles(fileObJ, uid) {
+    let File = fileObJ.resumeAttach;
 
+    if (File === null) {
+      this.$message.error("此人未上传简历附件");
+    } else {
+      let uid = fileObJ.uid;
+      let type = File.extension;
+      this.operating(uid, { desc: "简历附件" });
+      this.$nextTick(() => {
+        if (/(png|jpg)/.test(type)) {
+          window.open(File.url);
+        } else if (/(pdf)/.test(type)) {
+          window.open(File.url);
+        } else if (/(doc|docx)/.test(type)) {
+          window.open(
+            `https://view.officeapps.live.com/op/view.aspx?src=${File.url}`
+          );
+        } else {
+          this.$message({
+            message: "格式不支持",
+            type: "warning"
+          });
+        }
+      });
+    }
+  }
   // 学历列表
   degreeData() {
     degreeListAPI().then(res => {

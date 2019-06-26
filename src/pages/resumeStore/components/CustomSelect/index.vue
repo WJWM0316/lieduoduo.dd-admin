@@ -108,13 +108,16 @@ export default class CustomSelect extends Vue {
     } else if (!item.isSection) {
       /*   特殊字段处理， 如 无   不限 */
       console.log("this.SubType", this.SubpType);
-      if (this.SubpType === "work") {
+      if (this.SubpType === "work") { 
         if (item.text === "不限") {
           obj.isStudent = 0;
           obj.value = `不限`;
         } else if (item.text === "无限制") {
           obj.isStudent = 1;
           obj.value = `无限制`;
+        }else if (item.text === "无经验") {
+          obj.isStudent = 1;
+          obj.value = `无经验`;
         }
       } else {
         if (item.text === "不限") {
