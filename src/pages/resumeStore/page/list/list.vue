@@ -657,6 +657,7 @@ export default class resumeStore extends Vue {
     for (let key in this.form) {
       this.form[key] = null;
     }
+    this.searchList = [];
     this.form.expectFieldId = "";
     this.form.keyword = "";
     this.form.isStudent = "";
