@@ -151,7 +151,6 @@
             </el-form-item>
             <el-form-item class="formItem">
               <el-button type="primary" @click="submitForm('form')">立即创建</el-button>
-              <el-button @click="resetForm('form')">重置</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -171,40 +170,6 @@
         <el-button @click="checkMobile(checkMobileVal)" class="inquire" v-else>下一步</el-button>
       </span>
     </el-dialog>
-    <!-- 推荐单 -->
-    <!-- <div class="PopForm" @click.stop="isShowForm=false" v-if="isShowForm">
-      <div class="allRusule">
-        <p class="title">提交结果</p>
-        <div class="resumeNums">
-          <span v-if="resultmsg.succeedNum">成功:{{resultmsg.succeedNum}}份</span>
-          <span v-if="resultmsg.failNum">失败:{{resultmsg.failNum}}份</span>
-        </div>
-        <div class="resultList">
-          <el-table height="400" max-height="400" :data="tableData">
-            <el-table-column prop="vkey" label="简历编号"></el-table-column>
-            <el-table-column prop="name" label="求职者"></el-table-column>
-            <el-table-column prop="isSuccess" label="提交结果">
-              <template slot-scope="scope">
-                <i class="el-icon-circle-close" v-if="scope.row.isSuccess===0"></i>
-                <i class="el-icon-circle-check" style="color:red;" v-if="scope.row.isSuccess===1"></i>
-              </template>
-            </el-table-column>
-            <el-table-column prop="reason" label="原因说明">
-              <template slot-scope="scope">
-                <p style="color:#000;font-size:14px;" v-if="scope.row.isSuccess===1">推荐成功</p>
-                <p
-                  style="color:#000;font-size:14px;"
-                  v-if="scope.row.isSuccess===0"
-                >{{scope.row.reason}}</p>
-              </template>
-            </el-table-column>
-          </el-table>
-        </div>
-        <div class="okBtn" style="margin-top:20px;" v-if="sumbitRusult">
-          <el-button @click.stop="goPath">好的</el-button>
-        </div>
-      </div>
-    </div>-->
   </div>
 </template>
 
@@ -327,25 +292,6 @@ export default class OrderDetail extends Vue {
   }
   verificationMobile() {
     console.log(this.checkMobileVal);
-  }
-  /* 清除列表选项 */
-  resetForm(name) {
-    this.$refs[name].resetFields();
-    this.form.lastCompany = "";
-    this.form.lastPosition = "";
-    this.form.expectSalaryCeil = "";
-    this.form.expectSalaryFloor = "";
-    this.form.expectCityNum = "";
-    // this.$nextTick(() => {
-    let obj = {};
-    this.$nextTick(() => {
-      let obj = {};
-      obj.stopPropagation = () => {};
-      this.$refs.cascader.clearValue(obj);
-      this.$refs.cityChoice.clearValue(obj);
-      // this.$refs.custom.clearValue();
-    });
-    // });
   }
   changeTimeStamp(e, type) {
     this.form[type] = parseInt(e / 1000);

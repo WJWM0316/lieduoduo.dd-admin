@@ -258,11 +258,11 @@
       <div class="tabContent">
         <div class="TabHeader">
           <span>选择标签</span>
-          <i class="el-icon-circle-close" @click.stop="closeSelectStore=false"></i>
+          <i class="el-icon-circle-close" @click.stop="closeSelect"></i>
         </div>
         <div class="Selecting">
           <p class="selectNums">已选择 ({{nowCheckListTab.length}}/15)</p>
-          <div class="successSelectList" style="overflow:auto">
+          <div class="successSelectList" id="successSelectList" style="overflow:auto">
             <div
               :class="['common',item.status?'itemfocus':'nofocus']"
               v-for="(item,index) in nowCheckListTab"
@@ -276,7 +276,7 @@
         </div>
         <div class="Selecting">
           <p class="selectNums">标签库</p>
-          <div class="successSelectList">
+          <div class="successSelectList" id="TabStore">
             <div
               v-for="(item,index) in tabList"
               :key="index"
@@ -536,6 +536,23 @@ export default class resumeStore extends Vue {
       this.CompletionDisabled = true;
     }
   }
+  closeSelect() {
+    this.closeSelectStore = false;
+    const el = document.getElementById("TabStore");
+    el.removeEventListener("scroll", this.handleScroll);
+  }
+  addTab() {
+    this.closeSelectStore = true;
+    this.Tabresumelist();
+    this.$nextTick(() => {
+      const el = document.getElementById("TabStore");
+      console.log(el);
+      el.addEventListener("scroll", this.handleScroll);
+    });
+  }
+  handleScroll(e) {
+    console.log(e);
+  }
   /* 删除已选择的标签 */
   delateTab(index) {
     this.resetStoreStatus(index);
@@ -549,6 +566,7 @@ export default class resumeStore extends Vue {
       }
     }
   }
+
   /* 点击确认 */
   checkTab() {
     this.searchList = this.nowCheckListTab;
@@ -610,10 +628,7 @@ export default class resumeStore extends Vue {
     this.$refs["age"].closeSelect();
     console.log(this.form);
   }
-  addTab() {
-    this.closeSelectStore = true;
-    this.Tabresumelist();
-  }
+
   Tabresumelist() {
     resumelist().then(res => {
       this.tabList = res.data.data;

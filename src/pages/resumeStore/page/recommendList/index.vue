@@ -38,7 +38,7 @@
               <el-input
                 type="text"
                 placeholder="请输入内容"
-                v-model="form.commonKey1"
+                v-model="form.commonKey2"
                 class="inputSelect"
                 @blur.stop="checkInput()"
               >
@@ -212,6 +212,7 @@ export default class recommend extends Vue {
     this.form.startTime = "";
     this.form.endTime = "";
     this.form.commonKey1 = "";
+    this.form.commonKey2 = "";
     this.form.isJobhunterApply = false;
     this.$refs[name].resetFields();
   }
@@ -233,6 +234,7 @@ export default class recommend extends Vue {
       advisorUid: this.form.advisorUid
     };
     param[this.searchType.key1] = this.form.commonKey1;
+    param[this.searchType.key2] = this.form.commonKey2;
     return param;
   }
   getData() {

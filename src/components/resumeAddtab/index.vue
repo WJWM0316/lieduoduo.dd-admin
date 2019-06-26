@@ -27,7 +27,7 @@
               v-for="(item,index) in nowCheckListTab"
               :key="index"
             >
-              <span>{{item.name}}</span>
+              <span>{{item.labelName}}</span>
               <i class="el-icon-circle-close" @click.stop="delateTab(index)"></i>
             </div>
           </div>
@@ -62,14 +62,19 @@ import { resumelist, createLabel, confgiLabel } from "API/resumeStore.js";
 @Component({
   name: "resumeAddTab",
   props: {
+    /* 用户id */
     uid: {
       type: Number,
       default: 0
+    },
+    /* 当前选择标签数组 */
+    nowCheckListTab: {
+      type: Array,
+      default: () => []
     }
   }
 })
 export default class resumeAddtab extends Vue {
-  nowCheckListTab = []; /* 当前选择标签数组 */
   diyTabName = ""; /* 自定义标签 */
   showAddResumeTab = false; /* 是否显示select */
   tabList = []; /* 标签库 */
@@ -82,7 +87,8 @@ export default class resumeAddtab extends Vue {
   }
   /* 确认给简历打标签 */
   checkTab() {
-    let labelIds = this.nowCheckListTab.map(item => item.id).join(",");
+    console.log(this.nowCheckListTab);
+    let labelIds = this.nowCheckListTab.map(item => item.labelId).join(",");
     confgiLabel(this.uid, { labelIds }).then(res => {
       console.log(res);
       this.showAddResumeTab = false;
@@ -93,6 +99,14 @@ export default class resumeAddtab extends Vue {
   delateTab(index) {
     this.resetStoreStatus(index);
     this.nowCheckListTab.splice(index, 1);
+  }
+  /* 重置标签库 */
+  resetStoreStatus(index) {
+    for (let i = 0; i < this.tabList.length; i++) {
+      if (this.nowCheckListTab[index].labelId === this.tabList[i].id) {
+        this.tabList[i].status = false;
+      }
+    }
   }
   /* 新增标签 */
   addTab() {
@@ -115,8 +129,8 @@ export default class resumeAddtab extends Vue {
     if (!this.tabList[index].status) {
       let param = {
         status: !this.tabList[index].status,
-        name: this.tabList[index].name,
-        id: this.tabList[index].id
+        labelName: this.tabList[index].name,
+        labelId: this.tabList[index].id
       };
       this.$nextTick(() => {
         this.tabList[index].status = true;
@@ -131,21 +145,14 @@ export default class resumeAddtab extends Vue {
       // console.log("sdfk");
     }
   }
-  /* 重置标签库 */
-  resetStoreStatus(index) {
-    for (let i = 0; i < this.tabList.length; i++) {
-      if (this.nowCheckListTab[index].id === this.tabList[i].id) {
-        this.tabList[i].status = false;
-      }
-    }
-  }
+
   Tabresumelist() {
     resumelist().then(res => {
       this.tabList = res.data.data;
-      this.tabList.forEach(item => {
-        item.status = false;
-      });
-      console.log(this.tabList);
+      let labelIdList = this.nowCheckListTab.map(field => field.labelId);
+      this.tabList.map(
+        field => (field.status = labelIdList.includes(field.id) ? true : false)
+      );
     });
   }
   created() {
