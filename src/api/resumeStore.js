@@ -17,8 +17,9 @@ export const GetResumeDetailsAPI = data =>
 export const delateResume = uid =>
   request({
     url: `/resume/attach/${uid}`,
-    type: "get"
+    type: "delete"
   });
+  
 /* 简历标签 列表 */
 export const resumelist = uid =>
   request({
@@ -32,11 +33,18 @@ export const createLabel = data =>
     type: "post",
     data
   });
+/* 保存简历附件  */
+export const saveResume = (uid, data) =>
+  request({
+    url: `/resume/attach/${uid}`,
+    type: "put",
+    data
+  });
 /* 删除简历标签  */
 export const delateLabel = (uid, id) => {
   request({
     url: `/resume/label/${uid}?id=${id}`,
-    type: "delete",
+    type: "delete"
   });
 };
 

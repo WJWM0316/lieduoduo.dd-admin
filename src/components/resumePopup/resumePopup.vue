@@ -276,7 +276,8 @@ import {
   GetResumeHistory,
   GetResumeDetailsAPI,
   delateResume,
-  delateLabel
+  delateLabel,
+  saveResume
 } from "API/resumeStore.js";
 @Component({
   name: "resume-popup",
@@ -338,9 +339,19 @@ export default class resumePopup extends Vue {
     formData.append("attach_type", "doc");
     formData.append("img1", param.file);
     console.log("formData", formData);
-    uploadApi(formData).then(res => {
-      console.log(res);
-    });
+    uploadApi(formData)
+      .then(res => {
+        const resumeAttachId = res.data.data[0].id;
+        return resumeAttachId;
+      })
+      .then(resumeAttachId => {
+        saveResume(this.nowResumeMsg.uid, { resumeAttachId }).then(res => {
+          this.getResume();
+          this.$message({
+            message: `${res.data.msg}`
+          });
+        });
+      });
   }
   // 获取简历
   getResume() {
