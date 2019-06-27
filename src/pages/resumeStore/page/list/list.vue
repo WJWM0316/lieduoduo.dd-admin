@@ -857,8 +857,6 @@ export default class resumeStore extends Vue {
     });
   }
   getData() {
-    console.log(this.comexpectFieldId);
-    // if()
     this.comexpectFieldId.length > 0
       ? (this.form.expectFieldId = this.comexpectFieldId.join(","))
       : (this.form.expectFieldId = []);
