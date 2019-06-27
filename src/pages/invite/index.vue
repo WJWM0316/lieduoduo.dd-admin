@@ -360,7 +360,7 @@ export default class invite extends Vue {
       this.isShow = true;
       this.$nextTick(() => {
         this.$refs["resume"].getResume();
-        this.$refs["resume"].operating(this.resumeId, { desc: "简历" });
+        this.$refs["resume"].operating(this.resumeId, {action: "查看", desc: "简历" });
       });
     }
   }
