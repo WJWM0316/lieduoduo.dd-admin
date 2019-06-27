@@ -119,12 +119,7 @@ export default class filterAnswer extends Vue {
       this.forEachCheckAnswer(true);
     }
   }
-  /* 单选 */
-  checkReason(index) {
-    this.cities[index].status = !this.cities[index].status;
-    this.forEachStatus();
-  }
-  /*  */
+    /*  */
   forEachStatus() {
     this.checkObj = {};
     let checkall = this.cities.filter(item => item.status);
@@ -153,6 +148,12 @@ export default class filterAnswer extends Vue {
     });
     this.$emit("returnKeys", this.checkObj);
   }
+  /* 单选 */
+  checkReason(index) {
+    this.cities[index].status = !this.cities[index].status;
+    this.forEachStatus();
+  }
+
   /* 清空状态 */
   resetCheck() {
     for (let i = 0; i < this.cities.length; i++) {
