@@ -669,6 +669,7 @@ export default class resumeStore extends Vue {
 
   /* 手动关闭事件 */
   closeSubEvent() {
+    console.log("我背触发了");
     this.closelift = false;
     this.$refs["diywork"].closeSelect();
     this.$refs["Money"].closeSelect();
@@ -739,6 +740,7 @@ export default class resumeStore extends Vue {
   }
   /* 满意度 */
   returnKeys(obj) {
+    console.log(obj);
     this.form = { ...this.form, ...obj };
     console.log(this.form);
   }

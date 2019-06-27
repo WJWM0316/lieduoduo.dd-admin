@@ -11,7 +11,7 @@
         <div class="selectPop" v-if="startSelect">
           <p class="selectTitle">简历完整度筛选</p>
           <div class="selectBorder">
-            <div class="radioOnly row" @click.stop="noReason(1)">
+            <div class="radioOnly row" @click.stop="noReason()">
               <div class="border">
                 <span :class="noreason==1?'focus':''"></span>
               </div>
@@ -114,8 +114,54 @@ export default class filterAnswer extends Vue {
   /* type  勾选全部 还是不限 */
   /*  */
   /* 全部条件 */
+  allreason() {
+    this.nowCheckList = [];
+    this.noreason = 0;
+    this.cities.map(item => (item.status = true));
+    this.nowCheckList = [...this.cities];
+    this.nowCheckList.map(item => item.labelId).join(",");
+    let checkObj = {};
+    this.cities.forEach(item => {
+      if (item.status) {
+        checkObj[item.labelId] = 1;
+      }
+    });
+    this.$emit("returnKeys", checkObj);
+  }
+  /* 不限条件 */
+  noReason() {
+    this.nowCheckList = [];
+    this.noreason = 1;
+    this.cities.map(item => (item.status = false));
+    this.nowCheckList.push({
+      labelId: "",
+      status: false,
+      value: "不限条件"
+    });
+  }
+  delateArr(index) {
+    for (let i = 0; i < this.nowCheckList.length; i++) {
+      if (this.cities[index].labelId === this.nowCheckList[i].labelId) {
+        let delateobj = this.nowCheckList[i];
+        this.nowCheckList.splice(i, 1);
+      }
+    }
+  }
+  /* 单选 */
+  checkReason(index) {
+    this.cities[index].status = true ? false : true;
+    this.delateArr(index);
+    let checkObj = {};
+    this.cities.forEach(item => {
+      if (item.status) {
+        checkObj[item.labelId] = 1;
+      }
+    });
+    this.$emit("returnKeys", checkObj);
+  }
   /* 单选 */
   removeAarry(_arr, _obj) {
+    console.log("fsddfsfs");
     var length = _arr.length;
     for (var i = 0; i < length; i++) {
       if (_arr[i] == _obj) {
@@ -127,6 +173,7 @@ export default class filterAnswer extends Vue {
           return _arr;
         } else {
           _arr.splice(i, 1); //删除下标为i的元素
+          console.log(_arr);
           return _arr;
         }
       }
@@ -142,10 +189,11 @@ export default class filterAnswer extends Vue {
   // 显示
   showSelect() {
     this.startSelect = true;
-    this.resetCheck();
+    // this.resetCheck();
   }
   // 关闭
   closeSelect() {
+    console.log("sdfs");
     this.startSelect = false;
   }
 }
