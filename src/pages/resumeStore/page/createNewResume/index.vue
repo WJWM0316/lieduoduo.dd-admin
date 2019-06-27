@@ -285,9 +285,9 @@ export default class OrderDetail extends Vue {
   }
   /* 修改手机号码 */
   editMoile() {
-    this.dialogVisible = true;
     this.PopTitle = "修改手机号码";
     this.showClose = true;
+    this.dialogVisible = true;
     this.closeModel = true;
   }
   verificationMobile() {
@@ -332,9 +332,10 @@ export default class OrderDetail extends Vue {
             message: "该用户不存在，请去创建用户",
             type: "warning"
           });
-          this.$router.push({
-            path: "/user/addUser"
-          });
+          this.showClose = false;
+          this.dialogVisible = false;
+          this.closeModel = false;
+          this.$router.push({ path: "/user/addUser" });
         } else if (res.data.data.userExist && res.data.data.haveCard) {
           this.$message({
             message: "该手机号已创建简历，不能再次创建",
