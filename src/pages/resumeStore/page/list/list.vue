@@ -807,7 +807,6 @@ export default class resumeStore extends Vue {
   seereResume(index) {
     let uid = this.itemList[index].uid;
     this.seeFiles(this.itemList[index], uid);
-    this.operating(uid, { action: "查看", desc: "简历附件" });
   }
   seeFiles(fileObJ, uid) {
     let File = fileObJ.resumeAttach;
