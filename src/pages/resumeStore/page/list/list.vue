@@ -718,7 +718,7 @@ export default class resumeStore extends Vue {
     await addHistory(uid, param);
   }
   type(e) {
-    this.form.expectPosition = e[e.length - 1];
+    this.form.expectPositionId = e[e.length - 1];
   }
   choiceCity(e) {
     this.form.expectCityNum = e[e.length - 1];
