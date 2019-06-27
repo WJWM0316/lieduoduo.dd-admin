@@ -490,6 +490,8 @@ export default class application extends Vue {
   resetForm(name) {
     this.$refs[name].resetFields();
     this.form.companyName = "";
+    this.form.status = "";
+    this.form.last_status = "";
   }
 
   /* 翻页 */

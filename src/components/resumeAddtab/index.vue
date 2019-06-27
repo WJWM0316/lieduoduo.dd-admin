@@ -34,7 +34,7 @@
         </div>
         <div class="tabStore">
           <p>标签库</p>
-          <div class="tabList">
+          <div class="tabList" id="Tab_Store">
             <div
               v-for="(item,index) in tabList"
               :key="index"
@@ -79,11 +79,46 @@ export default class resumeAddtab extends Vue {
   showAddResumeTab = false; /* 是否显示select */
   tabList = []; /* 标签库 */
   returnStr = "";
+  labelStorePage = {
+    page: 1,
+    count: 100,
+    haveData: 1 
+  };
   showSelect() {
     this.showAddResumeTab = true;
+    this.$nextTick(() => {
+      const el = document.getElementById("Tab_Store");
+      el.addEventListener("scroll", this.handleScroll);
+    });
+  }
+  handleScroll(e) {
+    const el = document.getElementById("Tab_Store");
+    const offsetHeight = el.offsetHeight;
+    const scrollTop = el.scrollTop;
+    const scrollHeight = el.scrollHeight;
+    if (scrollTop + offsetHeight == scrollHeight) {
+      console.log("sdf");
+      this.Tabresumelist();
+    }
   }
   closeSelect() {
     this.showAddResumeTab = false;
+    const el = document.getElementById("TabStore");
+    el.removeEventListener("scroll", this.handleScroll);
+  }
+  Tabresumelist() {
+    if (this.labelStorePage.haveData) {
+      resumelist({ page: this.labelStorePage.page }).then(res => {
+        this.tabList =[...this.tabList,...res.data.data];
+        let labelIdList = this.nowCheckListTab.map(field => field.labelId);
+        this.labelStorePage.haveData = res.data.meta.haveData;
+        this.labelStorePage.page++;
+        this.tabList.map(
+          field =>
+            (field.status = labelIdList.includes(field.id) ? true : false)
+        );
+      });
+    }
   }
   /* 确认给简历打标签 */
   checkTab() {
@@ -143,17 +178,8 @@ export default class resumeAddtab extends Vue {
     }
   }
 
-  Tabresumelist() {
-    resumelist().then(res => {
-      this.tabList = res.data.data;
-      let labelIdList = this.nowCheckListTab.map(field => field.labelId);
-      this.tabList.map(
-        field => (field.status = labelIdList.includes(field.id) ? true : false)
-      );
-    });
-  }
   created() {
-    this.Tabresumelist();
+    // this.Tabresumelist();
   }
 }
 </script>

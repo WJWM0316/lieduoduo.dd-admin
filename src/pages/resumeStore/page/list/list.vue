@@ -367,6 +367,7 @@ export default class resumeStore extends Vue {
   //
   labelStorePage = {
     page: 1,
+    count:100,
     haveData: 1 /* 总页数 */
   };
   typeList = ["简历详情", "历史记录"];
@@ -558,7 +559,6 @@ export default class resumeStore extends Vue {
   addTab() {
     let nowCheckList = this.nowCheckListTab.concat();
     this.nowCheckListTab = nowCheckList;
-    console.log(this.nowCheckListTab)
     this.closeSelectStore = true;
     this.Tabresumelist();
     this.$nextTick(() => {

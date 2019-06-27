@@ -491,6 +491,7 @@ export default class invite extends Vue {
   /* 清除列表选项 */
   resetForm(name) {
     this.$refs[name].resetFields();
+    this.form.status = "";
     this.form.last_status = "";
     this.form.companyName = "";
   }

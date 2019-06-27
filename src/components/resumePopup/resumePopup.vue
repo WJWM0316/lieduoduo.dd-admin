@@ -199,19 +199,6 @@
                 <span>扫码进入</span>
               </div>
 
-              <div class="TabSelect">
-                <p class="addTab" @click="addTab">打标签</p>
-                <div class="tabList" v-if="nowResumeMsg.resumeLabels">
-                  <div class="tabItem" v-for="item in nowResumeMsg.resumeLabels" :key="item.id">
-                    <span>{{item.labelName}}</span>
-                    <i
-                      class="el-icon-circle-close"
-                      @click.stop="delateLabelBtn(item.id,nowResumeMsg.uid)"
-                    ></i>
-                  </div>
-                </div>
-              </div>
-
               <div class="ContactInformation" v-if="AdminShow!==3||AdminShow!==4">
                 <p class="contactTitle">联系方式:</p>
                 <div class="Contact" @click.stop="seeMobile" v-if="nowResumeMsg.mobile!=''">
@@ -242,6 +229,18 @@
                 <div class="Contact" @click.stop="seeFilesBtn" v-else>
                   <span>查看附件</span>
                   <i class="el-icon-delete" @click.stop="delateFile(nowResumeMsg.uid)"></i>
+                </div>
+              </div>
+              <div class="TabSelect">
+                <p class="addTab" @click="addTab">打标签</p>
+                <div class="tabList" v-if="nowResumeMsg.resumeLabels">
+                  <div class="tabItem" v-for="item in nowResumeMsg.resumeLabels" :key="item.id">
+                    <span>{{item.labelName}}</span>
+                    <i
+                      class="el-icon-circle-close"
+                      @click.stop="delateLabelBtn(item.id,nowResumeMsg.uid)"
+                    ></i>
+                  </div>
                 </div>
               </div>
             </div>
