@@ -18,13 +18,14 @@
               <span class="Reason">不限条件</span>
             </div>
             <p class="line">可勾选多个必需有的简历信息进行筛选</p>
-            <div class="radioOnly row" style="margin-bottom:10px;" @click.stop="allreason">
-              <div class="border">
-                <span :class="noreason==0?'focus':''"></span>
-              </div>
-              <span class="Reason">全部条件</span>
-            </div>
+
             <div class="checkList">
+              <div class="radioOnly row" style="margin-bottom:10px;" @click.stop="allreason">
+                <div class="border">
+                  <span :class="noreason==0?'focus':''"></span>
+                </div>
+                <span class="Reason">全部条件</span>
+              </div>
               <div
                 class="radioOnly row"
                 v-for="(city,index) in cities"
@@ -134,7 +135,7 @@ export default class filterAnswer extends Vue {
     this.noreason = 1;
     this.cities.map(item => (item.status = false));
     this.nowCheckList.push({
-      labelId: "",
+      labelId: "0",
       status: false,
       value: "不限条件"
     });
@@ -150,12 +151,20 @@ export default class filterAnswer extends Vue {
   /* 单选 */
   checkReason(index) {
     this.cities[index].status = !this.cities[index].status;
+    console.log(this.nowCheckList);
+    for (let i = 0; i < this.nowCheckList.length; i++) {
+      if (this.nowCheckList[i].labelId == "0") {
+        console.log(this.nowCheckList[i]);
+        this.nowCheckList.splice(i, 1);
+      }
+    }
     if (this.cities[index].status) {
+      this.noreason = 3;
       this.nowCheckList.push(this.cities[index]);
     } else {
+      this.noreason = 3;
       this.delateArr(index);
     }
-    console.log(this.cities[index].status);
 
     let checkObj = {};
     this.cities.forEach(item => {
