@@ -199,6 +199,7 @@ export default class OrderDetail extends Vue {
             this.resultmsg = res.data.data.list;
             this.tableData = res.data.data.result;
             this.sumbitRusult=true
+            // this.operating(this.nowResumeMsg.uid, { action: "删除", desc: "简历附件" });
             console.log(res);
           })
           .catch(err => {

@@ -11,7 +11,11 @@
         <div class="formReasult">
           <el-form ref="form" :model="form" class="form">
             <el-form-item label-width="80px" label="模糊搜索">
-              <el-input v-model="form.keyword" placeholder="简历ID/姓名/公司/手机号/求职意向" style="width:250px;"></el-input>
+              <el-input
+                v-model="form.keyword"
+                placeholder="简历ID/姓名/公司/手机号/求职意向"
+                style="width:250px;"
+              ></el-input>
             </el-form-item>
             <!-- 职位来源 -->
             <el-form-item label-width="120px" label="期望职位类型" prop="expectPositionId">
@@ -547,12 +551,13 @@ export default class resumeStore extends Vue {
     el.removeEventListener("scroll", this.handleScroll);
   }
 
-  handleScroll(e) {
+  handleScroll(e, event) {
     const el = document.getElementById("TabStore");
     const offsetHeight = el.offsetHeight;
     const scrollTop = el.scrollTop;
     const scrollHeight = el.scrollHeight;
     if (scrollTop + offsetHeight == scrollHeight) {
+      console.log("滚动到底部");
       this.Tabresumelist();
     }
   }
@@ -570,7 +575,7 @@ export default class resumeStore extends Vue {
   Tabresumelist() {
     if (this.labelStorePage.haveData) {
       console.log(this.labelStorePage.currentPage);
-      resumelist({ page: this.labelStorePage.page++ }).then(res => {
+      resumelist({ count: 100, page: this.labelStorePage.page++ }).then(res => {
         this.tabList = [...this.tabList, ...res.data.data];
         this.labelStorePage.haveData = res.data.meta.haveData;
         let isStatus = this.nowCheckListTab.map(item => item.id);

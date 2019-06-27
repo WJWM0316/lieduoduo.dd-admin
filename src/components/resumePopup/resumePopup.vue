@@ -267,7 +267,7 @@
           <div class="historyList" id="historyScroll" v-if="historyList.length>0">
             <span v-for="(item,index) in historyList" :key="index">
               {{item.createdAt}}
-              <i>&nbsp;&nbsp;&nbsp;{{item.admin}}&nbsp;&nbsp;</i>
+              <i>&nbsp;&nbsp;&nbsp;{{item.adminInfo}}&nbsp;&nbsp;</i>
               &nbsp;&nbsp;{{item.action}} &nbsp;&nbsp;{{item.desc}}
             </span>
           </div>
@@ -370,7 +370,7 @@ export default class resumePopup extends Vue {
       .then(resumeAttachId => {
         saveResume(this.nowResumeMsg.uid, { resumeAttachId }).then(res => {
           this.getResume();
-          this.operating(this.nowResumeMsg.uid, { desc: "简历附件" });
+          this.operating(this.nowResumeMsg.uid, { action: "上传", desc: "简历附件" });
           this.$message({
             message: `${res.data.msg}`
           });
@@ -394,6 +394,7 @@ export default class resumePopup extends Vue {
       console.log(res);
       this.visible = false;
       this.getResume();
+      this.operating(this.nowResumeMsg.uid, { action: "删除", desc: "简历附件" });
     });
   }
   beoforeUpload(e) {
@@ -454,7 +455,7 @@ export default class resumePopup extends Vue {
   // 查看附件
   seeFilesBtn() {
     this.seeFiles(this.nowResumeMsg, this.nowResumeMsg.uid);
-    this.operating(this.nowResumeMsg.uid, { desc: "简历附件" });
+    this.operating(this.nowResumeMsg.uid, { action: "查看", desc: "简历附件" });
   }
   seeFiles(fileObJ, uid) {
     let File = fileObJ.resumeAttach;
@@ -464,7 +465,7 @@ export default class resumePopup extends Vue {
     } else {
       let uid = fileObJ.uid;
       let type = File.extension;
-      this.operating(uid, { desc: "简历附件" });
+      this.operating(uid, { action: "查看", desc: "简历附件" });
       this.$nextTick(() => {
         if (/(png|jpg)/.test(type)) {
           window.open(File.url);
@@ -486,7 +487,7 @@ export default class resumePopup extends Vue {
   // 查看手机号码
   seeMobile() {
     let uid = this.nowResumeMsg.uid;
-    this.operating(uid, { desc: "联系方式" });
+    this.operating(uid, { action: "查看", desc: "手机号码" });
     this.$nextTick(() => {
       this.nowResumeMsg.showPhone = !this.nowResumeMsg.showPhone;
     });
@@ -494,7 +495,7 @@ export default class resumePopup extends Vue {
   /* 查看微信号 */
   seeWechat() {
     let uid = this.nowResumeMsg.uid;
-    this.operating(uid, { desc: "微信号" });
+    this.operating(uid, { action: "查看", desc: "微信号" });
     this.$nextTick(() => {
       this.nowResumeMsg.showWechat = !this.nowResumeMsg.showWechat;
     });
@@ -513,7 +514,7 @@ export default class resumePopup extends Vue {
         count: 20
       });
     } else if (this.nowCheck === 0) {
-      this.operating(this.nowResumeMsg.uid, { desc: "简历" });
+      this.operating(this.nowResumeMsg.uid, { action: "查看", desc: "简历" });
     }
   }
   // 获取上传参数
