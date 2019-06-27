@@ -227,7 +227,7 @@ import {
   getRecruiterCodeUrlApi,
   getPositionCodeUrlApi,
   getInterviewComment,
-  getInterviewStatusType,
+  getApplyInterviewStatusType,
   getNotSuitTypeList
 } from "API/interview";
 import List from "@/components/list";
@@ -319,7 +319,7 @@ export default class application extends Vue {
   created() {
     this.AdminShow = +sessionStorage.getItem("AdminShow");
     this.init();
-    this.getInterviewStatusType();
+    this.getApplyInterviewStatusType();
   }
   getNotSuitTypeList() {
     getNotSuitTypeList().then(res => {
@@ -337,8 +337,8 @@ export default class application extends Vue {
       this.showSecond = false;
     }
   }
-  getInterviewStatusType() {
-    getInterviewStatusType().then(res => {
+  getApplyInterviewStatusType() {
+    getApplyInterviewStatusType().then(res => {
       this.stutusList = res.data.data;
     });
   }

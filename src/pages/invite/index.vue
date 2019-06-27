@@ -225,7 +225,7 @@ import {
   getResumeCodeUrlApi,
   getPositionCodeUrlApi,
   getInterviewComment,
-  getInterviewStatusType,
+  getInviteInterviewStatusType,
   getNotSuitTypeList
 } from "API/interview";
 import List from "@/components/list";
@@ -300,10 +300,10 @@ export default class invite extends Vue {
   created() {
     this.AdminShow = +sessionStorage.getItem("AdminShow");
     this.init();
-    this.getInterviewStatusType();
+    this.getInviteInterviewStatusType();
   }
-  getInterviewStatusType() {
-    getInterviewStatusType().then(res => {
+  getInviteInterviewStatusType() {
+    getInviteInterviewStatusType().then(res => {
       this.stutusList = res.data.data;
     });
   }

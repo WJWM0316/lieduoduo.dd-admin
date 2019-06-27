@@ -29,6 +29,16 @@ export const getInviteNotSuitTypeList = uid => request({
   url: `/interview/getInviteNotSuitTypeList`,
   type: 'get',
 })
+/*获取申请列表面试状态一级列表 */
+export const getApplyInterviewStatusType = uid => request({
+  url: `/interview/getApplyInterviewStatusType`,
+  type: 'get',
+})
+/*获取申请列表面试状态一级列表 */
+export const getInviteInterviewStatusType = uid => request({
+  url: `/interview/getInviteInterviewStatusType`,
+  type: 'get',
+})
 /* 面试邀请列表 */
 export const getInviteListApi = data => request({
   url: '/interview/invite',
