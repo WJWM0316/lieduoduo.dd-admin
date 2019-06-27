@@ -21,10 +21,11 @@ export const delateResume = uid =>
   });
   
 /* 简历标签 列表 */
-export const resumelist = uid =>
+export const resumelist = data =>
   request({
     url: `/label/resume/list`,
-    type: "get"
+    type: "get",
+    data
   });
 /* 创建标签  */
 export const createLabel = data =>

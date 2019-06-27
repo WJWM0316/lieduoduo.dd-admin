@@ -365,6 +365,10 @@ export default class resumeStore extends Vue {
   closeSelectStore = false;
   diyTabName = ""; /* 自定义标签名 */
   //
+  labelStorePage = {
+    page: 1,
+    currentPage: 1 /* 总页数 */
+  };
   typeList = ["简历详情", "历史记录"];
   resumeId = ""; /* 简历详情id */
   leftcontent = {
@@ -546,12 +550,17 @@ export default class resumeStore extends Vue {
     this.Tabresumelist();
     this.$nextTick(() => {
       const el = document.getElementById("TabStore");
-      console.log(el);
       el.addEventListener("scroll", this.handleScroll);
     });
   }
   handleScroll(e) {
-    console.log(e);
+    const el = document.getElementById("TabStore");
+    const offsetHeight = el.offsetHeight;
+    const scrollTop = el.scrollTop;
+    const scrollHeight = el.scrollHeight;
+    if (scrollTop + offsetHeight == scrollHeight) {
+      this.Tabresumelist();
+    }
   }
   /* 删除已选择的标签 */
   delateTab(index) {
@@ -630,8 +639,17 @@ export default class resumeStore extends Vue {
   }
 
   Tabresumelist() {
-    resumelist().then(res => {
-      this.tabList = res.data.data;
+    console.log(this.labelStorePage.page);
+    let param = {
+      page: this.labelStorePage.page++
+    };
+    // if (this.labelStorePage.currentPage <= param.page) return;
+    resumelist(param).then(res => {
+      console.log(this.labelStorePage.currentPage);
+      console.log(this.labelStorePage.page);
+
+      this.tabList = [...this.tabList, ...res.data.data];
+      this.labelStorePage.currentPage = res.data.meta.currentPage;
       this.tabList.forEach(item => {
         item.status = false;
       });
