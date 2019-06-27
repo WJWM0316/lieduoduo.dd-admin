@@ -228,7 +228,7 @@ import {
   getPositionCodeUrlApi,
   getInterviewComment,
   getInterviewStatusType,
-  getNotSuitTypeList
+  getNotSuitTypeList 
 } from "API/interview";
 import List from "@/components/list";
 @Component({
