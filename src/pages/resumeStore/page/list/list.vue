@@ -10,8 +10,8 @@
       <div class="formSumbit" slot="formContent">
         <div class="formReasult">
           <el-form ref="form" :model="form" class="form">
-            <el-form-item label="模糊搜索">
-              <el-input v-model="form.keyword" placeholder="搜索简历ID/姓名/公司/手机号/求职意向"></el-input>
+            <el-form-item label-width="80px" label="模糊搜索">
+              <el-input v-model="form.keyword" placeholder="简历ID/姓名/公司/手机号/求职意向" style="width:250px;"></el-input>
             </el-form-item>
             <!-- 职位来源 -->
             <el-form-item label-width="120px" label="期望职位类型" prop="expectPositionId">
@@ -367,7 +367,7 @@ export default class resumeStore extends Vue {
   //
   labelStorePage = {
     page: 1,
-    count:100,
+    count: 100,
     haveData: 1 /* 总页数 */
   };
   typeList = ["简历详情", "历史记录"];
@@ -573,8 +573,10 @@ export default class resumeStore extends Vue {
       resumelist({ page: this.labelStorePage.page++ }).then(res => {
         this.tabList = [...this.tabList, ...res.data.data];
         this.labelStorePage.haveData = res.data.meta.haveData;
-        let isStatus=this.nowCheckListTab.map(item=>item.id);
-        this.tabList.map(item=>item.id===isStatus.includes(item.id)?true:false)
+        let isStatus = this.nowCheckListTab.map(item => item.id);
+        this.tabList.map(item =>
+          item.id === isStatus.includes(item.id) ? true : false
+        );
       });
     }
   }
@@ -654,7 +656,6 @@ export default class resumeStore extends Vue {
     console.log(this.form);
   }
 
-  
   // 新建微简历
   createNewResume() {
     let routeUrl = this.$router.resolve({

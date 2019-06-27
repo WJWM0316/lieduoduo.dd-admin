@@ -105,10 +105,13 @@ export default class filterAnswer extends Vue {
   /* 不限条件 */
   noReason(term) {
     this.noreason = term;
+    console.log(this.nowCheckList);
+    let isNoReason = this.nowCheckList.map(item => item.label).indexOf(0);
+    console.log(isNoReason);
     if (this.noreason) {
       this.nowCheckList.push({
         text: "不限条件",
-        label: "0"
+        label: 0
       });
       this.forEachCheckAnswer(false);
     } else {

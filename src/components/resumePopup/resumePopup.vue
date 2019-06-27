@@ -228,7 +228,19 @@
                 </el-upload>
                 <div class="Contact" @click.stop="seeFilesBtn" v-else>
                   <span>查看附件</span>
-                  <i class="el-icon-delete" @click.stop="delateFile(nowResumeMsg.uid)"></i>
+                  <!--  -->
+                  <el-popover placement="top" width="160" v-model="visible">
+                    <p>确认删除么，删除后将无法恢复</p>
+                    <div style="text-align: right; margin: 0">
+                      <el-button size="mini" type="text" @click="visible = false">取消</el-button>
+                      <el-button
+                        type="primary"
+                        size="mini"
+                        @click.stop="delateFile(nowResumeMsg.uid)"
+                      >确定</el-button>
+                    </div>
+                  </el-popover>
+                  <i class="el-icon-delete" @click.stop="visible=true"></i>
                 </div>
               </div>
               <div class="TabSelect">
@@ -318,6 +330,7 @@ export default class resumePopup extends Vue {
   nowCheck = 0; //当前点击
   historyList = []; /* 历史记录 */
   // 点击切换
+  visible = false;
   nowCheckListTab = [];
   fileList = [];
   nowResumeMsg = {}; /* 当前简历详情 */
@@ -379,6 +392,7 @@ export default class resumePopup extends Vue {
     console.log(e);
     delateResume(e).then(res => {
       console.log(res);
+      this.visible = false;
       this.getResume();
     });
   }
