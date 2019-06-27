@@ -1,5 +1,5 @@
 <template>
-  <div class="resumeStore" @click.self="closeSubEvent">
+  <div class="resumeStore" @click.stop="closeSubEvent">
     <lyout-content
       :leftcontent="leftcontent"
       :isShowbtn="true"

@@ -149,8 +149,14 @@ export default class filterAnswer extends Vue {
   }
   /* 单选 */
   checkReason(index) {
-    this.cities[index].status = true ? false : true;
-    this.delateArr(index);
+    this.cities[index].status = !this.cities[index].status;
+    if (this.cities[index].status) {
+      this.nowCheckList.push(this.cities[index]);
+    } else {
+      this.delateArr(index);
+    }
+    console.log(this.cities[index].status);
+
     let checkObj = {};
     this.cities.forEach(item => {
       if (item.status) {
