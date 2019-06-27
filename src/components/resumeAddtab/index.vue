@@ -140,9 +140,6 @@ export default class resumeAddtab extends Vue {
       this.$nextTick(() => {
         this.tabList[index].status = false;
       });
-      console.log("----2----", this.tabList);
-      // this.$forceUpdate();
-      // console.log("sdfk");
     }
   }
 

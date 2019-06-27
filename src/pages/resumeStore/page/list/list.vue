@@ -367,7 +367,7 @@ export default class resumeStore extends Vue {
   //
   labelStorePage = {
     page: 1,
-    currentPage: 1 /* 总页数 */
+    haveData: 1 /* 总页数 */
   };
   typeList = ["简历详情", "历史记录"];
   resumeId = ""; /* 简历详情id */
@@ -545,14 +545,7 @@ export default class resumeStore extends Vue {
     const el = document.getElementById("TabStore");
     el.removeEventListener("scroll", this.handleScroll);
   }
-  addTab() {
-    this.closeSelectStore = true;
-    this.Tabresumelist();
-    this.$nextTick(() => {
-      const el = document.getElementById("TabStore");
-      el.addEventListener("scroll", this.handleScroll);
-    });
-  }
+
   handleScroll(e) {
     const el = document.getElementById("TabStore");
     const offsetHeight = el.offsetHeight;
@@ -560,6 +553,29 @@ export default class resumeStore extends Vue {
     const scrollHeight = el.scrollHeight;
     if (scrollTop + offsetHeight == scrollHeight) {
       this.Tabresumelist();
+    }
+  }
+  addTab() {
+    let nowCheckList = this.nowCheckListTab.concat();
+    this.nowCheckListTab = nowCheckList;
+    console.log(this.nowCheckListTab)
+    this.closeSelectStore = true;
+    this.Tabresumelist();
+    this.$nextTick(() => {
+      const el = document.getElementById("TabStore");
+      el.addEventListener("scroll", this.handleScroll);
+    });
+  }
+  /* 标签库 */
+  Tabresumelist() {
+    if (this.labelStorePage.haveData) {
+      console.log(this.labelStorePage.currentPage);
+      resumelist({ page: this.labelStorePage.page++ }).then(res => {
+        this.tabList = [...this.tabList, ...res.data.data];
+        this.labelStorePage.haveData = res.data.meta.haveData;
+        let isStatus=this.nowCheckListTab.map(item=>item.id);
+        this.tabList.map(item=>item.id===isStatus.includes(item.id)?true:false)
+      });
     }
   }
   /* 删除已选择的标签 */
@@ -638,24 +654,7 @@ export default class resumeStore extends Vue {
     console.log(this.form);
   }
 
-  Tabresumelist() {
-    console.log(this.labelStorePage.page);
-    let param = {
-      page: this.labelStorePage.page++
-    };
-    // if (this.labelStorePage.currentPage <= param.page) return;
-    resumelist(param).then(res => {
-      console.log(this.labelStorePage.currentPage);
-      console.log(this.labelStorePage.page);
-
-      this.tabList = [...this.tabList, ...res.data.data];
-      this.labelStorePage.currentPage = res.data.meta.currentPage;
-      this.tabList.forEach(item => {
-        item.status = false;
-      });
-      console.log(this.tabList, "简历标签库");
-    });
-  }
+  
   // 新建微简历
   createNewResume() {
     let routeUrl = this.$router.resolve({
