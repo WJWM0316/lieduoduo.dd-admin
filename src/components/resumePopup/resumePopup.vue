@@ -247,11 +247,9 @@
                 <p class="addTab" @click="addTab">打标签</p>
                 <div class="tabList" v-if="nowResumeMsg.resumeLabels">
                   <div class="tabItem" v-for="item in nowResumeMsg.resumeLabels" :key="item.id">
+                    <!-- @click.stop="delateLabelBtn(item.id,nowResumeMsg.uid)" -->
                     <span>{{item.labelName}}</span>
-                    <i
-                      class="el-icon-circle-close"
-                      @click.stop="delateLabelBtn(item.id,nowResumeMsg.uid)"
-                    ></i>
+                    <!-- <i class="el-icon-circle-close"></i> -->
                   </div>
                 </div>
               </div>
@@ -330,10 +328,13 @@ export default class resumePopup extends Vue {
   nowCheck = 0; //当前点击
   historyList = []; /* 历史记录 */
   // 点击切换
+  delateTab = false;
   visible = false;
   nowCheckListTab = [];
   fileList = [];
-  nowResumeMsg = {}; /* 当前简历详情 */
+  nowResumeMsg = {
+    resumeLabels: {}
+  }; /* 当前简历详情 */
   nowIndex = ""; //当itemList不为空时，记录当前点击的简历id
   AdminShow = ""; //权限
   uploadParam = {}; /* 上传参数 */
@@ -356,10 +357,11 @@ export default class resumePopup extends Vue {
   }
   /* 上传文件 */
   UploadImage(param) {
-    console.log(param);
+    let name = param.file.name.split(".")[1];
+    let type = /(jpg|gif|png|peg|bmp)/.test(name) ? "img" : "doc";
     const formData = new FormData();
     formData.append("Authorization", sessionStorage.getItem("adminToken")); //
-    formData.append("attach_type", "doc");
+    formData.append("attach_type", type);
     formData.append("img1", param.file);
     console.log("formData", formData);
     uploadApi(formData)
@@ -370,7 +372,10 @@ export default class resumePopup extends Vue {
       .then(resumeAttachId => {
         saveResume(this.nowResumeMsg.uid, { resumeAttachId }).then(res => {
           this.getResume();
-          this.operating(this.nowResumeMsg.uid, { action: "上传", desc: "简历附件" });
+          this.operating(this.nowResumeMsg.uid, {
+            action: "上传",
+            desc: "简历附件"
+          });
           this.$message({
             message: `${res.data.msg}`
           });
@@ -381,6 +386,10 @@ export default class resumePopup extends Vue {
   getResume() {
     GetResumeDetailsAPI(this.resumeId).then(res => {
       this.nowResumeMsg = res.data.data;
+      console.log(this.nowResumeMsg);
+      for (let i = 0; i < this.nowResumeMsg.resumeLabels.length; i++) {
+        this.nowResumeMsg.resumeLabels[i].delateTab = false;
+      }
       this.nowResumeMsg = Object.assign({}, this.nowResumeMsg, {
         showPhone: false,
         showWechat: false
@@ -394,7 +403,10 @@ export default class resumePopup extends Vue {
       console.log(res);
       this.visible = false;
       this.getResume();
-      this.operating(this.nowResumeMsg.uid, { action: "删除", desc: "简历附件" });
+      this.operating(this.nowResumeMsg.uid, {
+        action: "删除",
+        desc: "简历附件"
+      });
     });
   }
   beoforeUpload(e) {
@@ -405,15 +417,16 @@ export default class resumePopup extends Vue {
     console.log("上传简历");
   }
   /* 删除标签 */
-  async delateLabelBtn(labelId, uid) {
+  delateLabelBtn(labelId, uid) {
     console.log(uid, labelId);
-    let res = await delateLabel(uid, labelId);
-    this.$message({
-      type: "success",
-      message: "删除成功!"
+    delateLabel(uid, labelId).then(res => {
+      this.$message({
+        type: "success",
+        message: "删除成功!"
+      });
+      this.getResume();
+      this.$emit("updata");
     });
-    await this.getResume();
-    this.$emit("updata");
   }
   // 左边箭头
   LeftArrow() {

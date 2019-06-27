@@ -1,5 +1,5 @@
 <template>
-  <div class="resumeStore" @click.stop="closeSubEvent">
+  <div class="resumeStore" @click.self="closeSubEvent">
     <lyout-content
       :leftcontent="leftcontent"
       :isShowbtn="true"
@@ -49,13 +49,7 @@
               ></el-cascader>
             </el-form-item>
             <el-form-item label="期望行业" prop="expectFieldId" class="formItem">
-              <el-select
-                multiple
-                clearable
-                collapse-tags
-                v-model="form.expectFieldId"
-                placeholder="请选择"
-              >
+              <el-select multiple collapse-tags v-model="comexpectFieldId" placeholder="请选择">
                 <el-option
                   :label="item.name"
                   :value="item.labelId"
@@ -492,6 +486,7 @@ export default class resumeStore extends Vue {
       introduce: ""
     }
   }; /* 简历详情 */
+  comexpectFieldId = "";
   searchList = []; /* 简历标签 */
   fieldList = []; /* 期望行业 */
   options = []; //期待职位信息
@@ -524,7 +519,7 @@ export default class resumeStore extends Vue {
     wherefrom: "" /* 10:平台用户在小程序上自行创建简历，20:后台用户创建 */,
     resumeLabel: "", //简历标签名
     count: 20, //每页条数
-    expectFieldId: "" /* 期望行业 */
+    expectFieldId: [] /* 期望行业 */
   };
   tabList = []; /* 标签栏 */
   historyCount = 1;
@@ -695,6 +690,7 @@ export default class resumeStore extends Vue {
     for (let key in this.form) {
       this.form[key] = null;
     }
+    this.comexpectFieldId = [];
     this.searchList = [];
     this.form.expectFieldId = "";
     this.form.keyword = "";
@@ -729,6 +725,8 @@ export default class resumeStore extends Vue {
   }
   // 查询按钮
   onSubmit() {
+    console.log(this.form);
+
     this.form.page = 1;
     this.getData();
   }
@@ -755,7 +753,10 @@ export default class resumeStore extends Vue {
         count: 20
       });
     } else if (this.nowCheck === 0) {
-      this.operating(this.nowResumeMsg.uid, { desc: "简历" });
+      this.operating(this.nowResumeMsg.uid, {
+        action: "查看",
+        desc: "简历附件"
+      });
     }
   }
 
@@ -806,7 +807,7 @@ export default class resumeStore extends Vue {
   seereResume(index) {
     let uid = this.itemList[index].uid;
     this.seeFiles(this.itemList[index], uid);
-    this.operating(uid, { desc: "简历附件" });
+    this.operating(uid, { action: "查看", desc: "简历附件" });
   }
   seeFiles(fileObJ, uid) {
     let File = fileObJ.resumeAttach;
@@ -816,7 +817,7 @@ export default class resumeStore extends Vue {
     } else {
       let uid = fileObJ.uid;
       let type = File.extension;
-      this.operating(uid, { desc: "简历附件" });
+      this.operating(uid, { action: "查看", desc: "简历附件" });
       this.$nextTick(() => {
         if (/(png|jpg)/.test(type)) {
           window.open(File.url);
@@ -849,9 +850,19 @@ export default class resumeStore extends Vue {
     this.nowIndex = index;
     this.$nextTick(() => {
       this.$refs["resume"].getResume();
+      this.$refs["resume"].operating(uid, {
+        action: "查看",
+        desc: "简历"
+      });
     });
   }
   getData() {
+    console.log(this.comexpectFieldId);
+    // if()
+    this.comexpectFieldId.length > 0
+      ? (this.form.expectFieldId = this.comexpectFieldId.join(","))
+      : (this.form.expectFieldId = []);
+    // ;
     GetResumeAPI(this.form).then(res => {
       this.itemList = res.data.data;
       this.leftcontent.total = parseInt(res.data.meta.total);

@@ -305,9 +305,11 @@ export default class OrderDetail extends Vue {
     this.form.resumeAttachId = e.data[0].id;
   }
   UploadImage(param) {
+    let name = param.file.name.split(".")[1];
+    let type = /(jpg|gif|png|peg|bmp)/.test(name) ? "img" : "doc";
     const formData = new FormData();
     formData.append("Authorization", sessionStorage.getItem("adminToken")); //
-    formData.append("attach_type", "doc");
+    formData.append("attach_type", type);
     formData.append("img1", param.file);
     console.log("formData", formData);
     uploadApi(formData).then(res => {

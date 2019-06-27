@@ -5,7 +5,7 @@
       <span class="Title">{{labelName}}:</span>
       <div class="select" :class="isCheck==true?'show':''" @click.stop="showSelect">
         <div class="checkList" v-if="nowCheckList.length>0">
-          <span class="itemCheck" v-for="(item,index) in nowCheckList" :key="index">{{item.text}}</span>
+          <span class="itemCheck" v-for="(item,index) in nowCheckList" :key="index">{{item.value}}</span>
           <!-- <span v-if="moreQuqery">+{{nowCheckList.length-1}}</span> -->
         </div>
         <div class="selectPop" v-if="startSelect">
@@ -18,7 +18,7 @@
               <span class="Reason">不限条件</span>
             </div>
             <p class="line">可勾选多个必需有的简历信息进行筛选</p>
-            <div class="radioOnly row" style="margin-bottom:10px;" @click.stop="noReason(0)">
+            <div class="radioOnly row" style="margin-bottom:10px;" @click.stop="allreason">
               <div class="border">
                 <span :class="noreason==0?'focus':''"></span>
               </div>
@@ -67,10 +67,9 @@ export default class filterAnswer extends Vue {
   allCheckList = []; /* 全选中 */
   nowCheckList = [
     {
-      text: "不限条件",
-      label: 0,
-      labelId: "",
-      status: true
+      labelId: "0",
+      value: "不限条件",
+      status: false
     }
   ]; /* 当前选中 */
   allCheck = [];
@@ -112,99 +111,11 @@ export default class filterAnswer extends Vue {
   ];
   cities = this.cityOptions;
   /* 不限条件 */
-  noReason(term) {
-    this.noreason = term;
-    this.nowCheckList = [];
-    this.forEachCheckAnswer(this.noreason);
-  }
   /* type  勾选全部 还是不限 */
-  forEachCheckAnswer(type) {
-    this.checkObj = {};
-    if (type) {
-      console.log("不限");
-      this.cities.map(item => (item.status = false));
-      this.nowCheckList.push({
-        text: "不限条件",
-        label: 0,
-        labelId: ""
-      });
-    } else {
-      console.log("全部");
-      this.cities.forEach(item => {
-        item.status = true;
-        this.nowCheckList.push({
-          text: item.value,
-          label: 1,
-          labelId: item.labelId
-        });
-      });
-      this.reallyList = this.nowCheckList.concat();
-    }
-    // this.cities.forEach(item => {
-
-    //     item.status = true;
-    //     this.checkObj[item.labelId] = 1;
-    //   } else {
-
-    //     this.nowCheckList.push({
-    //       text: "不限条件",
-    //       label: 0,
-    //       labelId: ""
-    //     });
-    //     item.status = false;
-    //   }
-    // });
-    this.$emit("returnKeys", this.checkObj);
-  }
   /*  */
-  // delateNoOptions() {
-  //   console.log(this.nowCheckList);
-  //   for (let i = 0; i < this.nowCheckList.length; i++) {
-  //     if (this.nowCheckList[i].label === 0) {
-  //       this.nowCheckList.splice(this.nowCheckList[i], 1);
-  //     }
-  //   }
-  // }
-  /*  */
-  forEachStatus() {
-    this.checkObj = {};
-    let checkall = this.cities.filter(item => item.status);
-    if (checkall.length === this.cities.length) {
-      this.noreason = 0;
-    }
-    this.cities.forEach(item => {
-      if (!item.status) {
-        this.noreason = 3;
-      } else {
-        this.checkObj[item.labelId] = 1;
-      }
-    });
-    this.$emit("returnKeys", this.checkObj);
-  }
-
+  /* 全部条件 */
   /* 单选 */
-  checkReason(index) {
-    this.cities[index].status = !this.cities[index].status;
-    this.forEachStatus();
-  }
-
-  /* 清空状态 */
-  resetCheck() {
-    for (let i = 0; i < this.cities.length; i++) {
-      this.cities[i].status = false;
-    }
-  }
-  // 显示
-  showSelect() {
-    this.startSelect = true;
-    this.resetCheck();
-  }
-  // 关闭
-  closeSelect() {
-    this.startSelect = false;
-  }
-
-  removeAaary(_arr, _obj) {
+  removeAarry(_arr, _obj) {
     var length = _arr.length;
     for (var i = 0; i < length; i++) {
       if (_arr[i] == _obj) {
@@ -220,6 +131,22 @@ export default class filterAnswer extends Vue {
         }
       }
     }
+  }
+  /*  */
+  /* 清空状态 */
+  resetCheck() {
+    for (let i = 0; i < this.cities.length; i++) {
+      this.cities[i].status = false;
+    }
+  }
+  // 显示
+  showSelect() {
+    this.startSelect = true;
+    this.resetCheck();
+  }
+  // 关闭
+  closeSelect() {
+    this.startSelect = false;
   }
 }
 </script>
