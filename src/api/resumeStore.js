@@ -13,6 +13,12 @@ export const GetResumeDetailsAPI = data =>
     url: `/resume/detail/uid/${data}`,
     type: "get"
   });
+/* 清空接口 */
+export const removeAllLabel = uid =>
+  request({
+    url: `/resume/labels/${uid}`,
+    type: "delete"
+  });
 /* 简历详情 */
 export const delateResume = uid =>
   request({

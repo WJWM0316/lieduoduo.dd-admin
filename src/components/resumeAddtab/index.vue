@@ -57,7 +57,12 @@
 <script>
 import Vue from "vue";
 import Component from "vue-class-component";
-import { resumelist, createLabel, confgiLabel } from "API/resumeStore.js";
+import {
+  resumelist,
+  createLabel,
+  confgiLabel,
+  removeAllLabel
+} from "API/resumeStore.js";
 
 @Component({
   name: "resumeAddTab",
@@ -122,13 +127,20 @@ export default class resumeAddtab extends Vue {
   }
   /* 确认给简历打标签 */
   checkTab() {
-    console.log(this.nowCheckListTab);
-    let labelIds = this.nowCheckListTab.map(item => item.labelId).join(",");
-    confgiLabel(this.uid, { labelIds }).then(res => {
-      console.log(res);
-      this.showAddResumeTab = false;
-      this.$emit("CallbackDetail");
-    });
+    if (this.nowCheckListTab.length === 0) {
+      removeAllLabel(this.uid).then(res => {
+        this.showAddResumeTab = false;
+        this.$emit("CallbackDetail");
+      });
+    } else {
+      console.log(this.nowCheckListTab);
+      let labelIds = this.nowCheckListTab.map(item => item.labelId).join(",");
+      confgiLabel(this.uid, { labelIds }).then(res => {
+        console.log(res);
+        this.showAddResumeTab = false;
+        this.$emit("CallbackDetail");
+      });
+    }
   }
   /* 删除已选择的标签 */
   delateTab(index) {
