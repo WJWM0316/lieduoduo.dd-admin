@@ -49,7 +49,7 @@
                   @change="checkType(searchType.key1)"
                 >
                   <el-option label="推荐职位" value="position"></el-option>
-                  <el-option label="公司名" value="companyName"></el-option>
+                  <el-option label="公司名" value="company"></el-option>
                   <el-option label="批次" value="listId"></el-option>
                   <el-option label="职位发布者" value="recruiter"></el-option>
                 </el-select>
