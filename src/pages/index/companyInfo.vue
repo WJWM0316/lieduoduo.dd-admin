@@ -54,7 +54,7 @@
           <span>{{companyInfo.employeesInfo}}</span>
         </el-form-item>
 
-        <el-form-item label="公司地址" prop="address_id" style="width: 380px;">
+        <el-form-item label="公司地址" prop="address_id">
           <!--公司地址列表-->
           <span
             class="AdressList"
@@ -62,15 +62,15 @@
           >{{`${index+1}、${item.address}${item.doorplate}`}}</span>
         </el-form-item>
 
-        <el-form-item class label="公司简介" style="width: 640px;">
+        <el-form-item class label="公司简介">
           <span>{{companyInfo.intro}}</span>
         </el-form-item>
 
-        <el-form-item class label="公司官网" style="width: 640px;">
+        <el-form-item class label="公司官网">
           <span>{{companyInfo.website}}</span>
         </el-form-item>
 
-        <el-form-item class label="公司邮箱" style="width: 640px;">
+        <el-form-item class label="公司邮箱">
           <span>{{companyInfo.email}}</span>
         </el-form-item>
 

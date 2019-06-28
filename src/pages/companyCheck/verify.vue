@@ -483,6 +483,7 @@ img {
     .item {
       padding-left: 30px;
       line-height: 30px;
+      text-align: left;
       .lable {
         margin-right: 10px;
         color: #909399;
