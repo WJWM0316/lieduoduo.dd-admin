@@ -334,7 +334,7 @@ export default class invitPro extends Vue {
   page = 1;
   mobile = "";
   searchType = {
-    key1: "companyName",
+    key1: "company",
     condition2: ""
   };
   reason = []; /* 理由 */
