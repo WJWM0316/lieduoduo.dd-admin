@@ -474,7 +474,6 @@ export default class resumePopup extends Vue {
   // 查看附件
   seeFilesBtn() {
     this.seeFiles(this.nowResumeMsg, this.nowResumeMsg.uid);
-    this.operating(this.nowResumeMsg.uid, { action: "查看", desc: "简历附件" });
   }
   seeFiles(fileObJ, uid) {
     let File = fileObJ.resumeAttach;

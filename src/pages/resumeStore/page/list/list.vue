@@ -685,7 +685,7 @@ export default class resumeStore extends Vue {
   }
   /* 清除列表选项 */
   resetForm(name) {
-    console.log(this.form);
+    this.$refs.Satisfaction.noReason();
     this.$refs[name].resetFields();
     this.form.page = 1;
     for (let key in this.form) {
@@ -847,7 +847,6 @@ export default class resumeStore extends Vue {
   }
 
   getDetail(uid, index) {
-    
     this.resumeId = String(uid);
     this.isShow = true;
     this.showArrow = true;
