@@ -14,7 +14,12 @@ export const uploadApi = data => request({
   type: 'post',
   data
 })
-
+/*  左侧菜单栏 */
+export const admin_menu = () => request({
+  url: '/cur/admin_menu',
+  type: 'get',
+  noGlobalLoading: true
+})
 /* 登录 */
 export const loginApi = data => request({
   url: '/auth/login',
@@ -37,5 +42,6 @@ export const rightInfoApi = data => request({
 /* 获取销售人员名单 */
 export const getSalerListApi = () => request({
   url: `/company/admin_user_list`,
-  type: 'get'
+  type: 'get',
+  noGlobalLoading: true
 })

@@ -12,14 +12,14 @@
             <div class="content">
               <el-input type='text' placeholder="请输入内容" v-model="searchType.keyword1" class="inputSelect">
                 <el-select class="selectTitle" v-model="searchType.condition1" slot="prepend" placeholder="请选择">
-                  <el-option v-for="item in keyword" :label="item.label" :value="item.value" v-show="searchType.condition2 !== item.value"></el-option>
+                  <el-option v-for="item in keyword" :key="item.label" :label="item.label" :value="item.value" v-show="searchType.condition2 !== item.value"></el-option>
                 </el-select>
               </el-input>
             </div>
             <div class="content">
               <el-input type='text' placeholder="请输入内容" v-model="searchType.keyword2" class="inputSelect">
                 <el-select class="selectTitle" v-model="searchType.condition2" slot="prepend" placeholder="请选择">
-                  <el-option v-for="item in keyword" :label="item.label" :value="item.value" v-show="searchType.condition1 !== item.value"></el-option>
+                  <el-option v-for="item in keyword" :key="item.label" :label="item.label" :value="item.value" v-show="searchType.condition1 !== item.value"></el-option>
                 </el-select>
               </el-input>
             </div>
@@ -235,6 +235,19 @@ export default class officerManage extends Vue{
     if (this.searchType.condition1 && this.searchType.keyword1) searchCondition[this.searchType.condition1] = this.searchType.keyword1
     if (this.searchType.condition2 && this.searchType.keyword2) searchCondition[this.searchType.condition2] = this.searchType.keyword2
     let searchForm = Object.assign({}, this.form, searchCondition)
+    if (searchForm.start !== "" && searchForm.end === "") {
+      this.$message({
+        message: "申请时间必须选择开始时间和结束时间",
+        type: "warning"
+      });
+      return;
+    } else if (searchForm.start === "" && searchForm.end !== "") {
+      this.$message({
+        message: "申请时间必须选择开始时间和结束时间",
+        type: "warning"
+      });
+      return;
+    }
     this.getRecruiterList(searchForm)
   }
   // 搜索地址
@@ -411,7 +424,7 @@ export default class officerManage extends Vue{
   .btn-container{
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     .check{
       line-height: 48px;
       color: #652791;

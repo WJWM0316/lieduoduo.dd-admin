@@ -4,8 +4,8 @@
         <div v-if="!isFromUser">
             <header>绑定管理员</header>
             <el-form ref="form" :model="bindForm" :rules="bindRules" class="bindForm" label-width="120px" label-suffix="：" @keyup.enter="done">
-                <el-form-item label="管理员账号" prop="adminUser">
-                    <el-input v-model="bindForm.adminUser" @blur.stop="checkUser"></el-input>
+                <el-form-item label="管理员账号" prop="mobile">
+                    <el-input v-model="bindForm.mobile" @blur.stop="checkUser"></el-input>
                 </el-form-item>
                 <p v-if="toCretedUser"><i class="el-icon-warning" style="color: #E6A23C;"></i> 该用户不存在，请先 <span class="addUser" @click.stop="addUser">添加用户</span></p>
                 <div v-if="isNewUser && !toCretedUser">
@@ -15,11 +15,11 @@
                     <el-form-item label="性别">
                         <P>{{newUserInfo.gender}}</p>
                     </el-form-item>
-                    <el-form-item label="担任职务" prop="position">
-                        <el-input v-model="bindForm.position"></el-input>
+                    <el-form-item label="担任职务" prop="user_position">
+                        <el-input v-model="bindForm.user_position"></el-input>
                     </el-form-item>
-                    <el-form-item label="接收简历邮箱" prop="email">
-                        <el-input v-model="bindForm.email"></el-input>
+                    <el-form-item label="接收简历邮箱" prop="user_email">
+                        <el-input v-model="bindForm.user_email"></el-input>
                     </el-form-item>
                 </div>
                 <el-button class="btn done" @click.stop="done" v-show="isNewUser">确定</el-button>
@@ -57,12 +57,12 @@
         <header v-if="!!isAdmin || !isFromUser">移除并更换管理员</header>
         <header v-else>移除招聘官</header>
         <div class="removeAdmin">
-            <h2 v-if="!!isAdmin || !isFromUser">确定将<span class="companyName">【{{companyName}}】</span>移除该管理员并更换?</h2>
-            <h2 v-else>确定将<span class="companyName">【{{userName}}】</span>招聘官从<span class="companyName">【{{companyName}}】</span>移出吗?</h2>
+            <h2 v-if="!!isAdmin || !isFromUser">确定将<span class="companyName">【{{companyInfo.realName}}】</span>移除该管理员并更换?</h2>
+            <h2 v-else>确定将<span class="companyName">【{{companyName}}】</span>招聘官从<span class="companyName">【{{companyInfo.realName}}】</span>移出吗?</h2>
             <p>解绑所属公司后，在平台上关联内容将如下处理，且数据永久保留</p>
             <ul>
                 <li>关闭与公司已绑定的所有职位</li>
-                <li>隐藏改用户的招聘官所有信息展示</li>
+                <li>隐藏该用户的招聘官所有信息展示</li>
                 <li>终止该用户所有有关的职位发布、面试邀约、面试行程</li>
                 <li>终止该用户所有权益和活动参与资格</li>
             </ul>
@@ -82,12 +82,20 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import ImageUploader from '@/components/imageUploader'
-import { checkIdentityApi, bindCompanyApi, deleteAdminApi, deleteRecruiterApi, checkCompanyNameApi } from 'API/company'
+import { checkIdentityApi, bindCompanyApi, deleteAdminApi, deleteRecruiterApi, checkCompanyNameApi,checkOldCompanyName,createCompanyApi } from 'API/company'
 @Component({
     name: 'adminBox',
     props: {
         isBindAdmin: {
             type: Boolean
+        },
+        // 是否是旧公司公司绑定管理员
+        isOldEdit:{
+            type:Boolean
+        },
+        // 公司信息
+        companyInfo:{
+            type:Object,
         },
         /* 是否在用户详情编辑 */
         isFromUser: {
@@ -103,6 +111,7 @@ import { checkIdentityApi, bindCompanyApi, deleteAdminApi, deleteRecruiterApi, c
             type: Number,
             default: 0
         },
+        // 当前公司招聘官名字,在点击移除管理员时使用
         companyName: {
             type: String,
             default: ''
@@ -124,29 +133,53 @@ export default class adminBox extends Vue {
     isNewUser = false
     newUserInfo = ''
     bindCompanyId = '' // 当前要绑定的公司id
+    /* 新建公司提交的数据 */
     bindForm = {
-        is_admin: '1',
-        adminUser: '', // 管理员账号
-        position: '', // 担任职务
-        email: '',
-        avatars: ''
+      user_email:'',//邮箱地址
+      user_position:'',//担任职务
+      mobile: "", //管理员(招聘官)手机号码
     }
-    /* 绑定公司 */
+    /* 编辑状态提交的数据 */
     bindCompanyForm = {
-        name: '',
+        mobile: '',
         is_admin: '1',
         uid: '', // 管理员账号
         position: '', // 担任职务
-        email: ''
+        email: '',
+        position:""
     }
+    // 公共提交
+    commonForm={
+        uid:''
+    }
+    // 由于这个组件 数据太乱 ，把一些公用的数据放到这里自己取
+    commonFrom={
+        uid:'' ///管理员id
+    }
+    // wait
     nameRule = (rule, value, callback) => {
-        checkCompanyNameApi(value).then(res => {
+        checkCompanyNameApi({company_name:value}).then(res => {
             if (res.data.data.exist) {
                 callback()
             } else {
-                callback(new Error(`公司不存在，请输入完整且正确的公司名字`))
+                callback(new Error(`${res.data.msg}`))
             }
         })
+    }
+    emailRule=(rule,value,callback)=>{
+    //    const emailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
+    const emailReg = /^([a-zA-Z0-9]+[_|\_|\.|\-]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[-_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,8}$/;
+        if (!value) {
+            return callback(new Error('邮箱不能为空'))
+        }
+        // console.log(emailReg.test(value),'emailReg.test(value)')
+        setTimeout(() => {
+            if (emailReg.test(value)) {
+                callback()
+                } else {
+                    callback(new Error('请输入正确的邮箱格式'))
+                }
+            }, 100) 
     }
     phoneRule = (rule, value, callback) => {
         checkIdentityApi(value).then(res => {
@@ -175,14 +208,15 @@ export default class adminBox extends Vue {
         "position": [
             { required: true, message: '请输入担任职务', trigger: 'blur' }
         ],
-        "email": [
-            { required: true, message: '请输入邮箱', trigger: 'blur' }
+        "user_email": [
+            { required: true, message: '请输入邮箱', trigger: 'blur'},
+            { required: true, message: '请输入正确的邮箱', trigger: 'blur', validator:this.emailRule }
         ],
     }
     companyRules = {
         "name": [
             { required: true, message: '请输入公司名字', trigger: 'blur' },
-            { validator: this.nameRule, trigger: 'blur' }
+            // { validator: this.nameRule, trigger: 'blur' }
         ],
         "is_admin": [
             { required: true, message: '请选择身份', trigger: 'blur' },
@@ -196,6 +230,12 @@ export default class adminBox extends Vue {
     }
     /* 绑定管理员 */
     async done () {
+        let company=this.companyInfo;
+        // console.log(company,'company')
+        
+        let NewcompanyInfo={...company,...this.bindForm}
+        // console.log(NewcompanyInfo)
+        // return
         if (!this.newUserInfo.name && !this.isFromUser) {
             this.$message({
                 type: 'error',
@@ -204,16 +244,38 @@ export default class adminBox extends Vue {
             return
         }
         if (!this.isFromUser) {
-            this.$refs['form'].validate(async (valid) => {
+            if(this.isOldEdit){
+                /* 旧公司绑定管理员 */
+                // console.log('旧公司绑定管理员')
+                // console.log(this.companyInfo,'this.bindCompanyId')
+                // console.log(this.bindCompanyForm)
+                // console.log(this.bindForm,'bindForm')
+                // console.log('公用数据',this.commonFrom)
+                this.bindCompanyForm={
+                    email: this.bindForm.user_email,
+                    is_admin: "1",
+                    mobile: this.bindForm.mobile,
+                    position: this.bindForm.user_position,
+                    uid: this.commonFrom.uid
+                }
+                // console.log('修改后的数据',this.bindCompanyForm)
+                let res = await bindCompanyApi(this.companyInfo.id, this.bindCompanyForm)
+                this.$message({type: 'success', message: '绑定成功'})
+                this.$emit('closeAdminWindow', {'needLoad': true})
+            }else{
+                /* 新公司创建 */
+                this.$refs['form'].validate(async (valid) => {
                 if (valid) {
-                    let res = await bindCompanyApi(this.$route.query.id, this.bindForm)
-                    this.$message({type: 'success', message: '管理员绑定成功'})
-                    this.$emit('closeAdminWindow', {'needLoad': true})
+                    let res = await createCompanyApi(NewcompanyInfo)
+                    this.$message({type: 'success', message: '公司创建成功'})
+                     this.$emit('close',{needLoad:true})
                 } else {
                     return false
                 }
             })
+            }
         } else {
+            console.log('绑定公司招聘官')
             this.$refs['bindCompanyForm'].validate(async (valid) => {
                 if (valid) {
                     this.bindCompanyForm.uid = this.$route.params.id
@@ -227,19 +289,35 @@ export default class adminBox extends Vue {
         }
     }
     cancel () {
-        this.$emit('closeAdminWindow')
+        this.$emit('close')
     }
+    // 检测手机号码
     checkUser () {
-        checkIdentityApi(this.bindForm.adminUser).then(res => {
+        console.log()
+        checkIdentityApi(this.bindForm.mobile).then(res => {
             if (res.data.data.isExisted) {
-                if (!res.data.data.isAdmin && !res.data.data.companyId) {
+                if(res.data.data.companyId!==0||res.data.data.companyName!==""){
+                    this.$message({
+                        message:`该用户已经绑定了公司!`,
+                        type: 'warning'
+                    })
+                }else if (!res.data.data.isAdmin && !res.data.data.companyId) {
+                    // console.log('输入手机号码',res.data.data)
+                    // console.log(this.bindCompanyForm)
                     this.isNewUser = true
                     this.toCretedUser = false
-                    this.bindForm.uid = res.data.data.uid
+                    // this.newUserInfo.name=res.data.data.name;
+                    // this.newUserInfo.gender=res.data.data.gender;
+                    this.bindForm.real_name=res.data.data.realname
+                    this.companyInfo.created_uid=res.data.data.uid
+                    // this.bindCompanyForm.uid=res.data.data.data.uid
+                    this.$set(this.commonFrom,'uid',res.data.data.uid)
+                    // console.log(this.commonFrom)
                     this.newUserInfo = {
                         name: res.data.data.realname,
                         gender: res.data.data.gender === 1? '男' : '女'
                     }
+                    // console.log(this.newUserInfo)
                 } else {
                     new Error(`该用户已绑定在${res.data.data.companyName},请重新绑定用户`)
                     this.toCretedUser = false
@@ -250,8 +328,9 @@ export default class adminBox extends Vue {
             }
         })
     }
+    // 检测已有公司名，并且将该公司与管理员绑定
     checkCompany () {
-        checkCompanyNameApi(this.bindCompanyForm.name).then(res => {
+        checkOldCompanyName(this.bindCompanyForm.name).then(res => {
             if (res.data.data.exist) {
                 this.bindCompanyId = res.data.data.id
             }
@@ -264,8 +343,13 @@ export default class adminBox extends Vue {
     }
     /* 移除管理员 */
     async removeAdmin () {
+        // console.log('移除管理员')
+        // console.log( this.isFromUser,this.isAdmin)
+       
         if (!this.isFromUser || !!this.isAdmin) {
             // 从公司信息入口编辑或编辑管理员
+            
+            // console.log('公司入口进入')
             let param = {
                 newAdmin: this.nextAdmin? this.nextAdmin.uid : 0
             }
@@ -277,6 +361,8 @@ export default class adminBox extends Vue {
             })
         } else {
             // 从用户入口编辑
+            //  console.log('从用户入口编辑')
+            //   return
             let param = {
                 uid: this.$route.params.id
             }
@@ -288,7 +374,11 @@ export default class adminBox extends Vue {
         }
         this.$emit('closeAdminWindow', {'needLoad': true})
     }
-    created () {}
+    created () {
+        // console.log(this.companyInfo,'companyInfo')
+        // console.log(this.isBindAdmin,'isBindAdmin')
+
+    }
 }
 </script>
 
@@ -301,6 +391,7 @@ export default class adminBox extends Vue {
         background-color: #652791;
         color: #ffffff;
     }
+    z-index: 111;
     overflow: hidden;
     width: 500px;
     background-color: #ffffff;

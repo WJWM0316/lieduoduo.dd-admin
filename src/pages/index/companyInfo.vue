@@ -11,7 +11,7 @@
         <el-button @click.stop="next" v-show="active === 0">保存，下一步</el-button>-->
         <el-button @click.stop="toEdit">编辑</el-button>
         <el-button @click.stop="bindAdmin" v-if="companyInfo.createdUid === 0">绑定管理员</el-button>
-        <el-button @click.stop="bindAdmin" v-else>移除管理员</el-button>
+        <el-button @click.stop="delateAdmin" v-else>移除管理员</el-button>
       </div>
     </div>
     <!--大图蒙层-->
@@ -46,7 +46,6 @@
         <el-form-item label="所属行业" prop="industry_id">
           <span>{{companyInfo.industry}}</span>
         </el-form-item>
-
         <el-form-item label="融资阶段" prop="financing">
           <span>{{companyInfo.financingInfo}}</span>
         </el-form-item>
@@ -141,9 +140,12 @@
     <!-- 绑定与解绑模块 -->
     <div v-if="showAdminWindow" class="bindAdminWindo">
       <admin-control
+        :isOldEdit="isOldEdit"
+        @close="closeBtn"
+        :companyInfo="companyInfo"
+        :isNewCompany="isNewCompany"
         @closeAdminWindow="close"
         :isBindAdmin="companyInfo.createdUid? true : false"
-        :companyName="companyInfo.companyName"
         :nextAdmin="nextAdmin"
       ></admin-control>
     </div>
@@ -156,6 +158,7 @@ import Component from "vue-class-component";
 import adminControl from "@/components/adminControl/index";
 import { fieldApi, uploadApi, getSalerListApi } from "API/commont";
 import {
+  bindCompanyApi,
   setCompanyInfoApi,
   setIdentityInfoApi,
   addCompanyAddressApi,
@@ -176,21 +179,25 @@ export default class createCompany extends Vue {
   active = 0;
   adressList = []; // 地址列表
   showAdminWindow = false;
-  nowImg='';//预览大图
+  nowImg = ""; //预览大图
   nextAdmin = null; // 公司下一个管理员的信息
   pop = {
     isShow: false,
     type: "position"
   };
+  isNewCompany = false;
   email = {
     isShow: false
   };
   /* 公司信息 */
-  companyInfo = {};
+  companyInfo = {
+    createdUid: "" /* 0没有绑定管理员，1已经绑定了管理员 */
+  };
 
   /* 权益信息 */
   rightInfo = {};
-
+  // 是否是旧公司绑定管理员
+  isOldEdit = false;
   /* 切换tab */
   tab(e) {
     if (e.target.className === "userInfo") {
@@ -206,21 +213,50 @@ export default class createCompany extends Vue {
   }
 
   /* 获取公司信息 */
-  async getCompanyInfo() {
+  getCompanyInfo() {
     const { id } = this.$route.query;
-    let res = await getCompanyInfoApi(id);
-    this.companyInfo = res.data.data.companyInfo;
-    this.rightInfo = res.data.data.rtInfo;
+    getCompanyInfoApi(id)
+      .catch(err => {
+        if (err.data.code === 403) {
+          this.$router.go(-1);
+        }
+        console.log(err);
+      })
+      .then(res => {
+        this.companyInfo = res.data.data.companyInfo;
+        console.log(this.companyInfo);
+        this.rightInfo = res.data.data.rtInfo;
+      });
+    // try {
+    //   const { id } = this.$route.query;
+    //   let res = await getCompanyInfoApi(id);
+    //   console.log('res',res)
+    //   this.companyInfo = res.data.data.companyInfo;
+    //   this.rightInfo = res.data.data.rtInfo;
+    // } catch(e) {
+    //   console.log('gggg')
+    //   console.log(e)
+    // }
   }
-
-  /* 绑定和解绑管理员 */
+  // 绑定已有公司的管理员
   async bindAdmin() {
+    // this.isFromUser = !false;
     this.showAdminWindow = true;
+    this.isBindAdmin = this.companyInfo.createdUid ? true : false;
+    this.isOldEdit = true;
+    console.log(this.companyInfo.createdUid);
+  }
+  /* 移除已有公司的管理员 */
+  async delateAdmin() {
+    this.showAdminWindow = true;
+    console.log(this.companyInfo);
+    // 判断是否存在公司id，如果存在，则进入下一步
     if (this.companyInfo.createdUid) {
       let param = {
         page: 1,
         count: 2
       };
+      //弹出移除并更换管理员的系统弹框，并自动调取管理员列表，获取下一个管理员信息
       let res = await getRecruitersListApi(this.$route.query.id, param);
       res.data.data.forEach((item, index) => {
         if (this.companyInfo.createdUid !== item.uid) {
@@ -237,12 +273,15 @@ export default class createCompany extends Vue {
     this.showAdminWindow = false;
     if (e && e.needLoad) this.getCompanyInfo();
   }
+  closeBtn() {
+    this.showAdminWindow = false;
+  }
   /* 查看大图 */
   showImg(imgUrl) {
     this.nowImg = imgUrl;
-    console.log(this.nowImg)
+    console.log(this.nowImg);
   }
-   /* 隐藏大图 */
+  /* 隐藏大图 */
   hiddenMask() {
     this.nowImg = "";
   }
@@ -272,10 +311,11 @@ export default class createCompany extends Vue {
     max-height: 90% !important;
   }
 }
-.seePhoto{
+.seePhoto {
   position: relative;
   width: 130px;
   height: 170px;
+  overflow: hidden;
 }
 .zoomBox {
   background-color: rgba(0, 0, 0, 0.2);

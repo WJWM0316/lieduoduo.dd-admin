@@ -445,8 +445,8 @@
     .arrow,
     .status,
     .time{
-      justify-content: center;
-      text-align: center;
+      justify-content: flex-start;
+      text-align: start;
     }
     
     .status {

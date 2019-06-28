@@ -90,6 +90,7 @@ export default class List extends Vue {
   $table = null
 
   mounted () {
+    console.log(this.total)
     this.init()
   }
 

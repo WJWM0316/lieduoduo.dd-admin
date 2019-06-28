@@ -54,7 +54,8 @@ export const getUserListApi = data => request({
 /* 获取用户详情 */
 export const getUserInfoApi = data => request({
   url: `/usermanage/user/detail/${data}`,
-  type: 'get'
+  type: 'get',
+  noGlobalLoading: true
 })
 /* 开启招聘官发布职位权限 */
 export const onCreatedRightApi = data => request({

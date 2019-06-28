@@ -412,12 +412,14 @@ export default class editCompany extends Vue {
   }
   /* 获取编辑的公司信息 */
   getCompanyInfo () {
+    console.log('ressfdsdfs',res)
     const { id } = this.$route.query
     getCompanyInfoApi(id).then(res => {
+      console.log('ressfdsdfs',res)
       this.form = {
-        logo: res.data.data.companyInfo.logoInfo.middleUrl, 
-        icon1: res.data.data.companyInfo.businessLicenseInfo.middleUrl, 
-        icon2: res.data.data.companyInfo.onJobInfo.middleUrl 
+        logo: res.data.data.companyInfo.logoInfo.url, 
+        icon1: res.data.data.companyInfo.businessLicenseInfo.url, 
+        icon2: res.data.data.companyInfo.onJobInfo.url 
       }
       /* 公司信息 */
       this.companyInfo = {

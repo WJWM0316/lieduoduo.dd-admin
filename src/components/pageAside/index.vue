@@ -1,59 +1,41 @@
 <template>
   <aside id="page-aside">
-    <section>
-      <div>
+    <section class="section">
+      <div class="AsideContent">
         <div class="logo">
           <img src="../../assets/lieduoduo.png" class="avatar">
         </div>
-        <ul>
-          <li>
-            <router-link to="/index">
-              <i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>公司库
-            </router-link>
-          </li>
-          <li>
-            <router-link to="/user">
-              <i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>用户管理
-            </router-link>
-          </li>
-          <li>
-            <router-link to="/positionManage">
-              <i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>职位管理
-            </router-link>
-          </li>
-          <!-- 审核管理列 -->
-          <li>
-            <router-link to="/check" active-class="interviewActive">
-              <i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>审核管理
-            </router-link>
-          </li>
-          <div class="verify">
-            <li>
-              <router-link to="/check/companyCheck">公司审核管理</router-link>
-            </li>
-            <li>
-              <router-link to="/check/recruitmentOfficer">招聘官审核</router-link>
-            </li>
-          </div>
-          <!-- 面试管理列 -->
-          <li>
-            <router-link to="/interview" active-class="interviewActive">
-              <i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>面试管理
-            </router-link>
-          </li>
-          <div class="interviewBox" :class="{expand: isCLick, collapse: !isCLick}">
-            <li>
-              <router-link to="/interview" exact>申请列表</router-link>
-            </li>
-            <li>
-              <router-link to="/interview/invite">邀请列表</router-link>
-            </li>
-          </div>
-          <!-- 简历库 -->
-          <li>
-            <router-link to="/resumeStore" active-class="interviewActive">
-              <i style="margin-right: 16px;" class="icon iconfont icongongneng"></i>简历库
-            </router-link>
+        <ul class="itemList">
+          <li
+            v-for="(item, index) in itemList"
+            :key="index"
+            class="item"
+            :class="{'slide-down': item.children.length, 'active': item.isShow }"
+            @click.stop="topath('up', '', index, item)"
+          >
+            <div class="path" :class="{'pathactive': item.isShow}">
+              <i
+                style="margin-right: 16px;"
+                class="icon iconfont icongongneng"
+                :class="onePath===item.path?'iconold':'iconNew'"
+              ></i>
+              <span>{{item.title}}</span>
+              <i class="el-icon-arrow-up pathArrow" v-show="item.children.length"></i>
+            </div>
+
+            <!--  :class="{'pathactive': page.path === onePath }" -->
+            <ul v-if="item.children.length">
+              <li
+                v-for="(page,index1) in item.children"
+                :key="index1"
+                class="children"
+                @click.stop="topath('down', index, index1, page)"
+              >
+                <div class="verify" :class="{'pathactive': page.isShow }">
+                  <span>{{page.title}}</span>
+                </div>
+              </li>
+            </ul>
           </li>
         </ul>
       </div>
@@ -64,175 +46,226 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import { routes } from "@/router/routes";
+import { admin_menu } from "API/commont";
 
 @Component({
   name: "page-asise",
-  watched: {
-    filterText(val) {
-      this.$refs.tree.filter(val);
+  watch: {
+    $route: {
+      handler(route) {
+        this.getMenu();
+        this.init();
+      },
+      immediate: true
     }
-  }
+  },
+  props: {}
 })
 export default class PageAside extends Vue {
   routes = null;
-  isCLick = true;
-  handleNodeClick(data) {}
+  isActive = 0;
+  onePath = "/index"; //当前一级路由
+  SecondPath = ""; //当前二级路由
+  index = "";
+  index1 = "";
+  AdminShow = 0;
+  itemList = [];
+  // itemList = [
+  //   {
+  //     path: "/index",
+  //     title: "公司库",
+  //     name: "index",
+  //     isShow: false,
+  //     flag: "index",
+  //     children: []
+  //   },
+  //   {
+  //     path: "/user",
+  //     title: "用户管理",
+  //     name: "user",
+  //     isShow: false,
+  //     flag: "user",
+  //     children: []
+  //   },
+  //   {
+  //     path: "/positionManage",
+  //     title: "职位管理",
+  //     name: "positionManage",
+  //     isShow: false,
+  //     flag: "positionManage",
+  //     children: []
+  //   },
+  //   {
+  //     path: "/",
+  //     title: "审核管理",
+  //     isShow: false,
+  //     flag: "check",
+  //     children: [
+  //       {
+  //         path: "/check/companyCheck",
+  //         title: "公司审核管理",
+  //         name: "companyCheck",
+  //         flag: "check"
+  //       },
+  //       {
+  //         path: "/check/recruitmentOfficer",
+  //         title: "招聘官审核",
+  //         name: "recruitmentOfficer",
+  //         flag: "check"
+  //       }
+  //     ]
+  //   },
+  //   {
+  //     path: "/",
+  //     title: "面试管理",
+  //     isShow: false,
+  //     flag: "interview",
+  //     children: [
+  //       {
+  //         isTwo: true,
+  //         isShow: false,
+  //         path: "/interview/List",
+  //         name: "List",
+  //         title: "申请列表",
+  //         flag: "interview"
+  //       },
+  //       {
+  //         isShow: false,
+  //         path: "/interview/invite",
+  //         name: "invite",
+  //         title: "邀请列表",
+  //         flag: "interview"
+  //       }
+  //     ]
+  //   },
+  //   {
+  //     path: "/",
+  //     title: "简历库",
+  //     flag: "resume",
+  //     isShow: false,
+  //     children: [
+  //       {
+  //         isShow: false,
+  //         path: "/resumeStore/list",
+  //         name: "list",
+  //         title: "简历列表",
+  //         flag: "resume"
+  //       },
+  //       {
+  //         isShow: false,
+  //         path: "/resumeStore/recommendList",
+  //         name: "recommendList",
+  //         title: "推荐列表",
+  //         flag: "resume"
+  //       },
+  //       {
+  //         isShow: false,
+  //         path: "/resumeStore/invitationProgress",
+  //         name: "invitationProgress",
+  //         title: "邀约进展",
+  //         flag: "resume"
+  //       }
+  //     ]
+  //   }
+  // ];
   tabSwitch() {
     this.isCLick = !this.isCLick;
   }
+  mounted() {
+    this.AdminShow = sessionStorage.getItem("AdminShow");
+    // console.log("sdfsddfds");
+    // this.getMenu();
+    // console.log(JSON.stringify(this.itemList))
+  }
+  getMenu() {
+    if (this.$route.path !== "/login" && this.$route.path !== "/") {
+      let itemList = JSON.parse(sessionStorage.getItem("itemList"));
+      console.log(itemList, "itemList");
+      if (itemList !== null) {
+        this.itemList = JSON.parse(sessionStorage.getItem("itemList"));
+      } else {
+        admin_menu().then(res => {
+          this.itemList = res.data.data;
+          sessionStorage.setItem("itemList", JSON.stringify(res.data.data));
+        });
+      }
+    } else {
+    }
+  }
+  topath(type, pIndex, cIndex, item) {
+    console.log(this.itemList);
+    // console.log(type, pIndex, cIndex, item)
+    console.log(this.itemList);
+    this.onePath = item.path;
+    if (type === "up") {
+      this.itemList.map(field => {
+        field.isShow = false;
+        if (field.path === item.path) field.isShow = true;
+      });
+    } else {
+      this.itemList[pIndex].children.map(
+        (field, i) => (field.isShow = i === cIndex ? true : false)
+      );
+    }
+
+    if (item.path == "/") {
+      this.itemList.map((field, i) => {
+        field.isShow = i === cIndex ? true : false;
+      });
+    } else {
+      console.log(this.itemList);
+      console.log(item.name, "------------");
+      this.$router.push({ name: item.name });
+    }
+  }
+  // mounted() {
+  //   this.init()
+  // }
+  show() {}
+  init() {
+    let path = this.$route.path;
+    let obj = {};
+    this.itemList.map((uRoute, uIndex, uArray) => {
+      if (Reflect.get(uRoute, "path") === path) {
+        uRoute.isShow = true;
+      } else {
+        uRoute.isShow = false;
+        uRoute.children.map(cRoute => {
+          if (cRoute.path === path) {
+            cRoute.isShow = true;
+            uArray.map(
+              field =>
+                (field.isShow = field.flag === cRoute.flag ? true : false)
+            );
+          } else {
+            cRoute.isShow = false;
+          }
+        });
+      }
+    });
+  }
+  judge(adminGrade) {
+    // console.log("+adminGrade", +adminGrade);
+    if (/(0|1|2)/.test(+adminGrade)) {
+      // console.log("显示简历库");
+      this.$set(this.itemList, 5, {
+        path: "/resumeStore",
+        name: "简历库",
+        isShow: true,
+        children: []
+      });
+    } else {
+      // console.log("不显示简历库");
+      this.$set(this.itemList, 5, {
+        path: "/resumeStore",
+        name: "简历库",
+        isShow: false,
+        children: []
+      });
+    }
+  }
 }
 </script>
-<style lang="less" scoped>
-#page-aside {
-  width: 200px;
-  height: 100vh;
-  background: #3e294d;
-  position: relative;
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  z-index: 2;
-  > section {
-    height: 100%;
-    overflow: hidden;
-    width: 200px;
-    > div {
-      height: 100%;
-      overflow-x: hidden;
-      overflow-y: scroll;
-      width: 217px;
-    }
-  }
-  .logo {
-    position: relative;
-    margin: 42px auto 50px;
-    .avatar {
-      position: relative;
-      z-index: 1;
-      width: 124px;
-    }
-  }
-  ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    margin-bottom: 150px;
-  }
-  li {
-    font-weight: 300;
-    color: #fff;
-    height: 60px;
-    line-height: 60px;
-    cursor: pointer;
-    transition: all ease 0.4s;
-    font-size: 14px;
-    text-align: left;
-    &:hover {
-      background: rgba(255, 226, 102, 0.12);
-    }
-    .zike-icon {
-      margin-right: 10px;
-    }
-    .iconfont {
-      margin-left: 5px;
-    }
-    .iconfont::before {
-      transition: 0.5s ease;
-    }
-    a {
-      padding-left: 46px;
-      box-sizing: border-box;
-      text-decoration: none;
-      color: #ededed;
-      display: block;
-      /*padding-left: 50px;*/
-      .iconfont {
-        color: #513e5f;
-      }
-    }
-  }
-  .router-link-active,
-  .interviewActive,
-  .filter-tree {
-    font-weight: 500;
-    background: rgba(255, 226, 102, 0.12);
-    position: relative;
-    color: #fff;
-    .iconfont {
-      color: #ffffff;
-    }
-    &:before {
-      background: #ffe266;
-      content: "";
-      display: block;
-      left: 0;
-      position: absolute;
-      height: 100%;
-      width: 4px;
-    }
-    &:after {
-      width: 0;
-      height: 0;
-      border-color: red;
-      position: absolute;
-      top: 50%;
-      left: 0;
-      transform: translateY(-50%);
-      border-width: 10px;
-      border-style: solid;
-      border-color: transparent transparent transparent #ffe266;
-      display: block;
-      content: "";
-    }
-  }
-  .interviewActive {
-    background: none;
-  }
-  .interviewActive:before {
-    display: none;
-  }
-  .interviewActive:after {
-    display: none;
-  }
-  .interviewBox {
-    height: 0px;
-    transition: 0.5s ease;
-    overflow: hidden;
-    li {
-      a {
-        padding-left: 78px;
-      }
-    }
-  }
-  .verifyTab {
-    color: #ededed;
-    padding-left: 46px;
-  }
-  .verify {
-    width: 100%;
-    display: inline-block;
-    li {
-      a {
-        padding-left: 78px;
-      }
-    }
-  }
-  .expand {
-    height: 120px;
-  }
-  .collapse {
-    height: 0px;
-  }
-  .turnUp::before {
-    display: inline-block;
-    transition: 0.5s ease;
-    transform: rotateZ(-180deg);
-  }
-  .turnDowm::before {
-    display: inline-block;
-    transition: 0.5s ease;
-    transform: rotateZ(0deg);
-  }
-}
+<style scoped lang="less">
+@import "./index.less";
 </style>

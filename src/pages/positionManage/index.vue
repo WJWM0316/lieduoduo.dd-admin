@@ -4,51 +4,79 @@
     <el-container class="container" style="border: 1px solid #eee">
       <el-header class="header" style="text-align: right; font-size: 15px">
         <div class="title">职位管理({{total}})</div>
+        <el-button @click.stop="addPosition" class="btn-limit-width">发布职位</el-button>
       </el-header>
       <el-main>
         <!--筛选-->
         <div class="selectionBox" @keyup.enter="search">
-          <el-button
-            class="inquire"
-            @click="addPosition"
-            style="margin-bottom: 20px;margin-left: 20px;float: right;"
-          >发布职位</el-button>
-
-          <el-form ref="form" :model="form" label-width="80px" validate="validate">
-            <el-form-item label="职位名称" prop="name">
-              <el-input v-model="form.name" placeholder="输入职位/发布者/主体公司"></el-input>
+          <el-form ref="form" :model="form" validate="validate">
+            <el-form-item prop="name">
+              <!-- 筛选条件1 -->
+              <div class="searchTab">
+                <el-input placeholder="请输入" v-model="form.name" class="inputSelect">
+                  <el-select v-model="select1" slot="prepend" placeholder="职位">
+                    <el-option label="公司名" value="1"></el-option>
+                    <el-option label="招聘官" value="2"></el-option>
+                    <el-option label="职位" value="3"></el-option>
+                  </el-select>
+                </el-input>
+              </div>
             </el-form-item>
-
-            <el-form-item label-width="100px" label="上线/下线" prop="is_online">
+            <el-form-item prop="name2">
+              <!-- 筛选条件1 -->
+              <div class="searchTab" style="margin-left:20px;">
+                <el-input placeholder="请输入" v-model="form.name2" class="inputSelect">
+                  <el-select v-model="select2" slot="prepend" placeholder="公司">
+                    <el-option label="公司名" value="1"></el-option>
+                    <el-option label="招聘官" value="2"></el-option>
+                    <el-option label="职位" value="3"></el-option>
+                  </el-select>
+                </el-input>
+              </div>
+            </el-form-item>
+            <el-form-item label-width="80px" label="上线/下线" prop="is_online">
               <el-select v-model="form.is_online" placeholder="全部状态">
                 <el-option label="上线" value="1"></el-option>
                 <el-option label="下线" value="2"></el-option>
               </el-select>
             </el-form-item>
 
-            <el-form-item label-width="100px" label="审核状态" prop="status">
+            <el-form-item label-width="80px" label="审核状态" prop="status">
               <el-select v-model="form.status" placeholder="全部状态">
                 <el-option label="全部状态" value=" "></el-option>
+                <el-option label="关闭" value="0"></el-option>
                 <el-option label="已通过" value="1"></el-option>
                 <el-option label="待审核" value="2"></el-option>
                 <el-option label="退回重审" value="3"></el-option>
                 <el-option label="未通过" value="4"></el-option>
               </el-select>
             </el-form-item>
+            <!-- 职位来源 -->
+            <el-form-item label-width="80px" label="职位类别" prop="type">
+              <el-cascader
+                ref="cascader"
+                placeholder="职位类别"
+                :options="options"
+                filterable
+                change-on-select
+                :props="positionManage"
+                @change="type"
+              ></el-cascader>
+            </el-form-item>
 
-            <el-form-item label-width="100px" label="职位来源" prop="comeFrom">
+            <el-form-item label-width="80px" label="职位来源" prop="wherefrom">
               <el-select v-model="form.wherefrom" placeholder="全部状态">
-                <el-option label="全部" value="1"></el-option>
-                <el-option label="后台导入" value="2"></el-option>
-                <el-option label="用户创建" value="3"></el-option>
+                <el-option label="全部" value="0"></el-option>
+                <el-option label="excel导入" value="3"></el-option>
+                <el-option label="用户创建" value="1"></el-option>
+                <el-option label="后台发布" value="2"></el-option>
               </el-select>
             </el-form-item>
-
-            <el-form-item>
-              <el-button class="inquire" @click="onSubmit">查询</el-button>
-              <el-button @click="resetForm('form')">重置</el-button>
-            </el-form-item>
           </el-form>
+          <div class="SumbitBtn">
+            <el-button class="inquire" @click="onSubmit">查询</el-button>
+            <el-button @click="resetForm('form')">重置</el-button>
+          </div>
         </div>
         <!--筛选-->
         <list
@@ -69,6 +97,11 @@
               <div>
                 <span class="check" @click="check(props.scope.row.id)">查看</span>
               </div>
+              <span
+                v-if="AdminShow==5||AdminShow==6||AdminShow==0"
+                class="createOrder"
+                @click="toPath(props.scope.row)"
+              >创建推荐单</span>
               <div
                 style="width: 100%; cursor: pointer; color: #652791;"
                 @click.stop="creatLink($event, props.scope.row.id, props.scope.$index)"
@@ -81,7 +114,13 @@
               style="height: 48px;"
             >
               <div class="positionMsg">
-                <div class="job_name">{{props.scope.row.positionName}}</div>
+                <span class="job_name">
+                  {{props.scope.row.positionName}}
+                  <span
+                    class="execlPut"
+                    v-if="props.scope.row.wherefrom==='3'"
+                  >导</span>
+                </span>
               </div>
             </div>
 
@@ -135,6 +174,14 @@
             >
               <span>{{props.scope.row.isOnline === 2 ? '下线' : '上线'}}</span>
             </div>
+            <!-- 职位信息
+            <div
+              class="btn-container"
+              v-else-if="props.scope.column.property === 'positionMsg'"
+              style="height: 48px;"
+            >
+              <i class="el-icon-error" style="color: #F56C6C;"></i>
+            </div>-->
             <template v-else>
               <span
                 :class="{'row-delete': props.scope.row.status !== 1}"
@@ -168,7 +215,8 @@ import Component from "vue-class-component";
 import List from "@/components/list";
 import { login, templistApi } from "API/company";
 import { getPositionCodeUrlApi } from "API/interview";
-import { getListApi } from "API/position";
+import { getListApi, getLabelPositionListApi } from "API/position";
+import { deflate } from "zlib";
 @Component({
   name: "course-list",
   components: {
@@ -179,15 +227,43 @@ export default class companyCheck extends Vue {
   total = 0; // 筛查结果数量
   pageCount = 0; // 请求回的数据共几页
   qrCode = "";
+  AdminShow = 0;
+  searchType = {
+    condition1: "name",
+    condition2: "name2",
+    condition2: "name3",
+    keyword1: "",
+    keyword2: "",
+    keyword3: ""
+  };
+  select1 = {
+    value: ""
+  };
+  select2 = {
+    value: ""
+  };
   form = {
-    wherefrom:'',//数据来源
+    wherefrom: "", //数据来源
     type: "",
     is_online: "", // 状态（1 上线，2 下线)
     status: "", // 状态（0关闭，1开启，审核通过，2审核中，3审核失败）查询多种状态用，号分隔（1,2,3）
     recruiter: "",
     page: 1,
-    name: "",
+    name: "", //职位名称，公司名，招聘官名（1）
+    name2: "", //职位名称，公司名，招聘官名（2）
     count: 20
+  };
+  options = [];
+  positionManage = {
+    value: "labelId",
+    label: "name",
+    children: "children"
+  }; //职位类别的配置
+  searchType = {
+    condition1: "keyword",
+    condition2: "mobile",
+    keyword1: "",
+    keyword2: ""
   };
   fields = [
     {
@@ -202,7 +278,7 @@ export default class companyCheck extends Vue {
     },
     {
       prop: "recruiterName",
-      label: "发布者",
+      label: "招聘官",
       width: 180
     },
     {
@@ -212,7 +288,7 @@ export default class companyCheck extends Vue {
     },
     {
       prop: "createdAt",
-      label: "最近修改时间",
+      label: "更新时间",
       width: 200
     },
     {
@@ -233,7 +309,13 @@ export default class companyCheck extends Vue {
     }
   ];
   list = [];
+  type(e) {
+    console.log(e);
+    this.form.type = e[e.length - 1];
+    console.log("this.form", this.form);
+  }
   onSubmit(e) {
+    console.log(this.form);
     this.form.page = 1;
     this.getTemplist();
   }
@@ -248,9 +330,17 @@ export default class companyCheck extends Vue {
       query: { id: id }
     });
   }
+  changeProvince() {}
   /* 重置 */
   resetForm(formName) {
     this.$refs[formName].resetFields();
+    this.$nextTick(() => {
+      let obj = {};
+      obj.stopPropagation = () => {};
+      this.$refs.cascader.clearValue(obj);
+    });
+    // this.positionManage.label = "";
+    // console.log(this.form);
   }
 
   addPosition() {
@@ -272,7 +362,17 @@ export default class companyCheck extends Vue {
       this.pageCount = res.data.meta.lastPage;
     });
   }
-
+  toPath(row) {
+    let obj = JSON.stringify(row);
+    this.$router.push({
+      path: "/resumeStore/recommendList/createOrder",
+      query: {
+        obj,
+        frompostion: true,
+        isFocus: true
+      }
+    });
+  }
   /* 关闭浮窗 */
   closeTopic() {
     this.$nextTick(() => {
@@ -321,7 +421,22 @@ export default class companyCheck extends Vue {
     });
   }
   created() {
+    this.AdminShow = +sessionStorage.getItem("AdminShow");
     this.getTemplist();
+    this.ManageList();
+  }
+  ManageList() {
+    getLabelPositionListApi().then(res => {
+      this.options = res.data.data;
+      this.options.forEach(item => {
+        item.children.forEach(item1 => {
+          item1.children.forEach(item2 => {
+            let result = JSON.stringify(item2.children);
+            if (result === "[]") delete item2.children;
+          });
+        });
+      });
+    });
   }
   activated() {
     let that = this;
@@ -333,6 +448,21 @@ export default class companyCheck extends Vue {
 </script>
 
 <style lang="less" scoped="scoped">
+@import "./index.less";
+.inputSelect {
+  line-height: 20px !important;
+  width: 100px !important;
+  background-color: #ffffff;
+  .el-select {
+    width: 120px;
+    margin-top: -2px;
+    border: none;
+    box-sizing: border-box;
+  }
+}
+.el-input-group__prepend {
+  width: 57px !important;
+}
 .positionManage {
   margin-left: 200px;
   .container {
@@ -368,6 +498,8 @@ export default class companyCheck extends Vue {
     .el-form {
       display: flex;
       align-items: center;
+      flex-wrap: wrap;
+      width: 1279px;
       .el-input {
         width: 200px;
       }
@@ -378,6 +510,9 @@ export default class companyCheck extends Vue {
   }
   .positionMsg {
     width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
     .job_name {
       font-family: PingFang-SC-Medium;
       font-weight: 500;
@@ -390,6 +525,19 @@ export default class companyCheck extends Vue {
       -webkit-line-clamp: 2;
       line-clamp: 2;
       -webkit-box-orient: vertical;
+      display: inline-block;
+      margin-right: 10px;
+      .execlPut {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 1px solid red;
+        font-size: 12px;
+        color: red;
+        display: inline-block;
+        text-align: center;
+        line-height: 20px;
+      }
     }
     .job_info {
       span {
@@ -408,63 +556,11 @@ export default class companyCheck extends Vue {
   .btn-container {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     .check {
-      line-height: 48px;
       color: #652791;
       cursor: pointer;
     }
-  }
-}
-.inquire {
-  background-color: #652791;
-  color: #ffffff;
-  border-radius: 4px;
-}
-.qrCode {
-  width: 150px;
-  height: 70px;
-  border-radius: 4px;
-  transform: translateY(-90%) translateX(-20%);
-  color: #652791;
-  position: absolute;
-  top: -999px;
-  left: -999px;
-  z-index: 3;
-  line-height: 60px;
-  .phoneBg {
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 5%;
-    z-index: -1;
-  }
-}
-.qrCode {
-  width: 300px;
-  height: 300px;
-  /*background-color: #CCCCCC;*/
-  transform: translateY(-100%) translateX(-50%);
-  .Qr {
-    width: 200px;
-    height: 200px;
-    margin-top: 30px;
-    object-fit: contain;
-  }
-  .bg {
-    width: 100%;
-    height: 100%;
-    max-width: 100%;
-    max-height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: -1;
-  }
-  .txt {
-    line-height: normal;
-    color: #5c565d;
-    margin-top: 5px;
   }
 }
 </style>

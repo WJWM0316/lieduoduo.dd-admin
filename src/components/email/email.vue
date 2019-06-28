@@ -42,7 +42,8 @@ export default class emailCheck extends Vue {
     }
     rule = {
         email: [
-            { required: true, message: '请输入邮箱', trigger: 'blur' }
+            { required: true, message: '请输入邮箱', trigger: 'blur' },
+            { required: true, message: '请输入正确的邮箱', trigger: 'blur', validator:this.emailRule }
         ]
     }
     save () {
@@ -52,6 +53,20 @@ export default class emailCheck extends Vue {
     }
     cancel () {
         this.$emit('close')
+    }
+    emailRule=(rule,value,callback)=>{
+    //    const emailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
+    const emailReg = /^([a-zA-Z0-9]+[_|\_|\.|\-]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[-_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,8}$/;
+        if (!value) {
+            return callback(new Error('邮箱不能为空'))
+        }
+        setTimeout(() => {
+            if (emailReg.test(value)) {
+                callback()
+                } else {
+                    callback(new Error('请输入正确的邮箱格式'))
+                }
+            }, 100) 
     }
     /* 发送校验 */
     sendEmail () {

@@ -15,7 +15,7 @@
         <h3>账号信息</h3>
         <el-form-item label="手机号码" prop="mobile">
           <el-input v-model="phone.mobile" placeholder="请输入手机号码" :maxlength="11" style="width: 250px;" v-if="!isEdit"></el-input>
-          <el-input v-model="phone.mobile" disabled placeholder="请输入手机号码" :maxlength="11" style="width: 250px;"v-else></el-input>
+          <el-input v-model="phone.mobile" disabled placeholder="请输入手机号码" :maxlength="11" style="width: 250px;" v-else></el-input>
         </el-form-item>
       </el-form>
 
@@ -184,8 +184,9 @@ export default class addUser extends Vue {
             message: this.isEdit? '编辑成功' : '用户创建成功',
             type: 'success'
           })
-          this.isEdit? this.$router.go(-1) : this.$router.replace({path: `/user`, query: {isNeedLoad: true}})
           // this.$router.go(-1)
+          this.isEdit? this.$router.go(-1) : this.$router.replace({path: `/user`, query: {isNeedLoad: true}})
+          this.$router.go(-1)
         })
       } else {
         return false

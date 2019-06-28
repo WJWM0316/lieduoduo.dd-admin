@@ -14,6 +14,12 @@ export const templistApi = data => request({
   type: 'get',
   data
 })
+/* 在审核表创建公司 */
+export const createCompanyApi = data => request({
+  url: '/company/temp',
+  type: 'post',
+  data
+})
 
 /* 获取审核公司基本信息 */
 export const getCompanyInfo = data => request({
@@ -152,8 +158,15 @@ export const getCityApi = () => request({
   url: `/area?level=3`,
   type: 'get'
 })
-/* 校验公司名称是否被使用 */
+/* 校验新公司名称是否被使用 */
 export const checkCompanyNameApi = (data) => request({
+  url: `/company/company_exist`,
+  type: 'get',
+  data,
+  noGlobalLoading: true
+})
+// 绑定公司，检测公司是否存在
+export const checkOldCompanyName = (data) => request({
   url: `/company/exist/${data}`,
   type: 'get',
   noGlobalLoading: true
@@ -188,7 +201,7 @@ export const checkIdentityApi = (phone) => request({
   type: 'get',
   noGlobalLoading: true
 })
-/* 公司绑定用户 */
+/* 公司绑定招聘官 */
 export const bindCompanyApi = (companyId, data) => request({
   url: `/company/recruiter/bind/${companyId}`,
   type: 'post',
@@ -212,13 +225,19 @@ export const deleteRecruiterApi = (companyId, uid) => request({
   type: 'delete'
 })
 /* 编辑公司审核表跟进人 */
-export const editCheckCompanyFollowUserApi = (companyId, uid) => request({
-  url: `/company/company_temp_add_to_follow_user/${companyId}?admin_uid=${uid}`,
+export const editCheckCompanyFollowUserApi = (companyId, uid,groupId) => request({
+  url: `/company/company_temp_add_to_follow_user/${companyId}?admin_uid=${uid}&groupId=${groupId}`,
   type: 'put'
 })
+/* 用户表设置跟进人 */
+export const editAdminNameApi = (uid,data) => request({
+  url: `/usermanage/save_admin_uid_to_user/${uid}`,
+  type: 'put',
+  data
+})
 /* 编辑公司库表里跟进人 */
-export const editCompanyFollowUserApi = (companyId, uid) => request({
-  url: `/company/company_add_to_follow_user/${companyId}?admin_uid=${uid}`,
+export const editCompanyFollowUserApi = (companyId, uid,groupId) => request({
+  url: `/company/company_add_to_follow_user/${companyId}?admin_uid=${uid}&groupId=${groupId}`,
   type: 'put'
 })
 /* 获取审核表里的人员申请信息 */
@@ -231,4 +250,9 @@ export const editApplyUserInfoApi = (uid,data) => request({
   url: `/company/update_company_apply_user_info/${uid}`,
   type: 'put',
   data
+})
+/* 审核表跟进人接口 */
+export const companyTempUserList = () => request({
+  url: `/company/company_temp_user_list`,
+  type: 'get',
 })
