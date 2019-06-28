@@ -82,7 +82,7 @@ export default class resumeAddtab extends Vue {
   labelStorePage = {
     page: 1,
     count: 100,
-    haveData: 1 
+    haveData: 1
   };
   showSelect() {
     this.showAddResumeTab = true;
@@ -108,8 +108,8 @@ export default class resumeAddtab extends Vue {
   }
   Tabresumelist() {
     if (this.labelStorePage.haveData) {
-      resumelist({ page: this.labelStorePage.page }).then(res => {
-        this.tabList =[...this.tabList,...res.data.data];
+      resumelist({ count: 100, page: this.labelStorePage.page }).then(res => {
+        this.tabList = [...this.tabList, ...res.data.data];
         let labelIdList = this.nowCheckListTab.map(field => field.labelId);
         this.labelStorePage.haveData = res.data.meta.haveData;
         this.labelStorePage.page++;
