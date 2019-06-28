@@ -27,7 +27,7 @@
                   placeholder="公司名"
                   @change="checkType(searchType.key1)"
                 >
-                  <el-option label="公司名" value="companyName"></el-option>
+                  <el-option label="公司名" value="company"></el-option>
                   <el-option label="批次" value="listId"></el-option>
                   <el-option label="职位发布者" value="recruiter"></el-option>
                   <el-option label="推荐职位" value="position"></el-option>
@@ -189,7 +189,7 @@ export default class recommend extends Vue {
   };
   tableData = [];
   searchType = {
-    key1: "companyName" /* 第一个搜索条件的默认键 */,
+    key1: "company" /* 第一个搜索条件的默认键 */,
     key2: "position" /* 第二个搜索条件的默认键 */
   };
   leftcontent = {
@@ -246,7 +246,7 @@ export default class recommend extends Vue {
       this.leftcontent.lastPage = res.data.meta.lastPage;
       this.leftcontent.total = res.data.meta.total;
 
-      // console.log(this.tableData);
+      console.log(this.tableData);
     });
   }
   handlePageChange(nowPage) {

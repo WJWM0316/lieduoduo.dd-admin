@@ -104,19 +104,19 @@ export const GetResumeHistory = (uid, data) =>
     data
   });
 // 获取简历历史记录
-export const recommendList = data =>
-  request({
-    url: `/advisor/recommend/interviews/search`,
-    type: "get",
-    data
-  });
-// 推荐清单列表
 // export const recommendList = data =>
 //   request({
-//     url: `/advisor/recommend_lists/search`,
+//     url: `/advisor/recommend/interviews/search`,
 //     type: "get",
 //     data
 //   });
+// 推荐清单列表
+export const recommendList = data =>
+  request({
+    url: `/advisor/recommend_lists/search`,
+    type: "get",
+    data
+  });
 // 推荐清单列表
 export const recommendDetail = uid =>
   request({
