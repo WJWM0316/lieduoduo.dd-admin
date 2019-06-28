@@ -226,7 +226,7 @@
               <div
                 class="seeResume"
                 @click.stop="seereResume(index)"
-                v-show="item.resumeAttach!=null"
+                v-show="item.resumeAttach!=null&&isSales"
               >
                 <el-button>查看简历附件</el-button>
               </div>
@@ -523,6 +523,7 @@ export default class resumeStore extends Vue {
     expectFieldId: [] /* 期望行业 */
   };
   tabList = []; /* 标签栏 */
+  isSales = 0; /* 权限字段 */
   historyCount = 1;
   nowCheck = 0; //当前点击详情上方的tab
   nowIndex = ""; //当前点击的简历索引
@@ -763,7 +764,11 @@ export default class resumeStore extends Vue {
       });
     }
   }
-
+  mounted() {
+    let AdminShow = +sessionStorage.getItem("AdminShow");
+    this.isSales = /(3|4)/.test(AdminShow) ? false : true;
+    console.log("当前是否能看", this.isSales);
+  }
   created() {
     this.isShow = this.degreeData();
     this.jobhuntStatus();
@@ -809,6 +814,15 @@ export default class resumeStore extends Vue {
   }
   /* 查看简历附件 */
   seereResume(index) {
+    let AdminShow = +sessionStorage.getItem("AdminShow");
+    AdminShow = /(3|4)/.test(AdminShow) ? false : true;
+    if (!AdminShow) {
+      this.$message({
+        message: "暂无权限",
+        type: "warning"
+      });
+      return;
+    }
     let uid = this.itemList[index].uid;
     this.seeFiles(this.itemList[index], uid);
   }

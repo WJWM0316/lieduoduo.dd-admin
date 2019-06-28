@@ -14,8 +14,8 @@
                   slot="prepend"
                   placeholder="公司名"
                 >
-                  <el-option label="公司名" value="companyName"></el-option>
-                  <el-option label="职位名" value="positionName"></el-option>
+                  <el-option label="公司名" value="company"></el-option>
+                  <el-option label="职位名" value="position"></el-option>
                   <el-option label="求职者" value="jobhunter"></el-option>
                   <el-option label="面试官" value="recruiter"></el-option>
                   <el-option label="简历编号" value="resumeId"></el-option>
