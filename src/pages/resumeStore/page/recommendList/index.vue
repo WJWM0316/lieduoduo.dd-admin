@@ -124,7 +124,7 @@
             <el-form-item label-width="1px" label prop="endTime"></el-form-item>
             <div class="BtnList">
               <el-form-item class="btn">
-                <el-button class="inquire" @click.stop="getData(form)">查询</el-button>
+                <el-button class="inquire" @click.stop="getData(1)">查询</el-button>
                 <el-button @click.stop="resetForm('form')">重置</el-button>
               </el-form-item>
             </div>
@@ -211,6 +211,7 @@ export default class recommend extends Vue {
     this.form.endTime = "";
     this.form.commonKey1 = "";
     this.form.commonKey2 = "";
+    this.form.page = 1;
     this.form.isJobhunterApply = false;
     this.$refs[name].resetFields();
   }
@@ -222,11 +223,12 @@ export default class recommend extends Vue {
       }
     });
   }
-  forEachKeys(form) {
+  forEachKeys(form, page) {
     // 基础键，剩余键值对由用户选择
+    console.log("form.page", form.page);
     let param = {
       count: 20,
-      page: form.page,
+      page: page,
       endTime: form.endTime,
       startTime: form.startTime,
       advisorUid: this.form.advisorUid
@@ -235,10 +237,8 @@ export default class recommend extends Vue {
     param[this.searchType.key2] = this.form.commonKey2;
     return param;
   }
-  getData() {
-    // console.log("this.form", this.form);
-    let obj = this.forEachKeys(this.form);
-    // console.log("ob", obj);
+  getData(page) {
+    let obj = this.forEachKeys(this.form, page);
     recommendList(obj).then(res => {
       this.tableData = res.data.data;
       this.leftcontent.lastPage = res.data.meta.lastPage;
@@ -251,11 +251,10 @@ export default class recommend extends Vue {
     // console.log(nowPage);
     this.$refs["methods"].scrollZero();
     this.form.page = nowPage;
-    this.form.page = nowPage;
-    this.getData(this.form);
+    this.getData(this.form.page);
   }
   created() {
-    this.getData(this.form);
+    this.getData(1);
     this.getList();
   }
   getList() {

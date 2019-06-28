@@ -111,7 +111,7 @@
             </el-form-item>
           </el-form>
           <div class="BtnList">
-            <el-button class="inquire" @click.stop="getData(form)">查询</el-button>
+            <el-button class="inquire" @click.stop="getData(1)">查询</el-button>
             <el-button @click.stop="resetForm('form')">重置</el-button>
           </div>
         </div>
@@ -363,7 +363,7 @@ export default class invitPro extends Vue {
     // console.log(nowPage);
     this.$refs["methods"].scrollZero();
     this.form.page = nowPage;
-    this.getData(this.form);
+    this.getData(this.form.page);
   }
   /* 选择二级状态 */
   choiceStatus(e) {
@@ -385,12 +385,12 @@ export default class invitPro extends Vue {
       this.$refs["qrCode"].style.display = "none";
     });
   }
-  forEachKeys(form) {
+  forEachKeys(form, page = 1) {
     // 基础键，剩余键值对由用户选择
 
     let param = {
+      page,
       count: 20,
-      page: form.page,
       dealStatusId: form.dealStatusId,
       dealStatusReasonId: form.dealStatusReasonId,
       startTime: form.startTime,
@@ -400,8 +400,9 @@ export default class invitPro extends Vue {
     param[this.searchType.key1] = this.form.commonKey1;
     return param;
   }
-  getData() {
-    let obj = this.forEachKeys(this.form);
+  getData(page) {
+    console.log("page", page);
+    let obj = this.forEachKeys(this.form, page);
     console.log(obj, "sdfsdf");
     interviewsList(obj).then(res => {
       this.tableData = res.data.data;
@@ -421,7 +422,7 @@ export default class invitPro extends Vue {
     });
   }
   created() {
-    this.getData(this.form);
+    this.getData(1);
     this.dealStatus();
   }
   dealStatus() {
