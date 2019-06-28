@@ -195,7 +195,7 @@ export default class OrderDetail extends Vue {
   uploadApi = "";
   PopTitle = "验证手机号码";
   isFocus = false;
-  dialogVisible = false;
+  dialogVisible = true;
   /* 提示语 */
   nowUserMsg = {}; /* 当前操作的用户数据 */
   closeModel = false;
