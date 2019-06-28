@@ -208,7 +208,6 @@ export default class filterAnswer extends Vue {
   }
   // 关闭
   closeSelect() {
-    console.log("sdfs");
     this.startSelect = false;
   }
 }

@@ -198,58 +198,59 @@
                 <img :src="nowResumeMsg.resumeQrCode" alt v-if="nowResumeMsg.resumeQrCode">
                 <span>扫码进入</span>
               </div>
-
-              <div class="ContactInformation" v-if="AdminShow!==3||AdminShow!==4">
-                <p class="contactTitle">联系方式:</p>
-                <div class="Contact" @click.stop="seeMobile" v-if="nowResumeMsg.mobile!=''">
-                  <span>手机号</span>
-                  <span v-if="nowResumeMsg.showPhone==true">{{nowResumeMsg.mobile}}</span>
+              <div class="isAdmin" v-if="isSales">
+                <div class="ContactInformation">
+                  <p class="contactTitle">联系方式:</p>
+                  <div class="Contact" @click.stop="seeMobile" v-if="nowResumeMsg.mobile!=''">
+                    <span>手机号</span>
+                    <span v-if="nowResumeMsg.showPhone==true">{{nowResumeMsg.mobile}}</span>
+                  </div>
+                  <div class="Contact" @click.stop="seeWechat" v-if="nowResumeMsg.wechat!=''">
+                    <span>微信号</span>
+                    <span v-if="nowResumeMsg.showWechat==true">{{nowResumeMsg.wechat}}</span>
+                  </div>
+                  <p v-if="nowResumeMsg.wechat==''&&nowResumeMsg.mobile==''" class="noUpload">暂无上传</p>
                 </div>
-                <div class="Contact" @click.stop="seeWechat" v-if="nowResumeMsg.wechat!=''">
-                  <span>微信号</span>
-                  <span v-if="nowResumeMsg.showWechat==true">{{nowResumeMsg.wechat}}</span>
+                <div class="download">
+                  <p class="contactTitle">
+                    附件简历:
+                    <span
+                      v-if="nowResumeMsg.resumeAttach"
+                    >{{nowResumeMsg.resumeAttach.whereFromDesc}}</span>
+                  </p>
+                  <el-upload
+                    v-if="nowResumeMsg.resumeAttach==null"
+                    action="https://admin-api.lieduoduo.ziwork.com/attaches"
+                    :limit="1"
+                    :http-request="UploadImage"
+                  >
+                    <el-button size="small" type="primary">上传附件</el-button>
+                  </el-upload>
+                  <div class="Contact" @click.stop="seeFilesBtn" v-else>
+                    <span>查看附件</span>
+                    <!--  -->
+                    <el-popover placement="top" width="160" v-model="visible">
+                      <p>确认删除么，删除后将无法恢复</p>
+                      <div style="text-align: right; margin: 0">
+                        <el-button size="mini" type="text" @click="visible = false">取消</el-button>
+                        <el-button
+                          type="primary"
+                          size="mini"
+                          @click.stop="delateFile(nowResumeMsg.uid)"
+                        >确定</el-button>
+                      </div>
+                    </el-popover>
+                    <i class="el-icon-delete" @click.stop="visible=true"></i>
+                  </div>
                 </div>
-                <p v-if="nowResumeMsg.wechat==''&&nowResumeMsg.mobile==''" class="noUpload">暂无上传</p>
-              </div>
-              <div class="download" v-if="AdminShow!==3||AdminShow!==4">
-                <p class="contactTitle">
-                  附件简历:
-                  <span
-                    v-if="nowResumeMsg.resumeAttach"
-                  >{{nowResumeMsg.resumeAttach.whereFromDesc}}</span>
-                </p>
-                <el-upload
-                  v-if="nowResumeMsg.resumeAttach==null"
-                  action="https://admin-api.lieduoduo.ziwork.com/attaches"
-                  :limit="1"
-                  :http-request="UploadImage"
-                >
-                  <el-button size="small" type="primary">上传附件</el-button>
-                </el-upload>
-                <div class="Contact" @click.stop="seeFilesBtn" v-else>
-                  <span>查看附件</span>
-                  <!--  -->
-                  <el-popover placement="top" width="160" v-model="visible">
-                    <p>确认删除么，删除后将无法恢复</p>
-                    <div style="text-align: right; margin: 0">
-                      <el-button size="mini" type="text" @click="visible = false">取消</el-button>
-                      <el-button
-                        type="primary"
-                        size="mini"
-                        @click.stop="delateFile(nowResumeMsg.uid)"
-                      >确定</el-button>
+                <div class="TabSelect">
+                  <p class="addTab" @click="addTab">打标签</p>
+                  <div class="tabList" v-if="nowResumeMsg.resumeLabels">
+                    <div class="tabItem" v-for="item in nowResumeMsg.resumeLabels" :key="item.id">
+                      <!-- @click.stop="delateLabelBtn(item.id,nowResumeMsg.uid)" -->
+                      <span>{{item.labelName}}</span>
+                      <!-- <i class="el-icon-circle-close"></i> -->
                     </div>
-                  </el-popover>
-                  <i class="el-icon-delete" @click.stop="visible=true"></i>
-                </div>
-              </div>
-              <div class="TabSelect">
-                <p class="addTab" @click="addTab">打标签</p>
-                <div class="tabList" v-if="nowResumeMsg.resumeLabels">
-                  <div class="tabItem" v-for="item in nowResumeMsg.resumeLabels" :key="item.id">
-                    <!-- @click.stop="delateLabelBtn(item.id,nowResumeMsg.uid)" -->
-                    <span>{{item.labelName}}</span>
-                    <!-- <i class="el-icon-circle-close"></i> -->
                   </div>
                 </div>
               </div>
@@ -332,6 +333,7 @@ export default class resumePopup extends Vue {
   visible = false;
   nowCheckListTab = [];
   fileList = [];
+  isSales = true; /* 只有超管，客服，顾问能看 */
   nowResumeMsg = {
     resumeLabels: {}
   }; /* 当前简历详情 */
@@ -352,8 +354,12 @@ export default class resumePopup extends Vue {
     await addHistory(uid, param);
   }
   created() {
-    this.AdminShow = +sessionStorage.getItem("AdminShow");
-    this.getUploadParam();
+    // this.AdminShow = +sessionStorage.getItem("AdminShow");
+    // this.testingAdmin(this.AdminShow);
+    // console.log("当前查看简历的权限", this.AdminShow);
+  }
+  testingAdmin(admin) {
+    this.isSales = /(3|4)/.test(admin) ? false : true;
   }
   /* 上传文件 */
   UploadImage(param) {
@@ -529,13 +535,6 @@ export default class resumePopup extends Vue {
     } else if (this.nowCheck === 0) {
       this.operating(this.nowResumeMsg.uid, { action: "查看", desc: "简历" });
     }
-  }
-  // 获取上传参数
-  getUploadParam() {
-    this.headers = {
-      "Authorization-Admin": getAccessToken(),
-      "Admin-Version": packjson.lieduoduoversion
-    };
   }
   // 请求历史记录
   history(uid, form) {

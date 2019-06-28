@@ -25,11 +25,7 @@
                 placeholder="职位类别"
                 :options="options"
                 filterable
-                :props="{
-                value:'labelId',
-                label:'name',
-                children:'children'
-                }"
+                :props="needWorkProps"
                 @change="type"
               ></el-cascader>
             </el-form-item>
@@ -362,7 +358,12 @@ export default class resumeStore extends Vue {
   nowCheckListTab = []; /* 添加标签数组 */
   closeSelectStore = false;
   diyTabName = ""; /* 自定义标签名 */
-  //
+  needWorkProps = {
+    value: "labelId",
+    label: "name",
+    children: "children",
+    checkStrictly: true
+  };
   labelStorePage = {
     page: 1,
     count: 100,
@@ -669,7 +670,6 @@ export default class resumeStore extends Vue {
 
   /* 手动关闭事件 */
   closeSubEvent() {
-    console.log("我背触发了");
     this.closelift = false;
     this.$refs["diywork"].closeSelect();
     this.$refs["Money"].closeSelect();
@@ -719,6 +719,8 @@ export default class resumeStore extends Vue {
     await addHistory(uid, param);
   }
   type(e) {
+    console.log(e, "当前选中");
+    console.log(this.$refs.cascader);
     this.form.expectPositionId = e[e.length - 1];
   }
   choiceCity(e) {
@@ -845,11 +847,14 @@ export default class resumeStore extends Vue {
   }
 
   getDetail(uid, index) {
+    
     this.resumeId = String(uid);
     this.isShow = true;
     this.showArrow = true;
     this.nowIndex = index;
     this.$nextTick(() => {
+      let AdminShow = +sessionStorage.getItem("AdminShow");
+      this.$refs["resume"].testingAdmin(AdminShow);
       this.$refs["resume"].getResume();
       this.$refs["resume"].operating(uid, {
         action: "查看",

@@ -355,6 +355,8 @@ export default class application extends Vue {
       this.resumeId = String(row.jobhunterInfo.uid);
       this.isShow = true;
       this.$nextTick(() => {
+        let AdminShow = +sessionStorage.getItem("AdminShow");
+        this.$refs["resume"].testingAdmin(AdminShow);
         this.$refs["resume"].getResume();
         this.$refs["resume"].operating(this.resumeId, {
           action: "查看",

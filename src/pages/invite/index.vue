@@ -157,7 +157,9 @@
                 class="btn positionName"
                 @click.stop="toPath(props.scope.row.positionId)"
               >{{props.scope.row.positionName}}</span>
-              <span style="display: inline-block;color:#282828;font-weight: normal;">{{props.scope.row.emolument}}</span>
+              <span
+                style="display: inline-block;color:#282828;font-weight: normal;"
+              >{{props.scope.row.emolument}}</span>
               <span
                 class="btn positionName"
                 @click.stop="creatLink($event, props.scope.row.positionId, props.scope.$index, 3)"
@@ -359,8 +361,13 @@ export default class invite extends Vue {
       this.resumeId = String(row.jobhunterInfo.uid);
       this.isShow = true;
       this.$nextTick(() => {
+        let AdminShow = +sessionStorage.getItem("AdminShow");
+        this.$refs["resume"].testingAdmin(AdminShow);
         this.$refs["resume"].getResume();
-        this.$refs["resume"].operating(this.resumeId, {action: "查看", desc: "简历" });
+        this.$refs["resume"].operating(this.resumeId, {
+          action: "查看",
+          desc: "简历"
+        });
       });
     }
   }
