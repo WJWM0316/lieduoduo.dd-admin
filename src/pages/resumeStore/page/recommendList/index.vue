@@ -17,7 +17,6 @@
                 placeholder="请输入内容"
                 v-model="form.commonKey1"
                 class="inputSelect"
-                @blur.stop="checkInput()"
               >
                 <el-select
                   size="medium"
@@ -40,7 +39,6 @@
                 placeholder="请输入内容"
                 v-model="form.commonKey2"
                 class="inputSelect"
-                @blur.stop="checkInput()"
               >
                 <el-select
                   size="medium"
