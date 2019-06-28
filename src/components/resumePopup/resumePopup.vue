@@ -263,7 +263,7 @@
             <span>简历编号：{{nowResumeMsg.vkey}}</span>
             <span>{{nowResumeMsg.resumeUpdateTime}}更新</span>
           </div>
-          <div class="historyList" id="historyScroll" v-if="historyList.length>0">
+          <div class="historyList" id="historyScroll" v-show="historyList.length>0">
             <span v-for="(item,index) in historyList" :key="index">
               {{item.createdAt}}
               <i>&nbsp;&nbsp;&nbsp;{{item.adminInfo}}&nbsp;&nbsp;</i>
@@ -323,6 +323,33 @@ import {
   },
   components: {
     resumeAddtab
+  },
+  watch: {
+    nowCheck: function(newval, oldval) {
+      // console.log(newval);
+      // const el = document.getElementById("historyScroll");
+      // let self = this;
+      // if (newval) {
+      //   el.addEventListener("scroll", function(e) {
+      //     const offsetHeight = el.offsetHeight;
+      //     const scrollTop = el.scrollTop;
+      //     const scrollHeight = el.scrollHeight;
+      //     if (offsetHeight + scrollTop - scrollHeight >= -1) {
+      //       // console.log(!lock)
+      //       if (lock) {
+      //         GetResumeHistory(self.itemList[self.nowIndex].uid, {
+      //           page: self.historyCount++,
+      //           count: 20
+      //         }).then(res => {
+      //           self.historyList = [...self.historyList, ...res.data.data];
+      //           lock = false;
+      //         });
+      //       }
+      //     }
+      //     lock = true;
+      //   });
+      // }
+    }
   }
 })
 export default class resumePopup extends Vue {
@@ -334,6 +361,7 @@ export default class resumePopup extends Vue {
   nowCheckListTab = [];
   fileList = [];
   isSales = true; /* 只有超管，客服，顾问能看 */
+  haveData = 1;
   nowResumeMsg = {
     resumeLabels: {}
   }; /* 当前简历详情 */
@@ -356,7 +384,7 @@ export default class resumePopup extends Vue {
   created() {
     // this.AdminShow = +sessionStorage.getItem("AdminShow");
     // this.testingAdmin(this.AdminShow);
-    // console.log("当前查看简历的权限", this.AdminShow);
+    console.log("当前查看简历的权限");
   }
   testingAdmin(admin) {
     this.isSales = /(3|4)/.test(admin) ? false : true;
@@ -369,7 +397,7 @@ export default class resumePopup extends Vue {
     formData.append("Authorization", sessionStorage.getItem("adminToken")); //
     formData.append("attach_type", type);
     formData.append("img1", param.file);
-    console.log("formData", formData);
+    // console.log("formData", formData);
     uploadApi(formData)
       .then(res => {
         const resumeAttachId = res.data.data[0].id;
@@ -392,7 +420,7 @@ export default class resumePopup extends Vue {
   getResume() {
     GetResumeDetailsAPI(this.resumeId).then(res => {
       this.nowResumeMsg = res.data.data;
-      console.log(this.nowResumeMsg);
+      // console.log(this.nowResumeMsg);
       for (let i = 0; i < this.nowResumeMsg.resumeLabels.length; i++) {
         this.nowResumeMsg.resumeLabels[i].delateTab = false;
       }
@@ -400,7 +428,7 @@ export default class resumePopup extends Vue {
         showPhone: false,
         showWechat: false
       });
-      console.log(this.nowResumeMsg);
+      // console.log(this.nowResumeMsg);
     });
   }
   delateFile(e) {
@@ -531,8 +559,33 @@ export default class resumePopup extends Vue {
         page: this.historyCount,
         count: 20
       });
+      this.$nextTick(() => {
+        const el = document.getElementById("historyScroll");
+        el.addEventListener("scroll", this.handleScroll);
+      });
     } else if (this.nowCheck === 0) {
+      const el = document.getElementById("historyScroll");
+      el.removeEventListener("scroll", this.handleScroll);
       this.operating(this.nowResumeMsg.uid, { action: "查看", desc: "简历" });
+    }
+  }
+  handleScroll(e) {
+    const el = document.getElementById("historyScroll");
+    const offsetHeight = el.offsetHeight;
+    const scrollTop = el.scrollTop;
+    const scrollHeight = el.scrollHeight;
+    if (scrollTop + offsetHeight == scrollHeight) {
+      if (this.haveData) {
+        GetResumeHistory(this.nowResumeMsg.uid, {
+          page: this.historyCount++,
+          count: 20
+        }).then(res => {
+          this.haveData = res.data.meta.haveData;
+          this.historyList = [...this.historyList, ...res.data.data];
+        });
+      }
+
+      // this.Tabresumelist();
     }
   }
   // 请求历史记录

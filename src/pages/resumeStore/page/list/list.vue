@@ -328,31 +328,7 @@ let lock = false;
     filterAnswer
   },
 
-  watch: {
-    resumeScroll: function(newVal, oldval) {},
-    nowCheck: function(newval, oldval) {
-      const el = document.getElementById("historyScroll");
-      let self = this;
-      el.addEventListener("scroll", function(e) {
-        const offsetHeight = el.offsetHeight;
-        const scrollTop = el.scrollTop;
-        const scrollHeight = el.scrollHeight;
-        if (offsetHeight + scrollTop - scrollHeight >= -1) {
-          // console.log(!lock)
-          if (lock) {
-            GetResumeHistory(self.itemList[self.nowIndex].uid, {
-              page: self.historyCount++,
-              count: 20
-            }).then(res => {
-              self.historyList = [...self.historyList, ...res.data.data];
-              lock = false;
-            });
-          }
-        }
-        lock = true;
-      });
-    }
-  }
+  watch: {}
 })
 export default class resumeStore extends Vue {
   nowCheckListTab = []; /* 添加标签数组 */
