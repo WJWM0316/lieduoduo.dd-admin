@@ -411,10 +411,12 @@ export default class indexPage extends Vue {
       searchCondition[this.searchType.condition1] = this.searchType.keyword1;
     if (this.searchType.condition2 && this.searchType.keyword2)
       searchCondition[this.searchType.condition2] = this.searchType.keyword2;
-    let searchForm = Object.assign({}, this.form, searchCondition);
+    let searchForm = Object.assign({}, this.form, searchCondition, {
+      page: nowPage
+    });
     this.$route.meta.scrollY = 0;
     window.scrollTo(0, 0);
-    this.form.page = nowPage;
+    // this.form.page = nowPage;
     this.getCompanyList(searchForm);
   }
   /* 新建公司 */
