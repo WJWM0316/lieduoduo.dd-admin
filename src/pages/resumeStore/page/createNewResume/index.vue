@@ -137,15 +137,10 @@
               <el-upload
                 action="https://admin-api.lieduoduo.ziwork.com/attaches"
                 :limit="1"
+                :file-list="fileList"
                 :http-request="UploadImage"
-                drag
-                multiple
               >
-                <i class="el-icon-upload"></i>
-                <div class="el-upload__text">
-                  将文件拖到此处，或
-                  <em>点击上传</em>
-                </div>
+                <el-button size="small" type="primary">点击上传</el-button>
                 <div class="el-upload__tip" slot="tip">支持上传png,jpg,pdf,doc,docx文件，且不超过500kb</div>
               </el-upload>
             </el-form-item>
@@ -196,6 +191,7 @@ export default class OrderDetail extends Vue {
   PopTitle = "验证手机号码";
   isFocus = false;
   dialogVisible = true;
+  fileList = [];
   /* 提示语 */
   nowUserMsg = {}; /* 当前操作的用户数据 */
   closeModel = false;
@@ -305,6 +301,7 @@ export default class OrderDetail extends Vue {
     this.form.resumeAttachId = e.data[0].id;
   }
   UploadImage(param) {
+    console.log(param);
     let name = param.file.name.split(".")[1];
     let type = /(jpg|gif|png|peg|bmp)/.test(name) ? "img" : "doc";
     const formData = new FormData();
@@ -315,6 +312,7 @@ export default class OrderDetail extends Vue {
     uploadApi(formData).then(res => {
       const resumeAttachId = res.data.data[0].id;
       this.form.resumeAttachId = resumeAttachId;
+      console.log(this.fileList);
     });
   }
   /* 验证手机号码 */
