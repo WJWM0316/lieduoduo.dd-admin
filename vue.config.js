@@ -4,6 +4,7 @@ const resolve = dir => {
   return path.join(__dirname, dir);
 };
 
+console.log(process.env.VUE_APP_API);
 module.exports = {
   lintOnSave: false,
   configureWebpack: {

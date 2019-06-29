@@ -363,7 +363,8 @@ export default class companyCheck extends Vue {
     });
   }
   toPath(row) {
-    if (!row.companyInfo.consultant) {
+    // isRecommend
+    if (!row.isRecommend) {
       this.$message({
         message: "没开通服务"
       });
