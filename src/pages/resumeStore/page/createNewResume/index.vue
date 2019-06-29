@@ -312,7 +312,6 @@ export default class OrderDetail extends Vue {
     uploadApi(formData).then(res => {
       const resumeAttachId = res.data.data[0].id;
       this.form.resumeAttachId = resumeAttachId;
-      console.log(this.fileList);
     });
   }
   /* 验证手机号码 */

@@ -73,7 +73,7 @@ export const routes = [
       title: "新建推荐单",
       haveParent: true,
       parentName: "推荐纪录",
-      keepAlive: true,
+      keepAlive: false,
       flag: "resumeStore"
     },
     component: resolve =>
@@ -87,7 +87,7 @@ export const routes = [
       title: "推荐单详情",
       haveParent: true,
       parentName: "推荐纪录",
-      keepAlive: true,
+      keepAlive: false,
       flag: "resumeStore"
     },
     component: resolve =>
