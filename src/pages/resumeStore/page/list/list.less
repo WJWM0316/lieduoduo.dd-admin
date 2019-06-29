@@ -221,14 +221,13 @@
           }
         }
       }
-      .tabList{
+      .tabList {
         display: flex;
         justify-content: flex-start;
         align-content: center;
         border-top: 1px solid #000;
         padding: 5px 10px;
-        .tabItem{
-
+        .tabItem {
         }
       }
     }
@@ -812,6 +811,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 520;
+    min-width: 500px;
     .Selecting {
       margin: 0 50px;
       display: flex;
@@ -831,6 +831,7 @@
         flex-wrap: wrap;
         height: 122px;
         overflow: scroll;
+        width: 100%;
         .common {
           padding: 5px 10px;
           border-radius: 4px;
@@ -975,7 +976,7 @@
       flex-direction: column;
       margin-left: 50px;
       height: 200px;
-      width:500px;
+      width: 500px;
       overflow: scroll;
       &::-webkit-scrollbar {
         display: none;
