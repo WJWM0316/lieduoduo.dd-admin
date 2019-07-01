@@ -448,6 +448,10 @@ export default class resumePopup extends Vue {
       // this.historyCount=1;
       if (this.nowCheck == 1) {
         this.historyCount = 1;
+        this.operating(this.itemList[this.nowIndex].uid, {
+          action: "查看",
+          desc: "简历"
+        });
         this.history(this.itemList[this.nowIndex].uid, {
           page: this.historyCount,
           count: 20
@@ -455,9 +459,6 @@ export default class resumePopup extends Vue {
       }
       this.$emit("SwitchResume", this.itemList[this.nowIndex].uid);
       this.initResume();
-      if (this.nowCheck) {
-        this.operating(this.nowResumeMsg.uid, { action: "查看", desc: "简历" });
-      }
     }
   }
   // 右箭头
@@ -478,11 +479,15 @@ export default class resumePopup extends Vue {
         });
       }
       // this.resumeId = this.itemList[this.nowIndex].uid;
+      /* 把下一个uid发回到父组件，并再父组件重新调用查看简历的接口 */
       this.$emit("SwitchResume", this.itemList[this.nowIndex].uid);
       this.initResume();
       console.log(this.nowResumeMsg);
       if (!this.nowCheck) {
-        this.operating(this.nowResumeMsg.uid, { action: "查看", desc: "简历" });
+        this.operating(this.itemList[this.nowIndex].uid, {
+          action: "查看",
+          desc: "简历"
+        });
       }
     }
   }
