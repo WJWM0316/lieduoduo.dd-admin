@@ -363,6 +363,7 @@ export default class resumePopup extends Vue {
   initResume() {
     this.nowResumeMsg.showPhone = false;
     this.nowResumeMsg.showWechat = false;
+    this.nowCheck = 0;
   }
   /* 上传文件 */
   UploadImage(param) {
@@ -446,12 +447,10 @@ export default class resumePopup extends Vue {
       this.nowIndex = this.nowIndex - 1;
 
       // this.historyCount=1;
-      if (this.nowCheck == 1) {
+      console.log(this.nowCheck);
+      if (this.nowCheck) {
+        console.log("左边箭头");
         this.historyCount = 1;
-        this.operating(this.itemList[this.nowIndex].uid, {
-          action: "查看",
-          desc: "简历"
-        });
         this.history(this.itemList[this.nowIndex].uid, {
           page: this.historyCount,
           count: 20
@@ -459,6 +458,10 @@ export default class resumePopup extends Vue {
       }
       this.$emit("SwitchResume", this.itemList[this.nowIndex].uid);
       this.initResume();
+      this.operating(this.itemList[this.nowIndex].uid, {
+        action: "查看",
+        desc: "简历"
+      });
     }
   }
   // 右箭头
@@ -483,12 +486,10 @@ export default class resumePopup extends Vue {
       this.$emit("SwitchResume", this.itemList[this.nowIndex].uid);
       this.initResume();
       console.log(this.nowResumeMsg);
-      if (!this.nowCheck) {
-        this.operating(this.itemList[this.nowIndex].uid, {
-          action: "查看",
-          desc: "简历"
-        });
-      }
+      this.operating(this.itemList[this.nowIndex].uid, {
+        action: "查看",
+        desc: "简历"
+      });
     }
   }
   // 查看附件
