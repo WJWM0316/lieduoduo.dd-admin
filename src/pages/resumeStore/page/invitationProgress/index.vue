@@ -156,8 +156,12 @@
                     ></i>
                   </div>
                   <p class="companyName">
-                    <span v-if="!scope.row.dealStatus">{{scope.row.dealStatusDesc}}</span>
-                    <span v-else>{{scope.row.interview.statusDesc}}</span>
+                    <span
+                      v-if="!scope.row.chargeStatus&&!scope.row.isJobhunterApply"
+                    >{{scope.row.dealStatusDesc}}</span>
+                    <span
+                      v-else-if="scope.row.chargeStatus!==0||scope.row.isJobhunterApply!==0"
+                    >{{scope.row.interview.statusDesc}}</span>
                     <span
                       class="StatusResult"
                       v-if="scope.row.interview.comment!==''"
