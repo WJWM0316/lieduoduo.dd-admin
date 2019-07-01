@@ -41,7 +41,7 @@
               </el-select>
               <el-select
                 class="select"
-                v-model="form.dealStatusReasonId"
+                v-model="form.interviewNotSuitTypeId"
                 placeholder="请选择"
                 style="margin-left:20px;"
                 v-if="showSecond"
@@ -262,19 +262,19 @@
     <!--电话号码展示框-->
     <div class="phone" ref="mobile">
       <span>{{mobile}}</span>
-      <img class="phoneBg" src="../../../../assets/number_bg.png">
+      <img class="phoneBg" src="../../../../assets/number_bg.png" />
     </div>
     <div class="qrCode" ref="qrCode">
-      <img class="bg" src="../../../../assets/code_bg.png">
+      <img class="bg" src="../../../../assets/code_bg.png" />
       <div
         style="height: 100%;display: flex; align-items: center;flex-direction: column;justify-content: center;"
         v-if="!qrCode"
       >
-        <img style="height: 38px;width: 38px;" src="../../../../assets/loading.gif">
+        <img style="height: 38px;width: 38px;" src="../../../../assets/loading.gif" />
         <div class="txt">正在加载中…</div>
       </div>
       <div v-else>
-        <img class="Qr" :src="qrCode">
+        <img class="Qr" :src="qrCode" />
         <div class="txt">微信扫码，打开小程序查看</div>
       </div>
     </div>
@@ -324,7 +324,7 @@ export default class invitPro extends Vue {
   form = {
     commonKey1: "",
     dealStatusId: "",
-    dealStatusReasonId: "",
+    interviewNotSuitTypeId: "",
     startTime: "",
     endTime: "",
     isJobhunterApply: "",
@@ -373,7 +373,7 @@ export default class invitPro extends Vue {
   resetForm(name) {
     this.form.commonKey1 = "";
     this.form.dealStatusId = "";
-    this.form.dealStatusReasonId = "";
+    this.form.interviewNotSuitTypeId = "";
     this.form.isJobhunterApply = false;
     this.$refs[name].resetFields();
     // console.log(this.form);
@@ -392,7 +392,7 @@ export default class invitPro extends Vue {
       page,
       count: 20,
       dealStatusId: form.dealStatusId,
-      dealStatusReasonId: form.dealStatusReasonId,
+      interviewNotSuitTypeId: form.interviewNotSuitTypeId,
       startTime: form.startTime,
       endTime: form.endTime,
       isJobhunterApply: this.form.isJobhunterApply == true ? 1 : 0
@@ -428,7 +428,7 @@ export default class invitPro extends Vue {
   dealStatus() {
     dealStatus().then(res => {
       this.dealStatusList = res.data.data.dealStatus;
-      this.reason = res.data.data.reason;
+      this.reason = res.data.data.notSuitTypes;
     });
   }
   /* 生成二维码 */
