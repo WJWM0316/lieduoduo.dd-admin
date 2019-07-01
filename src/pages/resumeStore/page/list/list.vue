@@ -291,6 +291,7 @@
       :resumeId="resumeId"
       :typeList="typeList"
       :itemList="itemList"
+      @SwitchResume="SwitchResume"
       @updata="getData"
       ref="resume"
     ></resume-popup>
@@ -325,7 +326,6 @@ let lock = false;
     resumePopup,
     filterAnswer
   },
-
   watch: {}
 })
 export default class resumeStore extends Vue {
@@ -845,6 +845,13 @@ export default class resumeStore extends Vue {
         action: "查看",
         desc: "简历"
       });
+    });
+  }
+  /* 切换简历 */
+  SwitchResume(e) {
+    this.resumeId = String(e);
+    this.$nextTick(() => {
+      this.$refs["resume"].getResume();
     });
   }
   getData() {

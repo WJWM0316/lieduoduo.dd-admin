@@ -11,7 +11,7 @@
           <i class="el-icon-arrow-right"></i>
         </div>
       </div>
-      <div class="swiperList">
+      <div class="swiperList" @click.stop="initResume">
         <div class="swipertype">
           <div
             class="common"
@@ -200,14 +200,14 @@
               </div>
               <div class="isAdmin" v-if="isSales">
                 <div class="ContactInformation">
-                  <p class="contactTitle">联系方式:</p>
-                  <div class="Contact" @click.stop="seeMobile" v-if="nowResumeMsg.mobile!=''">
+                  <p class="contactTitle" v-if="nowResumeMsg.mobile||nowResumeMsg.wechat">联系方式:</p>
+                  <div class="Contact" @click.stop="seeMobile" v-if="nowResumeMsg.mobile">
                     <span>手机号</span>
-                    <span v-if="nowResumeMsg.showPhone==true">{{nowResumeMsg.mobile}}</span>
+                    <span v-if="nowResumeMsg.showPhone">{{nowResumeMsg.mobile}}</span>
                   </div>
-                  <div class="Contact" @click.stop="seeWechat" v-if="nowResumeMsg.wechat!=''">
+                  <div class="Contact" @click.stop="seeWechat" v-if="nowResumeMsg.wechat">
                     <span>微信号</span>
-                    <span v-if="nowResumeMsg.showWechat==true">{{nowResumeMsg.wechat}}</span>
+                    <span v-if="nowResumeMsg.showWechat">{{nowResumeMsg.wechat}}</span>
                   </div>
                   <p v-if="nowResumeMsg.wechat==''&&nowResumeMsg.mobile==''" class="noUpload">暂无上传</p>
                 </div>
@@ -359,6 +359,11 @@ export default class resumePopup extends Vue {
   testingAdmin(admin) {
     this.isSales = /(3|4)/.test(admin) ? false : true;
   }
+  /* 初始化简历状态 */
+  initResume() {
+    this.nowResumeMsg.showPhone = false;
+    this.nowResumeMsg.showWechat = false;
+  }
   /* 上传文件 */
   UploadImage(param) {
     let name = param.file.name.split(".")[1];
@@ -390,15 +395,12 @@ export default class resumePopup extends Vue {
   getResume() {
     GetResumeDetailsAPI(this.resumeId).then(res => {
       this.nowResumeMsg = res.data.data;
-      // console.log(this.nowResumeMsg);
-      for (let i = 0; i < this.nowResumeMsg.resumeLabels.length; i++) {
-        this.nowResumeMsg.resumeLabels[i].delateTab = false;
-      }
+      this.nowResumeMsg.resumeLabels.map(item => (item.delateTab = false));
       this.nowResumeMsg = Object.assign({}, this.nowResumeMsg, {
         showPhone: false,
         showWechat: false
       });
-      console.log(this.itemList);
+      // console.log(this.itemList);
     });
   }
   delateFile(e) {
@@ -451,7 +453,8 @@ export default class resumePopup extends Vue {
           count: 20
         });
       }
-      this.nowResumeMsg = this.itemList[this.nowIndex];
+      this.$emit("SwitchResume", this.itemList[this.nowIndex].uid);
+      this.initResume();
       if (this.nowCheck) {
         this.operating(this.nowResumeMsg.uid, { action: "查看", desc: "简历" });
       }
@@ -474,8 +477,10 @@ export default class resumePopup extends Vue {
           count: 20
         });
       }
-      this.nowResumeMsg = this.itemList[this.nowIndex];
-      console.log(this.nowCheck);
+      // this.resumeId = this.itemList[this.nowIndex].uid;
+      this.$emit("SwitchResume", this.itemList[this.nowIndex].uid);
+      this.initResume();
+      console.log(this.nowResumeMsg);
       if (!this.nowCheck) {
         this.operating(this.nowResumeMsg.uid, { action: "查看", desc: "简历" });
       }
@@ -516,17 +521,14 @@ export default class resumePopup extends Vue {
   seeMobile() {
     let uid = this.nowResumeMsg.uid;
     this.operating(uid, { action: "查看", desc: "手机号码" });
-    this.$nextTick(() => {
-      this.nowResumeMsg.showPhone = !this.nowResumeMsg.showPhone;
-    });
+    console.log(this.nowResumeMsg);
+    this.nowResumeMsg.showPhone = true;
   }
   /* 查看微信号 */
   seeWechat() {
     let uid = this.nowResumeMsg.uid;
     this.operating(uid, { action: "查看", desc: "微信号" });
-    this.$nextTick(() => {
-      this.nowResumeMsg.showWechat = !this.nowResumeMsg.showWechat;
-    });
+    this.nowResumeMsg.showWechat = true;
   }
   // 点击遮罩展开组件
   showMark() {
