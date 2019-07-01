@@ -535,6 +535,7 @@ export default class resumePopup extends Vue {
   // 点击遮罩关闭组件
   closeMark() {
     this.isShow = false;
+    this.nowIndex = 0;
   }
   check(index) {
     this.nowCheck = +index;

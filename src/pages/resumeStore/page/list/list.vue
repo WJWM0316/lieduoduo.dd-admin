@@ -840,6 +840,7 @@ export default class resumeStore extends Vue {
       this.$refs["resume"].testingAdmin(AdminShow);
       this.$refs["resume"].getResume();
       this.$refs["resume"].showMark();
+      this.$refs["resume"].nowIndex = index;
       this.$refs["resume"].operating(uid, {
         action: "查看",
         desc: "简历"
