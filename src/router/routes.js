@@ -161,7 +161,7 @@ export const routes = [
     meta: {
       title: "公司审核",
       haveParent: true,
-      keepAlive: true,
+      keepAlive: false,
       parentPath: "/check/companyCheck",
       parentName: "公司审核管理"
     },

@@ -187,7 +187,7 @@
           <div class="resumeContent">
             <div class="userMsg">
               <div class="userAvator">
-                <img :src="item.avatar.url" alt v-if="item.avatar">
+                <img :src="item.avatar.url" alt v-if="item.avatar" />
               </div>
               <div class="userName">
                 <div class="userTop row">
@@ -530,7 +530,7 @@ export default class resumeStore extends Vue {
     const scrollTop = el.scrollTop;
     const scrollHeight = el.scrollHeight;
     if (scrollTop + offsetHeight == scrollHeight) {
-      console.log("滚动到底部");
+      // console.log("滚动到底部");
       this.Tabresumelist();
     }
   }
