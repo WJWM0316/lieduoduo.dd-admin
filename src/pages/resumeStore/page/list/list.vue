@@ -290,9 +290,7 @@
     <resume-popup
       :resumeId="resumeId"
       :typeList="typeList"
-      :isShow="isShow"
       :itemList="itemList"
-      @showCallback="showCallback"
       @updata="getData"
       ref="resume"
     ></resume-popup>
@@ -688,9 +686,6 @@ export default class resumeStore extends Vue {
       this.$refs.age.clearValue();
     });
   }
-  showCallback(val) {
-    this.isShow = false;
-  }
   // 查看操作
   async operating(uid, param) {
     await addHistory(uid, param);
@@ -746,7 +741,7 @@ export default class resumeStore extends Vue {
     console.log("当前是否能看", this.isSales);
   }
   created() {
-    this.isShow = this.degreeData();
+    this.degreeData();
     this.jobhuntStatus();
     this.ManageList();
     this.CityData();
@@ -838,13 +833,13 @@ export default class resumeStore extends Vue {
 
   getDetail(uid, index) {
     this.resumeId = String(uid);
-    this.isShow = true;
     this.showArrow = true;
     this.nowIndex = index;
     this.$nextTick(() => {
       let AdminShow = +sessionStorage.getItem("AdminShow");
       this.$refs["resume"].testingAdmin(AdminShow);
       this.$refs["resume"].getResume();
+      this.$refs["resume"].showMark();
       this.$refs["resume"].operating(uid, {
         action: "查看",
         desc: "简历"

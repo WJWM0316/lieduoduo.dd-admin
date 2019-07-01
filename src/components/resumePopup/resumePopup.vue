@@ -1,7 +1,7 @@
 <template>
   <div class="resumePopup">
     <!-- 遮罩 -->
-    <div class="Mark" v-if="isShow" @click.stop="showMark"></div>
+    <div class="Mark" v-if="isShow" @click.stop="closeMark"></div>
     <div v-if="isShow">
       <div v-if="itemList.length>0">
         <div class="left comstyle" @click.stop="LeftArrow">
@@ -32,7 +32,7 @@
               <div class="base">
                 <div class="message">
                   <div class="msgUrl">
-                    <img :src="nowResumeMsg.avatar.url" alt v-if="nowResumeMsg.avatar">
+                    <img :src="nowResumeMsg.avatar.url" alt v-if="nowResumeMsg.avatar" />
                     <span class="gender" v-show="nowResumeMsg.gender===1">
                       <i v-show="nowResumeMsg.gender===1" class="icon iconfont iconicon_boy"></i>
                     </span>
@@ -188,14 +188,14 @@
                       alt
                       v-for="(item,index) in nowResumeMsg.moreIntroduce.imgs"
                       :key="index"
-                    >
+                    />
                   </div>
                 </div>
               </div>
             </div>
             <div class="Code">
               <div class="msgCode">
-                <img :src="nowResumeMsg.resumeQrCode" alt v-if="nowResumeMsg.resumeQrCode">
+                <img :src="nowResumeMsg.resumeQrCode" alt v-if="nowResumeMsg.resumeQrCode" />
                 <span>扫码进入</span>
               </div>
               <div class="isAdmin" v-if="isSales">
@@ -300,11 +300,6 @@ import {
 @Component({
   name: "resume-popup",
   props: {
-    /* 是否显示整个模块 */
-    isShow: {
-      type: Boolean,
-      default: false
-    },
     /* 简历ID */
     resumeId: {
       type: String,
@@ -324,38 +319,13 @@ import {
   components: {
     resumeAddtab
   },
-  watch: {
-    nowCheck: function(newval, oldval) {
-      // console.log(newval);
-      // const el = document.getElementById("historyScroll");
-      // let self = this;
-      // if (newval) {
-      //   el.addEventListener("scroll", function(e) {
-      //     const offsetHeight = el.offsetHeight;
-      //     const scrollTop = el.scrollTop;
-      //     const scrollHeight = el.scrollHeight;
-      //     if (offsetHeight + scrollTop - scrollHeight >= -1) {
-      //       // console.log(!lock)
-      //       if (lock) {
-      //         GetResumeHistory(self.itemList[self.nowIndex].uid, {
-      //           page: self.historyCount++,
-      //           count: 20
-      //         }).then(res => {
-      //           self.historyList = [...self.historyList, ...res.data.data];
-      //           lock = false;
-      //         });
-      //       }
-      //     }
-      //     lock = true;
-      //   });
-      // }
-    }
-  }
+  watch: {}
 })
 export default class resumePopup extends Vue {
   nowCheck = 0; //当前点击
   historyList = []; /* 历史记录 */
   // 点击切换
+  isShow = false; /* 是否显示简历 */
   delateTab = false;
   visible = false;
   nowCheckListTab = [];
@@ -365,7 +335,7 @@ export default class resumePopup extends Vue {
   nowResumeMsg = {
     resumeLabels: {}
   }; /* 当前简历详情 */
-  nowIndex = ""; //当itemList不为空时，记录当前点击的简历id
+  nowIndex = 0; //当itemList不为空时，记录当前点击的简历id
   AdminShow = ""; //权限
   uploadParam = {}; /* 上传参数 */
   headers = {}; /* 上传头部 */
@@ -428,7 +398,7 @@ export default class resumePopup extends Vue {
         showPhone: false,
         showWechat: false
       });
-      // console.log(this.nowResumeMsg);
+      console.log(this.itemList);
     });
   }
   delateFile(e) {
@@ -464,17 +434,28 @@ export default class resumePopup extends Vue {
   }
   // 左边箭头
   LeftArrow() {
-    if (this.nowIndex < 0) return;
-    let index = this.nowIndex--;
-    // this.historyCount=1;
-    if (this.nowCheck == 1) {
-      this.historyCount = 1;
-      this.history(this.itemList[index].uid, {
-        page: this.historyCount,
-        count: 20
-      });
+    console.log(this.nowCheck);
+    console.log(this.nowIndex);
+
+    if (this.nowIndex < 0) {
+      this.nowIndex = 0;
+      return;
+    } else {
+      this.nowIndex = this.nowIndex - 1;
+
+      // this.historyCount=1;
+      if (this.nowCheck == 1) {
+        this.historyCount = 1;
+        this.history(this.itemList[this.nowIndex].uid, {
+          page: this.historyCount,
+          count: 20
+        });
+      }
+      this.nowResumeMsg = this.itemList[this.nowIndex];
+      if (this.nowCheck) {
+        this.operating(this.nowResumeMsg.uid, { action: "查看", desc: "简历" });
+      }
     }
-    this.nowResumeMsg = Object.assign(this.nowResumeMsg, this.itemList[index]);
   }
   // 右箭头
   rightArrow() {
@@ -484,19 +465,20 @@ export default class resumePopup extends Vue {
         type: "warning"
       });
     } else {
-      let index = this.nowIndex++;
-      // this.historyCount=1;
+      this.nowIndex = this.nowIndex + 1;
+      /* 每次切换简历应将历史记录的页面归为1 */
       if (this.nowCheck === 1) {
         this.historyCount = 1;
-        this.history(this.itemList[index].uid, {
+        this.history(this.itemList[this.nowIndex].uid, {
           page: this.historyCount,
           count: 20
         });
       }
-      this.nowResumeMsg = Object.assign(
-        this.nowResumeMsg,
-        this.itemList[index]
-      );
+      this.nowResumeMsg = this.itemList[this.nowIndex];
+      console.log(this.nowCheck);
+      if (!this.nowCheck) {
+        this.operating(this.nowResumeMsg.uid, { action: "查看", desc: "简历" });
+      }
     }
   }
   // 查看附件
@@ -546,9 +528,13 @@ export default class resumePopup extends Vue {
       this.nowResumeMsg.showWechat = !this.nowResumeMsg.showWechat;
     });
   }
-  // 点击遮罩关闭组件
+  // 点击遮罩展开组件
   showMark() {
-    this.$emit("showCallback", this.isShow);
+    this.isShow = true;
+  }
+  // 点击遮罩关闭组件
+  closeMark() {
+    this.isShow = false;
   }
   check(index) {
     this.nowCheck = +index;
