@@ -449,7 +449,6 @@ export default class resumePopup extends Vue {
       // this.historyCount=1;
       console.log(this.nowCheck);
       if (this.nowCheck) {
-        console.log("左边箭头");
         this.historyCount = 1;
         this.history(this.itemList[this.nowIndex].uid, {
           page: this.historyCount,
