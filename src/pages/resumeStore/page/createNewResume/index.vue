@@ -17,20 +17,20 @@
         <p class="title">新建微简历</p>
         <div class="CreateContent">
           <el-form :model="form" :rules="rules" ref="form" class="demo-ruleForm">
-            <el-form-item label-width="80px" required prop="mobile" label="手机号码" class="formItem">
+            <el-form-item label-width="80px" prop="mobile" label="手机号码" class="formItem">
               <el-input disabled v-model.number="form.mobile"></el-input>
               <span class="editMoile" @click.stop="editMoile">修改手机号码</span>
             </el-form-item>
-            <el-form-item label-width="80px" required label="姓名" class="formItem" prop="name">
+            <el-form-item label-width="80px" label="姓名" class="formItem" prop="name">
               <el-input v-model="form.name"></el-input>
             </el-form-item>
-            <el-form-item label="性别" prop="gender" class="formItem" label-width="80px" required>
+            <el-form-item label="性别" prop="gender" class="formItem" label-width="80px">
               <el-radio-group v-model="form.gender">
                 <el-radio label="1">男</el-radio>
                 <el-radio label="2">女</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item label="出生年月" label-width="80px" prop="birth" class="formItem" required>
+            <el-form-item label="出生年月" label-width="80px" prop="birth" class="formItem">
               <el-date-picker
                 type="date"
                 placeholder="选择日期"
@@ -40,26 +40,25 @@
                 style="width: 142px;"
               ></el-date-picker>
             </el-form-item>
-            <el-form-item prop="startWorkYear" label="参加工作时间" class="formItem" required>
+            <el-form-item label-width="80px" prop="startWorkYear" label="工作时间" class="formItem">
               <el-date-picker
+                class="datapicker"
                 type="date"
                 placeholder="选择日期"
                 v-model="form.startWorkYear"
                 value-format="timestamp"
-                style="width: 180px;margin-left:56px;"
+                style="width: 142px;"
               ></el-date-picker>
             </el-form-item>
-            <el-form-item required label="最近任职公司" class="formItem">
-              <el-input placeholder="最近任职公司" v-model="form.lastCompany" style="margin-left:56px;"></el-input>
+            <el-form-item label="近期公司" label-width="80px" prop="lastCompany" class="formItem">
+              <el-input placeholder="最近任职公司" v-model="form.lastCompany"></el-input>
             </el-form-item>
-            <el-form-item required label="最近工作职位" class="formItem">
-              <el-input placeholder="最近工作职位" v-model="form.lastPosition" style="margin-left:56px;"></el-input>
+            <el-form-item label="近期职位" label-width="80px" prop="lastPosition" class="formItem">
+              <el-input placeholder="最近工作职位" v-model="form.lastPosition"></el-input>
             </el-form-item>
-            <el-form-item label="期望城市" required class="formItem" prop="expectCityNum">
+            <el-form-item label="期望城市" label-width="80px" class="formItem" prop="expectCityNum">
               <el-cascader
                 ref="cityChoice"
-                class="formItem"
-                style="margin-left:83px;"
                 placeholder="期望城市"
                 :options="getCityList"
                 filterable
@@ -71,13 +70,7 @@
                 @change="type"
               ></el-cascader>
             </el-form-item>
-            <el-form-item
-              class="formItem"
-              label-width="80px"
-              required
-              label="期待职位"
-              prop="expectPositionId"
-            >
+            <el-form-item class="formItem" label-width="80px" label="期待职位" prop="expectPositionId">
               <el-cascader
                 ref="cascader"
                 class="formItem"
@@ -92,20 +85,23 @@
                 @change="choicePostion"
               ></el-cascader>
             </el-form-item>
-            <el-form-item required label="期望薪资" class="formItem">
-              <el-row style="margin-left:85px;">
+            <el-form-item label="期望薪资">
+              <el-row style="margin-left:161px;">
                 <el-col :span="6">
-                  <el-select
-                    v-model="form.expectSalaryFloor "
-                    placeholder="最低薪资"
-                    @change="choiceMin"
-                  >
-                    <el-option v-for="item in minSalary" :key="item" :label="item" :value="item"></el-option>
-                  </el-select>
+                  <el-form-item prop="expectSalaryFloor" class="formItem">
+                    <el-select
+                      v-model="form.expectSalaryFloor "
+                      placeholder="最低薪资"
+                      @change="choiceMin"
+                    >
+                      <el-option v-for="item in minSalary" :key="item" :label="item" :value="item"></el-option>
+                    </el-select>
+                  </el-form-item>
                 </el-col>
+
                 <el-col :span="1">-</el-col>
                 <el-col :span="6">
-                  <el-form-item>
+                  <el-form-item prop="expectSalaryCeil" class="formItem">
                     <el-select
                       v-model="form.expectSalaryCeil"
                       placeholder="最高薪资"
@@ -117,13 +113,8 @@
                 </el-col>
               </el-row>
             </el-form-item>
-            <el-form-item
-              label-width="80px"
-              required
-              label="期望领域"
-              class="formItem"
-              prop="expectFieldIds"
-            >
+
+            <el-form-item label-width="80px" label="期望领域" class="formItem" prop="expectFieldIds">
               <el-select v-model="form.expectFieldIds" placeholder="请选择">
                 <el-option
                   v-for="item in fieldList"
@@ -133,7 +124,7 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="附件简历(选填)" class="formItem" prop="name">
+            <el-form-item label="附件简历(选填)" class="formItem">
               <el-upload
                 action="https://admin-api.lieduoduo.ziwork.com/attaches"
                 :limit="1"
@@ -190,7 +181,7 @@ export default class OrderDetail extends Vue {
   uploadApi = "";
   PopTitle = "验证手机号码";
   isFocus = false;
-  dialogVisible = true;
+  dialogVisible = false;
   fileList = [];
   /* 提示语 */
   nowUserMsg = {}; /* 当前操作的用户数据 */
@@ -215,7 +206,7 @@ export default class OrderDetail extends Vue {
     birth: "" /* 出生年月(时间戳) */,
     startWorkYear: "" /* 参加工作年份(时间戳) */,
     lastCompany: "" /* 最近任职公司 */,
-    lastPosition: "" /* 最近任职公司*/,
+    lastPosition: "" /* 最近任职职位*/,
     expectCityNum: "" /* 期望城市，城市编号 */,
     expectPositionId: "" /* 期望职位id*/,
     expectSalaryCeil: "" /* 期望月薪上限，单位k */,
@@ -223,25 +214,60 @@ export default class OrderDetail extends Vue {
     expectFieldIds: "" /* 期望领域ids，逗号分隔 */,
     resumeAttachId: "" /* 简历附件id */
   };
+  validate_Name = (rule, value, callback) => {
+    if (value === "") {
+      callback(new Error("姓名不能为空"));
+    } else {
+      callback();
+    }
+  };
+  validate_Birth = (rule, value, callback) => {
+    console.log(value);
+    if (value === "") {
+      callback(new Error("出生年月不能为空"));
+    } else {
+      callback();
+    }
+  };
+  validate_lastCompany = (rule, value, callback) => {
+    // console.log(value);
+    if (!value) {
+      callback(new Error("请输入最近任职公司"));
+    } else {
+      callback();
+    }
+  };
+  validate_startWorkYear = (rule, value, callback) => {
+    console.log(value, "startWorkYear");
+    if (!value) {
+      callback(new Error("请输入工作时间"));
+    } else {
+      callback();
+    }
+  };
   rules = {
+    name: [{ required: true, validator: this.validate_Name, trigger: "blur" }],
     mobile: [{ required: true, message: "请输入手机号码", trigger: "blur" }],
     gender: [{ required: true, message: "请选择性别", trigger: "change" }],
     birth: [
-      { type: "date", required: true, message: "请选择日期", trigger: "change" }
+      {
+        required: true,
+        validator: this.validate_Birth,
+        trigger: "blur"
+      }
     ],
     startWorkYear: [
-      { required: true, message: "请输入参加工作年限", trigger: "blur" }
+      {
+        required: true,
+        validator: this.validate_startWorkYear,
+        trigger: "blur"
+      }
     ],
     lastCompany: [
-      { required: true, message: "请选择最近加入的公司", trigger: "change" }
+      { required: true, message: "请选择最近任职的公司", trigger: "blur" }
     ],
     lastPosition: [
-      {
-        type: "date",
-        required: true,
-        message: "请选择最近任职的职位",
-        trigger: "change"
-      }
+      { required: true, message: "请选择最近的工作职位", trigger: "blur" }
     ],
     expectCityNum: [
       { required: true, message: "请选择你期望的城市", trigger: "blur" }
@@ -354,16 +380,22 @@ export default class OrderDetail extends Vue {
     this.form.expectFieldIds = String(this.form.expectFieldIds);
     this.changeTimeStamp(this.form.birth, "birth");
     this.changeTimeStamp(this.form.startWorkYear, "startWorkYear");
-    console.log(this.form);
-    createResume(this.form.mobile, this.form).then(res => {
-      console.log(res);
-      this.$message({
-        message: "创建成功",
-        type: "success"
-      });
-      this.$router.push({
-        path: "/resumeStore/list"
-      });
+    this.$refs[form].validate(valid => {
+      if (valid) {
+        createResume(this.form.mobile, this.form).then(res => {
+          console.log(res);
+          this.$message({
+            message: "创建成功",
+            type: "success"
+          });
+          this.$router.push({
+            path: "/resumeStore/list"
+          });
+        });
+      } else {
+        console.log("error submit!!");
+        return false;
+      }
     });
   }
   choicePostion(e) {
@@ -402,10 +434,7 @@ export default class OrderDetail extends Vue {
       this.options = res.data.data;
       this.options.forEach(item => {
         item.children.forEach(item1 => {
-          item1.children.forEach(item2 => {
-            let result = JSON.stringify(item2.children);
-            if (result === "[]") delete item2.children;
-          });
+          delete item1.children;
         });
       });
     });
@@ -428,7 +457,7 @@ export default class OrderDetail extends Vue {
   }
   created() {
     this.getUploadParam();
-    if (!Number(this.$route.query.isEdit)) this.dialogVisible = true;
+    // if (!Number(this.$route.query.isEdit)) this.dialogVisible = true;
     this.salary();
     this.field();
     this.CityData();
