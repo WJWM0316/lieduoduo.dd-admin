@@ -279,12 +279,12 @@ export default class OrderDetail extends Vue {
       {
         type: "date",
         required: true,
-        message: "请选择期望的最低月薪",
+        message: "请选择期望的最高月薪",
         trigger: "change"
       }
     ],
     expectSalaryFloor: [
-      { required: true, message: "请选择期望的最高月薪", trigger: "blur" }
+      { required: true, message: "请选择期望的最低月薪", trigger: "blur" }
     ],
     expectFieldIds: [
       { required: true, message: "请选择你期望的领域", trigger: "change" }
@@ -457,7 +457,7 @@ export default class OrderDetail extends Vue {
   }
   created() {
     this.getUploadParam();
-    // if (!Number(this.$route.query.isEdit)) this.dialogVisible = true;
+    if (!Number(this.$route.query.isEdit)) this.dialogVisible = true;
     this.salary();
     this.field();
     this.CityData();
