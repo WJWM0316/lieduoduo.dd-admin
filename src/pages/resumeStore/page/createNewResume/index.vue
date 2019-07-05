@@ -143,17 +143,20 @@
       </div>
     </div>
     <el-dialog
-      :title="PopTitle"
+      :title="'修改手机号码'"
       :close-on-click-modal="closeModel"
       :show-close="showClose"
       :visible.sync="dialogVisible"
       width="30%"
       center
     >
-      <el-input v-model="checkMobileVal" placeholder="请输入手机号码"></el-input>
+      <el-form :model="canform" ref="canform" class="demo-ruleForm">
+        <el-form-item prop="mobile" label="手机号码" class="formItem">
+          <el-input v-model="canform.mobile" placeholder="请输入手机号码"></el-input>
+        </el-form-item>
+      </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="$router.go(-1)" class="inquire" v-if="!$route.query.isEdit">保存</el-button>
-        <el-button @click="checkMobile(checkMobileVal)" class="inquire" v-else>下一步</el-button>
+        <el-button @click.stop="saveUser" class="inquire">保存</el-button>
       </span>
     </el-dialog>
   </div>
@@ -173,16 +176,23 @@ import { getCityApi } from "API/company";
 import { fieldApi, uploadApi } from "API/commont";
 import { getAccessToken } from "API/cacheService";
 const packjson = require("../../../../../package.json");
+let canPush = 0; /* 0 规定 1 跳转注册页 2 去新建微简历 */
+let Sumbitform = {
+  name: "",
+  gender: "",
+  mobile: ""
+};
 @Component({
   name: "OrderDetail"
 })
 export default class OrderDetail extends Vue {
   checkMobileVal = ""; /* 校验手机号码 */
   uploadApi = "";
-  PopTitle = "验证手机号码";
   isFocus = false;
   dialogVisible = false;
   fileList = [];
+  canform = Sumbitform;
+
   /* 提示语 */
   nowUserMsg = {}; /* 当前操作的用户数据 */
   closeModel = false;
@@ -293,6 +303,50 @@ export default class OrderDetail extends Vue {
   options = [];
   sumbitRusult = false;
   itemList = ["新建微简历"];
+  // 修改用户
+  saveUser() {
+    let value = this.canform.mobile;
+    if (!value) {
+      this.$message({
+        message: "请输入手机号码"
+      });
+    } else if (!/^1(3|4|5|6|7|8|9)\d{9}$/.test(value)) {
+      this.$message({
+        message: "请输入正确的手机号码"
+      });
+    } else {
+      haveMobile(value).then(res => {
+        if (!res.data.data.userExist) {
+          canPush = 1;
+          this.$message({
+            message: "该用户不存在，请去创建用户"
+          });
+          this.$nextTick(() => {
+            this.$router.push({
+              path: "/user/addUser",
+              query: {
+                create_resume: true
+              }
+            });
+          });
+        } else if (res.data.data.userExist && res.data.data.haveCard) {
+          this.$message({
+            message: "该手机号已创建简历，不能再次创建"
+          });
+        } else {
+          // 满足需求
+          canPush = 2;
+          let param = {
+            gender: String(res.data.data.cardInfo.gender),
+            name: res.data.data.cardInfo.name,
+            mobile: value
+          };
+          this.form = { ...this.form, ...param };
+          this.dialogVisible = false;
+        }
+      });
+    }
+  }
   goPath(e) {
     this.$router.push({
       path: "/resumeStore/recommendList/OrderDetail",
@@ -307,7 +361,6 @@ export default class OrderDetail extends Vue {
   }
   /* 修改手机号码 */
   editMoile() {
-    this.PopTitle = "修改手机号码";
     this.showClose = true;
     this.dialogVisible = true;
     this.closeModel = true;
