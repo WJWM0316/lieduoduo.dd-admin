@@ -248,12 +248,6 @@ export default class addUser extends Vue {
       };
       newUser = Object.assign({}, param, this.phone);
     }
-    console.log(this.$route);
-    console.log();
-    // let router = this.$router.beforeEach((to, from, next) => {
-    //   console.log(form);
-    // });
-    // return;
     this.$refs["personalInfo"].validate(async valid => {
       if (valid) {
         let create_resume = this.$route.query.create_resume || false;
@@ -282,6 +276,13 @@ export default class addUser extends Vue {
               // 重定向到创建微简历
               this.$router.replace({
                 path: "/resumeStore/list/createNewResume",
+                query: {
+                  userInfo: JSON.stringify(userInfo)
+                }
+              });
+            } else {
+              this.$router.replace({
+                path: up_router,
                 query: {
                   userInfo: JSON.stringify(userInfo)
                 }

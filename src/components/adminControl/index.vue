@@ -339,6 +339,7 @@ export default class adminBox extends Vue {
     handleIconLoaded (e) {}
     /* 添加用户 */
     addUser () {
+        sessionStorage.setItem("up_router", this.$route.path);
         this.$router.push({path: '/user/addUser'})
     }
     /* 移除管理员 */
