@@ -248,20 +248,46 @@ export default class addUser extends Vue {
       };
       newUser = Object.assign({}, param, this.phone);
     }
+    console.log(this.$route);
+    console.log();
+    // let router = this.$router.beforeEach((to, from, next) => {
+    //   console.log(form);
+    // });
+    // return;
     this.$refs["personalInfo"].validate(async valid => {
       if (valid) {
+        let create_resume = this.$route.query.create_resume || false;
+        let up_router = sessionStorage.getItem(
+          "up_router"
+        ); /* 如果需要取上级路由，需要在上级路由缓存该路由path */
         this.editOrCreat(newUser).then(res => {
           this.$message({
             message: this.isEdit ? "编辑成功" : "用户创建成功",
             type: "success"
           });
-          this.isEdit
-            ? this.$router.go(-1)
-            : this.$router.replace({
-                path: `/user`,
-                query: { isNeedLoad: true }
+          if (this.isEdit) {
+            /* 常规操作 处于编辑状态回退到user页面 */
+            this.$router.replace({
+              path: `/user`,
+              query: { isNeedLoad: true }
+            });
+          } else {
+            // 其余页面 进入创建用户界面 统一通过up_
+            let userInfo = {
+              mobile: newUser.mobile,
+              name: newUser.real_name,
+              gender: newUser.gender
+            };
+            if (create_resume) {
+              // 重定向到创建微简历
+              this.$router.replace({
+                path: "/resumeStore/list/createNewResume",
+                query: {
+                  userInfo: JSON.stringify(userInfo)
+                }
               });
-          this.$router.go(-1);
+            }
+          }
         });
       } else {
         return false;

@@ -59,7 +59,7 @@ export const routes = [
       title: "新建微简历",
       haveParent: true,
       parentName: "简历列表",
-      keepAlive: true,
+      keepAlive: false,
       flag: "resumeStore"
     },
     component: resolve =>

@@ -590,11 +590,16 @@ export default class resumeStore extends Vue {
         }
       } else {
         if (canPush) {
+          sessionStorage.setItem("up_router", this.$route.path);
           this.$nextTick(() => {
-            this.$router.push({ path: "/user/addUser" });
+            this.$router.push({
+              path: "/user/addUser",
+              query: {
+                create_resume: true
+              }
+            });
           });
           this.dialogVisible = false;
-          console.log("sdfsf", this.dialogVisible);
         }
         return false;
       }
