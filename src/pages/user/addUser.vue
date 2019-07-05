@@ -272,7 +272,7 @@ export default class addUser extends Vue {
               query: { isNeedLoad: true }
             });
           } else {
-            // 其余页面 进入创建用户界面 统一通过up_
+            // 其余页面 进入创建用户界面 统一通过up_router 缓存上一级页面，进行回退，需要特殊处理的 下方判断
             let userInfo = {
               mobile: newUser.mobile,
               name: newUser.real_name,
