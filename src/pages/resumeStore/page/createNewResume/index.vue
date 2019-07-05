@@ -280,7 +280,7 @@ export default class OrderDetail extends Vue {
         type: "date",
         required: true,
         message: "请选择期望的最高月薪",
-        trigger: "change"
+        trigger: "blur"
       }
     ],
     expectSalaryFloor: [
@@ -457,7 +457,9 @@ export default class OrderDetail extends Vue {
   }
   created() {
     this.getUploadParam();
-    if (!Number(this.$route.query.isEdit)) this.dialogVisible = true;
+    this.form.mobile = JSON.parse(this.$route.query.userInfo).mobile;
+    this.form.gender = String(JSON.parse(this.$route.query.userInfo).gender);
+    this.form.name = JSON.parse(this.$route.query.userInfo).name;
     this.salary();
     this.field();
     this.CityData();
