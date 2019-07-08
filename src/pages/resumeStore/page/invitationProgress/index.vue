@@ -118,7 +118,7 @@
       </div>
       <div class="List" ref="List" id="scroll" slot="dataList">
         <div class="form">
-          <el-table highlight-current-row :data="tableData" style="width: 100%">
+          <el-table max-height="410" highlight-current-row :data="tableData" style="width: 100%">
             <el-table-column prop="jobhunter.resumeNum" label="简历ID" width="140">
               <template slot-scope="scope">
                 <p v-if="scope.row.isJobhunterApply" class="Self-operation inquire">求职者已自行约面</p>

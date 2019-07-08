@@ -132,7 +132,7 @@
         </div>
       </div>
       <div class="resumeList" id="scroll" slot="dataList">
-        <el-table highlight-current-row :data="tableData" style="width: 100%">
+        <el-table max-height="410" highlight-current-row :data="tableData" style="width: 100%">
           <el-table-column prop="id" label="批次" width="150"></el-table-column>
           <el-table-column prop="createdTimeDesc" label="创建时间" width="120"></el-table-column>
           <el-table-column prop="recruiterName" label="职位发布者" width="120"></el-table-column>
