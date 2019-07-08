@@ -68,7 +68,6 @@ import Component from "vue-class-component";
 })
 export default class lyoutContent extends Vue {
   tableHeight = 0; /* table高度 */
-  lyoutHeight = 0; /* 布局高度 */
   scrollZero() {
     window.scrollTo(0, 0);
     const el = document.getElementById("lyoutScroll");
@@ -79,15 +78,15 @@ export default class lyoutContent extends Vue {
   clientHeight() {
     let lyoutHeight = document.getElementById("lyoutScroll").offsetHeight;
     console.log("lyoutHeight", lyoutHeight);
-    let maxHeight = (lyoutHeight > 800) & (lyoutHeight < 900) ? true : false;
-    let mixHeight = (lyoutHeight > 600) & (lyoutHeight < 700) ? true : false;
-    let maxMix = (lyoutHeight > 400) & (lyoutHeight < 600) ? true : false;
+    let isMaxHeight = (lyoutHeight > 800) & (lyoutHeight < 900) ? true : false;
+    let isMixHeight = (lyoutHeight > 600) & (lyoutHeight < 700) ? true : false;
+    let ismaxMix = (lyoutHeight > 400) & (lyoutHeight < 600) ? true : false;
     this.lyoutHeight = lyoutHeight;
-    if (maxHeight) {
+    if (isMaxHeight) {
       this.tableHeight = 637;
-    } else if (mixHeight) {
+    } else if (isMixHeight) {
       this.tableHeight = 410;
-    } else if (maxMix) {
+    } else if (ismaxMix) {
       this.tableHeight = 260;
     }
     this.$emit("handertableHeight", this.tableHeight);
