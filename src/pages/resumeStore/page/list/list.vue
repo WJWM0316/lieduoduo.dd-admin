@@ -298,7 +298,13 @@
     ></resume-popup>
     <!-- 检测是否有简历 -->
     <el-dialog :title="'验证手机号码'" :visible.sync="dialogVisible" width="30%" center>
-      <el-form :model="canform" :rules="rules" ref="form" class="demo-ruleForm">
+      <el-form
+        :validate-on-rule-change="startrules"
+        :model="canform"
+        :rules="rules"
+        ref="form"
+        class="demo-ruleForm"
+      >
         <el-form-item label-width="80px" prop="mobile" label="手机号码" class="formItem">
           <el-input v-model="canform.mobile" placeholder="请输入手机号码"></el-input>
         </el-form-item>
@@ -348,6 +354,7 @@ let Sumbitform = {
   watch: {}
 })
 export default class resumeStore extends Vue {
+  startrules = false;
   nowCheckListTab = []; /* 添加标签数组 */
   dialogVisible = false;
   closeSelectStore = false;
@@ -402,7 +409,13 @@ export default class resumeStore extends Vue {
     }
   };
   rules = {
-    mobile: [{ required: true, validator: this.validate_mobile }]
+    mobile: [
+      {
+        required: true,
+        validator: this.validate_mobile,
+        trigger: ["blur", "change"]
+      }
+    ]
   };
   closelift = false; /* 工作经验 */
   /* 简历来源 */
