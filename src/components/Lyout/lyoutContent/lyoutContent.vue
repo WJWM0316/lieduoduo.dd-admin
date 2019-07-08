@@ -15,7 +15,8 @@
       <!-- 各类搜索条件 -->
       <slot name="formContent"></slot>
       <!-- 数据table -->
-      <slot name="dataList"></slot>
+      <slot name="dataList" ref="tableHeight"></slot>
+
       <!-- 分页 -->
       <div class="pageList" slot="pageList">
         <!-- v-if="hasPagination" v-show="total > 0" -->
@@ -60,18 +61,43 @@ import Component from "vue-class-component";
       type: String,
       default: ""
     }
+  },
+  watch: {
+    // clientHeight() {}
   }
 })
 export default class lyoutContent extends Vue {
+  tableHeight = 0; /* table高度 */
+  lyoutHeight = 0; /* 布局高度 */
   scrollZero() {
     window.scrollTo(0, 0);
     const el = document.getElementById("lyoutScroll");
     // console.log(el);
     el.scrollTop = 0;
   }
+  /* 监听布局高度，以改变table高度,兼容其他浏览器 */
+  clientHeight() {
+    let lyoutHeight = document.getElementById("lyoutScroll").offsetHeight;
+    console.log("lyoutHeight", lyoutHeight);
+    let maxHeight = (lyoutHeight > 800) & (lyoutHeight < 900) ? true : false;
+    let mixHeight = (lyoutHeight > 600) & (lyoutHeight < 700) ? true : false;
+    this.lyoutHeight = lyoutHeight;
+    if (maxHeight) {
+      this.tableHeight = 637;
+    } else if (mixHeight) {
+      this.tableHeight = 410;
+    }
+    this.$emit("handertableHeight", this.tableHeight);
+    // }else if()
+    console.log("table高度", this.tableHeight);
+  }
   handlePageChange(nowPage) {
     this.$emit("handlePageChange", nowPage);
   }
+  mounted() {
+    this.clientHeight();
+  }
+  created() {}
 }
 </script>
 <style scoped lang="less">

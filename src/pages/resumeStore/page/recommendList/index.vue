@@ -6,6 +6,7 @@
       :isShowbtn="true"
       ref="methods"
       @handlePageChange="handlePageChange"
+      @handertableHeight="handertableHeight"
     >
       <div class="class" slot="text" @click.stop="toTabBlock">新建推荐单</div>
       <div class="formSumbit" slot="formContent">
@@ -132,7 +133,12 @@
         </div>
       </div>
       <div class="resumeList" id="scroll" slot="dataList">
-        <el-table max-height="410" highlight-current-row :data="tableData" style="width: 100%">
+        <el-table
+          :max-height="tableHeight"
+          highlight-current-row
+          :data="tableData"
+          style="width: 100%"
+        >
           <el-table-column prop="id" label="批次" width="150"></el-table-column>
           <el-table-column prop="createdTimeDesc" label="创建时间" width="120"></el-table-column>
           <el-table-column prop="recruiterName" label="职位发布者" width="120"></el-table-column>
@@ -172,6 +178,7 @@ import { recommendList, userList } from "API/resumeStore";
   }
 })
 export default class recommend extends Vue {
+  tableHeight = ""; /* table栏显示高度，需计算 */
   tableData = [];
   key1 = "companyName";
   page = 1;
@@ -215,6 +222,9 @@ export default class recommend extends Vue {
     this.form.isJobhunterApply = false;
     this.$refs[name].resetFields();
   }
+  handertableHeight(e) {
+    this.tableHeight = e;
+  }
   handleClick(row) {
     this.$router.push({
       path: "/resumeStore/recommendList/OrderDetail",
@@ -243,8 +253,6 @@ export default class recommend extends Vue {
       this.tableData = res.data.data;
       this.leftcontent.lastPage = res.data.meta.lastPage;
       this.leftcontent.total = res.data.meta.total;
-
-      console.log(this.tableData);
     });
   }
   handlePageChange(nowPage) {

@@ -1,7 +1,12 @@
 <!--  -->
 <template>
   <div class="invitPro" @click.stop="closeTopic">
-    <lyout-content :leftcontent="leftcontent" ref="methods" @handlePageChange="handlePageChange">
+    <lyout-content
+      :leftcontent="leftcontent"
+      ref="methods"
+      @handlePageChange="handlePageChange"
+      @handertableHeight="handertableHeight"
+    >
       <div class="formSumbit" slot="formContent">
         <div class="formReasult">
           <el-form ref="form" :inline="true" :model="form" class="form">
@@ -118,7 +123,12 @@
       </div>
       <div class="List" ref="List" id="scroll" slot="dataList">
         <div class="form">
-          <el-table max-height="410" highlight-current-row :data="tableData" style="width: 100%">
+          <el-table
+            :max-height="tableHeight"
+            highlight-current-row
+            :data="tableData"
+            style="width: 100%"
+          >
             <el-table-column prop="jobhunter.resumeNum" label="简历ID" width="140">
               <template slot-scope="scope">
                 <p v-if="scope.row.isJobhunterApply" class="Self-operation inquire">求职者已自行约面</p>
@@ -225,7 +235,7 @@
               </template>
             </el-table-column>
             <el-table-column prop="chargeStatusDesc" label="是否扣点" width="200"></el-table-column>
-            <el-table-column label="操作" width="100">
+            <el-table-column fixed="right" label="操作" width="100">
               <!-- slot-scope="scope" -->
               <template slot-scope="scope">
                 <!-- 如果不是系统自动，则显示操作列表 -->
@@ -324,6 +334,7 @@ import { getResumeCodeUrlApi, getRecruiterCodeUrlApi } from "API/interview";
   }
 })
 export default class invitPro extends Vue {
+  tableHeight = 0;
   showSecond = false; /* 当选择不合适才出现第二级 */
   form = {
     commonKey1: "",
@@ -363,6 +374,7 @@ export default class invitPro extends Vue {
     lastPage: "",
     page: 1
   };
+  tableHeight = 700;
   handlePageChange(nowPage) {
     // console.log(nowPage);
     this.$refs["methods"].scrollZero();
@@ -570,6 +582,9 @@ export default class invitPro extends Vue {
     //
     //
     //
+  }
+  handertableHeight(e) {
+    this.tableHeight = e;
   }
   toPositionPath(id) {
     // console.log(id);
