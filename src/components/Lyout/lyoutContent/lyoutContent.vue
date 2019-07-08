@@ -81,11 +81,14 @@ export default class lyoutContent extends Vue {
     console.log("lyoutHeight", lyoutHeight);
     let maxHeight = (lyoutHeight > 800) & (lyoutHeight < 900) ? true : false;
     let mixHeight = (lyoutHeight > 600) & (lyoutHeight < 700) ? true : false;
+    let maxMix = (lyoutHeight > 400) & (lyoutHeight < 600) ? true : false;
     this.lyoutHeight = lyoutHeight;
     if (maxHeight) {
       this.tableHeight = 637;
     } else if (mixHeight) {
       this.tableHeight = 410;
+    } else if (maxMix) {
+      this.tableHeight = 260;
     }
     this.$emit("handertableHeight", this.tableHeight);
     // }else if()
