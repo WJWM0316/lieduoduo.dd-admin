@@ -7,13 +7,12 @@ const resolve = dir => {
   return path.join(__dirname, dir);
 };
 
-console.log(process.env.VUE_APP_API);
+console.log(process.env.NODE_ENV, "sdf");
 module.exports = {
   lintOnSave: false,
-
   // 去除console
   configureWebpack: config => {
-    if (process.env.NODE_ENV === "local") {
+    if (process.env.NODE_ENV !== "local") {
       let plugins = [
         new UglifyJsPlugin({
           uglifyOptions: {
