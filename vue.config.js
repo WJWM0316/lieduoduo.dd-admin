@@ -5,7 +5,7 @@ const resolve = dir => {
   return path.join(__dirname, dir);
 };
 
-console.log(process.env.VUE_APP_API);
+console.log(process.env.VUE_APP_API, "sdf");
 module.exports = {
   lintOnSave: false,
   // 去除console
