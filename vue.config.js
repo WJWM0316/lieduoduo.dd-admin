@@ -9,25 +9,6 @@ console.log(process.env.VUE_APP_API);
 module.exports = {
   lintOnSave: false,
   // 去除console
-  configureWebpack: config => {
-    if (process.env.NODE_ENV !== "test") {
-      console.log("我进来了");
-      config.plugins.push(
-        new UglifyJsPlugin({
-          uglifyOptions: {
-            compress: {
-              warnings: false,
-              drop_debugger: true, // 注释console
-              drop_console: true,
-              pure_funcs: ["console.log"] // 移除console
-            }
-          },
-          sourceMap: false,
-          parallel: true
-        })
-      );
-    }
-  },
   configureWebpack: {
     entry: {
       vendors: ["vue", "vue-router", "axios", "vuex"]
@@ -50,7 +31,6 @@ module.exports = {
     },
     plugins: []
   },
-  css: {},
   chainWebpack: config => {
     config.plugins.delete("prefetch");
   }
