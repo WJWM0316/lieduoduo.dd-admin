@@ -1,5 +1,17 @@
+const TerserPlugin = require("terser-webpack-plugin");
 module.exports = {
-  presets: [
-    '@vue/app'
-  ]
-}
+  configureWebpack: config => {
+    config.optimization = {
+      minimizer: [
+        new TerserPlugin({
+          terserOptions: {
+            compress: {
+              drop_console: true
+            }
+          }
+        })
+      ]
+    };
+  },
+  presets: ["@vue/app"]
+};

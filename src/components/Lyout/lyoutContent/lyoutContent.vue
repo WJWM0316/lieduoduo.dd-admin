@@ -82,6 +82,7 @@ export default class lyoutContent extends Vue {
     let isMixHeight = (lyoutHeight > 600) & (lyoutHeight < 700) ? true : false;
     let ismaxMix = (lyoutHeight > 400) & (lyoutHeight < 600) ? true : false;
     this.lyoutHeight = lyoutHeight;
+    /* 主要为了定table高度,屏幕高度值在几个区间浮动 */
     if (isMaxHeight) {
       this.tableHeight = 637;
     } else if (isMixHeight) {
