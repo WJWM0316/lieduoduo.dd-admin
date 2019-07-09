@@ -9,11 +9,29 @@ console.log(process.env.VUE_APP_API);
 module.exports = {
   lintOnSave: false,
 
-  configureWebpack: {
-    entry: {
+  configureWebpack: {},
+  // 去除console
+  configureWebpack: config => {
+    if (process.env.NODE_ENV !== "test") {
+      config.plugins.push(
+        new UglifyJsPlugin({
+          uglifyOptions: {
+            compress: {
+              warnings: false,
+              drop_debugger: true, // 注释console
+              drop_console: true,
+              pure_funcs: ["console.log"] // 移除console
+            }
+          },
+          sourceMap: false,
+          parallel: true
+        })
+      );
+    }
+    config.entry = {
       vendors: ["vue", "vue-router", "axios", "vuex"]
-    },
-    resolve: {
+    };
+    config.resolve = {
       alias: {
         PACKJSON: resolve("./"),
         "@": resolve("src"),
@@ -28,8 +46,8 @@ module.exports = {
         FILTERS: resolve("src/filters"),
         COLORS: resolve("src/eleui/colors")
       }
-    },
-    plugins: []
+    };
+    config.plugins = [];
   },
   chainWebpack: config => {
     config.plugins.delete("prefetch");
