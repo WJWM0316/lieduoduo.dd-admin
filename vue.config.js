@@ -8,8 +8,6 @@ const resolve = dir => {
 console.log(process.env.VUE_APP_API);
 module.exports = {
   lintOnSave: false,
-
-  configureWebpack: {},
   // 去除console
   configureWebpack: config => {
     if (process.env.NODE_ENV !== "test") {
@@ -17,7 +15,6 @@ module.exports = {
         new UglifyJsPlugin({
           uglifyOptions: {
             compress: {
-              warnings: false,
               drop_debugger: true, // 注释console
               drop_console: true,
               pure_funcs: ["console.log"] // 移除console
@@ -28,26 +25,21 @@ module.exports = {
         })
       );
     }
-    config.entry = {
-      vendors: ["vue", "vue-router", "axios", "vuex"]
+    config.entry.vendors = ["vue", "vue-router", "axios", "vuex"];
+    config.resolve.alias = {
+      PACKJSON: resolve("./"),
+      "@": resolve("src"),
+      IMAGES: resolve("src/assets/images"),
+      UTIL: resolve("src/util"),
+      API: resolve("src/api"),
+      STORE: resolve("src/store"),
+      COMPONENTS: resolve("src/components"),
+      CONFIGS: resolve("src/configs"),
+      STYLES: resolve("src/styles"),
+      ICONFONT: resolve("src/assets/iconfont"),
+      FILTERS: resolve("src/filters"),
+      COLORS: resolve("src/eleui/colors")
     };
-    config.resolve = {
-      alias: {
-        PACKJSON: resolve("./"),
-        "@": resolve("src"),
-        IMAGES: resolve("src/assets/images"),
-        UTIL: resolve("src/util"),
-        API: resolve("src/api"),
-        STORE: resolve("src/store"),
-        COMPONENTS: resolve("src/components"),
-        CONFIGS: resolve("src/configs"),
-        STYLES: resolve("src/styles"),
-        ICONFONT: resolve("src/assets/iconfont"),
-        FILTERS: resolve("src/filters"),
-        COLORS: resolve("src/eleui/colors")
-      }
-    };
-    config.plugins = [];
   },
   chainWebpack: config => {
     config.plugins.delete("prefetch");
