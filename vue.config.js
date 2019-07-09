@@ -1,6 +1,6 @@
 const webpack = require("webpack");
 const path = require("path");
-const TerserPlugin = require("terser-webpack-plugin");
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const resolve = dir => {
   return path.join(__dirname, dir);
 };
@@ -8,18 +8,25 @@ const resolve = dir => {
 console.log(process.env.VUE_APP_API);
 module.exports = {
   lintOnSave: false,
+  // 去除console
   configureWebpack: config => {
-    config.optimization = {
-      minimizer: [
-        new TerserPlugin({
-          terserOptions: {
+    if (process.env.NODE_ENV !== "test") {
+      console.log("我进来了");
+      config.plugins.push(
+        new UglifyJsPlugin({
+          uglifyOptions: {
             compress: {
-              drop_console: true
+              warnings: false,
+              drop_debugger: true, // 注释console
+              drop_console: true,
+              pure_funcs: ["console.log"] // 移除console
             }
-          }
+          },
+          sourceMap: false,
+          parallel: true
         })
-      ]
-    };
+      );
+    }
   },
   configureWebpack: {
     entry: {
