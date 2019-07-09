@@ -1,5 +1,6 @@
 const webpack = require("webpack");
 const path = require("path");
+const TerserPlugin = require("terser-webpack-plugin");
 const resolve = dir => {
   return path.join(__dirname, dir);
 };
@@ -7,6 +8,19 @@ const resolve = dir => {
 console.log(process.env.VUE_APP_API);
 module.exports = {
   lintOnSave: false,
+  configureWebpack: config => {
+    config.optimization = {
+      minimizer: [
+        new TerserPlugin({
+          terserOptions: {
+            compress: {
+              drop_console: true
+            }
+          }
+        })
+      ]
+    };
+  },
   configureWebpack: {
     entry: {
       vendors: ["vue", "vue-router", "axios", "vuex"]
