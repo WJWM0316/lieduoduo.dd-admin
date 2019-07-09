@@ -31,25 +31,6 @@ module.exports = {
     },
     plugins: []
   },
-  // 去除console
-  configureWebpack: config => {
-    if (process.env.NODE_ENV !== "test") {
-      config.plugins.push(
-        new UglifyJsPlugin({
-          uglifyOptions: {
-            compress: {
-              warnings: false,
-              drop_debugger: true, // 注释console
-              drop_console: true,
-              pure_funcs: ["console.log"] // 移除console
-            }
-          },
-          sourceMap: false,
-          parallel: true
-        })
-      );
-    }
-  },
   chainWebpack: config => {
     config.plugins.delete("prefetch");
   }
