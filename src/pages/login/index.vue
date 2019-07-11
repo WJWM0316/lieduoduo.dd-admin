@@ -1,7 +1,7 @@
 <template>
   <div id="login" @keyup.enter="login">
     <div class="title">
-      <img src="../../assets/logintitle.png">
+      <img src="../../assets/logintitle.png" />
       <div class="info">机会多，面试多</div>
     </div>
     <div class="box">
@@ -18,11 +18,11 @@
         </el-form-item>
         <div class="inpBox">
           <i slot="prefix" class="icon iconfont iconicon_account"></i>
-          <input class="inp" placeholder="请输入登录账号" type="tel" v-model="loginForm.email">
+          <input class="inp" placeholder="请输入登录账号" type="tel" v-model="loginForm.email" />
         </div>
         <div class="inpBox">
           <i slot="prefix" class="icon iconfont iconicon_password"></i>
-          <input class="inp" placeholder="请输入登录密码" type="password" v-model="loginForm.password">
+          <input class="inp" placeholder="请输入登录密码" type="password" v-model="loginForm.password" />
         </div>
         <el-form-item label-width="0px">
           <el-button
@@ -108,12 +108,13 @@ export default class login extends Vue {
       AdminShow = 3;
     } else if (isGroupAdmin && groupId === 3) {
       console.log("商务组长");
-      AdminShow = 3;
+      AdminShow = 4;
     } else if (isGroupAdmin && groupId === 4) {
       console.log("商务组长");
       AdminShow = 4;
     } else if (!isGroupAdmin && groupId === 4) {
-      AdminShow = 3;
+      AdminShow = 6;
+      console.log("猎头组员");
     } else if (isGroupAdmin && groupId === 5) {
       console.log("猎头主管");
       AdminShow = 5;

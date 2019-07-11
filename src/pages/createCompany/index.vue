@@ -182,29 +182,55 @@
       </el-form>
     </div>
     <!-- 跟进销售设置 -->
-    <div class="sales" v-if="active === 1">
-      <h3>跟进销售</h3>
-      <el-form>
-        <el-form-item label="跟进人">
-          <el-select
-            style="width: 400px;"
-            ref="salesList"
-            v-model="companyInfo.realname"
-            placeholder="请选择跟进人"
-            @change="ground"
-          >
-            <!-- <el-option label="全部" :value="all" v-if="AdminShow==4"/> -->
-            <el-option label="无" :value="0"/>
-            <el-option
-              v-for="(item, index) in salesList"
-              :label="item.realname"
-              :value="item.id"
-              :key="index"
-            />
-          </el-select>
-        </el-form-item>
-      </el-form>
+    <div class="editWindow" v-if="active === 1">
+      <div class="sales" v-if="AdminShow===0||AdminShow===4">
+        <h3>跟进销售</h3>
+        <el-form>
+          <el-form-item label="跟进销售">
+            <el-select
+              style="width: 400px;"
+              ref="salesList"
+              v-model="companyInfo.realname"
+              placeholder="请选择跟进人"
+              @change="ground"
+            >
+              <!-- <el-option label="全部" :value="all" v-if="AdminShow==4"/> -->
+              <el-option label="无" :value="0" />
+              <el-option
+                v-for="(item, index) in salesList"
+                :label="item.realname"
+                :value="item.id"
+                :key="index"
+              />
+            </el-select>
+          </el-form-item>
+        </el-form>
+      </div>
+      <div class="sales" v-if="AdminShow===0||AdminShow===5">
+        <h3>跟进顾问</h3>
+        <el-form>
+          <el-form-item label="跟进顾问">
+            <el-select
+              style="width: 400px;"
+              ref="salesList"
+              v-model="companyInfo.realname"
+              placeholder="请选择跟进人"
+              @change="ground"
+            >
+              <!-- <el-option label="全部" :value="all" v-if="AdminShow==4"/> -->
+              <el-option label="无" :value="0" />
+              <el-option
+                v-for="(item, index) in salesList"
+                :label="item.realname"
+                :value="item.id"
+                :key="index"
+              />
+            </el-select>
+          </el-form-item>
+        </el-form>
+      </div>
     </div>
+
     <!--添加新公司地址弹窗-->
     <div class="pop" v-show="pop.isShow">
       <map-search @popCancel="popCancel" @addAdress="addAdress"></map-search>
@@ -286,6 +312,7 @@ import mapSearch from "@/components/map";
   }
 })
 export default class createCompany extends Vue {
+  AdminShow = ""; /* 权限字段 */
   newComponyId = "";
   isEdit = false;
   active = 0; //0表示现在在填公司信息页  1表示不是在填公司信息页
@@ -305,7 +332,6 @@ export default class createCompany extends Vue {
   email = {
     isShow: false
   };
-  AdminShow = "";
   nextAdmin = {};
   showAdminWindow = false; //展示绑定管理员
   // 关闭
@@ -455,7 +481,7 @@ export default class createCompany extends Vue {
       if (this.salesList.length > 0) return;
       getSalerListApi().then(res => {
         this.salesList = res.data.data;
-        // console.log(this.salesList);
+        console.log(this.salesList);
       });
     } else {
       this.active = 0;
@@ -525,7 +551,6 @@ export default class createCompany extends Vue {
   }
   mounted() {
     this.AdminShow = +sessionStorage.getItem("AdminShow");
-    // console.log("this.AdminShow", this.AdminShow);
     if (this.$route.query.isCreated) {
       this.isCreated = this.$route.query.isCreated;
       this.isShowCompany = true;
@@ -760,7 +785,6 @@ export default class createCompany extends Vue {
   .sales {
     padding: 0 32px;
     text-align: left;
-    border: 1px solid #cccccc;
     .point {
       font-size: 14px;
       color: #ffffff;

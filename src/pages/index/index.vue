@@ -152,7 +152,7 @@
             </el-form-item>
 
             <!-- 跟进人筛选 -->
-            <el-form-item class="area" label="跟进人" prop="adminUid" label-width="70px">
+            <el-form-item class="area" label="跟进销售" prop="adminUid" label-width="70px">
               <el-select v-model="form.adminUid" placeholder="请选择" style="margin-right: 10px;">
                 <el-option label="全部" value="all" v-if="AdminShow==4"></el-option>
                 <el-option label="无" value="0"></el-option>
@@ -226,7 +226,7 @@
                 <img
                   style="width: 56px;height: 56px;border-radius: 5px;margin-right: 5px;"
                   :src="props.scope.row.logoInfo.middleUrl"
-                >
+                />
                 <div>
                   <span>{{props.scope.row.companyName}}</span>
                   <P class="label">
@@ -362,7 +362,7 @@ export default class indexPage extends Vue {
     },
     {
       prop: "adminName",
-      label: "跟进人",
+      label: "跟进销售",
       width: 150
     },
     {
