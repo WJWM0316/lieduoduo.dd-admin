@@ -19,7 +19,7 @@
           <el-form :model="form" :rules="rules" ref="form" class="demo-ruleForm">
             <el-form-item label-width="80px" prop="mobile" label="手机号码" class="formItem">
               <el-input disabled v-model.number="form.mobile"></el-input>
-              <span class="editMoile" @click.stop="editMoile">修改手机号码</span>
+              <span class="editMoile" @click.stop="editMoile">换个手机</span>
             </el-form-item>
             <el-form-item label-width="80px" label="姓名" class="formItem" prop="name">
               <el-input v-model="form.name"></el-input>
@@ -30,7 +30,7 @@
                 <el-radio label="2">女</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item label="出生年月" label-width="80px" prop="birth" class="formItem">
+            <el-form-item label="出生年月" label-width="80px" prop="birth" class="formItem" required>
               <el-date-picker
                 type="date"
                 placeholder="选择日期"
@@ -87,7 +87,7 @@
             </el-form-item>
             <el-form-item label="期望薪资">
               <el-row style="margin-left:161px;">
-                <el-col :span="6">
+                <el-col :span="3">
                   <el-form-item prop="expectSalaryFloor" class="formItem">
                     <el-select
                       v-model="form.expectSalaryFloor "
@@ -115,7 +115,7 @@
             </el-form-item>
 
             <el-form-item label-width="80px" label="期望领域" class="formItem" prop="expectFieldIds">
-              <el-select v-model="form.expectFieldIds" placeholder="请选择">
+              <el-select multiple collapse-tags v-model="form.expectFieldIds" placeholder="请选择">
                 <el-option
                   v-for="item in fieldList"
                   :key="item.labelId"
@@ -232,8 +232,7 @@ export default class OrderDetail extends Vue {
     }
   };
   validate_Birth = (rule, value, callback) => {
-    console.log(value);
-    if (value === "") {
+    if (!value) {
       callback(new Error("出生年月不能为空"));
     } else {
       callback();
@@ -268,6 +267,7 @@ export default class OrderDetail extends Vue {
     ],
     startWorkYear: [
       {
+        type: "date",
         required: true,
         validator: this.validate_startWorkYear,
         trigger: "blur"
@@ -430,7 +430,6 @@ export default class OrderDetail extends Vue {
     console.log(e);
   }
   submitForm(form) {
-    this.form.expectFieldIds = String(this.form.expectFieldIds);
     this.changeTimeStamp(this.form.birth, "birth");
     this.changeTimeStamp(this.form.startWorkYear, "startWorkYear");
     this.$refs[form].validate(valid => {
@@ -442,7 +441,10 @@ export default class OrderDetail extends Vue {
             type: "success"
           });
           this.$router.push({
-            path: "/resumeStore/list"
+            path: "/resumeStore/list",
+            meta: {
+              keepAlive: false
+            }
           });
         });
       } else {
@@ -487,7 +489,10 @@ export default class OrderDetail extends Vue {
       this.options = res.data.data;
       this.options.forEach(item => {
         item.children.forEach(item1 => {
-          delete item1.children;
+          item1.children.forEach(item2 => {
+            let result = JSON.stringify(item2.children);
+            if (result === "[]") delete item2.children;
+          });
         });
       });
     });
@@ -495,6 +500,7 @@ export default class OrderDetail extends Vue {
   field() {
     fieldApi().then(res => {
       this.fieldList = res.data.data;
+      console.log("行业", this.fieldList);
     });
   }
   getUploadParam() {

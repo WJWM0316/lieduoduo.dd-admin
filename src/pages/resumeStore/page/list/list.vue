@@ -411,7 +411,6 @@ export default class resumeStore extends Vue {
   rules = {
     mobile: [
       {
-        required: true,
         validator: this.validate_mobile,
         trigger: ["blur", "change"]
       }

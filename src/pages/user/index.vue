@@ -471,7 +471,30 @@ export default class user extends Vue {
     this.$route.meta.scrollY = 0;
     window.scrollTo(0, 0);
     this.form.page = nowPage;
-    this.getRecruiterList();
+    console.log(this.form);
+    let searchCondition = {};
+    if (this.searchType.condition1 && this.searchType.keyword1)
+      searchCondition[this.searchType.condition1] = this.searchType.keyword1;
+    if (this.searchType.condition2 && this.searchType.keyword2)
+      searchCondition[this.searchType.condition2] = this.searchType.keyword2;
+    let searchForm = Object.assign({}, this.form, searchCondition);
+    if (searchForm.createTimeStart !== "" && searchForm.createTimeEnd === "") {
+      this.$message({
+        message: "创建时间必须选择开始时间和结束时间",
+        type: "warning"
+      });
+      return;
+    } else if (
+      searchForm.createTimeStart === "" &&
+      searchForm.createTimeEnd !== ""
+    ) {
+      this.$message({
+        message: "创建时间必须选择开始时间和结束时间",
+        type: "warning"
+      });
+      return;
+    }
+    this.getRecruiterList(searchForm);
   }
   /* 查看相应的招聘官审核详情 */
   check(id) {

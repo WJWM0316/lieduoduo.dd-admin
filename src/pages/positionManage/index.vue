@@ -193,16 +193,16 @@
     </el-container>
     <!--小程序码展示框-->
     <div class="qrCode" ref="qrCode">
-      <img class="bg" src="../../assets/code_bg.png">
+      <img class="bg" src="../../assets/code_bg.png" />
       <div
         style="height: 100%;display: flex; align-items: center;flex-direction: column;justify-content: center;"
         v-if="!qrCode"
       >
-        <img style="height: 38px;width: 38px;" src="../../assets/loading.gif">
+        <img style="height: 38px;width: 38px;" src="../../assets/loading.gif" />
         <div class="txt">正在加载中…</div>
       </div>
       <div v-else>
-        <img class="Qr" :src="qrCode">
+        <img class="Qr" :src="qrCode" />
         <div class="txt">微信扫码，打开小程序查看</div>
       </div>
     </div>
@@ -310,12 +310,12 @@ export default class companyCheck extends Vue {
   ];
   list = [];
   type(e) {
-    console.log(e);
+    // console.log(e);
     this.form.type = e[e.length - 1];
-    console.log("this.form", this.form);
+    // console.log("this.form", this.form);
   }
   onSubmit(e) {
-    console.log(this.form);
+    // console.log(this.form);
     this.form.page = 1;
     this.getTemplist();
   }
@@ -339,8 +339,6 @@ export default class companyCheck extends Vue {
       obj.stopPropagation = () => {};
       this.$refs.cascader.clearValue(obj);
     });
-    // this.positionManage.label = "";
-    // console.log(this.form);
   }
 
   addPosition() {

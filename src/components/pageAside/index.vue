@@ -3,7 +3,7 @@
     <section class="section">
       <div class="AsideContent">
         <div class="logo">
-          <img src="../../assets/lieduoduo.png" class="avatar">
+          <img src="../../assets/lieduoduo.png" class="avatar" />
         </div>
         <ul class="itemList">
           <li
@@ -173,14 +173,10 @@ export default class PageAside extends Vue {
   }
   mounted() {
     this.AdminShow = sessionStorage.getItem("AdminShow");
-    // console.log("sdfsddfds");
-    // this.getMenu();
-    // console.log(JSON.stringify(this.itemList))
   }
   getMenu() {
     if (this.$route.path !== "/login" && this.$route.path !== "/") {
       let itemList = JSON.parse(sessionStorage.getItem("itemList"));
-      console.log(itemList, "itemList");
       if (itemList !== null) {
         this.itemList = JSON.parse(sessionStorage.getItem("itemList"));
       } else {
@@ -193,9 +189,6 @@ export default class PageAside extends Vue {
     }
   }
   topath(type, pIndex, cIndex, item) {
-    console.log(this.itemList);
-    // console.log(type, pIndex, cIndex, item)
-    console.log(this.itemList);
     this.onePath = item.path;
     if (type === "up") {
       this.itemList.map(field => {
@@ -213,15 +206,9 @@ export default class PageAside extends Vue {
         field.isShow = i === cIndex ? true : false;
       });
     } else {
-      console.log(this.itemList);
-      console.log(item.name, "------------");
       this.$router.push({ name: item.name });
     }
   }
-  // mounted() {
-  //   this.init()
-  // }
-  show() {}
   init() {
     let path = this.$route.path;
     let obj = {};
