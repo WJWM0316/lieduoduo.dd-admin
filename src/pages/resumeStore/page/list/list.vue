@@ -751,7 +751,12 @@ export default class resumeStore extends Vue {
   }
   delateSearch(index) {
     this.searchList.splice(index, 1);
+    console.log(this.searchList);
     this.nowCheckListTab = this.searchList;
+    this.form.resumeLabelIds = this.nowCheckListTab
+      .map(item => item.id)
+      .join(",");
+    // console.log(this.nowCheckListTab);
   }
   /* 清除列表选项 */
   resetForm(name) {

@@ -387,7 +387,6 @@ export default class OrderDetail extends Vue {
     formData.append("Authorization", sessionStorage.getItem("adminToken")); //
     formData.append("attach_type", type);
     formData.append("img1", param.file);
-    console.log("formData", formData);
     uploadApi(formData).then(res => {
       const resumeAttachId = res.data.data[0].id;
       this.form.resumeAttachId = resumeAttachId;
