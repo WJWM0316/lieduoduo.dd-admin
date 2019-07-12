@@ -431,6 +431,8 @@ export default class OrderDetail extends Vue {
   submitForm(form) {
     this.changeTimeStamp(this.form.birth, "birth");
     this.changeTimeStamp(this.form.startWorkYear, "startWorkYear");
+    // console.log(this.form.expectFieldIds);
+    this.form.expectFieldIds = [...this.form.expectFieldIds].join(",");
     this.$refs[form].validate(valid => {
       if (valid) {
         createResume(this.form.mobile, this.form).then(res => {
@@ -447,7 +449,7 @@ export default class OrderDetail extends Vue {
           });
         });
       } else {
-        console.log("error submit!!");
+        console.log(this.form);
         return false;
       }
     });
