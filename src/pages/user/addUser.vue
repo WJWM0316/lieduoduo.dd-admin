@@ -284,7 +284,8 @@ export default class addUser extends Vue {
               this.$router.replace({
                 path: up_router,
                 query: {
-                  userInfo: JSON.stringify(userInfo)
+                  userInfo: JSON.stringify(userInfo),
+                  id: this.$route.query.id
                 }
               });
             }
