@@ -61,9 +61,6 @@ import Component from "vue-class-component";
       type: String,
       default: ""
     }
-  },
-  watch: {
-    // clientHeight() {}
   }
 })
 export default class lyoutContent extends Vue {
@@ -103,9 +100,8 @@ export default class lyoutContent extends Vue {
     this.$emit("handlePageChange", nowPage);
   }
   mounted() {
-    this.clientHeight();
+    // this.$nextTick(() => this.clientHeight())
   }
-  created() {}
 }
 </script>
 <style scoped lang="less">

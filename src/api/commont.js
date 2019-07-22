@@ -45,3 +45,15 @@ export const getSalerListApi = () => request({
   type: 'get',
   noGlobalLoading: true
 })
+/* 获取客户等级 */
+export const getCompanyCustomerLevelRangeApi = () => request({
+  url: `/company/customer_level/range`,
+  type: 'get',
+  noGlobalLoading: true
+})
+/* 顾问推荐 - 顾问列表 */
+export const getAdvisorUserListApi = () => request({
+  url: `/advisor/user/list`,
+  type: 'get',
+  noGlobalLoading: true
+})

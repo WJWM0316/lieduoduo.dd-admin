@@ -72,11 +72,11 @@
             </el-form-item>
             <el-form-item
               label-width="90px"
-              label="跟进人"
+              label="跟进销售"
               prop="admin_uid"
               style="margin-left: 20px;"
             >
-              <el-select v-model="form.admin_uid" placeholder="跟进人">
+              <el-select v-model="form.admin_uid" placeholder="跟进销售">
                 <el-option label="全部" value="all" v-if="AdminShow==4"></el-option>
                 <el-option label="无" value="0"></el-option>
                 <el-option
@@ -91,12 +91,20 @@
               label-width="90px"
               label="公司来源"
               prop="wherefrom"
-              style="margin-left: 20px;"
-            >
+              style="margin-left: 20px;">
               <el-select v-model="form.wherefrom" placeholder="公司来源">
                 <el-option label="全部" value></el-option>
                 <el-option label="后台创建" value="2"></el-option>
                 <el-option label="用户创建" value="1"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item
+              label-width="90px"
+              label="客户等级"
+              prop="customer_level"
+              style="margin-left: 20px;">
+              <el-select v-model="form.customer_level" placeholder="客户等级">
+                <el-option :label="item.text" :value="item.value" v-for="item in companyCustomerLevelRange" :key="item.value"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item class="btn">
@@ -124,6 +132,19 @@
               <div>
                 <span class="check" @click="check(props.scope.row[props.scope.column.property])">查看</span>
               </div>
+            </div>
+            <div class="btn-container" v-else-if="props.scope.column.property === 'customer_level'">
+              <el-select
+                v-model="list[props.scope.$index].customerVevelValue"
+                placeholder="请选择"
+                @change="change(props.scope.$index, list[props.scope.$index].customerVevelValue)">
+                <el-option
+                  v-for="item in props.scope.row[props.scope.column.property]"
+                  :key="item.value"
+                  :label="item.text"
+                  :value="item.value">
+                </el-option>
+              </el-select>
             </div>
             <!-- 序号 -->
             <!--<div class="btn-container" v-else-if="props.scope.column.property === 'index'">
@@ -235,8 +256,8 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import List from "@/components/list";
-import { getSalerListApi } from "API/commont";
-import { templistApi, companyTempUserList } from "API/company";
+import { getSalerListApi, getCompanyCustomerLevelRangeApi } from "API/commont";
+import { templistApi, companyTempUserList, setCompanyCustomerLevel_01Api, setCompanyCustomerLevel_02Api } from "API/company";
 @Component({
   name: "course-list",
   components: {
@@ -257,14 +278,15 @@ export default class companyCheck extends Vue {
     start: "",
     end: "",
     page: 1,
-    count: 20
+    count: 20,
+    customer_level: ''
   };
   fields = [
-    //  {
-    //    prop: 'index',
-    //    label: '序号',
-    //    width: 80
-    //  },
+     // {
+     //   prop: 'index',
+     //   label: '序号',
+     //   width: 50
+     // },
     {
       prop: "companyName",
       label: "申请信息",
@@ -273,13 +295,19 @@ export default class companyCheck extends Vue {
     {
       prop: "realName",
       label: "提交人",
-      width: 150,
+      width: 100,
+      align: "left"
+    },
+    {
+      prop: "customer_level",
+      label: "客户等级",
+      width: 200,
       align: "left"
     },
     {
       prop: "adminName",
-      label: "跟进人",
-      width: 150,
+      label: "跟进销售",
+      width: 200,
       align: "left"
     },
     {
@@ -304,6 +332,20 @@ export default class companyCheck extends Vue {
     }
   ];
   list = [];
+  companyCustomerLevelRange = []
+  change(index, value) {
+    let item = this.list.find((field, i) => index === i)
+    setCompanyCustomerLevel_02Api({id: item.id, customerLevel: value})
+  }
+  /**
+   * @Author   小书包
+   * @DateTime 2019-07-19
+   * @detail   获取跟进人列表
+   * @return   {[type]}   [description]
+   */
+  getCompanyCustomerLevelRange() {
+    getCompanyCustomerLevelRangeApi().then(res => this.companyCustomerLevelRange = res.data.data)
+  }
   onSubmit(e) {
     this.form.page = 1;
     this.getTemplist();
@@ -319,7 +361,6 @@ export default class companyCheck extends Vue {
         isCreated: true
       }
     });
-    console.log("添加公司");
   }
   check(id) {
     this.$route.meta.scrollY = window.scrollY;
@@ -337,21 +378,31 @@ export default class companyCheck extends Vue {
   }
   /* 请求审核列表 */
   getTemplist() {
-    if (this.form.start !== "" && this.form.end === "") {
+    let params = this.form
+    if (params.start !== "" && params.end === "") {
       this.$message({
         message: "申请时间必须选择开始时间和结束时间",
         type: "warning"
       });
       return;
-    } else if (this.form.start === "" && this.form.end !== "") {
+    } else if (params.start === "" && params.end !== "") {
       this.$message({
         message: "申请时间必须选择开始时间和结束时间",
         type: "warning"
       });
       return;
     }
-    templistApi(this.form).then(res => {
-      this.list = res.data.data;
+    if(!params.customer_level) delete params.customer_level
+    templistApi(params).then(res => {
+      let list = res.data.data
+      list.map((field, index) => {
+        field.customer_level = [].concat(this.companyCustomerLevelRange)
+        field.customerVevelValue = field.customerLevel
+        if(index === 0) {
+          console.log(field)
+        }
+      })
+      this.list = list;
       this.total = res.data.meta.total;
       this.pageCount = res.data.meta.lastPage;
     });
@@ -374,11 +425,10 @@ export default class companyCheck extends Vue {
   }
   mounted() {
     this.AdminShow = +sessionStorage.getItem("AdminShow");
-    console.log(typeof this.AdminShow);
     this.getTemplist();
+    this.getCompanyCustomerLevelRange()
   }
   userList() {
-    console.log("---1------");
     getSalerListApi().then(res => {
       this.userList = res.data.data;
     });
@@ -507,5 +557,11 @@ export default class companyCheck extends Vue {
       }
     }
   }
+}
+</style>
+<style>
+.companyCheck .m-list{
+  padding-left: 0;
+  padding-right: 0;
 }
 </style>

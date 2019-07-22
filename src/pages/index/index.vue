@@ -8,14 +8,14 @@
         <!--筛选-->
         <div class="selectionBox" @keyup.enter="search">
           <el-form ref="form" :model="form" label-width="80px" validate="validate">
+
             <!-- 筛选条件1 -->
             <div class="searchTab">
               <el-input
                 type="text"
                 placeholder="请输入内容"
                 v-model="searchType.keyword1"
-                class="inputSelect"
-              >
+                class="inputSelect">
                 <el-select
                   class="selectTitle"
                   v-model="searchType.condition1"
@@ -41,17 +41,13 @@
                 </el-select>
               </el-input>
             </div>
-            <!-- <el-form-item prop="keyword" label-width="20px" class="searchTab">
-            
-            </el-form-item>-->
             <!-- 筛选条件2 -->
             <div class="searchTab">
               <el-input
                 type="text"
                 placeholder="请输入内容"
                 v-model="searchType.keyword2"
-                class="inputSelect"
-              >
+                class="inputSelect">
                 <el-select
                   class="selectTitle"
                   v-model="searchType.condition2"
@@ -77,17 +73,13 @@
                 </el-select>
               </el-input>
             </div>
-            <!-- <el-form-item prop="keyword" label-width="20px" class="searchTab">
-            
-            </el-form-item>-->
             <!--地区筛选-->
             <el-form-item class="area" label="地区筛选" prop="area">
               <el-select
                 v-model="form.firstAreaId"
                 placeholder="请选择省份"
                 @change="changeProvince"
-                style="margin-right: 10px;"
-              >
+                style="margin-right: 10px;">
                 <el-option
                   v-for="item in firstAreaIdList"
                   :key="item.areaId"
@@ -164,6 +156,7 @@
                 ></el-option>
               </el-select>
             </el-form-item>
+
             <el-form-item label-width="77px" label="营业执照" prop="is_license">
               <el-select v-model="form.is_license" placeholder="全部状态">
                 <el-option label="全部" value></el-option>
@@ -174,9 +167,20 @@
             <!-- 公司来源 -->
             <el-form-item label-width="77px" label="公司来源" prop="wherefrom">
               <el-select v-model="form.wherefrom" placeholder="全部状态">
-                <el-option label="全部" value></el-option>
+                <el-option label="全部" value="0"></el-option>
                 <el-option label="后台创建" value="2"></el-option>
                 <el-option label="用户创建" value="1"></el-option>
+              </el-select>
+            </el-form-item>
+
+            <el-form-item label-width="77px" label="客户等级" prop="customer_level">
+              <el-select v-model="form.customer_level" placeholder="请选择">
+                <el-option :label="item.text" :value="item.value" v-for="item in companyCustomerLevelRange" :key="item.value"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label-width="77px" label="跟进顾问" prop="advisorUid">
+              <el-select v-model="form.advisorUid" placeholder="全部状态">
+                <el-option :label="item.realname" :value="item.id" v-for="item in advisorUserList" :key="item.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item class="btn">
@@ -290,7 +294,7 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import { getCompanyListApi, getCityApi } from "API/company";
-import { rightInfoApi, getSalerListApi } from "API/commont";
+import { rightInfoApi, getSalerListApi, getCompanyCustomerLevelRangeApi, getAdvisorUserListApi } from "API/commont";
 import List from "@/components/list";
 Component.registerHooks([
   "beforeRouteEnter",
@@ -319,7 +323,9 @@ export default class indexPage extends Vue {
     firstAreaId: "",
     equity: "",
     status: "",
-    adminUid: ""
+    adminUid: "",
+    customer_level: '',
+    advisorUid: ''
   };
   searchType = {
     condition1: "keyword",
@@ -377,16 +383,32 @@ export default class indexPage extends Vue {
       label: "操作"
     }
   ];
-  beforeRouteEnter(to, from, next) {
-    if (from.name === "createCompany") {
-      next(vm => {
-        vm.getCompanyList();
-      });
-    } else {
-      next();
-    }
+  companyCustomerLevelRange = []
+  advisorUserList = []
+  /**
+   * @Author   小书包
+   * @DateTime 2019-07-19
+   * @detail   获取跟进人列表
+   * @return   {[type]}   [description]
+   */
+  getCompanyCustomerLevelRange() {
+    getCompanyCustomerLevelRangeApi().then(res => this.companyCustomerLevelRange = res.data.data)
   }
-  // 获取公司数据
+  /**
+   * @Author   小书包
+   * @DateTime 2019-07-19
+   * @detail   顾问推荐 - 顾问列表
+   * @return   {[type]}   [description]
+   */
+  getAdvisorUserList() {
+    getAdvisorUserListApi().then(res => this.advisorUserList = res.data.data)
+  }
+  /**
+   * @Author   小书包
+   * @DateTime 2019-07-19
+   * @detail   获取公司数据
+   * @return   {[type]}           [description]
+   */
   getCompanyList(newForm) {
     if (this.form.firstAreaId !== "" && this.form.area_id === "") {
       this.$message.error("请选择城市");
@@ -510,6 +532,8 @@ export default class indexPage extends Vue {
     this.getCity();
     this.getRightList();
     this.getSalerList();
+    this.getCompanyCustomerLevelRange()
+    this.getAdvisorUserList()
   }
   activated() {
     let that = this;
@@ -520,8 +544,11 @@ export default class indexPage extends Vue {
 }
 </script>
 
-<style lang="less" scoped="scoped">
+<style lang="less">
 #index {
+  .el-form-item__label{
+    text-align: center
+  }
   margin-left: 200px;
   .container {
     min-width: 1000px;
@@ -581,7 +608,7 @@ export default class indexPage extends Vue {
     .el-form-item,
     .searchTab {
       margin-bottom: 22px;
-      margin-left: 5px;
+      margin-right: 20px;
       float: left;
     }
     .btn {
