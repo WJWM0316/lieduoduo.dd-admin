@@ -259,7 +259,7 @@ export const companyTempUserList = () => request({
 
 
 /* 设置客户等级 */
-export const setCompanyCustomerLevel_01Api = data => request({
+export const setCompanyCustomerLevelApi = data => request({
   url: `/company/set/customer_level/${data.id}`,
   type: 'put',
   data,
@@ -267,7 +267,7 @@ export const setCompanyCustomerLevel_01Api = data => request({
 })
 
 /* 设置客户等级 */
-export const setCompanyCustomerLevel_02Api = data => request({
+export const setCompanyCompanyLevelApi = data => request({
   url: `/company/set/company_temp_customer_level/${data.id}`,
   type: 'put',
   data,

@@ -224,6 +224,19 @@
                 <span>{{props.scope.row.id}}</span>
               </div>
             </div>
+            <div class="btn-container" v-else-if="props.scope.column.property === 'customer_level'">
+              <el-select
+                v-model="list[props.scope.$index].customerVevelValue"
+                placeholder="请选择"
+                @change="change(props.scope.$index, list[props.scope.$index].customerVevelValue)">
+                <el-option
+                  v-for="item in props.scope.row[props.scope.column.property]"
+                  :key="item.value"
+                  :label="item.text"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </div>
             <!-- 申请信息 -->
             <div class="btn-container" v-else-if="props.scope.column.property === 'companyName'">
               <div style="text-align: left; display: flex;align-items: center;">
@@ -293,8 +306,9 @@
 <script>
 import Vue from "vue";
 import Component from "vue-class-component";
-import { getCompanyListApi, getCityApi } from "API/company";
+import { getCompanyListApi, getCityApi, setCompanyCustomerLevelApi } from "API/company";
 import { rightInfoApi, getSalerListApi, getCompanyCustomerLevelRangeApi, getAdvisorUserListApi } from "API/commont";
+
 import List from "@/components/list";
 Component.registerHooks([
   "beforeRouteEnter",
@@ -343,7 +357,7 @@ export default class indexPage extends Vue {
     {
       prop: "id",
       label: "公司ID",
-      width: 80
+      width: 50
     },
     {
       prop: "companyName",
@@ -359,7 +373,13 @@ export default class indexPage extends Vue {
     {
       prop: "rtVersionName",
       label: "权益类型",
-      width: 150
+      width: 100
+    },
+    {
+      prop: "customer_level",
+      label: "客户等级",
+      width: 200,
+      align: "left"
     },
     {
       prop: "expiredDesc",
@@ -369,12 +389,17 @@ export default class indexPage extends Vue {
     {
       prop: "adminName",
       label: "跟进销售",
-      width: 150
+      width: 100
     },
+    // {
+    //   prop: "adminName",
+    //   label: "跟进顾问",
+    //   width: 100
+    // },
     {
       prop: "statusDesc",
       label: "状态",
-      width: 200
+      width: 80
     },
     {
       prop: "check",
@@ -385,6 +410,10 @@ export default class indexPage extends Vue {
   ];
   companyCustomerLevelRange = []
   advisorUserList = []
+  change(index, value) {
+    let item = this.list.find((field, i) => index === i)
+    setCompanyCustomerLevelApi({id: item.id, customerLevel: value})
+  }
   /**
    * @Author   小书包
    * @DateTime 2019-07-19
@@ -416,11 +445,14 @@ export default class indexPage extends Vue {
     }
     //  delete this.form.firstAreaId
     getCompanyListApi(newForm || this.form).then(res => {
-      this.$nextTick(() => {
-        this.list = res.data.data;
-        this.pageCount = res.data.meta.lastPage;
-        this.total = res.data.meta.total;
-      });
+      let list = res.data.data
+      list.map((field, index) => {
+        field.customer_level = [].concat(this.companyCustomerLevelRange)
+        field.customerVevelValue = field.customerLevel
+      })
+      this.list = list;
+      this.pageCount = res.data.meta.lastPage;
+      this.total = res.data.meta.total;
     });
   }
   mounted() {

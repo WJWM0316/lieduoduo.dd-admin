@@ -257,7 +257,7 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import List from "@/components/list";
 import { getSalerListApi, getCompanyCustomerLevelRangeApi } from "API/commont";
-import { templistApi, companyTempUserList, setCompanyCustomerLevel_01Api, setCompanyCustomerLevel_02Api } from "API/company";
+import { templistApi, companyTempUserList, setCompanyCompanyLevelApi } from "API/company";
 @Component({
   name: "course-list",
   components: {
@@ -335,7 +335,7 @@ export default class companyCheck extends Vue {
   companyCustomerLevelRange = []
   change(index, value) {
     let item = this.list.find((field, i) => index === i)
-    setCompanyCustomerLevel_02Api({id: item.id, customerLevel: value})
+    setCompanyCompanyLevelApi({id: item.id, customerLevel: value})
   }
   /**
    * @Author   小书包
@@ -398,9 +398,6 @@ export default class companyCheck extends Vue {
       list.map((field, index) => {
         field.customer_level = [].concat(this.companyCustomerLevelRange)
         field.customerVevelValue = field.customerLevel
-        if(index === 0) {
-          console.log(field)
-        }
       })
       this.list = list;
       this.total = res.data.meta.total;
