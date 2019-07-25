@@ -179,3 +179,10 @@ export const interviewsList = data =>
     type: "get",
     data
   });
+/* 平台热门简历推荐 - 面试邀约搜索 */
+export const getRecommendInterviewsSearchListApi = data => request({
+  url: `/recommend/interviews/search`,
+  type: 'get',
+  data,
+  noGlobalLoading: true
+})

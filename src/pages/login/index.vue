@@ -88,12 +88,7 @@ export default class login extends Vue {
   // 等级,身份
   judge(groupId, isAdmin, isGroupAdmin, userinfo) {
     let AdminShow;
-    // const Identity=(isGroupAdmin,groupId)=>{
-    //   // let default=isAdmin?'dafault':'';
-    //   let result=permission.get(isAdmin)||permission.get(`${isGroupAdmin}_${groupId}`);
-    //   result.call(this);
-    // }
-    // console.log(result)
+    // 3||4销售主管
     if (isAdmin) {
       console.log("超管");
       AdminShow = 0;
@@ -116,7 +111,7 @@ export default class login extends Vue {
       console.log("商务组长");
       AdminShow = 4;
     } else if (isGroupAdmin && groupId === 5) {
-      console.log("猎头主管");
+      console.log("猎头主管&顾问主管");
       AdminShow = 5;
     } else if (!isGroupAdmin && groupId === 5) {
       console.log("猎头组员");

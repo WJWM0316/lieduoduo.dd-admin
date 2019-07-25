@@ -287,7 +287,7 @@ export default class companyCheck extends Vue {
       width: 200
     },
     {
-      prop: "createdAt",
+      prop: "updatedAt",
       label: "更新时间",
       width: 200
     },

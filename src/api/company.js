@@ -256,3 +256,20 @@ export const companyTempUserList = () => request({
   url: `/company/company_temp_user_list`,
   type: 'get',
 })
+
+
+/* 设置客户等级 */
+export const setCompanyCustomerLevelApi = data => request({
+  url: `/company/set/customer_level/${data.id}`,
+  type: 'put',
+  data,
+  noGlobalLoading: true
+})
+
+/* 设置客户等级 */
+export const setCompanyCompanyLevelApi = data => request({
+  url: `/company/set/company_temp_customer_level/${data.id}`,
+  type: 'put',
+  data,
+  noGlobalLoading: true
+})
