@@ -22,12 +22,12 @@
             <el-button
               class="inquire"
               @click.stop="Review(companyInfo.id, 'company')"
-              v-show="companyInfo.status !== 1 && companyInfo.status !== 2"
+              v-show="companyInfo.status !== 1 && companyInfo.status !== 2 && clickAble"
             >审核</el-button>
             <el-button
               type="info"
               disabled
-              v-show="companyInfo.status === 1 || companyInfo.status === 2"
+              v-show="companyInfo.status === 1 || companyInfo.status === 2 || !clickAble"
             >审核</el-button>
           </div>
           <el-button
@@ -266,6 +266,16 @@ Component.registerHooks([
       handler(tags, oldTags) {
         this.needReason = tags;
       }
+    }
+  },
+  computed: {
+    clickAble () {
+      return this.companyInfo 
+              && this.companyInfo.companyName 
+              && this.companyInfo.companyShortname 
+              && this.companyInfo.financing 
+              && this.companyInfo.employees
+              && this.companyInfo.industry
     }
   }
 })
