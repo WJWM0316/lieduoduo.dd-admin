@@ -183,7 +183,7 @@
     </div>
     <!-- 跟进销售设置 -->
     <div class="editWindow" v-if="active === 1">
-      <div class="sales" v-if="AdminShow === 0 || AdminShow === 4 || AdminShow === 3 || AdminShow === 2">
+      <div class="sales" v-if="AdminShow === 0 || AdminShow === 4">
         <h3>跟进销售</h3>
         <el-form>
           <el-form-item label="跟进销售">
@@ -288,7 +288,8 @@ import {
   getCheckCompanyInfoApi,
   editCheckCompanyInfoApi,
   editCheckCompanyFollowUserApi,
-  editCompanyFollowUserApi
+  editCompanyFollowUserApi,
+  setCompanyCompanyAdvisorApi
 } from "API/company";
 import mapSearch from "@/components/map";
 @Component({
@@ -547,12 +548,22 @@ export default class createCompany extends Vue {
   /* 保存跟进人 */
   async saveSaller() {
     const { id, checkId } = this.$route.params;
+    // let api = null
+    // if([0,1,2,3,4].includes(Number(this.AdminShow))) {
+    //   api = 'editCompanyFollowUserApi'
+    // }
+    // else if([0,5].includes(Number(this.AdminShow))) {
+    //   api = 'setCompanyCompanyAdvisorApi'
+    // }
     if (id) {
-      await editCompanyFollowUserApi(
-        id,
-        this.companyInfo.admin_uid,
-        this.companyInfo.groupId
-      );
+      if([0,1,2,3,4].includes(Number(this.AdminShow))) {
+        await editCompanyFollowUserApi(
+          id,
+          this.companyInfo.admin_uid,
+          this.companyInfo.groupId
+        );
+      }
+      
       if(this.companyInfo.advisorUid) {
         await setCompanyAdvisorApi({id,advisorGroupId: this.companyInfo.advisorGroupId, advisorUid: this.companyInfo.advisorUid})
       }
@@ -574,7 +585,6 @@ export default class createCompany extends Vue {
     this.$router.go(-1)
     // aaa
   }
-
   handleIconLoaded(e) {
     let formData = new FormData();
     formData.append("attach_type", "img");
@@ -682,6 +692,7 @@ export default class createCompany extends Vue {
       admin_uid: parseInt(newCompanyInfo.adminUid), //跟进人员
       adminName: newCompanyInfo.adminName,
       advisorUid: newCompanyInfo.advisorUid,
+      groupId: newCompanyInfo.groupId,
       advisorName: newCompanyInfo.advisorName === '无' ? '' : newCompanyInfo.advisorName,
       advisorGroupId : newCompanyInfo.advisorGroupId
     };

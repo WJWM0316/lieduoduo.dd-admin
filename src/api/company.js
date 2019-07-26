@@ -236,7 +236,7 @@ export const editAdminNameApi = (uid,data) => request({
   data
 })
 /* 编辑公司库表里跟进人 */
-export const editCompanyFollowUserApi = (companyId, uid,groupId) => request({
+export const editCompanyFollowUserApi = (companyId, uid, groupId) => request({
   url: `/company/company_add_to_follow_user/${companyId}?admin_uid=${uid}&groupId=${groupId}`,
   type: 'put'
 })
@@ -273,3 +273,12 @@ export const setCompanyCompanyLevelApi = data => request({
   data,
   noGlobalLoading: true
 })
+
+/* 设置顾问跟进人 */
+export const setCompanyCompanyAdvisorApi = data => request({
+  url: `/company/set/advisor/${data.id}`,
+  type: 'put',
+  data,
+  noGlobalLoading: true
+})
+
