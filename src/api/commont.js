@@ -73,7 +73,7 @@ export const payRecommendApi = data => request({
 })
 /* 返点 */
 export const refundRecommendApi = data => request({
-  url: `/recommend/refund/{recommendId}`,
+  url: `/recommend/refund/${data.recommendId}`,
   type: 'post',
   data,
   noGlobalLoading: true

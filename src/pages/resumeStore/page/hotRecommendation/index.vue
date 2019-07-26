@@ -513,13 +513,7 @@ export default class invitPro extends Vue {
     });
   }
   async creatLink(e, uid, index, type) {
-    // console.log(e);
-    // console.log(uid, index, type);
-    // console.log(e.clientX, e.clientY, "e");
-    // console.log(window.scrollY);
     this.qrCode = "";
-    // 是否已经加载过二维码
-    // console.log("this.tableData[index]", this.tableData[index]);
     if (this.tableData[index].qrCode && type === 1) {
       this.qrCode = this.tableData[index].qrCode;
       this.$nextTick(() => {
@@ -571,13 +565,11 @@ export default class invitPro extends Vue {
   /* status 是否出现编辑弹框 */
   /* type  1 扣点  2 返点，3返点原因  4扣点原因 5 不合适原因 */
   handleClick(status, title, id, type) {
-    // console.log(status, title, id, type);
     this.dialogTitle = title;
     this.centerDialogVisible = true;
     this.iconList = [];
     this.RusultForm.note = "";
     let nowRow = this.tableData.filter(item => item.id === id)[0];
-    // console.log(nowRow.chargeNote);
     switch (type) {
       case 1:
         this.RusultForm.type = type;
@@ -607,7 +599,6 @@ export default class invitPro extends Vue {
     this.tableHeight = e;
   }
   toPositionPath(id) {
-    // console.log(id);
     this.$router.push({
       path: "/positionManage/positionAuditDetail",
       query: { id }
@@ -624,24 +615,20 @@ export default class invitPro extends Vue {
       return;
     }
     if (this.RusultForm.type === 1) {
-      // console.log("扣点");
       payRecommendApi({
         recommendId: this.RusultForm.recommendId,
         note: this.RusultForm.note
       }).then(res => {
-        // console.log(res);
         this.centerDialogVisible = false;
         this.getData();
         this.RusultForm.note = "";
       });
       /* 扣点 */
     } else if (this.RusultForm.type === 2) {
-      // console.log("返点"); /* 返点 */
       refundRecommendApi({
         recommendId: this.RusultForm.recommendId,
         note: this.RusultForm.note
       }).then(res => {
-        // console.log(res);
         this.centerDialogVisible = false;
         this.getData();
         this.RusultForm.note = "";
