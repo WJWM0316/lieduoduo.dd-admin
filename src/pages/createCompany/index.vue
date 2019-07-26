@@ -190,7 +190,7 @@
             <el-select
               style="width: 400px;"
               ref="salesList"
-              v-model="companyInfo.realname"
+              v-model="companyInfo.adminName"
               placeholder="请选择跟进人"
               @change="ground"
             >
@@ -206,7 +206,7 @@
           </el-form-item>
         </el-form>
       </div>
-      <div class="sales" v-if="AdminShow === 0||AdminShow === 5">
+ <!--      <div class="sales" v-if="AdminShow === 0||AdminShow === 5">
         <h3>跟进顾问</h3>
         <el-form>
           <el-form-item label="跟进顾问">
@@ -217,7 +217,7 @@
               placeholder="请选择跟进人"
               @change="ground"
             >
-              <!-- <el-option label="全部" :value="all" v-if="AdminShow==4"/> -->
+              <el-option label="全部" :value="all" v-if="AdminShow==4"/>
               <el-option label="无" :value="0" />
               <el-option
                 v-for="(item, index) in salesList"
@@ -228,7 +228,7 @@
             </el-select>
           </el-form-item>
         </el-form>
-      </div>
+      </div> -->
     </div>
 
     <!--添加新公司地址弹窗-->
@@ -406,7 +406,8 @@ export default class createCompany extends Vue {
     email: "", //公司邮箱
     logo: "",
     website: "", // 公司官网
-    address: [] // 公司地址
+    address: [], // 公司地址
+    adminName: ''
   };
   /* 融资情况标签 */
   financing = [
@@ -563,6 +564,7 @@ export default class createCompany extends Vue {
     // console.log(this.$route.params);
     // console.log("this.companyInfo", this.companyInfo);
     // return;
+    console.log(this.companyInfo)
     if (id) {
       await editCompanyFollowUserApi(
         id,
@@ -580,8 +582,8 @@ export default class createCompany extends Vue {
       type: "success",
       message: "跟进人编辑成功"
     });
-    this.$route.push({
-      url: "/index"
+    this.$router.push({
+      name: "index"
     });
     // aaa
   }
@@ -656,12 +658,10 @@ export default class createCompany extends Vue {
 
   /* 获取编辑公司信息 */
   async getCompanyInfo() {
-    console.log("this.$route.params", this.$route.params);
     const { id } = this.$route.params;
-    // console.log("id", id);
     let res = await getCompanyInfoApi(id);
     let newCompanyInfo = res.data.data.companyInfo;
-    // console.log("newCompanyInfo", newCompanyInfo);
+    console.log("newCompanyInfo", newCompanyInfo);
     this.setCompanyInfo(newCompanyInfo);
   }
 
@@ -694,7 +694,8 @@ export default class createCompany extends Vue {
       website: newCompanyInfo.website, // 公司官网
       address: newCompanyInfo.address ? newCompanyInfo.address : [], // 公司地址
       email: newCompanyInfo.email,
-      admin_uid: parseInt(newCompanyInfo.admin_uid) //跟进人员
+      admin_uid: parseInt(newCompanyInfo.adminUid), //跟进人员
+      adminName: newCompanyInfo.adminName
     };
     // 上传证件信息
     this.form = {

@@ -173,7 +173,7 @@
               </el-select>
             </el-form-item>
 
-            <el-form-item label-width="77px" label="客户等级" prop="customer_level">
+     <!--        <el-form-item label-width="77px" label="客户等级" prop="customer_level">
               <el-select v-model="form.customer_level" placeholder="请选择">
                 <el-option :label="item.text" :value="item.value" v-for="item in companyCustomerLevelRange" :key="item.value"></el-option>
               </el-select>
@@ -182,7 +182,7 @@
               <el-select v-model="form.advisorUid" placeholder="全部状态">
                 <el-option :label="item.realname" :value="item.id" v-for="item in advisorUserList" :key="item.id"></el-option>
               </el-select>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item class="btn">
               <el-button class="inquire" @click="onSubmit">查询</el-button>
               <el-button @click.stop="resetForm('form')">重置</el-button>
@@ -357,30 +357,30 @@ export default class indexPage extends Vue {
     {
       prop: "id",
       label: "公司ID",
-      width: 50
+      width: 100
     },
     {
       prop: "companyName",
       label: "申请信息",
-      width: 350
+      width: 400
       //    align: 'left'
     },
     {
       prop: "address",
       label: "地区",
-      width: 150
+      width: 200
     },
     {
       prop: "rtVersionName",
       label: "权益类型",
       width: 100
     },
-    {
-      prop: "customer_level",
-      label: "客户等级",
-      width: 200,
-      align: "left"
-    },
+    // {
+    //   prop: "customer_level",
+    //   label: "客户等级",
+    //   width: 200,
+    //   align: "left"
+    // },
     {
       prop: "expiredDesc",
       label: "权益截止时间",
@@ -399,12 +399,12 @@ export default class indexPage extends Vue {
     {
       prop: "statusDesc",
       label: "状态",
-      width: 80
+      width: 100
     },
     {
       prop: "check",
       fixed: "right",
-      width: 180,
+      width: 200,
       label: "操作"
     }
   ];
@@ -564,8 +564,8 @@ export default class indexPage extends Vue {
     this.getCity();
     this.getRightList();
     this.getSalerList();
-    this.getCompanyCustomerLevelRange()
-    this.getAdvisorUserList()
+    // this.getCompanyCustomerLevelRange()
+    // this.getAdvisorUserList()
   }
   activated() {
     let that = this;
