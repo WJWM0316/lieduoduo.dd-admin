@@ -4,11 +4,15 @@ const resolve = dir => {
   return path.join(__dirname, dir);
 };
 
+console.log(process.env.VUE_APP_API);
 module.exports = {
   lintOnSave: false,
-  configureWebpack: config => {
-    config.entry.vendors = ["vue", "vue-router", "axios", "vuex"]
-    config.resolve.alias = {
+  configureWebpack: {
+    entry: {
+      vendors: ["vue", "vue-router", "axios", "vuex"]
+    },
+    resolve: {
+      alias: {
         PACKJSON: resolve("./"),
         "@": resolve("src"),
         IMAGES: resolve("src/assets/images"),
@@ -21,8 +25,11 @@ module.exports = {
         ICONFONT: resolve("src/assets/iconfont"),
         FILTERS: resolve("src/filters"),
         COLORS: resolve("src/eleui/colors")
-    }
+      }
+    },
+    plugins: []
   },
+  css: {},
   chainWebpack: config => {
     config.plugins.delete("prefetch");
   }
