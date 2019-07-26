@@ -206,21 +206,21 @@
           </el-form-item>
         </el-form>
       </div>
- <!--      <div class="sales" v-if="AdminShow === 0||AdminShow === 5">
+      <div class="sales" v-if="AdminShow === 0 || AdminShow === 5">
         <h3>跟进顾问</h3>
         <el-form>
           <el-form-item label="跟进顾问">
             <el-select
               style="width: 400px;"
               ref="salesList"
-              v-model="companyInfo.realname"
+              v-model="companyInfo.advisorUid"
               placeholder="请选择跟进人"
-              @change="ground"
+              @change="ground1"
             >
               <el-option label="全部" :value="all" v-if="AdminShow==4"/>
               <el-option label="无" :value="0" />
               <el-option
-                v-for="(item, index) in salesList"
+                v-for="(item, index) in advisorUserList"
                 :label="item.realname"
                 :value="item.id"
                 :key="index"
@@ -228,7 +228,7 @@
             </el-select>
           </el-form-item>
         </el-form>
-      </div> -->
+      </div>
     </div>
 
     <!--添加新公司地址弹窗-->
@@ -277,7 +277,7 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import ImageUploader from "@/components/imageUploader";
 import emailCheck from "@/components/email/email";
-import { fieldApi, uploadApi, getSalerListApi } from "API/commont";
+import { fieldApi, uploadApi, getSalerListApi, getAdvisorUserListApi } from "API/commont";
 import adminControl from "@/components/adminControl/index";
 import {
   setCompanyInfoApi,
@@ -358,6 +358,14 @@ export default class createCompany extends Vue {
     // console.log("dsfsddf");
   }
   ground(e) {
+    // console.log(e);
+    let result = this.salesList.find(field => field.id === e);
+    this.companyInfo.groupId = result.groupId;
+    this.companyInfo.admin_uid = result.id;
+    // console.log(result);
+  }
+  ground1(e) {
+    console.log(e);return
     // console.log(e);
     let result = this.salesList.find(field => field.id === e);
     this.companyInfo.groupId = result.groupId;
@@ -475,6 +483,16 @@ export default class createCompany extends Vue {
     financing: [{ required: true, message: "融资情况必选", trigger: "change" }],
     employees: [{ required: true, message: "人员规模必选", trigger: "change" }]
   };
+  advisorUserList = []
+  /**
+   * @Author   小书包
+   * @DateTime 2019-07-19
+   * @detail   顾问推荐 - 顾问列表
+   * @return   {[type]}   [description]
+   */
+  getAdvisorUserList() {
+    getAdvisorUserListApi().then(res => this.advisorUserList = res.data.data)
+  }
   /* 切换tab */
   tab(e) {
     if (e.target.className === "userInfo") {
@@ -552,6 +570,7 @@ export default class createCompany extends Vue {
   }
   mounted() {
     this.AdminShow = +sessionStorage.getItem("AdminShow");
+    this.getAdvisorUserList()
     if (this.$route.query.isCreated) {
       this.isCreated = this.$route.query.isCreated;
       this.isShowCompany = true;
@@ -695,7 +714,8 @@ export default class createCompany extends Vue {
       address: newCompanyInfo.address ? newCompanyInfo.address : [], // 公司地址
       email: newCompanyInfo.email,
       admin_uid: parseInt(newCompanyInfo.adminUid), //跟进人员
-      adminName: newCompanyInfo.adminName
+      adminName: newCompanyInfo.adminName,
+      advisorUid: newCompanyInfo.advisorUid
     };
     // 上传证件信息
     this.form = {

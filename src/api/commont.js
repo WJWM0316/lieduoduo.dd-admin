@@ -57,3 +57,9 @@ export const getAdvisorUserListApi = () => request({
   type: 'get',
   noGlobalLoading: true
 })
+/* 公司库添加跟进人/修改跟进人 */
+export const setCompanyAdvisorApi = () => request({
+  url: `/company/set/advisor/${data.id}`,
+  type: 'put',
+  noGlobalLoading: true
+})

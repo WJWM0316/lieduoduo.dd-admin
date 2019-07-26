@@ -173,7 +173,7 @@
               </el-select>
             </el-form-item>
 
-     <!--        <el-form-item label-width="77px" label="客户等级" prop="customer_level">
+            <el-form-item label-width="77px" label="客户等级" prop="customer_level">
               <el-select v-model="form.customer_level" placeholder="请选择">
                 <el-option :label="item.text" :value="item.value" v-for="item in companyCustomerLevelRange" :key="item.value"></el-option>
               </el-select>
@@ -182,7 +182,7 @@
               <el-select v-model="form.advisorUid" placeholder="全部状态">
                 <el-option :label="item.realname" :value="item.id" v-for="item in advisorUserList" :key="item.id"></el-option>
               </el-select>
-            </el-form-item> -->
+            </el-form-item>
             <el-form-item class="btn">
               <el-button class="inquire" @click="onSubmit">查询</el-button>
               <el-button @click.stop="resetForm('form')">重置</el-button>
@@ -375,12 +375,12 @@ export default class indexPage extends Vue {
       label: "权益类型",
       width: 100
     },
-    // {
-    //   prop: "customer_level",
-    //   label: "客户等级",
-    //   width: 200,
-    //   align: "left"
-    // },
+    {
+      prop: "customer_level",
+      label: "客户等级",
+      width: 200,
+      align: "left"
+    },
     {
       prop: "expiredDesc",
       label: "权益截止时间",
@@ -391,11 +391,11 @@ export default class indexPage extends Vue {
       label: "跟进销售",
       width: 100
     },
-    // {
-    //   prop: "adminName",
-    //   label: "跟进顾问",
-    //   width: 100
-    // },
+    {
+      prop: "advisorName",
+      label: "跟进顾问",
+      width: 100
+    },
     {
       prop: "statusDesc",
       label: "状态",
@@ -564,8 +564,8 @@ export default class indexPage extends Vue {
     this.getCity();
     this.getRightList();
     this.getSalerList();
-    // this.getCompanyCustomerLevelRange()
-    // this.getAdvisorUserList()
+    this.getCompanyCustomerLevelRange()
+    this.getAdvisorUserList()
   }
   activated() {
     let that = this;
@@ -626,9 +626,6 @@ export default class indexPage extends Vue {
           border: none;
           box-sizing: border-box;
         }
-      }
-      .el-input {
-        width: 200px;
       }
       &::after {
         content: "";
