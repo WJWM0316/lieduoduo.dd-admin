@@ -9,7 +9,7 @@
       <div>
         <el-button @click.stop="createdCompany" v-show="active === 0 && !isEdit">保存</el-button>
         <el-button @click.stop="createdCompany" v-show="active === 0 && isEdit">保存编辑</el-button>
-        <el-button @click.stop="saveSaller" v-show="active === 1 && isEdit">保存跟进人</el-button>
+        <el-button @click.stop="saveSaller" v-show="active === 1 && isEdit">保存</el-button>
       </div>
     </div>
     <!--公司信息表格-->
@@ -183,7 +183,7 @@
     </div>
     <!-- 跟进销售设置 -->
     <div class="editWindow" v-if="active === 1">
-      <div class="sales" v-if="AdminShow === 0 || AdminShow === 4 || AdminShow === 3">
+      <div class="sales" v-if="AdminShow === 0 || AdminShow === 4 || AdminShow === 3 || AdminShow === 2">
         <h3>跟进销售</h3>
         <el-form>
           <el-form-item label="跟进销售">
@@ -212,13 +212,10 @@
           <el-form-item label="跟进顾问">
             <el-select
               style="width: 400px;"
-              ref="salesList"
-              v-model="companyInfo.advisorUid"
+              v-model="companyInfo.advisorName"
               placeholder="请选择跟进人"
               @change="ground1"
             >
-              <el-option label="全部" :value="all" v-if="AdminShow==4"/>
-              <el-option label="无" :value="0" />
               <el-option
                 v-for="(item, index) in advisorUserList"
                 :label="item.realname"
@@ -277,7 +274,7 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import ImageUploader from "@/components/imageUploader";
 import emailCheck from "@/components/email/email";
-import { fieldApi, uploadApi, getSalerListApi, getAdvisorUserListApi } from "API/commont";
+import { fieldApi, uploadApi, getSalerListApi, getAdvisorUserListApi, setCompanyAdvisorApi } from "API/commont";
 import adminControl from "@/components/adminControl/index";
 import {
   setCompanyInfoApi,
@@ -336,10 +333,7 @@ export default class createCompany extends Vue {
   showAdminWindow = false; //展示绑定管理员
   // 关闭
   closeAdmin(e) {
-    // console.log("触发了么");
-
     this.showAdminWindow = false;
-
     if (e && e.needLoad) {
       this.$set(this.companyInfo, "realname", sessionStorage.getItem("name"));
     }
@@ -353,24 +347,17 @@ export default class createCompany extends Vue {
   closeAdminWindow() {
     this.showAdminWindow = false;
   }
-  /* 修改公司名 */
-  editCompanyName() {
-    // console.log("dsfsddf");
-  }
   ground(e) {
-    // console.log(e);
     let result = this.salesList.find(field => field.id === e);
     this.companyInfo.groupId = result.groupId;
     this.companyInfo.admin_uid = result.id;
-    // console.log(result);
   }
   ground1(e) {
-    console.log(e);return
-    // console.log(e);
-    let result = this.salesList.find(field => field.id === e);
-    this.companyInfo.groupId = result.groupId;
-    this.companyInfo.admin_uid = result.id;
-    // console.log(result);
+    let item = this.advisorUserList.find(field => field.id === e)
+    this.companyInfo.advisorUid = item.id
+    this.companyInfo.advisorName = item.realname
+    this.companyInfo.advisorGroupId = item.groupId
+    console.log(item);return
   }
   /* 自定义公司名称校验规则 */
   companyNameRule = (rule, value, callback) => {
@@ -500,7 +487,6 @@ export default class createCompany extends Vue {
       if (this.salesList.length > 0) return;
       getSalerListApi().then(res => {
         this.salesList = res.data.data;
-        console.log(this.salesList);
       });
     } else {
       this.active = 0;
@@ -509,16 +495,13 @@ export default class createCompany extends Vue {
   /* 创建公司 */
   async createdCompany() {
     this.companyInfo.address = this.adressList;
-    // console.log(this.$route.params);
     this.$refs["companyInfo"].validate(async valid => {
       if (valid) {
         const { id, checkId } = this.$route.params;
 
-        // console.log("是否处于编辑状态", this.isEdit);
         if (this.isEdit) {
           // 编辑正式库
           if (id) {
-            // console.log("编辑正式库", this.companyInfo);
             delete this.companyInfo.adminUid;
             await editCompanyApi(id, this.companyInfo);
             this.$message({
@@ -527,7 +510,6 @@ export default class createCompany extends Vue {
             });
           } else {
             /* 编辑审核库 */
-            // console.log("编辑审核库", this.companyInfo);
             delete this.companyInfo.admin_uid;
 
             try {
@@ -537,13 +519,9 @@ export default class createCompany extends Vue {
                 type: "success"
               });
             } catch (err) {
-              // console.log(err);
             }
           }
         } else {
-          // 新建公司
-          console.log("开始预创建公司，绑定公司管理员");
-
           let admin_uid = sessionStorage.getItem("admin_uid");
           this.$set(this.companyInfo, "admin_uid", admin_uid);
           // console.log(this.companyInfo);
@@ -551,18 +529,6 @@ export default class createCompany extends Vue {
           this.isBindAdmin = 0;
           this.isNewCompany = true;
         }
-        // this.$message({
-        //   message: this.isEdit ? "编辑成功" : "公司创建成功",
-        //   type: "success"
-        // });
-        // if (checkId) {
-        //   this.$router.push({
-        //     path: `/check/companyCheck/verify?id=${checkId}`
-        //   });
-        // }
-        // else {
-        //   this.$router.go(-1);
-        // }
       } else {
         return false;
       }
@@ -580,23 +546,27 @@ export default class createCompany extends Vue {
   /* 保存跟进人 */
   async saveSaller() {
     const { id, checkId } = this.$route.params;
-    // console.log(this.$route.params);
-    // console.log("this.companyInfo", this.companyInfo);
-    // return;
-    console.log(this.companyInfo)
+    // console.log(this.companyInfo);return
     if (id) {
       await editCompanyFollowUserApi(
         id,
         this.companyInfo.admin_uid,
         this.companyInfo.groupId
       );
+      if(this.companyInfo.advisorUid) {
+        await setCompanyAdvisorApi({id,advisorGroupId: this.companyInfo.advisorGroupId, advisorUid: this.companyInfo.advisorUid})
+      }
     } else {
       await editCheckCompanyFollowUserApi(
         checkId,
         this.companyInfo.admin_uid,
         this.companyInfo.groupId
       );
+      if(this.companyInfo.advisorUid) {
+        await setCompanyAdvisorApi({id,advisorGroupId: this.companyInfo.advisorGroupId, advisorUid: this.companyInfo.advisorUid})
+      }
     }
+
     this.$message({
       type: "success",
       message: "跟进人编辑成功"
@@ -680,7 +650,6 @@ export default class createCompany extends Vue {
     const { id } = this.$route.params;
     let res = await getCompanyInfoApi(id);
     let newCompanyInfo = res.data.data.companyInfo;
-    console.log("newCompanyInfo", newCompanyInfo);
     this.setCompanyInfo(newCompanyInfo);
   }
 
@@ -695,27 +664,28 @@ export default class createCompany extends Vue {
   /* 填充原公司数据 */
   setCompanyInfo(newCompanyInfo) {
     let admin_uid = sessionStorage.getItem("admin_uid");
-    // console.log("newCompanyInfo", newCompanyInfo);
     this.companyInfo = {
-      company_name: newCompanyInfo.companyName, // 公司名称
-      company_shortname: newCompanyInfo.companyShortname, // 公司简称
-      industry_id: newCompanyInfo.industryId ? newCompanyInfo.industryId : "", // 所属行业
+      company_name: newCompanyInfo.companyName,
+      company_shortname: newCompanyInfo.companyShortname,
+      industry_id: newCompanyInfo.industryId ? newCompanyInfo.industryId : "",
       financing: newCompanyInfo.financing
         ? parseInt(newCompanyInfo.financing)
-        : "", // 融资
+        : "",
       employees: newCompanyInfo.employees
         ? parseInt(newCompanyInfo.employees)
-        : "", // 规模
-      intro: newCompanyInfo.intro, // 公司简介
-      business_license: newCompanyInfo.businessLicenseInfo.id || "", // 营业执照
-      on_job: newCompanyInfo.onJobInfo.id || "", // 在职证明
+        : "",
+      intro: newCompanyInfo.intro,
+      business_license: newCompanyInfo.businessLicenseInfo.id || "",
+      on_job: newCompanyInfo.onJobInfo.id || "",
       logo: newCompanyInfo.logoInfo.id || "",
-      website: newCompanyInfo.website, // 公司官网
-      address: newCompanyInfo.address ? newCompanyInfo.address : [], // 公司地址
+      website: newCompanyInfo.website,
+      address: newCompanyInfo.address ? newCompanyInfo.address : [],
       email: newCompanyInfo.email,
-      admin_uid: parseInt(newCompanyInfo.adminUid), //跟进人员
+      admin_uid: parseInt(newCompanyInfo.adminUid),
       adminName: newCompanyInfo.adminName,
-      advisorUid: newCompanyInfo.advisorUid
+      advisorUid: newCompanyInfo.advisorUid,
+      advisorName: newCompanyInfo.advisorName === '无' ? '' : newCompanyInfo.advisorName,
+      advisorGroupId : newCompanyInfo.advisorGroupId
     };
     // 上传证件信息
     this.form = {
@@ -751,8 +721,6 @@ export default class createCompany extends Vue {
 
   created() {
     this.init();
-    // console.log(this.active)
-    // if(this.$route.query)
   }
 }
 </script>
