@@ -564,8 +564,8 @@ export default class indexPage extends Vue {
     this.getCity();
     this.getRightList();
     this.getSalerList();
-    // this.getCompanyCustomerLevelRange()
-    // this.getAdvisorUserList()
+    this.getCompanyCustomerLevelRange()
+    this.getAdvisorUserList()
   }
   activated() {
     let that = this;

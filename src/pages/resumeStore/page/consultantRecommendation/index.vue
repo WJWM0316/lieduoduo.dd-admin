@@ -413,7 +413,7 @@ export default class invitPro extends Vue {
     let obj = this.forEachKeys(this.form, page);
     if(obj.isJobhunterApply === '') delete obj.isJobhunterApply
     if(obj.dealStatusId === '') delete obj.dealStatusId
-    if(!obj.company.trim()) delete obj.company
+    if(obj.company && !obj.company.trim()) delete obj.company
     if(!obj.followAdvisorUid) delete obj.followAdvisorUid
     if(!obj.startTime || !obj.endTime) {
       delete obj.startTime
