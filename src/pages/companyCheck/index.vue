@@ -98,7 +98,7 @@
                 <el-option label="用户创建" value="1"></el-option>
               </el-select>
             </el-form-item>
-            <!-- <el-form-item
+            <el-form-item
               label-width="90px"
               label="客户等级"
               prop="customer_level"
@@ -106,7 +106,7 @@
               <el-select v-model="form.customer_level" placeholder="客户等级">
                 <el-option :label="item.text" :value="item.value" v-for="item in companyCustomerLevelRange" :key="item.value"></el-option>
               </el-select>
-            </el-form-item> -->
+            </el-form-item>
             <el-form-item class="btn">
               <el-button class="inquire" @click="onSubmit">查询</el-button>
               <el-button @click.stop="resetForm('form')">重置</el-button>
@@ -298,12 +298,12 @@ export default class companyCheck extends Vue {
       width: 100,
       align: "left"
     },
-    // {
-    //   prop: "customer_level",
-    //   label: "客户等级",
-    //   width: 200,
-    //   align: "left"
-    // },
+    {
+      prop: "customer_level",
+      label: "客户等级",
+      width: 200,
+      align: "left"
+    },
     {
       prop: "adminName",
       label: "跟进人",

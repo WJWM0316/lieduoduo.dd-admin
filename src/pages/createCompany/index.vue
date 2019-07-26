@@ -680,7 +680,7 @@ export default class createCompany extends Vue {
       address: newCompanyInfo.address ? newCompanyInfo.address : [],
       email: newCompanyInfo.email,
       admin_uid: parseInt(newCompanyInfo.adminUid), //跟进人员
-      adminName: newCompanyInfo.adminName
+      adminName: newCompanyInfo.adminName,
       advisorUid: newCompanyInfo.advisorUid,
       advisorName: newCompanyInfo.advisorName === '无' ? '' : newCompanyInfo.advisorName,
       advisorGroupId : newCompanyInfo.advisorGroupId
