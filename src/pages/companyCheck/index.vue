@@ -72,11 +72,11 @@
             </el-form-item>
             <el-form-item
               label-width="90px"
-              label="跟进销售"
+              label="跟进人"
               prop="admin_uid"
               style="margin-left: 20px;"
             >
-              <el-select v-model="form.admin_uid" placeholder="跟进销售">
+              <el-select v-model="form.admin_uid" placeholder="跟进人">
                 <el-option label="全部" value="all" v-if="AdminShow==4"></el-option>
                 <el-option label="无" value="0"></el-option>
                 <el-option
@@ -98,7 +98,7 @@
                 <el-option label="用户创建" value="1"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item
+            <!-- <el-form-item
               label-width="90px"
               label="客户等级"
               prop="customer_level"
@@ -106,7 +106,7 @@
               <el-select v-model="form.customer_level" placeholder="客户等级">
                 <el-option :label="item.text" :value="item.value" v-for="item in companyCustomerLevelRange" :key="item.value"></el-option>
               </el-select>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item class="btn">
               <el-button class="inquire" @click="onSubmit">查询</el-button>
               <el-button @click.stop="resetForm('form')">重置</el-button>
@@ -298,15 +298,15 @@ export default class companyCheck extends Vue {
       width: 100,
       align: "left"
     },
-    {
-      prop: "customer_level",
-      label: "客户等级",
-      width: 200,
-      align: "left"
-    },
+    // {
+    //   prop: "customer_level",
+    //   label: "客户等级",
+    //   width: 200,
+    //   align: "left"
+    // },
     {
       prop: "adminName",
-      label: "跟进销售",
+      label: "跟进人",
       width: 200,
       align: "left"
     },

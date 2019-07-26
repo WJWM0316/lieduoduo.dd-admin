@@ -49,24 +49,24 @@ export const routes = [
             "@/pages/resumeStore/page/invitationProgress/index.vue"
           ], resolve)
       },
-      {
-        path: "consultantRecommendation",
-        name: "consultantRecommendation",
-        meta: { title: "顾问推荐进展", keepAlive: true, flag: "resumeStore" },
-        component: resolve =>
-          require([
-            "@/pages/resumeStore/page/consultantRecommendation/index.vue"
-          ], resolve)
-      },
-      {
-        path: "hotRecommendation",
-        name: "hotRecommendation",
-        meta: { title: "热门推荐进展", keepAlive: true, flag: "resumeStore" },
-        component: resolve =>
-          require([
-            "@/pages/resumeStore/page/hotRecommendation/index.vue"
-          ], resolve)
-      }
+      // {
+      //   path: "consultantRecommendation",
+      //   name: "consultantRecommendation",
+      //   meta: { title: "顾问推荐进展", keepAlive: true, flag: "resumeStore" },
+      //   component: resolve =>
+      //     require([
+      //       "@/pages/resumeStore/page/consultantRecommendation/index.vue"
+      //     ], resolve)
+      // },
+      // {
+      //   path: "hotRecommendation",
+      //   name: "hotRecommendation",
+      //   meta: { title: "热门推荐进展", keepAlive: true, flag: "resumeStore" },
+      //   component: resolve =>
+      //     require([
+      //       "@/pages/resumeStore/page/hotRecommendation/index.vue"
+      //     ], resolve)
+      // }
     ]
   },
   /* 新建微简历 */
