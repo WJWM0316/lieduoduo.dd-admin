@@ -391,11 +391,11 @@ export default class indexPage extends Vue {
       label: "跟进销售",
       width: 100
     },
-    // {
-    //   prop: "adminName",
-    //   label: "跟进顾问",
-    //   width: 100
-    // },
+    {
+      prop: "advisorName",
+      label: "跟进顾问",
+      width: 100
+    },
     {
       prop: "statusDesc",
       label: "状态",
@@ -626,9 +626,6 @@ export default class indexPage extends Vue {
           border: none;
           box-sizing: border-box;
         }
-      }
-      .el-input {
-        width: 200px;
       }
       &::after {
         content: "";

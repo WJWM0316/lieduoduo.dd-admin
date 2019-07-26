@@ -57,3 +57,24 @@ export const getAdvisorUserListApi = () => request({
   type: 'get',
   noGlobalLoading: true
 })
+/* 公司库添加跟进人/修改跟进人 */
+export const setCompanyAdvisorApi = data => request({
+  url: `/company/set/advisor/${data.id}`,
+  type: 'put',
+  data,
+  noGlobalLoading: true
+})
+/* 扣点（实扣点） */
+export const payRecommendApi = data => request({
+  url: `/recommend/pay/${data.recommendId}`,
+  type: 'post',
+  data,
+  noGlobalLoading: true
+})
+/* 返点 */
+export const refundRecommendApi = data => request({
+  url: `/recommend/refund/{recommendId}`,
+  type: 'post',
+  data,
+  noGlobalLoading: true
+})

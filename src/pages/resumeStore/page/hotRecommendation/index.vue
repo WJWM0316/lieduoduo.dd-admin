@@ -326,7 +326,7 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import lyoutContent from "COMPONENTS/Lyout/lyoutContent/lyoutContent.vue";
-import { getAdvisorUserListApi } from "API/commont";
+import { getAdvisorUserListApi, payRecommendApi, refundRecommendApi } from "API/commont";
 
 import {
   getRecommendInterviewsSearchListApi,
@@ -602,22 +602,6 @@ export default class invitPro extends Vue {
         this.iconList = nowRow.interview.comment.reason.split(",");
         break;
     }
-
-    // [0];
-    //
-    //
-    // if (nowRow.interview.comment !== ""&&type===undefined) {
-    //   console.log("点击原因");
-    //
-    //
-    // } else {
-    //   console.log("点击扣返点");
-    //   this.iconList=[];
-    //
-    // }
-    //
-    //
-    //
   }
   handertableHeight(e) {
     this.tableHeight = e;
@@ -641,7 +625,8 @@ export default class invitPro extends Vue {
     }
     if (this.RusultForm.type === 1) {
       // console.log("扣点");
-      recommendPay(this.RusultForm.recommendId, {
+      payRecommendApi({
+        recommendId: this.RusultForm.recommendId,
         note: this.RusultForm.note
       }).then(res => {
         // console.log(res);
@@ -652,7 +637,8 @@ export default class invitPro extends Vue {
       /* 扣点 */
     } else if (this.RusultForm.type === 2) {
       // console.log("返点"); /* 返点 */
-      refund(this.RusultForm.recommendId, {
+      refundRecommendApi({
+        recommendId: this.RusultForm.recommendId,
         note: this.RusultForm.note
       }).then(res => {
         // console.log(res);
