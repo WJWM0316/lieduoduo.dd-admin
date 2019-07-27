@@ -160,7 +160,7 @@
             >
               <span style="text-align: left;">{{props.scope.row[props.scope.column.property]}}</span>
             </div>
-            <!-- 跟进人 -->
+            <!-- 跟进销售 -->
             <div
               class="btn-container"
               v-else-if="props.scope.column.property === 'adminName'"
@@ -168,7 +168,7 @@
             >
               <span style="text-align: left;">
                 <span v-if="props.scope.row.adminUid">{{props.scope.row.adminName}}</span>
-                <span v-else class="btn" @click.stop="toEditSaller(props.scope.row.id)">添加跟进人</span>
+                <span v-else class="btn" @click.stop="toEditSaller(props.scope.row.id)">添加跟进销售</span>
               </span>
             </div>
             <!-- 申请信息列 -->
@@ -340,7 +340,7 @@ export default class companyCheck extends Vue {
   /**
    * @Author   小书包
    * @DateTime 2019-07-19
-   * @detail   获取跟进人列表
+   * @detail   获取跟进销售列表
    * @return   {[type]}   [description]
    */
   getCompanyCustomerLevelRange() {
@@ -409,7 +409,7 @@ export default class companyCheck extends Vue {
   resetForm(name) {
     this.$refs[name].resetFields();
   }
-  /* 去选择跟进人 */
+  /* 去选择跟进销售 */
   toEditSaller(id) {
     this.$route.meta.scrollY = window.scrollY;
     this.$router.push({
