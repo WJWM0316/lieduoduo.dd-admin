@@ -191,7 +191,7 @@
               style="width: 400px;"
               ref="salesList"
               v-model="companyInfo.adminName"
-              placeholder="请选择跟进人"
+              placeholder="请选择跟进销售"
               @change="ground"
             >
               <!-- <el-option label="全部" :value="all" v-if="AdminShow==4"/> -->
@@ -206,7 +206,7 @@
           </el-form-item>
         </el-form>
       </div>
- <div class="sales" v-if="AdminShow === 0||AdminShow === 5">
+ <div class="sales" v-if="(AdminShow === 0||AdminShow === 5) && $route.path.includes('/index/editCompany')">
 
         <h3>跟进顾问</h3>
         <el-form>
@@ -214,7 +214,7 @@
             <el-select
               style="width: 400px;"
               v-model="companyInfo.advisorName"
-              placeholder="请选择跟进人"
+              placeholder="请选择跟进顾问"
               @change="ground1"
             >
               <el-option
@@ -226,7 +226,7 @@
             </el-select>
           </el-form-item>
         </el-form>
-      </div> -->
+      </div> 
     </div>
 
     <!--添加新公司地址弹窗-->
@@ -583,7 +583,7 @@ export default class createCompany extends Vue {
 
     this.$message({
       type: "success",
-      message: "跟进人编辑成功"
+      message: "编辑成功"
     });
     this.$router.go(-1)
     // aaa
@@ -733,6 +733,7 @@ export default class createCompany extends Vue {
 
   created() {
     this.init();
+    console.log(this.$route.path)
   }
 }
 </script>

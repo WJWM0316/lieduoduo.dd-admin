@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import { addCompanyAddressApi, delCompanyAddressApi } from 'API/company'
 import {TMap} from '../../util/js/TMap.js'
+// const QQMapWX = require('../../util/lib/qqmap-wx-jssdk.min.js')
 
 @Component({
   name: 'mapSearch',
@@ -47,6 +48,7 @@ export default class mapSearch extends Vue {
       // 保存地图对象
       that.qqMapObj = qq
       let latlngBounds = new qq.maps.LatLngBounds();
+      console.log(qq.maps)
       that.searchService = new qq.maps.SearchService({
         //设置搜索范围为北京
         location: "北京",
