@@ -564,9 +564,12 @@ export default class createCompany extends Vue {
         );
       }
       
-      if(this.companyInfo.advisorUid) {
-        await setCompanyAdvisorApi({id,advisorGroupId: this.companyInfo.advisorGroupId, advisorUid: this.companyInfo.advisorUid})
+      if([0,5].includes(Number(this.AdminShow))) {
+        if(this.companyInfo.advisorUid) {
+          await setCompanyAdvisorApi({id,advisorGroupId: this.companyInfo.advisorGroupId, advisorUid: this.companyInfo.advisorUid})
+        }
       }
+      
     } else {
       await editCheckCompanyFollowUserApi(
         checkId,
