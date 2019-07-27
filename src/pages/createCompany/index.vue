@@ -548,7 +548,7 @@ export default class createCompany extends Vue {
   /* 保存跟进人 */
   async saveSaller() {
     const { id, checkId } = this.$route.params;
-    // let api = null
+    // 数字代表权限的ip
     // if([0,1,2,3,4].includes(Number(this.AdminShow))) {
     //   api = 'editCompanyFollowUserApi'
     // }
@@ -563,7 +563,7 @@ export default class createCompany extends Vue {
           this.companyInfo.groupId
         );
       }
-      
+
       if([0,5].includes(Number(this.AdminShow))) {
         if(this.companyInfo.advisorUid) {
           await setCompanyAdvisorApi({id,advisorGroupId: this.companyInfo.advisorGroupId, advisorUid: this.companyInfo.advisorUid})

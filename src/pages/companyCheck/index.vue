@@ -72,11 +72,11 @@
             </el-form-item>
             <el-form-item
               label-width="90px"
-              label="跟进人"
+              label="跟进销售"
               prop="admin_uid"
               style="margin-left: 20px;"
             >
-              <el-select v-model="form.admin_uid" placeholder="跟进人">
+              <el-select v-model="form.admin_uid" placeholder="跟进销售">
                 <el-option label="全部" value="all" v-if="AdminShow==4"></el-option>
                 <el-option label="无" value="0"></el-option>
                 <el-option
@@ -306,7 +306,7 @@ export default class companyCheck extends Vue {
     },
     {
       prop: "adminName",
-      label: "跟进人",
+      label: "跟进销售",
       width: 200,
       align: "left"
     },
