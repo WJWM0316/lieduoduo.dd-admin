@@ -510,6 +510,7 @@ export default class invitPro extends Vue {
       this.$refs["mobile"].style.display = "block";
       this.$refs["mobile"].style.left = e.clientX + "px";
       this.$refs["mobile"].style.top = e.clientY + window.scrollY + "px";
+      this.$refs["mobile"].style.marginTop = "-5px";
     });
   }
   async creatLink(e, uid, index, type) {
@@ -520,6 +521,7 @@ export default class invitPro extends Vue {
         this.$refs["qrCode"].style.display = "block";
         this.$refs["qrCode"].style.left = e.clientX + "px";
         this.$refs["qrCode"].style.top = e.clientY + window.scrollY + "px";
+
       });
       return;
     } else if (this.tableData[index].resumeQrCode && type === 2) {
