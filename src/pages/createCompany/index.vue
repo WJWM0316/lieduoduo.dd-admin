@@ -183,7 +183,7 @@
     </div>
     <!-- 跟进销售设置 -->
     <div class="editWindow" v-if="active === 1">
-      <div class="sales" v-if="AdminShow === 0 || AdminShow === 4">
+      <div class="sales" v-if="AdminShow === 0 || AdminShow === 4 || AdminShow === 2">
         <h3>跟进销售</h3>
         <el-form>
           <el-form-item label="跟进销售">

@@ -107,7 +107,6 @@ export default class mapSearch extends Vue {
           }
         },//若服务请求失败，则运行以下函数
         error: function(e) {
-          console.log(e)
           that.nowPosiInfo = ''
           that.$message.error("地址太过模糊,请确保地址准确且包含城市名")
         }
