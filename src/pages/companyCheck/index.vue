@@ -392,7 +392,7 @@ export default class companyCheck extends Vue {
       });
       return;
     }
-    if(!params.customer_level) delete params.customer_level
+    // if(!params.customer_level) delete params.customer_level
     templistApi(params).then(res => {
       let list = res.data.data
       list.map((field, index) => {
