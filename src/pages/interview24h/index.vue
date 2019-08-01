@@ -836,9 +836,6 @@ export default class Interview24h extends Vue {
    * @return   {[type]}              [description]
    */
   todoAction(type, data, beforeType, beforeTitle) {
-    let positionId = data.positionId
-    this.model.type = type
-    this.model.position.positionId = positionId
     this.form.realname = data.recruiterInfo.realname
     this.form.mobile = data.recruiterInfo.mobile
     this.model.item = data
@@ -846,10 +843,12 @@ export default class Interview24h extends Vue {
     this.model.beforeTitle = beforeTitle
     switch(type) {
       case 'recipe':
+        this.model.type = type
         this.confirmInterview({interviewId: data.interviewId})
         break;
       case 'improper':
         this.getLabelComment({status: data.status}).then(() => {
+          this.model.type = type
           this.model.show = true
           this.model.title = '不合适'
           this.model.item = data
@@ -865,6 +864,7 @@ export default class Interview24h extends Vue {
         this.form.mobile = data.recruiterInfo.mobile
         this.form.realname = data.recruiterInfo.realname
         this.model.interviewId = data.interviewId
+        this.model.type = type
         this.model.dateLists.push({
           active: true,
           value: data.handleEndTime
@@ -874,6 +874,7 @@ export default class Interview24h extends Vue {
         this.positionNum = 1
         this.positionLists = []
         this.isLastPageOfPosition = false
+        this.model.type = type
         this.getPositionList({
           page: this.positionNum, 
           count: 20, 
@@ -903,6 +904,7 @@ export default class Interview24h extends Vue {
         this.model.show = true
         this.model.title = '查看面试'
         this.model.position.name = data.positionName
+        this.model.type = type
         this.model.dateLists.push({
           active: true,
           value: data.handleEndTime
@@ -919,6 +921,7 @@ export default class Interview24h extends Vue {
           recruiter: data.recruiterInfo.uid
         }).then(() => {
           this.model.show = true
+          this.model.type = type
           this.model.title = '选择职位'
           this.model.btnTxt = '返回'
           document.getElementById('scroll_div_ul_position').onscroll = () => {
@@ -937,6 +940,7 @@ export default class Interview24h extends Vue {
           this.model.show = true
           this.model.title = '选择职位'
           this.model.btnTxt = '返回'
+          this.model.type = type
           document.getElementById('scroll_div_ul_address').onscroll = () => {
             this.divScroll().then(() => {
               if (!this.isLastPageOfAddress) this.getSimplepageAddressesLists(false)
@@ -948,6 +952,7 @@ export default class Interview24h extends Vue {
         this.model.show = true
         this.model.title = '选择不合适原因'
         this.model.type = 'reason'
+        this.model.type = type
         let reason = this.model.reason.map(field => field.id).join(',')
         this.refuseJobhunterUidInterview({
           jobhunterUid: data.jobhunterInfo.uid,
@@ -957,6 +962,7 @@ export default class Interview24h extends Vue {
         })
         break;
       case 'withdraw':
+        this.model.type = type
         this.interviewRetract({
           jobhunterUid: data.jobhunterInfo.uid,
           interviewId: data.interviewId
