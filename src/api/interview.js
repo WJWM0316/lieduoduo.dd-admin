@@ -69,3 +69,11 @@ export const getPositionCodeUrlApi = data => request({
   data,
   noGlobalLoading: true
 })
+
+/* 24h急速反馈列表 */
+export const getQuickApplyInterviewApi = data => request({
+  url: '/interview/quickApply',
+  type: 'get',
+  data,
+  noGlobalLoading: true
+})

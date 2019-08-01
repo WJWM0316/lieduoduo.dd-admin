@@ -47,6 +47,10 @@ import Component from "vue-class-component";
       type: Boolean,
       default: false
     },
+    showBtn: {
+      type: Boolean,
+      default: true
+    },
     // 上传的文件类型
     type: {
       type: String,
@@ -97,15 +101,8 @@ export default class ImageUploader extends Vue {
   getImageURL(file) {
     return new Promise((resolve, reject) => {
       const fileReader = new FileReader();
-
-      fileReader.onload = event => {
-        resolve(event.target.result);
-      };
-
-      fileReader.onerror = event => {
-        reject(event);
-      };
-
+      fileReader.onload = event => resolve(event.target.result)
+      fileReader.onerror = event => reject(event)
       fileReader.readAsDataURL(file);
     });
   }
@@ -135,45 +132,38 @@ export default class ImageUploader extends Vue {
    * @param {Object} event
    */
   handleChangeFile(event) {
-    console.log("文件选择错误888888");
     let file = null;
     const files = event.target.files;
     if (!files || files.length <= 0) {
-      console.log("文件选择错误");
       this.clearFileInput(event.target);
       return;
     }
     file = files[0];
     // 判断文件类型
     if (!/^image\//.test(file.type)) {
-      console.log(`文件格式不正确：${file.type}`);
       this.$message.error("图片文件格式不正确");
       this.clearFileInput(event.target);
       return;
     }
     // 判断文件大小
     if (file.size > 1024 * 1024 * this.maxFileSize) {
-      console.log(`文件大小不能超过${this.maxFileSize}M`);
       this.$message.error(`图片文件大小不能超过${this.maxFileSize}M`);
       this.clearFileInput(event.target);
       return;
     }
 
     this.$emit("before-load", file);
-    this.getImageURL(file)
-      .then(url => {
-        file.preview = url;
-        file.uploadType = this.type;
-        this.previewSrc = url;
-        this.$emit("input", this.previewSrc);
-        this.$emit("loaded", file);
-        // this.clearFileInput(event.target)
-      })
-      .catch(e => {
-        console.log("获取图片文件报错", e);
-        this.$emit("load-error", e);
-        this.clearFileInput(event.target);
-      });
+    this.getImageURL(file).then(url => {
+      file.preview = url;
+      file.uploadType = this.type;
+      this.previewSrc = url;
+      this.$emit("input", this.previewSrc);
+      this.$emit("loaded", file);
+    })
+    .catch(e => {
+      this.$emit("load-error", e);
+      this.clearFileInput(event.target);
+    });
   }
 
   /**

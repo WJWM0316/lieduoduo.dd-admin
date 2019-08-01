@@ -10,7 +10,7 @@ let isTest = false;
 const API_ROOT = process.env.VUE_APP_API;
 
 // 请求的跟地址
-// export const upload_api = `${API_ROOT}/attaches`
+export const upload_api = `${API_ROOT}/attaches`
 axios.defaults.baseURL = API_ROOT;
 // 请求拦截器
 axios.interceptors.request.use(

@@ -73,7 +73,22 @@
         <el-form-item class label="公司邮箱">
           <span>{{companyInfo.email}}</span>
         </el-form-item>
-
+        
+        <el-form-item class label="*一句话亮点">
+          <span>{{companyInfo.oneSentenceIntro}}</span>
+        </el-form-item>
+        <el-form-item class label="公司图片">
+          <ul class="common-list_01">
+            <li
+              v-for="(imageItem, imageIndex) in companyInfo.albumInfo"
+              :key="imageIndex"
+              :data-key="imageIndex"
+              class="draggable"
+              :style="`background-image: url(${imageItem.smallUrl}); background-size: cover; background-repeat: no-repeat; background-position: center center;`"
+              draggable="true">
+            </li>
+          </ul>
+        </el-form-item>
         <h3>资质信息</h3>
         <el-form-item class="full" label="营业执照" prop="icon" v-if="companyInfo.businessLicenseInfo">
           <div class="seePhoto" v-if="companyInfo.businessLicenseInfo.smallUrl!=null">
@@ -99,6 +114,25 @@
             </div>
           </div>
         </el-form-item>
+        <h3 v-if="companyInfo.product.length">产品介绍</h3>
+        <div v-for="(item, index) in companyInfo.product" v-if="companyInfo.product.length">
+          <el-form-item class label="产品logo">
+            <img :src="item.logoInfo.smallUrl" alt="" style="width: 130px;height: 130px;" v-if="item.logoInfo.smallUrl">
+          </el-form-item>
+          <el-form-item class label="产品名称">
+            <span>{{item.productName}}</span>
+          </el-form-item>
+          <el-form-item class label="产品官网">
+            <span>{{item.siteUrl}}</span>
+          </el-form-item>
+          <el-form-item class label="产品slogan">
+            <span>{{item.slogan}}</span>
+          </el-form-item>
+          <el-form-item class label="产品亮点">
+            <span>{{item.lightspot}}</span>
+          </el-form-item>
+          <div class="line" style="height: 1px;background: #ebeef5;width: 100%; margin-bottom: 20px;" v-if="companyInfo.product.length !== index + 1"></div>
+        </div>
       </el-form>
     </div>
     <!-- 跟进销售设置 -->
@@ -165,7 +199,8 @@ import {
   delCompanyAddressApi,
   verifyEmailApi,
   getCompanyInfoApi,
-  getRecruitersListApi
+  getRecruitersListApi,
+  getCompanyProductListsApi
 } from "API/company";
 import mapSearch from "@/components/map";
 import { constants } from "crypto";
@@ -191,6 +226,7 @@ export default class createCompany extends Vue {
   };
   /* 公司信息 */
   companyInfo = {
+    product: [],
     createdUid: "" /* 0没有绑定管理员，1已经绑定了管理员 */
   };
 
@@ -220,23 +256,15 @@ export default class createCompany extends Vue {
         if (err.data.code === 403) {
           this.$router.go(-1);
         }
-        console.log(err);
       })
       .then(res => {
         this.companyInfo = res.data.data.companyInfo;
-        console.log(this.companyInfo);
         this.rightInfo = res.data.data.rtInfo;
       });
-    // try {
-    //   const { id } = this.$route.query;
-    //   let res = await getCompanyInfoApi(id);
-    //   console.log('res',res)
-    //   this.companyInfo = res.data.data.companyInfo;
-    //   this.rightInfo = res.data.data.rtInfo;
-    // } catch(e) {
-    //   console.log('gggg')
-    //   console.log(e)
-    // }
+  }
+  getCompanyProductLists() {
+    let query = this.$route.query
+    getCompanyProductListsApi({id: query.id, page: 1, count: 50})
   }
   // 绑定已有公司的管理员
   async bindAdmin() {
@@ -244,12 +272,10 @@ export default class createCompany extends Vue {
     this.showAdminWindow = true;
     this.isBindAdmin = this.companyInfo.createdUid ? true : false;
     this.isOldEdit = true;
-    console.log(this.companyInfo.createdUid);
   }
   /* 移除已有公司的管理员 */
   async delateAdmin() {
     this.showAdminWindow = true;
-    console.log(this.companyInfo);
     // 判断是否存在公司id，如果存在，则进入下一步
     if (this.companyInfo.createdUid) {
       let param = {
@@ -279,7 +305,6 @@ export default class createCompany extends Vue {
   /* 查看大图 */
   showImg(imgUrl) {
     this.nowImg = imgUrl;
-    console.log(this.nowImg);
   }
   /* 隐藏大图 */
   hiddenMask() {
@@ -292,6 +317,55 @@ export default class createCompany extends Vue {
 </script>
 
 <style lang="less" scoped="scoped">
+.common-list_01 {
+  li {
+    width:88px;
+    height:88px;
+    background:rgba(245,247,250,1);
+    border-radius:4px;
+    position: relative;
+    display: inline-block;
+    margin-right: 24px;
+    margin-bottom: 24px;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .upload-li {
+    position: relative;
+    box-sizing: border-box;
+    border: dotted 1px #DCDCDC;
+    background: #f5f7fa;
+    .el-upload {
+      width: 100%;
+      height: 100%;
+    }
+    .el-icon-plus {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #DCDCDC;
+      font-size: 24px;
+    }
+  }
+  .btn-close{
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    color: #BCBCBC;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .el-progress--circle{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
 .mask {
   position: fixed;
   top: 0;

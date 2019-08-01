@@ -15,7 +15,6 @@ export const routes = [
   {
     path: "/index",
     name: "index",
-
     meta: { title: "公司库", keepAlive: true, scrollY: 0, Aside: false },
     component: resolve => require(["@/pages/index/index.vue"], resolve)
   },
@@ -68,6 +67,30 @@ export const routes = [
           ], resolve)
       }
     ]
+  },
+  {
+    path: "/24h/add",
+    name: "h24_post",
+    meta: {
+      title: "职位发布111",
+      haveParent: true,
+      parentPath: "/24h",
+      parentName: "24h反馈专场管理"
+    },
+    component: resolve =>
+      require(["@/pages/24h/post.vue"], resolve)
+  },
+  {
+    path: "/24h/edit",
+    name: "h24_edit",
+    meta: {
+      title: "职位发布111",
+      haveParent: true,
+      parentPath: "/24h",
+      parentName: "24h反馈专场管理"
+    },
+    component: resolve =>
+      require(["@/pages/24h/post.vue"], resolve)
   },
   /* 新建微简历 */
   {
@@ -147,6 +170,18 @@ export const routes = [
     },
     component: resolve => require(["../App.vue"], resolve),
     children: [
+      {
+        path: "interview24h",
+        name: "interview24h",
+        meta: {
+          title: "24h反馈专场管理",
+          haveParent: true,
+          keepAlive: true,
+          flag: "interview"
+        },
+        component: resolve =>
+          require(["@/pages/interview24h/index.vue"], resolve)
+      },
       {
         path: "List",
         name: "List",
@@ -327,7 +362,13 @@ export const routes = [
     meta: { title: "用户管理", haveParent: false, keepAlive: true },
     component: resolve => require(["@/pages/user/index.vue"], resolve)
   },
-
+  /* 24h反馈专场管理 */
+  {
+    path: "/24h",
+    name: "24h",
+    meta: { title: "24h反馈专场管理", haveParent: false, keepAlive: true },
+    component: resolve => require(["@/pages/24h/24h.vue"], resolve)
+  },
   /* 添加用户 */
   {
     path: "/user/addUser",

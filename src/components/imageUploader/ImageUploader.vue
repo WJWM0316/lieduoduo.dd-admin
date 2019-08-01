@@ -1,16 +1,16 @@
 <template>
   <div class="m-image-uploader f-flex">
-    <div class="preview f-flex-fixed" v-show="previewSrc" v-loading="uploading" @click.stop="preview(previewSrc)">
+    <div class="preview f-flex-fixed" v-show="previewSrc" v-loading="uploading">
       <i class="u-image auto" :style="{ width: imageWidth, height: imageHeight, lineHeight: imageHeight }"><img :src="previewSrc" alt="预览图"></i>
     </div>
-    <div class="uploader-control f-flex-auto f-flex">
+    <div class="uploader-control f-flex-auto f-flex" v-if="showBtn">
       <div>
         <div size="small" class="u-file-btn" @click="handleChoose">
         <slot name="point">
           <p class="help-block" v-text="point" v-if="point"></p>
         </slot>
           <span v-text="previewSrc ? '重新上传' : '选择文件'"></span>
-          <input type="file" ref="fileInput" name="file" :accept="accept" @change="handleChangeFile">
+          <input type="file" ref="fileInput" name="file" :accept="accept" @change="handleChangeFile" class="file">
         </div>
         <slot name="tips">
           <p class="help-block" v-text="tips" v-if="tips"></p>
@@ -58,6 +58,17 @@ export default ImageUploader
   .u-file-btn{
     display: flex;
     align-items: center;
+    position: relative;
+    cursor: pointer;
+/*    .file{
+      opacity: 0;
+      position: absolute;
+      left: 0;
+      right: 0;
+      width: 0;
+      height: 0;
+      z-index: 2;
+    }*/
   }
 
   .help-block {

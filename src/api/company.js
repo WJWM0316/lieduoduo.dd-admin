@@ -282,3 +282,40 @@ export const setCompanyCompanyAdvisorApi = data => request({
   noGlobalLoading: true
 })
 
+/* 创建公司产品 */
+export const addCompanyProductApi = data => request({
+  url: `/company/product`,
+  type: 'post',
+  data,
+  noGlobalLoading: true
+})
+
+/* 编辑公司产品 */
+export const editCompanyProductApi = data => request({
+  url: `/company/product/${data.id}`,
+  type: 'put',
+  data,
+  noGlobalLoading: true
+})
+
+/* 获取某个公司产品产品 */
+export const getCompanyProductApi = data => request({
+  url: `/company/product/${data.id}`,
+  type: 'get',
+  noGlobalLoading: true
+})
+
+/* 删除公司产品 */
+export const deleteCompanyProductApi = data => request({
+  url: `/company/product/${data.id}`,
+  type: 'get',
+  noGlobalLoading: true
+})
+
+/* 获取公司产品列表 */
+export const getCompanyProductListsApi = data => request({
+  url: `/company/productlist/${data.id}`,
+  type: 'get',
+  data,
+  noGlobalLoading: true
+})

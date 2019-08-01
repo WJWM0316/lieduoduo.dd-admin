@@ -1,0 +1,244 @@
+<style lang="less" scoped>
+#H24{
+  margin: 22px 22px 22px 222px;
+  border: 1px solid rgb(238, 238, 238);
+  .h24_navigation{
+    text-align: left;
+    margin-top: 24px;
+    margin-left: 10px;
+    li{
+      display: inline-block;
+      background-color: #f4f4f5;
+      display: inline-block;
+      height: 40px;
+      padding: 0 15px;
+      line-height: 40px;
+      font-size: 12px;
+      color: #909399;
+      cursor: pointer;
+    }
+    .active{
+      background-color: #3e294d;
+      color: white;
+      cursor: none;
+      pointer-events: none;
+    }
+  }
+  .el-form {
+    text-align: left;
+    margin-top: 22px;
+    overflow: hidden;
+    .el-form-item{
+      text-align: center;
+    }
+  }
+  .el-pagination{
+    text-align: left;
+    margin: 22px 0;
+    overflow: hidden;
+  }
+  .btn_deal{
+    color: #652791;
+    cursor: pointer;
+    display: inline-block;
+    margin-right: 40px;
+  }
+}
+</style>
+<template>
+  <div id="H24" class="H24">
+
+    <ul class="h24_navigation">
+      <li v-for="item in navigation" :key="item.type" :class="{active: item.active}" @click="tabClick(item.type)">{{item.msg}}</li>
+    </ul>
+
+    <el-form ref="form" :model="form" label-width="80px" :inline="true">
+
+      <el-form-item label="职位ID">
+        <el-input v-model="form.position_id"></el-input>
+      </el-form-item>
+
+      <el-form-item label="上架时间">
+        <el-date-picker type="datetime" placeholder="选择日期" v-model="form.start_time" style="width: 100%;" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+      </el-form-item>
+      
+      <el-form-item label="截止时间">
+        <el-date-picker type="datetime" placeholder="选择日期" v-model="form.end_time" style="width: 100%;" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+      </el-form-item>
+
+      <el-form-item>
+        <el-button type="primary" @click="todoAction('add')">新增</el-button>
+        <el-button type="primary" @click="search">搜索</el-button>
+      </el-form-item>
+    </el-form>
+
+    <el-table :data="lists">
+      <el-table-column
+        prop="sort"
+        label="权重序号">
+      </el-table-column>
+      <el-table-column
+        prop="positionId"
+        label="职位ID">
+      </el-table-column>
+      <el-table-column
+        prop="startTime"
+        label="上架时间">
+      </el-table-column>
+      <el-table-column
+        prop="endTime"
+        label="截止时间">
+      </el-table-column>
+      <el-table-column
+        prop="seatsNum"
+        label="服务席位数量">
+      </el-table-column>
+      <el-table-column
+        prop="applyNum"
+        label="真实抢占席位">
+      </el-table-column>
+      <el-table-column
+        prop="applyNum"
+        label="虚拟抢占席位">
+      </el-table-column>
+      <el-table-column
+        prop="applyNum"
+        label="剩余席位">
+      </el-table-column>
+      <el-table-column
+        prop="action"
+        label="操作">
+        <template slot-scope="scope">
+          <span class="btn_deal" @click="todoAction('edit', scope.row.id)">编辑</span>
+          <span class="btn_deal">查看</span>
+        </template>
+      </el-table-column>
+    </el-table>
+    
+    <el-pagination
+      layout="prev, pager, next, slot"
+      :total="total"
+      :page-size="pageSize"
+      prev-text="上一页"
+      next-text="下一页"
+      :current-page="Number(form.page)"
+      v-if="total"
+      @current-change="pageChange">
+      <span class="total">共{{ Math.ceil(total/20) }}页, {{total}}条记录</span>
+    </el-pagination>
+
+  </div>
+</template>
+
+<script>
+import Vue from "vue"
+import Component from "vue-class-component"
+import {
+  getRapidlySurfaceListApi
+} from "API/24h";
+@Component({
+  name: 'H24',
+  // watch: {
+  //   '$route': {
+  //     handler() {
+  //       this.init()
+  //     },
+  //     immediate: true
+  //   }
+  // }
+})
+export default class H24 extends Vue {
+  navigation = [
+    {
+      type: 'processing',
+      msg: '进行中',
+      active: false,
+      id:'1'
+    },
+    {
+      type: 'notStarted',
+      msg: '未开始',
+      active: true,
+      id: '2'
+    },
+    {
+      type: 'padding',
+      msg: '即将开始',
+      active: false,
+      id: '3'
+    },
+    {
+      type: 'resolve',
+      msg: '已结束',
+      active: false,
+      id: '4'
+    }
+  ]
+  total = 99
+  pageSize = 20
+  form = {
+    page: 1,
+    position_id: '',
+    start_time: '',
+    end_time: '',
+    count: 20
+  }
+  lists = []
+  getRapidlySurfaceList() {
+    let tab = this.navigation.find(field => field.active)
+    let params = {
+      count: 20,
+      page: this.form.page,
+      tab: tab.id
+    }
+    if(this.form.position_id) {
+      params = Object.assign(params, {position_id: this.form.position_id})
+    }
+    if(this.form.start_time) {
+      params = Object.assign(params, {start_time: this.form.start_time})
+    }
+    if(this.form.end_time) {
+      params = Object.assign(params, {end_time: this.form.end_time})
+    }
+    getRapidlySurfaceListApi(params).then(res => {
+      let infos = res.data
+      this.total = infos.meta.total
+      this.lists = infos.data
+      this.$router.push({query: {...params}})
+    })
+  }
+  tabClick(type) {
+    this.navigation.map(field => field.active = type === field.type ? true : false)
+  }
+  search() {
+    this.getRapidlySurfaceList()
+  }
+  pageChange(page) {
+    this.form.page = page
+  }
+  todoAction(type, id) {
+    switch(type) {
+      case 'add':
+        this.$router.push({name: 'h24_post'})
+        break
+      case 'edit':
+        this.$router.push({name: 'h24_edit', query: {id}})
+        break
+      default:
+        break
+    }
+  }
+  init() {
+    let query = this.$route.query
+    this.form = Object.assign(this.form, query)
+    this.navigation.map(field => {
+      field.active = false
+      if(query.tab === field.id) field.active = true
+    })
+  }
+  created() {
+    this.init()
+    this.getRapidlySurfaceList()
+  }
+}
+</script>
