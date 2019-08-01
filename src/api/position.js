@@ -8,7 +8,8 @@ import { request } from './index.js'
 export const getListApi = data => request({
 	url: `/position/list`,
 	type: 'get',
-	data
+	data,
+	noGlobalLoading: true //不需要loading
 })
 
 // 职位分状态按条件数量统计

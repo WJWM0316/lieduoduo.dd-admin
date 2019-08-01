@@ -77,3 +77,56 @@ export const getQuickApplyInterviewApi = data => request({
   data,
   noGlobalLoading: true
 })
+
+/* 不合适面试撤回 */
+export const interviewRetractApi = data => request({
+  url: `/interview/interviewRetract/${data.jobhunterUid}`,
+  type: 'put',
+  data,
+  noGlobalLoading: true
+})
+
+/* 确定约面 */
+export const confirmInterviewApi = data => request({
+  url: `/interview/confirm/${data.interviewId}`,
+  type: 'post',
+  noGlobalLoading: true
+})
+
+/* 获取面试评价不满意标签 */
+export const getInterviewCommentReasonApi = data => request({
+  url: `/interview/getCommentReason`,
+  type: 'get',
+  noGlobalLoading: true
+})
+
+/* 获取面试过程中不合适标签 */
+export const getInterviewNotSuitReasonApi = data => request({
+  url: `/interview/getInterviewNotSuitReason`,
+  type: 'get',
+  noGlobalLoading: true
+})
+
+/* 标记不合适 */
+export const refuseJobhunterUidInterviewApi = data => request({
+  url: `/interview/refuse/${data.jobhunterUid}`,
+  type: 'post',
+  data,
+  noGlobalLoading: true
+})
+
+/* 设置面试安排 */
+export const setInterviewInfoApi = data => request({
+  url: `/interview/setInterviewInfo/${data.interviewId}`,
+  type: 'post',
+  data,
+  noGlobalLoading: true
+})
+
+/* 分页获取地址列表 */
+export const getSimplepageAddressesListsApi = data => request({
+  url: '/company/position/simplepage/addresses',
+  type: 'get',
+  data,
+  noGlobalLoading: true
+})

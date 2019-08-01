@@ -26,7 +26,7 @@
           type="datetime"
           value-format="yyyy-MM-dd HH:mm:ss"
           style="width: 400px;"
-          :disabled="form.is_online === 2 && $route.name === 'h24_edit'"
+          :disabled="form.status === 1 && $route.name === 'h24_edit'"
           placeholder="选择上架日期">
         </el-date-picker>
       </el-form-item>
@@ -35,18 +35,18 @@
           v-model="form.end_time"
           type="datetime"
           value-format="yyyy-MM-dd HH:mm:ss"
-          :disabled="form.is_online === 2 && $route.name === 'h24_edit'"
+          :disabled="form.status === 1 && $route.name === 'h24_edit'"
           style="width: 400px;"
           placeholder="选择下架日期">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="服务席位数量">
-        <el-input v-model="form.seats_num" style="width: 400px;" :disabled="form.is_online === 2 && $route.name === 'h24_edit'"></el-input>
+        <el-input v-model="form.seats_num" style="width: 400px;" :disabled="form.status === 1 && $route.name === 'h24_edit'"></el-input>
       </el-form-item>
       <el-form-item label="状态" v-if="$route.name === 'h24_edit'">
-        <el-radio v-model="form.resource" label="1">上架</el-radio>
-        <el-radio v-model="form.resource" label="2">下架</el-radio>
-        <el-radio v-model="form.resource" label="3">立即截至</el-radio>
+        <el-radio v-model="form.is_online" :label="1">上架</el-radio>
+        <el-radio v-model="form.is_online" :label="2">下架</el-radio>
+        <el-radio v-model="form.is_online" :label="3">立即截至</el-radio>
       </el-form-item>
       <el-form-item label="权重排序值" v-if="$route.name === 'h24_edit'">
         <el-input v-model="form.sort" style="width: 400px;"></el-input>
@@ -75,9 +75,8 @@ export default class H24_POST extends Vue {
     seats_num: '',
     start_time: '',
     end_time: '',
-    desc: '',
-    resource: false,
-    sort: ''
+    status: '',
+    positions: ''
   }
   onSubmit() {
     let params = {}
@@ -104,10 +103,10 @@ export default class H24_POST extends Vue {
     Promise.all([positions, startTime, endTime, seats_num]).then(() => this[api](params)).catch(err => this.$message.error(err))
   }
   addAction(params) {
-    addRapidlySurfaceApi(params).then(() => this.$router.go(-1))
+    addRapidlySurfaceApi(params).then(() => this.$router.push({name: '24h'}))
   }
   editAction(params) {
-    editRapidlySurfaceApi(params).then(() => this.$router.go(-1))
+    editRapidlySurfaceApi(params).then(() => this.$router.push({name: '24h'}))
   }
   getRapidlySurface() {
     getRapidlySurfaceApi({id: this.$route.query.id}).then(res => {
@@ -119,7 +118,8 @@ export default class H24_POST extends Vue {
         positions: infos.positionId,
         id: infos.id,
         is_online: infos.isOnline,
-        sort: infos.sort
+        sort: infos.sort,
+        status: infos.status
       }
       this.form = form
     })

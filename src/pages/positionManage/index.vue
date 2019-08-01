@@ -302,6 +302,11 @@ export default class companyCheck extends Vue {
       //    width: 150
     },
     {
+      prop: "wherefromDesc",
+      label: "职位来源"
+      //    width: 150
+    },
+    {
       prop: "op",
       fixed: "right",
       width: 150,
