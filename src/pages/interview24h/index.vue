@@ -397,7 +397,7 @@
         align="center"
         label="代客操作">
         <template slot-scope="scope" v-if="scope.row.action">
-          <span class="btn_deal" @click="todoAction('modify', scope.row)">修改面试</span>
+          <!-- <span class="btn_deal" @click="todoAction('modify', scope.row)">修改面试</span> -->
           <span class="btn_deal" @click="todoAction(item.action, scope.row)" v-for="(item, index) in scope.row.action">{{item.msg}}</span>
         </template>
       </el-table-column>
