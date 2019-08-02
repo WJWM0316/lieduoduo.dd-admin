@@ -763,12 +763,24 @@ export default class Interview24h extends Vue {
       }
     })
   }
+  /**
+   * @Author   小书包
+   * @DateTime 2019-08-02
+   * @detail   tab切换
+   * @return   {[type]}        [description]
+   */
   tabClick(type) {
     this.navigation.map(field => field.active = type === field.type ? true : false)
   }
   onSubmit() {
     console.log('submit!');
   }
+  /**
+   * @Author   小书包
+   * @DateTime 2019-08-02
+   * @detail   分页获取数据
+   * @return   {[type]}        [description]
+   */
   pageChange(page) {
     this.form.page = page
   }
@@ -890,18 +902,43 @@ export default class Interview24h extends Vue {
         break
     }
   }
+  /**
+   * @Author   小书包
+   * @DateTime 2019-08-02
+   * @detail   切换搜索类型
+   * @return   {[type]}   [description]
+   */
   changeSearch() {
     this.form.content = ''
   }
+  /**
+   * @Author   小书包
+   * @DateTime 2019-08-02
+   * @detail   获取时间
+   * @param    {[type]}   e [description]
+   * @return   {[type]}     [description]
+   */
   getTime(e) {
     this.model.dateLists.push({
       value: e,
       active: false
     })
   }
+  /**
+   * @Author   小书包
+   * @DateTime 2019-08-02
+   * @detail   设置面试时间
+   * @return   {[type]}         [description]
+   */
   selectTime(index) {
     this.model.dateLists.map((field, i) => field.active = index === i ? true : false)
   }
+  /**
+   * @Author   小书包
+   * @DateTime 2019-08-02
+   * @detail   初始化页面
+   * @return   {[type]}   [description]
+   */
   init() {
     let query = this.$route.query
     this.form = Object.assign(this.form, query)
