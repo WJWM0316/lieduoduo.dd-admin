@@ -58,6 +58,14 @@
 		"flag":"interview",
 		"children":[
 			{
+				"path":"24h",
+				"title":"24h反馈专场管理",
+				"name":"interview24h",
+				"flag":"interview",
+				"isTwo":true,
+				"isShow":false
+			},
+			{
 				"path":"/interview/List",
 				"title":"申请列表",
 				"name":"List",

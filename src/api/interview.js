@@ -130,3 +130,19 @@ export const getSimplepageAddressesListsApi = data => request({
   data,
   noGlobalLoading: true
 })
+
+
+/* 设置候选人是否到场 */
+export const setUserInterviewAttendApi = data => request({
+  url: '/interview/attend',
+  type: 'put',
+  data,
+  noGlobalLoading: true
+})
+
+/* 面试评价(设置感兴趣) */
+export const setUserInterviewCommentApi = data => request({
+  url: '/interview/interviewComment',
+  type: 'post',
+  data
+})

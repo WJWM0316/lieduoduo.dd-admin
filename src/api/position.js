@@ -103,3 +103,9 @@ export const professionalSkillsApi = data => request({
 	data
 })
 
+
+// 开放职位
+export const openPositionApi = data => request({
+	url: `/position/open/${data.id}`,
+	type: 'put'
+})

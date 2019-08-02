@@ -259,7 +259,7 @@
     <el-table :data="lists">
       <el-table-column
         prop="interviewId"
-        width="80"
+        width="50"
         label="面试id">
       </el-table-column>
       <el-table-column
@@ -267,13 +267,34 @@
         label="求职者信息">
         <template slot-scope="scope" v-if="scope.row.jobhunterInfo">
           <div>
-            <span class="strong_name">{{scope.row.jobhunterInfo.realname}}</span>
+            <span class="strong_name" @click="showResume(scope.row)">{{scope.row.jobhunterInfo.realname}}</span>
             <span> · {{scope.row.jobhunterInfo.lastPosition}}</span>
           </div>
           <div>{{scope.row.jobhunterInfo.lastCompanyName}}</div>
           <div>
-            <span class="strong_name">扫码看简历&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <span class="strong_name">联系用户</span>
+            <el-popover
+              placement="bottom"
+              width="300"
+              trigger="click">
+              <div>
+                <div style="text-align: center;"v-if="!model.qrCode">
+                  <img style="height: 38px;width: 38px; margin-top: 10px;" src="../../assets/loading.gif" />
+                  <div style="margin-top: 20px;">正在加载中…</div>
+                </div>
+                <div v-else>
+                  <img class="Qr" :src="model.qrCode" />
+                  <div style="text-align: center;margin-top: 10px;">微信扫码，打开小程序查看</div>
+                </div>
+              </div>
+              <span class="strong_name" @click.stop="getResumeCodeUrl(scope.row.jobhunterInfo.uid)" slot="reference">扫码看简历&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            </el-popover>
+            <el-popover
+              placement="bottom"
+              width="50"
+              trigger="click"
+              :content="scope.row.jobhunterInfo.mobile">
+              <span class="strong_name" slot="reference">联系用户</span>
+            </el-popover>
           </div>
         </template>
       </el-table-column>
@@ -295,8 +316,29 @@
           </div>
           <div>{{scope.row.recruiterInfo.companyName}}</div>
           <div>
-            <span class="strong_name">扫码看主页&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <span class="strong_name">联系用户</span>
+            <el-popover
+              placement="bottom"
+              width="300"
+              trigger="click">
+              <div>
+                <div style="text-align: center;"v-if="!model.qrCode">
+                  <img style="height: 38px;width: 38px; margin-top: 10px;" src="../../assets/loading.gif" />
+                  <div style="margin-top: 20px;">正在加载中…</div>
+                </div>
+                <div v-else>
+                  <img class="Qr" :src="model.qrCode" />
+                  <div style="text-align: center;margin-top: 10px;">微信扫码，打开小程序查看</div>
+                </div>
+              </div>
+              <span class="strong_name" @click="getRecruiterCodeUrl(scope.row.recruiterInfo.uid)" slot="reference">扫码看主页&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            </el-popover>
+            <el-popover
+              placement="bottom"
+              width="50"
+              trigger="click"
+              :content="scope.row.recruiterInfo.mobile">
+              <span class="strong_name" slot="reference">联系用户</span>
+            </el-popover>
           </div>
         </template>
       </el-table-column>
@@ -305,7 +347,22 @@
         label="约面信息">
         <template slot-scope="scope">
           <div>
-            <span class="strong_name">职位： {{scope.row.positionName}}</span>
+            <el-popover
+              placement="bottom"
+              width="300"
+              trigger="click">
+              <div>
+                <div style="text-align: center;"v-if="!model.qrCode">
+                  <img style="height: 38px;width: 38px; margin-top: 10px;" src="../../assets/loading.gif" />
+                  <div style="margin-top: 20px;">正在加载中…</div>
+                </div>
+                <div v-else>
+                  <img class="Qr" :src="model.qrCode" />
+                  <div style="text-align: center;margin-top: 10px;">微信扫码，打开小程序查看</div>
+                </div>
+              </div>
+              <span class="strong_name" @click="getPositionCodeUrl(scope.row.positionId)" slot="reference">职位： {{scope.row.positionName}}</span>
+            </el-popover>
           </div>
           <div>地址：{{scope.row.address}}</div>
         </template>
@@ -331,7 +388,7 @@
         align="center"
         label="代客操作">
         <template slot-scope="scope" v-if="scope.row.action">
-          <span class="btn_deal" @click="todoAction('modify', scope.row)">修改约面时间</span>
+          <span class="btn_deal" @click="todoAction('modify', scope.row)">修改面试</span>
           <span class="btn_deal" @click="todoAction(item.action, scope.row)" v-for="(item, index) in scope.row.action">{{item.msg}}</span>
         </template>
       </el-table-column>
@@ -361,6 +418,12 @@
             <div class="name">{{item.positionName}}</div>
           </li>
         </ul>
+      </div>
+      <div class="html_content" v-show="model.type === 'present'">
+        <div style="margin: 20px 0;">
+          <el-radio v-model="form.isAttend" label="0">未到场</el-radio>
+          <el-radio v-model="form.isAttend" label="1">已到场</el-radio>
+        </div>
       </div>
       <div class="html_content position_ul" v-show="model.type === 'address'">
         <ul class="p_ul" id="scroll_div_ul_address">
@@ -410,6 +473,13 @@
               <el-button type="text" @click="todoAction('position')" v-else>+选择职位</el-button>
             </div>
           </li>
+          <li class="row">
+            <div class="label">地址：</div>
+            <div class="value">
+              <span class="user_input" style="cursor: pointer;color: #3a8ee6;" v-if="model.address.addressName" @click="todoAction('address')">{{model.address.addressName}}</span>
+              <el-button type="text" @click="todoAction('address')" v-else>+选择地址</el-button>
+            </div>
+          </li>
         </ul>
         <ul class="time_list" v-if="model.dateLists.length">
           <li class="time_row" v-for="(item, index) in model.dateLists" :key="index" @click="selectTime(index)">
@@ -445,6 +515,12 @@
               <span class="user_input" style="color: #3a8ee6;">{{model.position.name}}</span>
             </div>
           </li>
+          <li class="row">
+            <div class="label">地址：</div>
+            <div class="value">
+              <span class="user_input" style="color: #3a8ee6;">{{model.address.addressName}}</span>
+            </div>
+          </li>
         </ul>
         <ul class="time_list" v-if="model.dateLists.length">
           <li class="time_row" v-for="(item, index) in model.dateLists" :key="index" @click="selectTime(index)" style="cursor: unset;">
@@ -459,12 +535,15 @@
         <el-button type="primary" @click="confirm" size="small" v-if="model.showConfirmBtn">确 定</el-button>
       </div>
     </el-dialog>
+    <resume-popup :resumeId="model.resumeId" :isShow="model.showResume" @showCallback="showCallback" ref="resume"></resume-popup>
   </div>
 </template>
 
 <script>
 import Vue from "vue"
 import Component from "vue-class-component"
+import resumePopup from "COMPONENTS/resumePopup/resumePopup.vue";
+
 import {
   getQuickApplyInterviewApi,
   interviewRetractApi,
@@ -473,13 +552,22 @@ import {
   getInterviewNotSuitReasonApi,
   refuseJobhunterUidInterviewApi,
   setInterviewInfoApi,
-  getSimplepageAddressesListsApi
+  getSimplepageAddressesListsApi,
+  setUserInterviewAttendApi,
+  setUserInterviewCommentApi,
+  getResumeCodeUrlApi,
+  getRecruiterCodeUrlApi,
+  getPositionCodeUrlApi,
 } from "API/interview"
 import {
-  getListApi
+  getListApi,
+  openPositionApi
 } from "API/position"
 @Component({
-  name: 'Interview24h'
+  name: 'Interview24h',
+  components: {
+    resumePopup
+  }
 })
 export default class Interview24h extends Vue {
   navigation = [
@@ -557,10 +645,14 @@ export default class Interview24h extends Vue {
     content: '',
     status: '',
     mobile: '',
-    realname: ''
+    realname: '',
+    isAttend: '0'
   }
   lists = []
   model = {
+    qrCode: '',
+    resumeId: '',
+    showResume: false,
     show: false,
     type: '',
     beforeType: '',
@@ -650,6 +742,9 @@ export default class Interview24h extends Vue {
         this.model.show = false
         this.model.position = this.model.defaultPosition
         break;
+      case 'present':
+        this.model.show = false
+        break;
       default:
         break
     }
@@ -661,7 +756,7 @@ export default class Interview24h extends Vue {
    * @param    {[type]}   index [description]
    */
   confirm() {
-    let interviewTime = this.model.dateLists.find(field => field.active)
+    let interviewTime = this.model.dateLists.find(field => field.active).value
     let data = this.model.item
     switch(this.model.type) {
       case 'arrange':
@@ -708,6 +803,15 @@ export default class Interview24h extends Vue {
           this.model.show = false
         })
         break;
+      case 'present':
+        this.setUserInterviewAttend({
+          interviewId: data.interviewId,
+          isAttend: this.form.isAttend
+        }).then(() => {
+          this.model.show = false
+          this.init()
+        })
+        break;
       default:
         break
     }
@@ -741,6 +845,11 @@ export default class Interview24h extends Vue {
     this.positionLists.map((field, i) => {
       field.active = false
       if(i === index) {
+        // openPosition({id: field.id}).then(() => {
+        //   field.active = true
+        //   this.model.position.positionId = field.id
+        //   this.model.position.positionName = field.positionName
+        // })
         field.active = true
         this.model.position.positionId = field.id
         this.model.position.positionName = field.positionName
@@ -798,6 +907,13 @@ export default class Interview24h extends Vue {
     this.model.beforeType = this.model.type
     this.model.beforeTitle = this.model.title
     this.model.dateLists = []
+    this.model.position.name = data.positionName
+    this.model.position.positionId = data.positionId
+    this.model.address.addressName = data.address
+    this.model.address.addressId = data.addressId
+    this.model.interviewId = data.interviewId
+    this.model.dateLists.push({active: true, value: data.handleEndTime})
+    let reason = this.model.reason.map(field => field.id).join(',')
     switch(type) {
       case 'recipe':
         this.model.type = type
@@ -814,60 +930,36 @@ export default class Interview24h extends Vue {
       case 'arrange':
         this.model.type = type
         this.model.show = true
-        this.model.position.name = data.positionName
-        this.model.position.positionId = data.positionId
         this.model.title = '安排面试'
-        this.model.dateLists.push({active: true, value: data.handleEndTime})
-        this.setPositionDomScroll({
-          page: this.positionNum, 
-          count: 20, 
-          recruiter: data.recruiterInfo.uid
-        }).then(() => {
-          this.model.address.addressName = data.address
-          this.model.address.addressId = data.addressId
-          this.form.mobile = data.recruiterInfo.mobile
-          this.form.realname = data.recruiterInfo.realname
-          this.model.interviewId = data.interviewId
-        })
         break;
       case 'modify':
         this.model.type = type
         this.model.show = true
-        this.model.dateLists.push({active: true, value: data.handleEndTime})
-        this.model.position.name = data.positionName
-        this.model.position.positionId = data.positionId
         this.model.title = '修改面试时间'
-        this.setPositionDomScroll({
-          page: this.positionNum, 
-          count: 20, 
-          recruiter: data.recruiterInfo.uid
-        }).then(() => {
-          this.model.address.addressName = data.address
-          this.model.address.addressId = data.addressId
-          this.form.mobile = data.recruiterInfo.mobile
-          this.form.realname = data.recruiterInfo.realname
-          this.model.interviewId = data.interviewId
-        })
         break;
       case 'preview':
         this.model.show = true
         this.model.title = '查看面试'
-        this.model.position.name = data.positionName
         this.model.type = type
-        this.model.dateLists.push({active: true, value: data.handleEndTime})
         this.form.mobile = data.recruiterInfo.mobile
         this.form.realname = data.recruiterInfo.realname
         this.model.showConfirmBtn = false
         this.model.btnTxt = '返回'
         break;
       case 'position':
-        this.model.show = true
-        this.model.type = type
-        this.model.title = '选择职位'
-        this.model.btnTxt = '返回'
+        this.setPositionDomScroll({
+          page: this.positionNum, 
+          count: 20, 
+          recruiter: data.recruiterInfo.uid
+        }).then(() => {
+          this.model.show = true
+          this.model.type = type
+          this.model.title = '选择职位'
+          this.model.btnTxt = '返回'
+        })
         break;
       case 'address':
-        this.getSimplepageAddressesLists({
+        this.setAddressDomScroll({
           page: this.addressNum, 
           count: 20, 
           mobile: data.recruiterInfo.mobile
@@ -876,7 +968,6 @@ export default class Interview24h extends Vue {
           this.model.title = '选择职位'
           this.model.btnTxt = '返回'
           this.model.type = type
-          this.setAddressDomScroll()
         })
         break;
       case 'reason':
@@ -884,7 +975,6 @@ export default class Interview24h extends Vue {
         this.model.title = '选择不合适原因'
         this.model.type = 'reason'
         this.model.type = type
-        let reason = this.model.reason.map(field => field.id).join(',')
         this.refuseJobhunterUidInterview({
           jobhunterUid: data.jobhunterInfo.uid,
           interviewId: data.interviewId,
@@ -897,6 +987,14 @@ export default class Interview24h extends Vue {
           jobhunterUid: data.jobhunterInfo.uid,
           interviewId: data.interviewId
         })
+        break
+      case 'present':
+        this.model.show = true
+        this.model.title = '标记候选人是否到场'
+        this.model.type = type
+        break
+      case 'evaluation':
+        this.setUserInterviewComment({interviewId: data.interviewId}).then(() => this.init())
         break
       default:
         break
@@ -1008,7 +1106,7 @@ export default class Interview24h extends Vue {
    * @return   {[type]}   [description]
    */
   getPositionList(params) {
-    return getListApi(params).then(res => {
+    return getListApi(Object.assign(params, {status: '0,1,2'})).then(res => {
       let infos = res.data
       let list = infos.data
       list.map(field => field.active = false)
@@ -1054,13 +1152,13 @@ export default class Interview24h extends Vue {
    * @detail   设置地址dom的滚动加载
    * @return   {[type]}   [description]
    */
-  setAddressDomScroll() {
+  setAddressDomScroll(params) {
     return new Promise((resolve, reject) => {
-      setTimeout(() => {
+      this.$nextTick(() => {
         let domId = 'scroll_div_ul_address'
         let div = document.getElementById(domId)
-        div.onscroll = this.scroll(domId).then(() => this.getSimplepageAddressesLists().then(() => resolve()))
-      }, 1000)
+        div.onscroll = this.scroll(domId).then(() => this.getSimplepageAddressesLists(params).then(() => resolve()))
+      })
     })
   }
   /**
@@ -1071,13 +1169,96 @@ export default class Interview24h extends Vue {
    */
   setPositionDomScroll(params) {
     return new Promise((resolve, reject) => {
-      setTimeout(() => {
+      this.$nextTick(() => {
         let domId = 'scroll_div_ul_position'
         let div = document.getElementById(domId)
         div.onscroll = this.scroll(domId).then(() => this.getPositionList(params).then(() => resolve()))
-      }, 1000)
+      })
     })
   }
+  /**
+   * @Author   小书包
+   * @DateTime 2019-08-02
+   * @detail   detail
+   * @param    {[type]}   params [description]
+   * @return   {[type]}          [description]
+   */
+  openPosition(params) {
+    return openPositionApi(params)
+  }
+  /**
+   * @Author   小书包
+   * @DateTime 2019-08-02
+   * @detail   设置候选人是否到场
+   * @param    {[type]}   params [description]
+   */
+  setUserInterviewAttend(params) {
+    return setUserInterviewAttendApi(params)
+  }
+  /**
+   * @Author   小书包
+   * @DateTime 2019-08-02
+   * @detail   评价面试
+   */
+  setUserInterviewComment(params) {
+    return setUserInterviewCommentApi(params)
+  }
+  /**
+   * @Author   小书包
+   * @DateTime 2019-08-02
+   * @detail   显示简历
+   * @return   {[type]}       [description]
+   */
+  showResume(data) {
+    if (this.AdminShow == 3 || this.AdminShow == 4) {
+      this.$message({message: '用户暂无权限'})
+    } else {
+      this.model.resumeId = String(data.jobhunterInfo.uid)
+      this.model.showResume = true
+      this.$nextTick(() => {
+        let AdminShow = +sessionStorage.getItem('AdminShow')
+        this.$refs['resume'].testingAdmin(AdminShow)
+        this.$refs['resume'].getResume()
+        this.$refs['resume'].showMark()
+        this.$refs['resume'].initResume()
+        this.$refs['resume'].operating(data.jobhunterInfo.uid, {
+          action: '查看',
+          desc: '简历'
+        })
+      })
+    }
+  }
+  /**
+   * @Author   小书包
+   * @DateTime 2019-08-02
+   * @detail   获取招聘官主页二维码
+   * @return   {[type]}         [description]
+   */
+  getRecruiterCodeUrl(uid) {
+    this.model.qrCode = ''
+    return getRecruiterCodeUrlApi({id: uid}).then(res => this.model.qrCode = res.data.data.qrCodeUrl)
+  }
+  /**
+   * @Author   小书包
+   * @DateTime 2019-08-02
+   * @detail   获取招简历二维码
+   * @return   {[type]}         [description]
+   */
+  getResumeCodeUrl(uid) {
+    this.model.qrCode = ''
+    return getResumeCodeUrlApi({id: uid}).then(res => this.model.qrCode = res.data.data.qrCodeUrl)
+  }
+  /**
+   * @Author   小书包
+   * @DateTime 2019-08-02
+   * @detail   获取招职位二维码
+   * @return   {[type]}         [description]
+   */
+  getPositionCodeUrl(uid) {
+    this.model.qrCode = ''
+    return getPositionCodeUrlApi({id: uid}).then(res => this.model.qrCode = res.data.data.qrCodeUrl)
+  }
+  showCallback() {}
   mounted() {
     this.init()
   }
