@@ -80,17 +80,24 @@
       height: 40px;
       line-height: 40px;
       display: flex;
-      border-bottom: 1px solod #fefefe;
       position: relative;
-      cursor: pointer;
     }
     .name{
       padding-left: 20px;
-      max-width: 300px;
+      max-width: 80%;
       overflow: hidden;
       line-height: 40px;
       text-overflow: ellipsis;
       white-space: nowrap;
+      cursor: pointer;
+    }
+    .edit{
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      right: 20px;
+      color: #652791;
+      cursor: pointer;
     }
     .icon_circle_my{
       width: 12px;
@@ -390,7 +397,7 @@
         align="center"
         label="代客操作">
         <template slot-scope="scope" v-if="scope.row.action">
-          <!-- <span class="btn_deal" @click="todoAction('modify', scope.row)">修改面试</span> -->
+          <span class="btn_deal" @click="todoAction('modify', scope.row)">修改面试</span>
           <span class="btn_deal" @click="todoAction(item.action, scope.row)" v-for="(item, index) in scope.row.action">{{item.msg}}</span>
         </template>
       </el-table-column>
@@ -427,14 +434,28 @@
           <el-radio v-model="form.isAttend" label="1">已到场</el-radio>
         </div>
       </div>
-      <div class="html_content position_ul" v-show="model.type === 'address'">
-        <ul class="p_ul" id="scroll_div_ul_address">
-          <li class="position_item" v-for="(item, index) in addressLists" :key="index" @click="getAddress(index)">
-            <i class="icon_circle_my" v-show="!item.active"></i>
-            <i class="el-icon-success" v-show="item.active"></i>
-            <div class="name">{{item.address}}</div>
+      <div class="html_content" v-show="model.type === 'add_address' || model.type === 'edit_address'">
+        <ul>
+          <li class="row">
+            <div class="label">地址：</div>
+            <div class="value">{{form.address.address ? form.address.address : '点击调用地图，选择地点 >>'}}</div>
+          </li>
+          <li class="row">
+            <div class="label">门牌：</div>
+            <div class="value"><input type="text" class="user_input" placeholder="请输入门牌号" v-model="form.address.doorplate" /></div>
           </li>
         </ul>
+      </div>
+      <div class="html_content position_ul" v-show="model.type === 'address'">
+        <ul class="p_ul" id="scroll_div_ul_address">
+          <li class="position_item" v-for="(item, index) in addressLists" :key="index">
+            <i class="icon_circle_my" v-show="!item.active"></i>
+            <i class="el-icon-success" v-show="item.active"></i>
+            <div class="name" @click="getAddress(index)">{{item.address}}</div>
+            <span class="edit" @click="editAddress(index)">编辑</span>
+          </li>
+        </ul>
+        <el-button type="text" class="add_time" @click="todoAction('add_address')"> +添加地址 </el-button>
       </div>
       <div class="html_content position_ul" v-show="model.type === 'improper'">
         <div class="improper">确定标记为不合适吗？</div>
@@ -534,10 +555,11 @@
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="close" size="small">{{model.btnTxt}}</el-button>
-        <el-button type="primary" @click="confirm" size="small" v-if="model.showConfirmBtn">确 定</el-button>
+        <el-button type="primary" @click="confirm" size="small">确 定</el-button>
       </div>
     </el-dialog>
     <resume-popup :resumeId="model.resumeId" :isShow="model.showResume" @showCallback="showCallback" ref="resume"></resume-popup>
+    <map-search v-if="model.showMap" @popCancel="popCancel" @addAdress="addAdress"></map-search>
   </div>
 </template>
 
@@ -545,6 +567,7 @@
 import Vue from "vue"
 import Component from "vue-class-component"
 import resumePopup from "COMPONENTS/resumePopup/resumePopup.vue";
+import mapSearch from '@/components/map'
 
 import {
   getQuickApplyInterviewApi,
@@ -563,12 +586,16 @@ import {
 } from "API/interview"
 import {
   getListApi,
-  openPositionApi
+  openPositionApi,
+  createPositionAddressApi,
+  editPositionAddressApi,
+  getPositionAddressApi
 } from "API/position"
 @Component({
   name: 'Interview24h',
   components: {
-    resumePopup
+    resumePopup,
+    mapSearch
   }
 })
 export default class Interview24h extends Vue {
@@ -648,7 +675,16 @@ export default class Interview24h extends Vue {
     status: '',
     mobile: '',
     realname: '',
-    isAttend: '0'
+    isAttend: '0',
+    address: {
+      mobile: '',
+      title: '',
+      areaName: '',
+      address: '',
+      doorplate: '',
+      lng: '',
+      lat: ''
+    }
   }
   lists = []
   model = {
@@ -666,6 +702,7 @@ export default class Interview24h extends Vue {
     dateLists: [],
     interviewId: '',
     showConfirmBtn: true,
+    showMap: false,
     position: {
       positionName: '',
       positionId: ''
@@ -712,6 +749,7 @@ export default class Interview24h extends Vue {
    * @param    {[type]}   index [description]
    */
   close() {
+    let item = this.model.item
     switch(this.model.type) {
       case 'recipe':
         this.model.title = '确定约面'
@@ -737,8 +775,14 @@ export default class Interview24h extends Vue {
         this.model.title = this.model.beforeTitle
         break;
       case 'address':
-        this.model.type = this.model.beforeType
-        this.model.title = this.model.beforeTitle
+        let actionList = item.action.map(field => field.action)
+        if(actionList.includes('arrange')) {
+          this.model.type = 'arrange'
+          this.model.title = '安排面试'
+        } else {
+          this.model.type = 'modify'
+          this.model.title = '修改面试时间'
+        }
         break;
       case 'reason':
         this.model.show = false
@@ -747,6 +791,9 @@ export default class Interview24h extends Vue {
       case 'present':
         this.model.show = false
         break;
+      case 'add_address':
+        this.model.type = 'address'
+        break
       default:
         break
     }
@@ -787,12 +834,61 @@ export default class Interview24h extends Vue {
         this.model.show = false
         break;
       case 'position':
-        this.model.type = this.model.beforeType
-        this.model.title = this.model.beforeTitle
+        let positionItem = this.positionLists.find(field => field.active)
+        // 该职位处于下线状态
+        if(positionItem.status) {
+          this.$confirm('确认开放该职位进行约面吗？', '开放职位约面', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消'
+          }).then(() => {
+            this.openPosition({id: positionItem.id}).then(() => {
+              this.model.position.name = positionItem.positionName
+              this.model.position.positionId = positionItem.id
+              this.model.type = this.model.beforeType
+              this.model.title = this.model.beforeTitle
+            })
+          }).catch(() => {
+            // 2
+          })
+        } else {
+          this.model.position.name = positionItem.positionName
+          this.model.position.positionId = positionItem.id
+          this.model.type = this.model.beforeType
+          this.model.title = this.model.beforeTitle
+        }
         break;
       case 'address':
-        this.model.type = this.model.beforeType
-        this.model.title = this.model.beforeTitle
+        let addressItem = this.addressLists.find(field => field.active)
+        let actionList = data.action.map(field => field.action)
+        if(addressItem) {
+          this.model.address.addressName = addressItem.address
+          this.model.address.addressId = addressItem.id
+          if(actionList.includes('arrange')) {
+            this.model.type = 'arrange'
+            this.model.title = '安排面试'
+          } else {
+            this.model.type = 'modify'
+            this.model.title = '修改面试时间'
+          }
+        } else {
+          this.$message('请选择一个地址')
+        }
+        break;
+      case 'edit_address':
+        this.editPositionAddress(this.form.address).then(() => {
+          this.addressLists = []
+          this.addressNum = 1
+          this.isLastPageOfAddress = false
+          this.getSimplepageAddressesLists({
+            mobile: data.recruiterInfo.mobile
+          }).then(() => {
+            this.model.type = 'address'
+            this.model.title = '选择地址'
+            this.setAddressDomScroll({
+              mobile: data.recruiterInfo.mobile
+            })
+          })
+        })
         break;
       case 'reason':
         let reason = this.model.reason.map(field => field.id).join(',')
@@ -812,6 +908,22 @@ export default class Interview24h extends Vue {
         }).then(() => {
           this.model.show = false
           this.init()
+        })
+        break;
+      case 'add_address':
+        this.createPositionAddress(this.form.address).then(() => {
+          this.addressLists = []
+          this.addressNum = 1
+          this.isLastPageOfAddress = false
+          this.getSimplepageAddressesLists({
+            mobile: data.recruiterInfo.mobile
+          }).then(() => {
+            this.model.type = 'address'
+            this.model.title = '选择地址'
+            this.setAddressDomScroll({
+              mobile: data.recruiterInfo.mobile
+            })
+          })
         })
         break;
       default:
@@ -844,19 +956,7 @@ export default class Interview24h extends Vue {
    * @return   {[type]}         [description]
    */
   getPosition(index) {
-    this.positionLists.map((field, i) => {
-      field.active = false
-      if(i === index) {
-        // openPosition({id: field.id}).then(() => {
-        //   field.active = true
-        //   this.model.position.positionId = field.id
-        //   this.model.position.positionName = field.positionName
-        // })
-        field.active = true
-        this.model.position.positionId = field.id
-        this.model.position.positionName = field.positionName
-      }
-    })
+    this.positionLists.map((field, i) => field.active = i === index ? true : false)
   }
   /**
    * @Author   小书包
@@ -936,12 +1036,16 @@ export default class Interview24h extends Vue {
         this.model.show = true
         this.model.title = '修改面试时间'
         break;
+      case 'add_address':
+        this.model.type = 'add_address'
+        this.model.show = true
+        this.model.showMap = true
+        this.model.title = '新增地址'
+        break;
       case 'preview':
         this.model.show = true
         this.model.title = '查看面试'
         this.model.type = type
-        this.form.mobile = data.recruiterInfo.mobile
-        this.form.realname = data.recruiterInfo.realname
         this.model.showConfirmBtn = false
         this.model.btnTxt = '返回'
         break;
@@ -969,7 +1073,7 @@ export default class Interview24h extends Vue {
            mobile: data.recruiterInfo.mobile
          }).then(() => {
           this.model.show = true
-          this.model.title = '选择职位'
+          this.model.title = '选择地址'
           this.model.btnTxt = '返回'
           this.model.type = type
           this.setAddressDomScroll({
@@ -1158,7 +1262,7 @@ export default class Interview24h extends Vue {
   setAddressDomScroll(params) {
     return new Promise((resolve, reject) => {
       let dom = document.getElementById('scroll_div_ul_address')
-      div.onscroll = () => {
+      dom.onscroll = () => {
         let wholeHeight = dom.scrollHeight
         let scrollTop = dom.scrollTop
         let divHeight = dom.clientHeight
@@ -1175,7 +1279,7 @@ export default class Interview24h extends Vue {
   setPositionDomScroll(params) {
     return new Promise((resolve, reject) => {
       let dom = document.getElementById('scroll_div_ul_position')
-      div.onscroll = () => {
+      dom.onscroll = () => {
         let wholeHeight = dom.scrollHeight
         let scrollTop = dom.scrollTop
         let divHeight = dom.clientHeight
@@ -1266,6 +1370,84 @@ export default class Interview24h extends Vue {
     return getPositionCodeUrlApi({id: uid}).then(res => this.model.qrCode = res.data.data.qrCodeUrl)
   }
   showCallback() {}
+  /**
+   * @Author   小书包
+   * @DateTime 2019-08-02
+   * @detail   地图组件点击取消
+   * @return   {[type]}   [description]
+   */
+  popCancel() {
+    this.model.showMap = !this.model.showMap
+  }
+  /**
+   * @Author   小书包
+   * @DateTime 2019-08-02
+   * @detail   地图组件点击确定
+   * @param    {[type]}   e [description]
+   */
+  addAdress(e) {
+    let item = this.model.item
+    this.form.address = {
+      mobile: item.recruiterInfo.mobile,
+      areaName: e.data.area_id,
+      address: e.data.address,
+      doorplate: e.data.doorplate,
+      lng: e.data.lng,
+      lat: e.data.lat
+    }
+  }
+  /**
+   * @Author   小书包
+   * @DateTime 2019-08-02
+   * @detail   创建职位地址
+   * @return   {[type]}          [description]
+   */
+  createPositionAddress(params) {
+    return createPositionAddressApi(params)
+  }
+  /**
+   * @Author   小书包
+   * @DateTime 2019-08-02
+   * @detail   编辑职位地址
+   * @return   {[type]}          [description]
+   */
+  editPositionAddress(params) {
+    return editPositionAddressApi(params)
+  }
+  /**
+   * @Author   小书包
+   * @DateTime 2019-08-02
+   * @detail   获取职位地址
+   * @return   {[type]}          [description]
+   */
+  getPositionAddress(params) {
+    return getPositionAddressApi(params)
+  }
+  /**
+   * @Author   小书包
+   * @DateTime 2019-08-02
+   * @detail   编辑职位
+   * @return   {[type]}         [description]
+   */
+  editAddress(index) {
+    let item = this.addressLists.find((field, i) => i === index)
+    let data = this.model.item
+    this.getPositionAddress({id: item.id}).then(res => {
+      let infos = res.data.data
+      this.form.address = {
+        mobile: data.recruiterInfo.mobile,
+        areaName: infos.area,
+        address: infos.address,
+        doorplate: infos.doorplate,
+        lng: infos.lng,
+        lat: infos.lat,
+        id: infos.id
+      }
+      this.model.type = 'edit_address'
+      this.model.show = true
+      this.model.title = '编辑地址'
+    })
+  }
   mounted() {
     this.init()
   }
