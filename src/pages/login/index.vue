@@ -51,70 +51,59 @@ export default class login extends Vue {
     password: ""
   };
   login() {
-    loginApi(this.loginForm)
-      .then(res => {
-        let { groupId, isAdmin, isGroupAdmin } = res.data.data;
-        sessionStorage.setItem("email", this.loginForm.email);
-        sessionStorage.setItem("avar", res.data.data.avatarInfo.smallUrl);
-        sessionStorage.setItem("name", res.data.data.realname);
-        sessionStorage.setItem("admin_uid", res.data.data.id);
-        sessionStorage.setItem("adminToken", res.data.data.adminToken);
-        sessionStorage.removeItem("itemList");
-        saveAccessToken(res.data.data.adminToken);
-        let AdminShow = this.judge(
-          groupId,
-          isAdmin,
-          isGroupAdmin,
-          res.data.data
-        );
-        sessionStorage.setItem("AdminShow", AdminShow);
-        let userInfo = Object.assign({}, res.data.data, { AdminShow });
-        this.$store.dispatch("update_userinfo", {
-          userInfo
-        });
-        console.log();
-        this.$message({
-          message: "登录成功",
-          type: "success"
-        });
-        this.$router.push({
-          path: "/index"
-        });
-      })
-      .catch(err => {
-        this.$message.error(`用户账号或密码错误`);
+    loginApi(this.loginForm).then(res => {
+      let { groupId, isAdmin, isGroupAdmin } = res.data.data;
+      sessionStorage.setItem("email", this.loginForm.email);
+      sessionStorage.setItem("avar", res.data.data.avatarInfo.smallUrl);
+      sessionStorage.setItem("name", res.data.data.realname);
+      sessionStorage.setItem("admin_uid", res.data.data.id);
+      sessionStorage.setItem("adminToken", res.data.data.adminToken);
+      sessionStorage.removeItem("itemList");
+      saveAccessToken(res.data.data.adminToken);
+      let AdminShow = this.judge(
+        groupId,
+        isAdmin,
+        isGroupAdmin,
+        res.data.data
+      );
+      sessionStorage.setItem("AdminShow", AdminShow);
+      let userInfo = Object.assign({}, res.data.data, { AdminShow });
+      this.$store.dispatch("update_userinfo", {
+        userInfo
       });
+      this.$message({message: "登录成功", type: "success"});
+      this.$router.push({path: "/index"});
+    })
   }
   // 等级,身份
   judge(groupId, isAdmin, isGroupAdmin, userinfo) {
     let AdminShow;
-    // 3||4销售主管
     if (isAdmin) {
-      console.log("超管");
+      // console.log("超管");
       AdminShow = 0;
     } else if (isGroupAdmin && groupId === 2) {
-      console.log("客服组长");
+      // console.log("客服组长");
       AdminShow = 1;
     } else if (!isGroupAdmin && groupId === 2) {
-      console.log("客服组员");
+      // console.log("客服组员");
       AdminShow = 2;
     } else if (!isGroupAdmin && groupId === 3) {
-      console.log("商务组员");
+      // console.log("商务组员");
       AdminShow = 3;
     } else if (!isGroupAdmin && groupId === 4) {
       AdminShow = 3;
-      console.log("商务组员");
+      // console.log("商务组员");
     } else if (isGroupAdmin && groupId === 3) {
-      console.log("商务组长");
+      // console.log("商务组长");
       AdminShow = 4;
     } else if (isGroupAdmin && groupId === 4) {
-      console.log("商务组长");
+      // console.log("商务组长");
       AdminShow = 4;
     } else if (isGroupAdmin && groupId === 5) {
-      console.log("猎头主管&顾问主管");
+      // console.log("猎头主管&顾问主管");
       AdminShow = 5;
     } else if (!isGroupAdmin && groupId === 5) {
-      console.log("猎头组员");
+      // console.log("猎头组员");
       AdminShow = 6;
     }
     return AdminShow;

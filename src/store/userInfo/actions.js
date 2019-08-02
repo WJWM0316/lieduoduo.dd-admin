@@ -2,10 +2,10 @@ import * as types from './mutations_types'
 
 export default {
   // 更新用户信息
-  update_userinfo: ({commit}, {userinfo}) => {
+  update_userinfo: ({commit}, {userInfo}) => {
     return new Promise((resolve, reject) => {
       commit(types.UPDATE_USERINFO, {
-        userinfo
+        userInfo
       })
       resolve()
     })

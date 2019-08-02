@@ -65,13 +65,16 @@
     }
     .user_input{
       display: block;
-      width: 100%;
+      width: 80%;
       border: none;
       outline: none;
       height: 40px;
       background: transparent;
       line-height: 40px;
       font-size: 14px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     .position_item{
       height: 40px;
@@ -181,8 +184,8 @@
       right: 0;
     }
     .active{
-      border-color: rgb(58, 142, 230);
-      background: rgb(58, 142, 230);
+      border-color: #3e294d;
+      background: #3e294d;
     }
   }
   .add_time{
