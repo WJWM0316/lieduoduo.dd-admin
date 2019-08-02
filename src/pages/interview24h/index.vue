@@ -251,7 +251,6 @@
       </el-form-item>
 
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">新增</el-button>
         <el-button type="primary" @click="search">搜索</el-button>
       </el-form-item>
     </el-form>
@@ -388,7 +387,7 @@
         align="center"
         label="代客操作">
         <template slot-scope="scope" v-if="scope.row.action">
-          <span class="btn_deal" @click="todoAction('modify', scope.row)">修改面试</span>
+          <!-- <span class="btn_deal" @click="todoAction('modify', scope.row)">修改面试</span> -->
           <span class="btn_deal" @click="todoAction(item.action, scope.row)" v-for="(item, index) in scope.row.action">{{item.msg}}</span>
         </template>
       </el-table-column>
@@ -881,9 +880,6 @@ export default class Interview24h extends Vue {
   tabClick(type) {
     this.navigation.map(field => field.active = type === field.type ? true : false)
   }
-  onSubmit() {
-    console.log('submit!');
-  }
   /**
    * @Author   小书包
    * @DateTime 2019-08-02
@@ -947,28 +943,36 @@ export default class Interview24h extends Vue {
         this.model.btnTxt = '返回'
         break;
       case 'position':
-        this.setPositionDomScroll({
-          page: this.positionNum, 
-          count: 20, 
+        this.positionLists = []
+        this.positionNum = 1
+        this.isLastPageOfPosition = false
+        this.getPositionList({
           recruiter: data.recruiterInfo.uid
         }).then(() => {
           this.model.show = true
           this.model.type = type
           this.model.title = '选择职位'
           this.model.btnTxt = '返回'
+          this.setPositionDomScroll({
+            recruiter: data.recruiterInfo.uid
+          })
         })
         break;
       case 'address':
-        this.setAddressDomScroll({
-          page: this.addressNum, 
-          count: 20, 
-          mobile: data.recruiterInfo.mobile
-        }).then(() => {
+        this.addressLists = []
+        this.addressNum = 1
+        this.isLastPageOfAddress = false
+        this.getSimplepageAddressesLists({
+           mobile: data.recruiterInfo.mobile
+         }).then(() => {
           this.model.show = true
           this.model.title = '选择职位'
           this.model.btnTxt = '返回'
           this.model.type = type
-        })
+          this.setAddressDomScroll({
+            mobile: data.recruiterInfo.mobile
+          })
+         })
         break;
       case 'reason':
         this.model.show = true
@@ -1105,8 +1109,14 @@ export default class Interview24h extends Vue {
    * @detail   获取职位列表
    * @return   {[type]}   [description]
    */
-  getPositionList(params) {
-    return getListApi(Object.assign(params, {status: '0,1,2'})).then(res => {
+  getPositionList(data) {
+    let params = {
+      page: this.positionNum,
+      count: 20,
+      status: '0,1,2'
+    }
+    params = Object.assign(params, data)
+    return getListApi(params).then(res => {
       let infos = res.data
       let list = infos.data
       list.map(field => field.active = false)
@@ -1121,7 +1131,12 @@ export default class Interview24h extends Vue {
    * @detail   获取地址列表
    * @return   {[type]}   [description]
    */
-  getSimplepageAddressesLists(params) {
+  getSimplepageAddressesLists(data) {
+    let params = {
+      page: this.addressNum,
+      count: 20
+    }
+    params = Object.assign(params, data)
     return getSimplepageAddressesListsApi(params).then(res => {
       let infos = res.data
       let list = infos.data
@@ -1134,31 +1149,18 @@ export default class Interview24h extends Vue {
   /**
    * @Author   小书包
    * @DateTime 2019-08-01
-   * @detail   dom滚动
-   * @return   {[type]}   [description]
-   */
-  scroll(domId) {
-    return new Promise((resolve, reject) => {
-      let dom = document.getElementById(domId)
-      let wholeHeight = dom.scrollHeight
-      let scrollTop = dom.scrollTop
-      let divHeight = dom.clientHeight
-      if(scrollTop + divHeight >= wholeHeight) resolve()
-    })
-  }
-  /**
-   * @Author   小书包
-   * @DateTime 2019-08-01
    * @detail   设置地址dom的滚动加载
    * @return   {[type]}   [description]
    */
   setAddressDomScroll(params) {
     return new Promise((resolve, reject) => {
-      this.$nextTick(() => {
-        let domId = 'scroll_div_ul_address'
-        let div = document.getElementById(domId)
-        div.onscroll = this.scroll(domId).then(() => this.getSimplepageAddressesLists(params).then(() => resolve()))
-      })
+      let dom = document.getElementById('scroll_div_ul_address')
+      div.onscroll = () => {
+        let wholeHeight = dom.scrollHeight
+        let scrollTop = dom.scrollTop
+        let divHeight = dom.clientHeight
+        if(scrollTop + divHeight >= wholeHeight) this.getSimplepageAddressesLists(params).then(() => resolve())
+      }
     })
   }
   /**
@@ -1169,11 +1171,13 @@ export default class Interview24h extends Vue {
    */
   setPositionDomScroll(params) {
     return new Promise((resolve, reject) => {
-      this.$nextTick(() => {
-        let domId = 'scroll_div_ul_position'
-        let div = document.getElementById(domId)
-        div.onscroll = this.scroll(domId).then(() => this.getPositionList(params).then(() => resolve()))
-      })
+      let dom = document.getElementById('scroll_div_ul_position')
+      div.onscroll = () => {
+        let wholeHeight = dom.scrollHeight
+        let scrollTop = dom.scrollTop
+        let divHeight = dom.clientHeight
+        if(scrollTop + divHeight >= wholeHeight) this.getPositionList(params).then(() => resolve())
+      }
     })
   }
   /**
