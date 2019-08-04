@@ -397,7 +397,7 @@
         align="center"
         label="代客操作">
         <template slot-scope="scope" v-if="scope.row.action">
-          <!-- <span class="btn_deal" @click="todoAction('modify', scope.row)">修改面试</span> -->
+          <span class="btn_deal" @click="todoAction('modify', scope.row)">修改面试</span>
           <span class="btn_deal" @click="todoAction(item.action, scope.row)" v-for="(item, index) in scope.row.action">{{item.msg}}</span>
         </template>
       </el-table-column>
@@ -410,7 +410,7 @@
       prev-text="上一页"
       next-text="下一页"
       :current-page="Number(form.page)"
-      v-if="total"
+      v-if="total > pageSize"
       @current-change="pageChange">
       <span class="total">共{{ Math.ceil(total/20) }}页, {{total}}条记录</span>
     </el-pagination>
@@ -836,7 +836,7 @@ export default class Interview24h extends Vue {
       case 'position':
         let positionItem = this.positionLists.find(field => field.active)
         // 该职位处于下线状态
-        if(positionItem.status) {
+        if(!positionItem.status) {
           this.$confirm('确认开放该职位进行约面吗？', '开放职位约面', {
             confirmButtonText: '确定',
             cancelButtonText: '取消'
