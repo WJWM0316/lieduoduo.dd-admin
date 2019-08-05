@@ -69,6 +69,7 @@
       <el-form-item>
         <el-button type="primary" @click="todoAction('add')">新增</el-button>
         <el-button type="primary" @click="search">搜索</el-button>
+        <el-button type="primary" @click="reset">重置</el-button>
       </el-form-item>
     </el-form>
 
@@ -253,6 +254,17 @@ export default class H24 extends Vue {
     } else {
       this.navigation[0].active = true
     }
+  }
+  reset() {
+    this.navigation.map((field, index) => field.active = index === 0 ? true : false)
+    this.form = {
+      page: 1,
+      position_id: '',
+      start_time: '',
+      end_time: '',
+      count: 20
+    }
+    this.getRapidlySurfaceList()
   }
   mounted() {
     this.init()

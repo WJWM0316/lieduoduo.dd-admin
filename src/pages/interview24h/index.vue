@@ -262,6 +262,7 @@
 
       <el-form-item>
         <el-button type="primary" @click="search">搜索</el-button>
+        <el-button type="primary" @click="reset">重置</el-button>
       </el-form-item>
     </el-form>
 
@@ -1447,6 +1448,31 @@ export default class Interview24h extends Vue {
       this.model.show = true
       this.model.title = '编辑地址'
     })
+  }
+  reset() {
+    this.navigation.map((field, index) => field.active = index === 0 ? true : false)
+    this.form = {
+      companyName: '',
+      searchType: '',
+      date1: '',
+      resource: '',
+      page: 1,
+      content: '',
+      status: '',
+      mobile: '',
+      realname: '',
+      isAttend: '0',
+      address: {
+        mobile: '',
+        title: '',
+        areaName: '',
+        address: '',
+        doorplate: '',
+        lng: '',
+        lat: ''
+      }
+    }
+    this.getQuickApplyInterview()
   }
   mounted() {
     this.init()
