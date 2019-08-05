@@ -46,14 +46,14 @@
       <el-form-item label="状态" v-if="$route.name === 'h24_edit'">
         <el-radio v-model="form.is_online" :label="1">上架</el-radio>
         <el-radio v-model="form.is_online" :label="2">下架</el-radio>
-        <el-radio v-model="form.is_online" :label="3">立即截至</el-radio>
+        <el-radio v-model="form.is_online" :label="3">立即截止</el-radio>
       </el-form-item>
       <el-form-item label="权重排序值" v-if="$route.name === 'h24_edit'">
         <el-input v-model="form.sort" style="width: 400px;"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">确定</el-button>
-        <el-button>取消</el-button>
+        <el-button @click="reset" v-if="$route.name === 'h24_edit'">取消</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -123,6 +123,9 @@ export default class H24_POST extends Vue {
       }
       this.form = form
     })
+  }
+  reset() {
+    this.getRapidlySurface()
   }
   created() {
     if(this.$route.name === 'h24_edit') this.getRapidlySurface()

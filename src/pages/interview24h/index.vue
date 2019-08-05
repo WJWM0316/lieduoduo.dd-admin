@@ -232,7 +232,7 @@
           <el-select
             v-model="form.searchType"
             slot="prepend"
-            placeholder="手机号"
+            placeholder="面试id"
             @change="changeSearch"
           >
             <el-option
@@ -293,6 +293,8 @@
             <el-popover
               placement="bottom"
               width="300"
+              @hide="hide"
+              :disabled="openType !== 'resume'"
               trigger="click">
               <div>
                 <div style="text-align: center;"v-if="!model.qrCode">
@@ -337,6 +339,8 @@
             <el-popover
               placement="bottom"
               width="300"
+              @hide="hide"
+              :disabled="openType !== 'recruiter'"
               trigger="click">
               <div>
                 <div style="text-align: center;"v-if="!model.qrCode">
@@ -369,6 +373,8 @@
             <el-popover
               placement="bottom"
               width="300"
+              @hide="hide"
+              :disabled="openType !== 'position'"
               trigger="click">
               <div>
                 <div style="text-align: center;"v-if="!model.qrCode">
@@ -403,7 +409,7 @@
       </el-table-column>
       <el-table-column
         prop="status"
-        width="120"
+        width="130"
         align="center"
         label="代客操作">
         <template slot-scope="scope" v-if="scope.row.action">
@@ -435,6 +441,7 @@
             <i class="icon_circle_my" v-show="!item.active"></i>
             <i class="el-icon-success" v-show="item.active"></i>
             <div class="name">{{item.positionName}}</div>
+            <span v-if="!item.status" style="margin-left: 10px;color: rgba(0,0,0,.2);">(已关闭)</span>
           </li>
         </ul>
       </div>
@@ -515,10 +522,12 @@
           </li>
         </ul>
         <ul class="time_list" v-if="model.dateLists.length">
-          <li class="time_row" v-for="(item, index) in model.dateLists" :key="index" @click="selectTime(index)">
-            <i class="el-icon-remove"></i>
-            {{item.value}}
-            <span class="circle" :class="{active: item.active}"></span>
+          <li class="time_row" v-for="(item, index) in model.dateLists" :key="index">
+            <i class="el-icon-remove" @click="deleteTime(index)"></i>
+            <span @click="selectTime(index)">
+              {{item.value}}
+              <span class="circle" :class="{active: item.active}"></span>
+            </span>
           </li>
         </ul>
         <el-button type="text" class="add_time" v-if="model.dateLists.length < 3">
@@ -556,7 +565,7 @@
           </li>
         </ul>
         <ul class="time_list" v-if="model.dateLists.length">
-          <li class="time_row" v-for="(item, index) in model.dateLists" :key="index" @click="selectTime(index)" style="cursor: unset;">
+          <li class="time_row" v-for="(item, index) in model.dateLists" :key="index" style="cursor: unset;">
             <i class="el-icon-remove"></i>
             {{item.value}}
             <span class="circle" :class="{active: item.active}"></span>
@@ -611,6 +620,7 @@ import {
   }
 })
 export default class Interview24h extends Vue {
+  openType = ''
   navigation = [
     {
       type: 'all',
@@ -634,7 +644,7 @@ export default class Interview24h extends Vue {
   options = [
     {
       value: 'id',
-      label: '面试'
+      label: '面试id'
     },
     {
       value: 'jobhunter',
@@ -679,7 +689,7 @@ export default class Interview24h extends Vue {
   pageSize = 20
   form = {
     companyName: '',
-    searchType: '',
+    searchType: 'id',
     date1: '',
     resource: '',
     page: 1,
@@ -802,13 +812,26 @@ export default class Interview24h extends Vue {
         break;
       case 'reason':
         this.model.show = false
-        this.model.position = this.model.defaultPosition
+        // this.model.position = this.model.defaultPosition
         break;
       case 'present':
         this.model.show = false
         break;
       case 'add_address':
         this.model.type = 'address'
+        break
+      case 'edit_address':
+        this.getSimplepageAddressesLists({
+           mobile: item.recruiterInfo.mobile
+         }).then(() => {
+          this.model.show = true
+          this.model.title = '选择地址'
+          this.model.btnTxt = '返回'
+          this.model.type = 'address'
+          this.setAddressDomScroll({
+            mobile: item.recruiterInfo.mobile
+          })
+         })
         break
       default:
         break
@@ -821,19 +844,25 @@ export default class Interview24h extends Vue {
    * @param    {[type]}   index [description]
    */
   confirm() {
-    let interviewTime = this.model.dateLists.find(field => field.active).value
+    let interviewTime = this.model.dateLists.find(field => field.active)
+    if(interviewTime) interviewTime = String(Date.parse(interviewTime.value) / 1000)
     let data = this.model.item
     switch(this.model.type) {
       case 'arrange':
-        this.model.show = false
-        this.setInterviewInfo({
-          interviewId: this.model.interviewId,
-          realname: this.form.realname,
-          mobile: this.form.mobile,
-          addressId: this.model.address.addressId,
-          interviewTime,
-          positionId: this.model.position.positionId
-        })
+        if(interviewTime) {
+          this.model.show = false
+          this.setInterviewInfo({
+            interviewId: this.model.interviewId,
+            realname: this.form.realname,
+            mobile: this.form.mobile,
+            addressId: this.model.address.addressId,
+            interviewTime,
+            positionId: this.model.position.positionId
+          })
+        } else {
+          this.$message.error('请选择一个面试时间')
+        }
+        
         break;
       case 'modify':
         this.model.show = false
@@ -848,6 +877,12 @@ export default class Interview24h extends Vue {
         break;
       case 'preview':
         this.model.show = false
+        break;
+      case 'improper':
+        this.getLabelComment({status: data.status}).then(() => {
+          this.model.type = 'reason'
+          this.model.title = '选择不合适原因'
+        })
         break;
       case 'position':
         let positionItem = this.positionLists.find(field => field.active)
@@ -1027,7 +1062,7 @@ export default class Interview24h extends Vue {
     this.model.address.addressName = data.address
     this.model.address.addressId = data.addressId
     this.model.interviewId = data.interviewId
-    this.model.dateLists.push({active: true, value: data.handleEndTime})
+    // this.model.dateLists.push({active: true, value: data.handleEndTime})
     let reason = this.model.reason.map(field => field.id).join(',')
     switch(type) {
       case 'recipe':
@@ -1064,6 +1099,7 @@ export default class Interview24h extends Vue {
         this.model.type = type
         this.model.showConfirmBtn = false
         this.model.btnTxt = '返回'
+        this.model.dateLists.push({active: true, value: data.handleEndTime})
         break;
       case 'position':
         this.positionLists = []
@@ -1157,6 +1193,15 @@ export default class Interview24h extends Vue {
    */
   selectTime(index) {
     this.model.dateLists.map((field, i) => field.active = index === i ? true : false)
+  }
+  /**
+   * @Author   小书包
+   * @DateTime 2019-08-05
+   * @detail   删除时间
+   * @return   {[type]}         [description]
+   */
+  deleteTime(index) {
+    this.model.dateLists.splice(index, 1)
   }
   /**
    * @Author   小书包
@@ -1363,6 +1408,7 @@ export default class Interview24h extends Vue {
    */
   getRecruiterCodeUrl(uid) {
     this.model.qrCode = ''
+    this.openType = 'recruiter'
     return getRecruiterCodeUrlApi({id: uid}).then(res => this.model.qrCode = res.data.data.qrCodeUrl)
   }
   /**
@@ -1373,6 +1419,7 @@ export default class Interview24h extends Vue {
    */
   getResumeCodeUrl(uid) {
     this.model.qrCode = ''
+    this.openType = 'resume'
     return getResumeCodeUrlApi({id: uid}).then(res => this.model.qrCode = res.data.data.qrCodeUrl)
   }
   /**
@@ -1383,6 +1430,7 @@ export default class Interview24h extends Vue {
    */
   getPositionCodeUrl(uid) {
     this.model.qrCode = ''
+    this.openType = 'position'
     return getPositionCodeUrlApi({id: uid}).then(res => this.model.qrCode = res.data.data.qrCodeUrl)
   }
   showCallback() {}
@@ -1512,10 +1560,9 @@ export default class Interview24h extends Vue {
    */
   readPosition(id) {
     window.open(`/positionManage/positionAuditDetail?id=${id}`, '_blank');
-    // this.$router.resolve({
-    //   path: "/positionManage/positionAuditDetail",
-    //   query: { id }
-    // })
+  }
+  hide() {
+    this.openType = ''
   }
   mounted() {
     this.init()

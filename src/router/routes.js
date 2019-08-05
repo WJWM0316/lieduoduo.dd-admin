@@ -72,7 +72,7 @@ export const routes = [
     path: "/24h/add",
     name: "h24_post",
     meta: {
-      title: "职位发布111",
+      title: "专场发布",
       haveParent: true,
       parentPath: "/24h",
       parentName: "24h反馈专场管理"
@@ -84,7 +84,7 @@ export const routes = [
     path: "/24h/edit",
     name: "h24_edit",
     meta: {
-      title: "职位发布111",
+      title: "专场发布",
       haveParent: true,
       parentPath: "/24h",
       parentName: "24h反馈专场管理"
