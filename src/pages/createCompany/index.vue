@@ -217,7 +217,7 @@
               v-model="item.logoInfo.smallUrl || ''"
               @loaded="handleProductIconLoaded"
             />
-            <div class="func_zone" style="position: absolute;right: 0;top: 0;">
+            <div class="func_zone" style="position: absolute;right: 0;top: 0;" v-if="!item.isEditing">
               <el-button type="text" @click="editAction(index)">编辑</el-button>
               <el-button type="text" @click="deleteAction(index)">删除</el-button>
             </div>

@@ -253,9 +253,17 @@
         <el-select v-model="form.status" placeholder="全部状态">
           <el-option
             v-for="item in statusLists"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
+            :key="item.status"
+            :label="item.desc"
+            :value="item.status">
+          </el-option>
+        </el-select>
+        <el-select v-model="form.last_status" placeholder="全部状态" v-if="form.status === 52">
+          <el-option
+            v-for="item in statusLists"
+            :key="item.status"
+            :label="item.desc"
+            :value="item.status">
           </el-option>
         </el-select>
       </el-form-item>
@@ -357,6 +365,7 @@
         label="约面信息">
         <template slot-scope="scope">
           <div>
+            <span class="strong_name" @click="readPosition(scope.row.positionId)">职位： {{scope.row.positionName}}&nbsp;&nbsp;&nbsp;&nbsp;</span>
             <el-popover
               placement="bottom"
               width="300"
@@ -371,7 +380,7 @@
                   <div style="text-align: center;margin-top: 10px;">微信扫码，打开小程序查看</div>
                 </div>
               </div>
-              <span class="strong_name" @click="getPositionCodeUrl(scope.row.positionId)" slot="reference">职位： {{scope.row.positionName}}</span>
+              <span class="strong_name" @click="getPositionCodeUrl(scope.row.positionId)" slot="reference">扫码看职位</span>
             </el-popover>
           </div>
           <div>地址：{{scope.row.address}}</div>
@@ -387,7 +396,7 @@
       </el-table-column>
       <el-table-column
         prop="num4"
-        label="跟进运营">
+        label="跟进销售">
         <template slot-scope="scope" v-if="scope.row.adminInfo">
           {{scope.row.adminInfo.realname || ''}}
         </template>
@@ -584,6 +593,8 @@ import {
   getResumeCodeUrlApi,
   getRecruiterCodeUrlApi,
   getPositionCodeUrlApi,
+  getInterviewFisrtStatusListsApi,
+  getInterviewSecondStatusListsApi
 } from "API/interview"
 import {
   getListApi,
@@ -674,6 +685,7 @@ export default class Interview24h extends Vue {
     page: 1,
     content: '',
     status: '',
+    last_status: '',
     mobile: '',
     realname: '',
     isAttend: '0',
@@ -735,6 +747,9 @@ export default class Interview24h extends Vue {
     }
     if(this.form.status) {
       params = Object.assign(params, {status: this.form.status})
+    }
+    if(this.form.status === 52) {
+      params = Object.assign(params, {last_status: this.form.last_status})
     }
     getQuickApplyInterviewApi(params).then(res => {
       let infos = res.data
@@ -1474,8 +1489,36 @@ export default class Interview24h extends Vue {
     }
     this.getQuickApplyInterview()
   }
+  /**
+   * @Author   小书包
+   * @DateTime 2019-08-05
+   * @detail   获取面试状态一级列表
+   * @return   {[type]}   [description]
+   */
+  getInterviewFisrtStatusLists() {
+    return getInterviewFisrtStatusListsApi().then(res0 => {
+      getInterviewSecondStatusListsApi().then(res1 => {
+        let statusLists = res0.data.data
+        statusLists.map(field => field.children = field.status === 52 ? res1.data.data : [])
+        this.statusLists = statusLists
+      })
+    })
+  }
+  /**
+   * @Author   小书包
+   * @DateTime 2019-08-05
+   * @detail   跳转职位详情
+   * @return   {[type]}      [description]
+   */
+  readPosition(id) {
+    this.$router.push({
+      path: "/positionManage/positionAuditDetail",
+      query: { id }
+    })
+  }
   mounted() {
     this.init()
+    this.getInterviewFisrtStatusLists()
   }
 }
 </script>

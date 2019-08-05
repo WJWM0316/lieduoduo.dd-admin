@@ -146,3 +146,15 @@ export const setUserInterviewCommentApi = data => request({
   type: 'post',
   data
 })
+
+/* 获取面试的一级状态列表 */
+export const getInterviewFisrtStatusListsApi = data => request({
+  url: `/interview/quickApplyInterviewStatus`,
+  type: 'get'
+})
+
+/* 获取面试的二级状态列表 */
+export const getInterviewSecondStatusListsApi = data => request({
+  url: `/interview/getApplyNotSuitTypeList`,
+  type: 'get'
+})
