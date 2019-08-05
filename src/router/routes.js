@@ -106,6 +106,20 @@ export const routes = [
     component: resolve =>
       require(["@/pages/resumeStore/page/createNewResume/index.vue"], resolve)
   },
+  /* 新建微简历 */
+  {
+    path: "/resumeStore/list/postResume",
+    name: "postResume",
+    meta: {
+      title: "操作简历",
+      haveParent: true,
+      parentName: "简历列表",
+      keepAlive: false,
+      flag: "resumeStore"
+    },
+    component: resolve =>
+      require(["@/pages/resumeStore/page/postResume/index.vue"], resolve)
+  },
   /* 新建推荐单 */
   {
     path: "/resumeStore/recommendList/createOrder",

@@ -6,7 +6,8 @@
       ref="methods"
       @handlePageChange="handlePageChange"
     >
-      <div class="class" slot="text" @click.stop="createResume">新建微简历</div>
+      <div class="class" slot="text" @click.stop="createResume">新建简历</div>
+      <!-- <div class="class" slot="text" @click.stop="createResume2">新建简历</div> -->
       <div class="formSumbit" slot="formContent">
         <div class="formReasult">
           <el-form ref="form" :model="form" class="form">
@@ -171,6 +172,7 @@
           </div>
         </div>
       </div>
+
       <div class="resumeList" id="scroll" slot="dataList">
         <div
           class="resumeItem"
@@ -186,9 +188,11 @@
           </div>
           <div class="resumeContent">
             <div class="userMsg">
+
               <div class="userAvator">
                 <img :src="item.avatar.url" alt v-if="item.avatar" />
               </div>
+
               <div class="userName">
                 <div class="userTop row">
                   <span class="name">{{item.name}}</span>
@@ -207,6 +211,7 @@
                 >最近工作: {{item.lastCompany}} · {{item.lastPosition}}</p>
                 <p class="maxEducation">最高学历：{{item.school}} · {{item.degreeDesc}} · {{item.major}}</p>
               </div>
+
               <div class="needWork">
                 <div
                   class="workItem"
@@ -223,13 +228,18 @@
                   </div>
                 </div>
               </div>
-              <div
-                class="seeResume"
-                @click.stop="seereResume(index)"
-                v-show="item.resumeAttach!=null&&isSales"
-              >
-                <el-button>查看简历附件</el-button>
+              <div class="seeResume">
+                <el-button class="" @click.stop="editResume(item)">编辑简历</el-button>
+
+                <div
+                  class=""
+                  @click.stop="seereResume(index)"
+                  v-show="item.resumeAttach!=null&&isSales"
+                >
+                  <el-button>查看简历附件</el-button>
+                </div>
               </div>
+              
             </div>
           </div>
           <div class="tabList" v-if="item.resumeLabels.length>0">
@@ -238,6 +248,7 @@
             </div>
           </div>
         </div>
+
         <div
           style="font-size: 14px;color: #000;padding: 30px 0px;"
           class="resumeItem"
@@ -341,6 +352,7 @@ let canPush = 0; /* 0 规定 1 跳转注册页 2 去新建微简历 */
 let Sumbitform = {
   name: "",
   gender: "",
+  uid: '',
   mobile: ""
 };
 @Component({
@@ -389,11 +401,14 @@ export default class resumeStore extends Vue {
         if (!res.data.data.userExist) {
           canPush = 1;
           callback(new Error("该用户不存在，请去创建用户"));
-        } else if (res.data.data.userExist && res.data.data.haveCard) {
-          callback(new Error("该手机号已创建简历，不能再次创建"));
-        } else {
+        } 
+        // else if (res.data.data.userExist && res.data.data.haveCard) {
+        //   callback(new Error("该手机号已创建简历，不能再次创建"));
+        // } 
+        else {
           canPush = 2;
           Sumbitform = {
+            uid: res.data.data.cardInfo.uid,
             gender: res.data.data.cardInfo.gender,
             name: res.data.data.cardInfo.name,
             mobile: value
@@ -401,11 +416,6 @@ export default class resumeStore extends Vue {
           callback();
         }
       });
-      // this.canCreate = false;
-      // this.$forceUpdate();
-      // console.log(this.canCreate);
-      // console.log("mobile is ok");
-      // callback();
     }
   };
   rules = {
@@ -587,19 +597,48 @@ export default class resumeStore extends Vue {
     const el = document.getElementById("TabStore");
     el.removeEventListener("scroll", this.handleScroll);
   }
+
+  createResume() {
+    this.dialogVisible = true;
+    this.canform.mobile = "";
+  }
+
+  createResume2() {
+    this.$router.push({
+      path: "/resumeStore/list/postResume",
+      query: {
+        isEdit: 0
+      }
+    })
+  }
+
+  editResume(item) {
+    console.log(item)
+    this.$router.push({
+      path: "/resumeStore/list/postResume",
+      query: {
+        isEdit: 1,
+        userInfo: JSON.stringify({
+          uid: item.uid
+        })
+      }
+    })
+  }
+
   checkMobile(form) {
-    console.log(Sumbitform);
+    console.log(Sumbitform)
     this.$refs[form].validate(valid => {
       if (valid) {
         if (canPush === 2) {
           this.dialogVisible = false;
           this.$router.push({
-            path: "/resumeStore/list/createNewResume",
+            // path: "/resumeStore/list/createNewResume",
+            path: "/resumeStore/list/postResume",
             query: {
               isEdit: 0,
               userInfo: JSON.stringify(Sumbitform)
             }
-          });
+          })
         }
       } else {
         if (canPush) {
@@ -610,11 +649,11 @@ export default class resumeStore extends Vue {
               query: {
                 create_resume: true
               }
-            });
-          });
-          this.dialogVisible = false;
+            })
+          })
+          this.dialogVisible = false
         }
-        return false;
+        return false
       }
     });
   }
@@ -727,17 +766,6 @@ export default class resumeStore extends Vue {
     this.$refs["age"].closeSelect();
     console.log(this.form);
   }
-
-  // // 新建微简历
-  // createNewResume() {
-  //   let routeUrl = this.$router.resolve({
-  //     path: "/resumeStore/list/createNewResume",
-  //     query: {
-  //       isEdit: 0
-  //     }
-  //   });
-  //   window.open(routeUrl.href, "_blank");
-  // }
 
   /* 手动关闭事件 */
   closeSubEvent() {
@@ -930,10 +958,9 @@ export default class resumeStore extends Vue {
       this.degreeList = res.data.data;
     });
   }
-  createResume() {
-    this.dialogVisible = true;
-    this.canform.mobile = "";
-  }
+
+  
+
   getDetail(uid, index) {
     this.resumeId = String(uid);
     this.showArrow = true;

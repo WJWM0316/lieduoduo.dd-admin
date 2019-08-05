@@ -69,10 +69,8 @@ export default class login extends Vue {
         );
         sessionStorage.setItem("AdminShow", AdminShow);
         let userInfo = Object.assign({}, res.data.data, { AdminShow });
-        this.$store.dispatch("update_userinfo", {
-          userInfo
-        });
-        console.log();
+        this.$store.dispatch("update_userinfo",{userInfo});
+        console.log(userInfo);
         this.$message({
           message: "登录成功",
           type: "success"

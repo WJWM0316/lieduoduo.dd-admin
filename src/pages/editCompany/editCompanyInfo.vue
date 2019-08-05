@@ -15,12 +15,14 @@
       <el-form class="edit-form" ref="form" :model="companyInfo" label-width="150px" label-suffix="：">
         <h3>公司信息</h3>
         <!--工牌/名片/在职证明-->
+          {{form.logo}}
         <el-form-item class="full" label="公司LOGO" prop="icon">
           <image-uploader :width="iconUploader.width"
                           :height="iconUploader.height"
                           type="logo"
                           v-model="form.logo"
                           @loaded="handleIconLoaded"/>
+          }
         </el-form-item>
         
         <el-form-item label="公司全称" prop="title">
