@@ -238,7 +238,7 @@ export default class H24 extends Vue {
           query: {
             tab_status: 1,
             searchType: 'position',
-            content: data.positionId
+            content: data.positionName
           }
         })
         break

@@ -68,8 +68,8 @@
               <el-select v-model="form.wherefrom" placeholder="全部状态">
                 <el-option label="全部" value="0"></el-option>
                 <el-option label="excel导入" value="3"></el-option>
-                <el-option label="用户创建" value="1"></el-option>
-                <el-option label="后台发布" value="2"></el-option>
+                <el-option label="小程序发布" value="1"></el-option>
+                <el-option label="后台添加" value="2"></el-option>
               </el-select>
             </el-form-item>
           </el-form>

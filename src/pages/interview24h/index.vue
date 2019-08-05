@@ -1511,10 +1511,11 @@ export default class Interview24h extends Vue {
    * @return   {[type]}      [description]
    */
   readPosition(id) {
-    this.$router.push({
-      path: "/positionManage/positionAuditDetail",
-      query: { id }
-    })
+    window.open(`/positionManage/positionAuditDetail?id=${id}`, '_blank');
+    // this.$router.resolve({
+    //   path: "/positionManage/positionAuditDetail",
+    //   query: { id }
+    // })
   }
   mounted() {
     this.init()
