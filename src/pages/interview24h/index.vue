@@ -1088,6 +1088,8 @@ export default class Interview24h extends Vue {
         this.model.title = '安排面试'
         break;
       case 'modify':
+        let dateLists1 = data.arrangementInfo.appointmentList
+        dateLists1.map(field => field.active = false)
         this.model.type = type
         this.model.show = true
         this.model.title = '修改面试时间'
@@ -1095,7 +1097,7 @@ export default class Interview24h extends Vue {
         this.model.position.positionId = data.positionId
         this.model.address.addressName = data.address
         this.model.address.addressId = data.addressId
-        this.model.dateLists.push({active: true, value: data.arrangementInfo.appointment})
+        this.model.dateLists = dateLists1
         break;
       case 'add_address':
         this.model.type = 'add_address'
@@ -1110,7 +1112,9 @@ export default class Interview24h extends Vue {
         this.model.showConfirmBtn = false
         this.model.btnTxt = '返回'
         if(data.arrangementInfo) {
-          this.model.dateLists.push({active: true, value: data.handleEndTime})
+          let dateLists2 = data.arrangementInfo.appointmentList
+          dateLists2.map(field => field.active = false)
+          this.model.dateLists = dateLists2
           this.model.position.name = data.positionName
           this.model.position.positionId = data.positionId
           this.model.address.addressName = data.address
