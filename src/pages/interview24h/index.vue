@@ -260,7 +260,7 @@
         </el-select>
         <el-select v-model="form.last_status" placeholder="全部状态" v-if="form.status === 52">
           <el-option
-            v-for="item in statusLists"
+            v-for="item in statusChildLists"
             :key="item.status"
             :label="item.desc"
             :value="item.status">
@@ -685,6 +685,7 @@ export default class Interview24h extends Vue {
       label: '不合适'
     }
   ]
+  statusChildLists = []
   total = 99
   pageSize = 20
   form = {
@@ -1546,9 +1547,8 @@ export default class Interview24h extends Vue {
   getInterviewFisrtStatusLists() {
     return getInterviewFisrtStatusListsApi().then(res0 => {
       getInterviewSecondStatusListsApi().then(res1 => {
-        let statusLists = res0.data.data
-        statusLists.map(field => field.children = field.status === 52 ? res1.data.data : [])
-        this.statusLists = statusLists
+        this.statusChildLists = res1.data.data
+        this.statusLists = res0.data.data
       })
     })
   }
