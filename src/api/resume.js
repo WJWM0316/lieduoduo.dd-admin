@@ -191,3 +191,12 @@ export const deleteEducationApi = data =>
     type: "delete",
     data
   })
+
+
+/* 生活标签表 */
+export const getLifeLabelApi = data =>
+  request({
+    url: `/label/life`,
+    type: "get"
+  })
+

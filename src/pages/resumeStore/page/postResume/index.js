@@ -13,6 +13,7 @@ import {
   haveMobile
 } from "API/resumeStore"
 import { 
+  getLifeLabelApi,
   deleteExpectApi, deleteCareerApi, deleteProjectApi, deleteEducationApi,
   putExpectApi, putEducationApi, putProjectApi, putCareerApi,
   setLabelsApi, setEducationApi, setProjectApi, setBaseInfoApi, setIntroduceApi, setAttachResumeApi, setExpectApi, setCareerApi } from "API/resume"
@@ -35,7 +36,6 @@ let Sumbitform = {
   },
   filters: {
     getJobStatus (res) {
-      console.log(res)
       switch(res){
         case 1:
           return '在职暂不考虑'
@@ -181,7 +181,12 @@ export default class PostResume extends Vue {
     professionalSkillsList = [] //职业技能列表
     professionalLiteracyList = []
     optionsSkills = []
+    lifeLabelsList = []
     isEditForm2 = false
+    selectedJobList = []
+    selectedLifeList = []
+    skillLabelsList = []
+    skillSelectText = ''
     form2 = {
       literacyLabels: [],   //职业素养
       skillLabels: [],   //职业技能
@@ -191,6 +196,7 @@ export default class PostResume extends Vue {
     isEditForm3 = false
     form3cityNum = []
     form3positionId = []
+
     form3 = {
       cityNum: '',     // 期望城市，城市编号
       positionId: '',     // 期望职位id
@@ -266,6 +272,12 @@ export default class PostResume extends Vue {
     this.getJobhuntStatus()
     this.getDegreeList()
     this.getProfessionalSkills()
+    this.getLifeLabel()
+  }
+  getLifeLabel() {
+    getLifeLabelApi().then(res => {
+      this.lifeLabelsList = res.data.data[1].children
+    })
   }
   time(time) {
     var date = new Date(time + 8 * 3600 * 1000)
@@ -314,7 +326,6 @@ export default class PostResume extends Vue {
    */
   async saveInfo (type) {
     type = String(type)
-    console.log(type)
     try {
       const params = this.transformData(type)
       if (type === '1') {
@@ -352,7 +363,13 @@ export default class PostResume extends Vue {
   }
 
   setEdit (type, item) {
-    if (this.handleStatus !== '') return 
+    if (this.handleStatus !== '') {
+      this.$message({
+        message: '您还有内容没有保存',
+        type: 'warning'
+      })
+      return
+    }
     let name = `isEditForm${type}`
     this.handleStatus = 'edit'
     this[name] = true
@@ -374,6 +391,26 @@ export default class PostResume extends Vue {
       this[`form${type}`].avatar = this.editMsg.avatar.id
     }
 
+    if(type === 2) {
+      this[`form${type}`].literacyLabels = []
+      this[`form${type}`].skillLabels = []
+      this[`form${type}`].lifeLabels = []
+      this.editMsg.personalizedLabels.map(item => {
+        if (item.type === 'label_life') {
+          this[`form${type}`].lifeLabels.push({labelId: item.labelId})
+          this.selectedLifeList.push(item)
+        } else if (item.type === 'label_professional_literacy') {
+          this[`form${type}`].literacyLabels.push({labelId: item.labelId})
+          this.selectedJobList.push(item)
+        } else if (item.type === 'label_professional_skills') {
+          this[`form${type}`].skillLabels.push({labelId: item.labelId})
+          this.selectedJobList.push(item)
+        }
+      })
+
+      console.log()
+    }
+
     if(type === 3) {
       this[`form${type}`].salaryCeil = item.salaryCeil
       this[`form${type}`].salaryFloor = item.salaryFloor
@@ -392,6 +429,8 @@ export default class PostResume extends Vue {
       this[`form${type}`].labelIds = item.technicalLabelIds.map(item => {
         return parseInt(item)
       })
+
+      this.setProfessionalSkills()
     }
 
     if(type === 5) {
@@ -426,7 +465,13 @@ export default class PostResume extends Vue {
   }
 
   async setDelete (type, item) {
-    if (this.handleStatus !== '') return
+    if (this.handleStatus !== '') {
+      this.$message({
+        message: '您还有内容没有保存',
+        type: 'warning'
+      })
+      return
+    }
     try {
       if (type === '3') {
         await deleteExpectApi({
@@ -472,6 +517,21 @@ export default class PostResume extends Vue {
       newForm.startWorkYear =  newForm.startWorkYear/1000
     }
 
+    if (name === 'form2') {
+      newForm.skillLabels = []
+      newForm.literacyLabels =  []
+      this.selectedJobList.map(item => {
+        if (item.type === 'label_professional_skills') {
+          newForm.skillLabels.push({labelId:item.labelId})
+        }else {
+          newForm.literacyLabels.push({labelId:item.labelId})
+        }
+      })
+      this.selectedLifeList.map(item => {
+        newForm.lifeLabels.push({labelId:item.labelId})
+      })
+    }
+
     if (name === 'form3') {
       newForm.fieldIds =  newForm.fieldIds.join(',')
       newForm.positionId =  newForm.positionId[newForm.positionId.length - 1]
@@ -500,7 +560,7 @@ export default class PostResume extends Vue {
       newForm.attachIds = this.introImgList.map(field => field.id).join(',')
     }
 
-    console.log(newForm)
+    console.log(newForm,this[name] )
     return newForm
   }
 
@@ -738,14 +798,73 @@ export default class PostResume extends Vue {
       }
     })
   }
-  changePostion(e) {
-    console.log(e)
-    // this.form3.positionId = e[e.length - 1]
+  changeLiteracyLabels(e) {
+    let res = {}
+    let isHas = false
+    this.selectedJobList.forEach(item => {
+      if (item.labelId === e) {
+        isHas = true
+      }
+    })
+    if (isHas) return
+    if (this.selectedJobList.length>4) return
+    this.professionalLiteracyList.map(item => {
+      if (item.labelId === e) {
+        res = item
+      }
+    })
+    this.selectedJobList.push(res)
+    console.log(this.selectedJobList)
+  }
+  changeSetSkillLabels(e) {
+    this.professionalSkillsList.map((item,index) => {
+      if (e === item.labelId) {
+        this.skillLabelsList = item.children
+      }
+    })
+  }
+  changeSkillLabels(e) {
+    let res = {}
+    let isHas = false
+    this.selectedJobList.forEach(item => {
+      if (item.labelId === e) {
+        isHas = true
+      }
+    })
+    if (isHas) return
+    if (this.selectedJobList.length>4) return
+    this.skillLabelsList.map(item => {
+      if (item.labelId === e) {
+        this.selectedJobList.push(item)
+      }
+    })
+    console.log(this.selectedJobList)
+  }
+  changeLifeLabels(e) {
+    let res = {}
+    let isHas = false
+    if (this.selectedLifeList.length>4) return
+    this.selectedLifeList.map(item => {
+      if (item.labelId === e) {
+        isHas = true
+      }
+    })
+    if (isHas) return
+    this.lifeLabelsList.map(item => {
+      if (item.labelId === e) {
+        res = item
+      }
+    })
+    this.selectedLifeList.push(res)
+    console.log(this.selectedLifeList)
+  }
+  // 编辑删除标签
+  deleteLabel(type,index) {
+    let name = type === 'job' ? `selectedJobList` : 'selectedLifeList'
+    this[name].splice(index,1)
   }
   // 工作经历 =》 职位类别
   changePostion1(e) {
-    console.log(e)
-    // this.form4.positionTypeId = e[e.length - 1]
     this.setProfessionalSkills()
   }
   /* 选择最小薪资 */
@@ -789,8 +908,6 @@ export default class PostResume extends Vue {
         return
       }
     })
-    console.log(id,options)
-    console.log(this.professionalSkillsList)
     this.optionsSkills = options
   }
 

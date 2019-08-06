@@ -136,22 +136,43 @@
             </div>
           </div>
 
-          <h4 class="classifyTitle">个性签名<span class="edit_span" v-if="!isEditForm1" @click="setEdit(1)">编辑</span></h4>
-          <el-form :model="form2" :rules="rules" ref="form2" class="demo-ruleForm">
+          <h4 class="classifyTitle">个性签名<span class="edit_span" v-if="!isEditForm2" @click="setEdit(2)">编辑</span></h4>
+          <el-form :model="form2" :rules="rules" ref="form2" class="demo-ruleForm" v-if="isEditForm2">
             <el-form-item label-width="80px" label="职业素养" class="formItem" prop="literacyLabels">
+              <el-select
+                filterable
+                default-first-option
+                @change="changeLiteracyLabels"
+                placeholder="请选择">
+                <el-option
+                  v-for="item in professionalLiteracyList"
+                  :key="item.labelId"
+                  :label="item.name"
+                  :value="item.labelId">
+                </el-option>
+              </el-select>
             </el-form-item>
             <el-form-item label-width="80px" label="职业技能" class="formItem" prop="skillLabels">
               <el-select
-                style="width: 300px;"
-                v-model="form4.labelIds"
-                multiple
-                :multiple-limit="4"
+                v-model="skillSelectText"
                 filterable
-                allow-create
                 default-first-option
-                placeholder="请选择">
+                @change="changeSetSkillLabels"
+                placeholder="请选择行业">
                 <el-option
-                  v-for="item in options"
+                  v-for="item in professionalSkillsList"
+                  :key="item.labelId"
+                  :label="item.name"
+                  :value="item.labelId">
+                </el-option>
+              </el-select>
+              <el-select
+                filterable
+                default-first-option
+                @change="changeSkillLabels"
+                placeholder="请选择技能">
+                <el-option
+                  v-for="item in skillLabelsList"
                   :key="item.labelId"
                   :label="item.name"
                   :value="item.labelId">
@@ -159,9 +180,48 @@
               </el-select>
             </el-form-item>
             <el-form-item label-width="80px" label="生活标签" class="formItem" prop="lifeLabels">
+              <el-select
+                filterable
+                default-first-option
+                @change="changeLifeLabels"
+                placeholder="请选择">
+                <el-option
+                  v-for="item in lifeLabelsList"
+                  :key="item.labelId"
+                  :label="item.name"
+                  :value="item.labelId">
+                </el-option>
+              </el-select>
+            </el-form-item>
+
+            <el-form-item label-width="110px" label="已选择职业标签" class="formItem" >
+              <div class="selectedList">
+                <div class="selected_span" v-for="item, index in selectedJobList" @click="deleteLabel('job',index)">{{item.name || item.labelName}}</div>
+              </div>
+            </el-form-item>
+            <el-form-item label-width="110px" label="已选择生活标签" class="formItem" >
+              <div class="selectedList">
+                <div class="selected_span" v-for="item, index in selectedLifeList" @click="deleteLabel('life',index)">{{item.name || item.labelName}}</div>
+              </div>
+            </el-form-item>
+
+            <el-form-item class="formItem submit">
+              <el-button size="medium" @click="handleCancle('2')">取消</el-button>
+              <el-button size="medium" type="primary" @click="handleSubmit(2)">确定</el-button>
             </el-form-item>
           </el-form>
-
+          <div class="infoCont" v-else>
+            <div class="line_blo">
+              <div class="row_blo">
+                <span class="label_name">个性签名:</span>
+                <div class="label_value formItem">
+                  <div class="selectedList selectCont">
+                    <div class="selected_span" v-for="item, index in editMsg.personalizedLabels" >{{item.labelName}}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
           <h4 class="classifyTitle">
             求职意向
             
@@ -196,7 +256,6 @@
                   label:'name',
                   children:'children'
                 }"
-                @change="changePostion"
               ></el-cascader>
             </el-form-item>
             <el-form-item label="期望薪资">
@@ -264,7 +323,7 @@
               </div>
               <div class="row_blo">
                 <span class="label_name">期望领域:</span>
-                <div class="label_value">{{item.fieldIds[0]}}</div>              
+                <div class="label_value">{{item.fields[0].field}}</div>              
               </div>
             </div>
           </div>
@@ -374,14 +433,14 @@
               </div>
               <div class="row_blo">
                 <span class="label_name">开始时间:</span>
-                <div class="label_value">{{item.startTime}}</div>              
+                <div class="label_value">{{item.startTimeDesc}}</div>              
               </div>
             </div>
 
             <div class="line_blo">
               <div class="row_blo">
                 <span class="label_name">结束时间:</span>
-                <div class="label_value">{{item.endTime}}</div>   
+                <div class="label_value">{{item.endTimeDesc}}</div>   
               </div>
               <div class="row_blo">
                 <span class="label_name">工作内容:</span>
@@ -633,7 +692,7 @@
               <div class="row_blo">
                 <span class="label_name">介绍图片:</span>
                 <div class="label_value">
-                  <img v-for="item,index in editMsg.moreIntroduce.imgs"  :src="item.middleUrl" />
+                  <img v-for="item,index in editMsg.moreIntroduce.imgs" :src="item.middleUrl"  />
                 </div>   
               </div>
             </div>

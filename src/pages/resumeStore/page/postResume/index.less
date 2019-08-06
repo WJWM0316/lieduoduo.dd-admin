@@ -185,9 +185,37 @@
   justify-content: flex-start;
   align-items: flex-start;
   position: relative;
-
+  .selectedList {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    &.selectCont {
+      width: 600px;
+      .selected_span {
+        &:hover {
+          border: 1px solid #ccc;
+        }
+      }
+    }
+    .selected_span {
+      height: 24px;
+      padding: 0 15px;
+      line-height: 24px;
+      border-radius: 25px;
+      text-align: center;
+      font-size: 12px;
+      position: relative;
+      border: 1px solid #ccc;
+      margin-right: 10px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      &:hover {
+        // background: #ececec;
+        border: 1px solid red;
+      }
+    }
+  }
   &.attach_resume {
-
   }
 }
 .editMoile {
