@@ -1209,7 +1209,6 @@ export default class Interview24h extends Vue {
    */
   selectTime(index) {
     this.model.dateLists.map((field, i) => field.active = index === i ? true : false)
-    console.log(this.model.dateLists.find(field => field.active))
   }
   /**
    * @Author   小书包
