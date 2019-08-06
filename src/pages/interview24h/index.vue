@@ -52,16 +52,19 @@
     .row{
       height: 40px;
       line-height: 40px;
-      display: flex;
+      display: block;
+      overflow: hidden;
     }
     .label{
       display: inline-block;
-      width: 70px;
+      width: 80px;
+      float: left;
     }
     .value{
       display: inline-block;
-      flex: 1;
       position: relative;
+      width: calc(100% - 80px);
+      float: left;
     }
     .user_input{
       display: block;
@@ -567,7 +570,7 @@
         <ul class="time_list" v-if="model.dateLists.length">
           <li class="time_row" v-for="(item, index) in model.dateLists" :key="index" style="cursor: unset;">
             <i class="el-icon-remove"></i>
-            {{item.value}}
+            {{item.appointment}}
             <span class="circle" :class="{active: item.active}"></span>
           </li>
         </ul>
@@ -848,7 +851,7 @@ export default class Interview24h extends Vue {
    */
   confirm() {
     let interviewTime = this.model.dateLists.find(field => field.active)
-    if(interviewTime) interviewTime = String(Date.parse(new Date(interviewTime.value)) / 1000)
+    if(interviewTime) interviewTime = String(Date.parse(new Date(interviewTime.appointment)) / 1000)
     let data = this.model.item
     switch(this.model.type) {
       case 'arrange':
@@ -1201,7 +1204,7 @@ export default class Interview24h extends Vue {
    */
   getTime(e) {
     this.model.dateLists.push({
-      value: e,
+      appointment: e,
       active: false
     })
   }
