@@ -83,7 +83,19 @@ export default class PostResume extends Vue {
   }
 
   rules = {
-    name: [{ required: true, message: '请输入姓名', trigger: "blur" }],
+    name: [
+      { required: true, message: '请输入姓名', trigger: "blur" },
+      { min: 2, message: '姓名不得少于2个字', trigger: 'blur' },
+      { max: 20, message: '姓名最多输入20个字', trigger: 'blur' }
+    ],
+    signature: [
+      { min: 6, message: '自我描述不得少于6个字', trigger: 'blur' },
+      { max: 150, message: '自我描述最多输入150个字', trigger: 'blur' }
+    ],
+    wechat: [
+      { min: 6, message: '微信号不得少于6个字', trigger: 'blur' },
+      { max: 20, message: '微信号最多输入20个字', trigger: 'blur' }
+    ],
     mobile: [{ required: true, message: "请输入手机号码", trigger: "blur" }],
     gender: [{ required: true, message: "请选择性别", trigger: "change" }],
     birth: [{ required: true, message: "出生年月不能为空", trigger: "blur" }],
@@ -110,11 +122,23 @@ export default class PostResume extends Vue {
     fieldIds: [
       { required: true, message: "请选择你期望的领域", trigger: "blur" }
     ],
-    company: [{ required: true, message: '请输入公司名称', trigger: "blur" }],
+    company: [
+      { required: true, message: '请输入公司名称', trigger: "blur" },
+      { min: 2, message: '公司名称不得少于2个字', trigger: 'blur' },
+      { max: 50, message: '公司名称最多输入50个字', trigger: 'blur' }
+    ],
     positionTypeId: [{ required: true, message: '请选择职位类别', trigger: "blur" }],
-    position: [{ required: true, message: '请输入职位名称', trigger: "blur" }],
+    position: [
+      { required: true, message: '请输入职位名称', trigger: "blur" },
+      { min: 2, message: '职位名称不得少于2个字', trigger: 'blur' },
+      { max: 20, message: '职位名称最多输入20个字', trigger: 'blur' }
+    ],
     startTime: [{ required: true, message: '请选择开始时间', trigger: "blur" }],
-    duty: [{ required: true, message: '请输入工作内容', trigger: "blur" }],
+    duty: [
+      { required: true, message: '请输入工作内容', trigger: "blur" },
+      { min: 10, message: '工作内容不得少于10个字', trigger: 'blur' },
+      { max: 1000, message: '工作内容最多输入1000个字', trigger: 'blur' }
+    ],
   }
   rules5 = {
     name: [{ required: true, message: '请输入项目名称', trigger: "blur" }],

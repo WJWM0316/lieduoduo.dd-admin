@@ -64,7 +64,7 @@
               <el-input placeholder="请输入微信号" v-model="form1.wechat"></el-input>
             </el-form-item>
 
-            <el-form-item label="自我描述" prop="describe">
+            <el-form-item label="自我描述" prop="signature">
               <el-input
                 style="width: 300px; float: left;margin-left: 90px;"
                 type="textarea"
