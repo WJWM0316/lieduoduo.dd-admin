@@ -48,7 +48,6 @@ export default class mapSearch extends Vue {
       // 保存地图对象
       that.qqMapObj = qq
       let latlngBounds = new qq.maps.LatLngBounds();
-      console.log(qq.maps)
       that.searchService = new qq.maps.SearchService({
         //设置搜索范围为北京
         location: "北京",

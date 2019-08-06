@@ -8,7 +8,8 @@ import { request } from './index.js'
 export const getListApi = data => request({
 	url: `/position/list`,
 	type: 'get',
-	data
+	data,
+	noGlobalLoading: true //不需要loading
 })
 
 // 职位分状态按条件数量统计
@@ -102,3 +103,33 @@ export const professionalSkillsApi = data => request({
 	data
 })
 
+
+// 开放职位
+export const openPositionApi = data => request({
+	url: `/position/open/${data.id}`,
+	type: 'put',
+	noGlobalLoading: true //不需要loading
+})
+
+// 创建职位地址
+export const createPositionAddressApi = data => request({
+	url: `/company/position/address`,
+	type: 'put',
+	data,
+	noGlobalLoading: true //不需要loading
+})
+
+// 编辑职位地址
+export const editPositionAddressApi = data => request({
+	url: `/company/position/address/${data.id}`,
+	type: 'post',
+	data,
+	noGlobalLoading: true //不需要loading
+})
+
+// 获取职位地址
+export const getPositionAddressApi = data => request({
+	url: `/company/position/address/${data.id}`,
+	type: 'get',
+	noGlobalLoading: true //不需要loading
+})

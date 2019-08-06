@@ -155,6 +155,14 @@
               draggable="true">
               <div class="btn-close" @click="handleRemoveUploadImage(imageIndex)"><i class="el-icon-delete"></i></div>
             </li>
+<!--             <el-image 
+              style="width: 88px; height: 88px"
+              v-for="(imageItem1, imageIndex1) in commonList"
+              :key="imageIndex1"
+              :data-key="imageIndex1"
+              :src="imageItem1.smallUrl"
+              :preview-src-list="imagesLists">
+            </el-image> -->
             <li class="upload-li" v-if="commonList.length < 20" @click="handleChooseImage">
               <i class="el-icon-plus"></i>
               <input type="file" multiple="multiple" @change="handleChangeImage" style="display: none;" id="image" name="image" accept="image/*" />
@@ -217,7 +225,7 @@
               v-model="item.logoInfo.smallUrl || ''"
               @loaded="handleProductIconLoaded"
             />
-            <div class="func_zone" style="position: absolute;right: 0;top: 0;">
+            <div class="func_zone" style="position: absolute;right: 0;top: 0;" v-if="!item.isEditing">
               <el-button type="text" @click="editAction(index)">编辑</el-button>
               <el-button type="text" @click="deleteAction(index)">删除</el-button>
             </div>
@@ -416,6 +424,8 @@ import mapSearch from "@/components/map";
   }
 })
 export default class createCompany extends Vue {
+  imagesLists = null
+  realImgSrc = null
   xhr = null
   commonList = []
   temProductList = []
@@ -814,6 +824,7 @@ export default class createCompany extends Vue {
     };
     this.temProductList = [].concat(productList)
     this.commonList = newCompanyInfo.albumInfo
+    this.imagesLists = newCompanyInfo.albumInfo.map(field => field.url)
     // 上传证件信息
     this.form = {
       logo: newCompanyInfo.logoInfo.url || "", // logo
@@ -906,6 +917,7 @@ export default class createCompany extends Vue {
     // 上传成功
     this.xhr.onload = (res) => {
       this.commonList.push(JSON.parse(res.target.responseText).data[0])
+      this.imagesLists = this.commonList.map(field => field.url)
     }
     // 上传失败
     this.xhr.onerror = (res) => {}
@@ -921,6 +933,7 @@ export default class createCompany extends Vue {
    */
   handleRemoveUploadImage(index) {
     this.commonList.splice(index, 1)
+    this.imagesLists = this.commonList.map(field => field.url)
   }
   editAction(index) {
     this.companyInfo.product.map((field, i) => {

@@ -58,7 +58,7 @@
 
         <div class="item">
           <span class="lable">薪资范围：</span>
-          {{positionData.emolumentMin}}k-{{positionData.emolumentMax}}k
+          {{positionData.emolumentMin}}k-{{positionData.emolumentMax}}k × {{positionData.annualSalaryDesc}}
         </div>
         <div class="item">
           <span class="lable">经验要求：</span>

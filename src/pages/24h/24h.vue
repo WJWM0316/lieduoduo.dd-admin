@@ -69,6 +69,7 @@
       <el-form-item>
         <el-button type="primary" @click="todoAction('add')">新增</el-button>
         <el-button type="primary" @click="search">搜索</el-button>
+        <el-button type="primary" @click="reset">重置</el-button>
       </el-form-item>
     </el-form>
 
@@ -98,19 +99,25 @@
         label="真实抢占席位">
       </el-table-column>
       <el-table-column
-        prop="applyNum"
+        prop="seatsNum"
         label="虚拟抢占席位">
+        <template slot-scope="scope">
+          {{Math.floor(scope.row.seatsNum * 0.3)}}
+        </template>
       </el-table-column>
       <el-table-column
-        prop="applyNum"
+        prop="seatsNum"
         label="剩余席位">
+        <template slot-scope="scope">
+          {{scope.row.seatsNum - scope.row.applyNum}}
+        </template>
       </el-table-column>
       <el-table-column
         prop="action"
         label="操作">
         <template slot-scope="scope">
-          <span class="btn_deal" @click="todoAction('edit', scope.row.id)">编辑</span>
-          <span class="btn_deal">查看</span>
+          <span class="btn_deal" @click="todoAction('edit', scope.row)" v-if="scope.row.status !== 4">编辑</span>
+          <span class="btn_deal" @click="todoAction('view', scope.row)">查看</span>
         </template>
       </el-table-column>
     </el-table>
@@ -122,7 +129,7 @@
       prev-text="上一页"
       next-text="下一页"
       :current-page="Number(form.page)"
-      v-if="total"
+      v-if="total > pageSize"
       @current-change="pageChange">
       <span class="total">共{{ Math.ceil(total/20) }}页, {{total}}条记录</span>
     </el-pagination>
@@ -142,6 +149,7 @@ import {
   //   '$route': {
   //     handler() {
   //       this.init()
+  //       this.getRapidlySurfaceList()
   //     },
   //     immediate: true
   //   }
@@ -158,7 +166,7 @@ export default class H24 extends Vue {
     {
       type: 'notStarted',
       msg: '未开始',
-      active: true,
+      active: false,
       id: '2'
     },
     {
@@ -216,13 +224,23 @@ export default class H24 extends Vue {
   pageChange(page) {
     this.form.page = page
   }
-  todoAction(type, id) {
+  todoAction(type, data) {
     switch(type) {
       case 'add':
         this.$router.push({name: 'h24_post'})
         break
       case 'edit':
-        this.$router.push({name: 'h24_edit', query: {id}})
+        this.$router.push({name: 'h24_edit', query: {id: data.id}})
+        break
+      case 'view':
+        this.$router.push({
+          name: 'interview24h',
+          query: {
+            tab_status: 1,
+            searchType: 'position',
+            content: data.positionName
+          }
+        })
         break
       default:
         break
@@ -231,12 +249,24 @@ export default class H24 extends Vue {
   init() {
     let query = this.$route.query
     this.form = Object.assign(this.form, query)
-    this.navigation.map(field => {
-      field.active = false
-      if(query.tab === field.id) field.active = true
-    })
+    if(query.tab) {
+      this.navigation.map(field => field.active = query.tab == field.id ? true : false)
+    } else {
+      this.navigation[0].active = true
+    }
   }
-  created() {
+  reset() {
+    this.navigation.map((field, index) => field.active = index === 0 ? true : false)
+    this.form = {
+      page: 1,
+      position_id: '',
+      start_time: '',
+      end_time: '',
+      count: 20
+    }
+    this.getRapidlySurfaceList()
+  }
+  mounted() {
     this.init()
     this.getRapidlySurfaceList()
   }

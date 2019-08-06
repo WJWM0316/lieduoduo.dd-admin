@@ -107,7 +107,7 @@ export default class CommunityEdit extends Vue {
   		label: '10年以上'
   	}
   ]
-
+  annual_salary_list = []
   addressList = [
   	{
 			value: '0',
@@ -135,6 +135,7 @@ export default class CommunityEdit extends Vue {
     work_experience: '', // integer(formData)	经验要求,1:不限, 2:暂无经历 , 3:一年以内, 4:1-3年, 5:3-5年, 6:5-10年, 7 10年以上
     education: '', // 学历要求,5 ：初中及以下，10： 中专 ，15：高中, 20: 大专, 25: 本科， 30: 硕士, 35：博士
     describe: '', // 职位描述
+    annual_salary: '12'
   }
 
   // 表单验证规则
@@ -241,6 +242,9 @@ export default class CommunityEdit extends Vue {
     this.setEmolumentMin()
     this.getProfessionalSkills()
     this.getLabelPositionList()
+    for(let i = 12; i <= 24; i++) {
+      this.annual_salary_list.push({value: String(i), label: `${i}薪`})
+    }
   }
   
   /**
@@ -308,6 +312,7 @@ export default class CommunityEdit extends Vue {
         form.emolument_max = data.data.emolumentMax
         this.setEmolumentMax(data.data.emolumentMin)
         form.mobile = data.data.mobile
+        form.annual_salary = String(data.data.annualSalary)
         this.form = form
 
         this.getAdressList()

@@ -72,7 +72,7 @@ export const routes = [
     path: "/24h/add",
     name: "h24_post",
     meta: {
-      title: "职位发布111",
+      title: "专场发布",
       haveParent: true,
       parentPath: "/24h",
       parentName: "24h反馈专场管理"
@@ -84,7 +84,7 @@ export const routes = [
     path: "/24h/edit",
     name: "h24_edit",
     meta: {
-      title: "职位发布111",
+      title: "专场发布",
       haveParent: true,
       parentPath: "/24h",
       parentName: "24h反馈专场管理"
@@ -185,12 +185,11 @@ export const routes = [
     component: resolve => require(["../App.vue"], resolve),
     children: [
       {
-        path: "interview24h",
+        path: "24h",
         name: "interview24h",
         meta: {
           title: "24h反馈专场管理",
           haveParent: true,
-          keepAlive: true,
           flag: "interview"
         },
         component: resolve =>
@@ -380,7 +379,7 @@ export const routes = [
   {
     path: "/24h",
     name: "24h",
-    meta: { title: "24h反馈专场管理", haveParent: false, keepAlive: true },
+    meta: { title: "24h反馈专场管理", haveParent: false},
     component: resolve => require(["@/pages/24h/24h.vue"], resolve)
   },
   /* 添加用户 */

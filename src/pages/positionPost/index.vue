@@ -64,7 +64,7 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="薪酬范围" prop="emolument_min" style="width: 500px; text-align: left;">
+      <el-form-item label="薪酬范围" prop="emolument_min" style="width: 800px; text-align: left;">
         <el-select v-model="form.emolument_min" placeholder="选择薪资范围" @change="changeEmolumentMin"  style="width: 150px;">
           <el-option
             v-for="item in emolumentMinList"
@@ -77,6 +77,15 @@
         <el-select v-model="form.emolument_max" placeholder="选择薪资范围"  style="width: 150px;">
           <el-option
             v-for="item in emolumentMaxList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+        &nbsp;×&nbsp;
+        <el-select v-model="form.annual_salary" placeholder="请选择">
+          <el-option
+            v-for="item in annual_salary_list"
             :key="item.value"
             :label="item.label"
             :value="item.value">

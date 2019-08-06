@@ -68,8 +68,8 @@
               <el-select v-model="form.wherefrom" placeholder="全部状态">
                 <el-option label="全部" value="0"></el-option>
                 <el-option label="excel导入" value="3"></el-option>
-                <el-option label="用户创建" value="1"></el-option>
-                <el-option label="后台发布" value="2"></el-option>
+                <el-option label="小程序发布" value="1"></el-option>
+                <el-option label="后台添加" value="2"></el-option>
               </el-select>
             </el-form-item>
           </el-form>
@@ -299,6 +299,11 @@ export default class companyCheck extends Vue {
     {
       prop: "status",
       label: "审核状态"
+      //    width: 150
+    },
+    {
+      prop: "wherefromDesc",
+      label: "职位来源"
       //    width: 150
     },
     {

@@ -180,6 +180,9 @@
               v-if="props.scope.row.arrangementInfo && props.scope.row.arrangementInfo.appointmentTime"
             >时间：{{props.scope.row.arrangementInfo.appointmentTime *1000 | date}}</div>
           </div>
+          <div class="jobhunter" v-else-if="props.scope.column.property === 'adminInfo'">
+            {{props.scope.row.adminInfo.realname || ''}}
+          </div>
           <template v-else>
             <span
               :class="{'row-delete': props.scope.row.status !== 1}"
@@ -268,6 +271,13 @@ export default class invite extends Vue {
     {
       prop: "recruiterInfo",
       label: "面试官信息",
+      minWidth: "25%",
+      //    width: 300,
+      align: "left"
+    },
+    {
+      prop: "adminInfo",
+      label: "跟进销售",
       minWidth: "25%",
       //    width: 300,
       align: "left"
