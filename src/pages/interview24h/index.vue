@@ -748,7 +748,9 @@ export default class Interview24h extends Vue {
   getQuickApplyInterview() {
     let tab = this.navigation.find(field => field.active)
     let params = {
-      tab_status: tab.id
+      tab_status: tab.id,
+      page: this.form.page,
+      count: 20
     }
     if(this.form.companyName) {
       params = Object.assign(params, {companyName: this.form.companyName})
@@ -1107,7 +1109,7 @@ export default class Interview24h extends Vue {
         this.model.type = type
         this.model.showConfirmBtn = false
         this.model.btnTxt = '返回'
-        if(data.status !== 11 || data.status !== 21) {
+        if(data.arrangementInfo) {
           this.model.dateLists.push({active: true, value: data.handleEndTime})
           this.model.position.name = data.positionName
           this.model.position.positionId = data.positionId
@@ -1207,6 +1209,7 @@ export default class Interview24h extends Vue {
    */
   selectTime(index) {
     this.model.dateLists.map((field, i) => field.active = index === i ? true : false)
+    console.log(this.model.dateLists.find(field => field.active))
   }
   /**
    * @Author   小书包
