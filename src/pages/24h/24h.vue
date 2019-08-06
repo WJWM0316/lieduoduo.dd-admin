@@ -217,6 +217,8 @@ export default class H24 extends Vue {
   }
   tabClick(type) {
     this.navigation.map(field => field.active = type === field.type ? true : false)
+    this.form.position_id = ''
+    this.getRapidlySurfaceList()
   }
   search() {
     this.getRapidlySurfaceList()

@@ -277,7 +277,7 @@
     <el-table :data="lists">
       <el-table-column
         prop="interviewId"
-        width="50"
+        width="80"
         label="面试id">
       </el-table-column>
       <el-table-column
@@ -500,11 +500,11 @@
         <ul>
           <li class="row">
             <div class="label">联系人：</div>
-            <div class="value">{{form.realname}}</div>
+            <div class="value"><!-- {{form.realname}} --><input v-model="form.realname" class="user_input" /></div>
           </li>
           <li class="row">
             <div class="label">联系电话：</div>
-            <div class="value">{{form.mobile}}</div>
+            <div class="value"><!-- {{form.mobile}} --><input v-model="form.mobile" class="user_input" /></div>
           </li>
           <li class="row">
             <div class="label">职位：</div>
@@ -753,7 +753,7 @@ export default class Interview24h extends Vue {
     if(this.form.companyName) {
       params = Object.assign(params, {companyName: this.form.companyName})
     }
-    if(this.form.searchType) {
+    if(this.form.searchType && this.form.content) {
       params = Object.assign(params, {searchType: this.form.searchType, content: this.form.content})
     }
     if(this.form.status) {
@@ -846,7 +846,7 @@ export default class Interview24h extends Vue {
    */
   confirm() {
     let interviewTime = this.model.dateLists.find(field => field.active)
-    if(interviewTime) interviewTime = String(Date.parse(interviewTime.value) / 1000)
+    if(interviewTime) interviewTime = String(Date.parse(new Date(interviewTime.value)) / 1000)
     let data = this.model.item
     switch(this.model.type) {
       case 'arrange':
@@ -1034,6 +1034,8 @@ export default class Interview24h extends Vue {
    */
   tabClick(type) {
     this.navigation.map(field => field.active = type === field.type ? true : false)
+    this.form.content = ''
+    this.getQuickApplyInterview()
   }
   /**
    * @Author   小书包
@@ -1058,10 +1060,10 @@ export default class Interview24h extends Vue {
     this.model.beforeType = this.model.type
     this.model.beforeTitle = this.model.title
     this.model.dateLists = []
-    this.model.position.name = data.positionName
-    this.model.position.positionId = data.positionId
-    this.model.address.addressName = data.address
-    this.model.address.addressId = data.addressId
+    // this.model.position.name = data.positionName
+    // this.model.position.positionId = data.positionId
+    // this.model.address.addressName = data.address
+    // this.model.address.addressId = data.addressId
     this.model.interviewId = data.interviewId
     // this.model.dateLists.push({active: true, value: data.handleEndTime})
     let reason = this.model.reason.map(field => field.id).join(',')
@@ -1087,6 +1089,11 @@ export default class Interview24h extends Vue {
         this.model.type = type
         this.model.show = true
         this.model.title = '修改面试时间'
+        this.model.position.name = data.positionName
+        this.model.position.positionId = data.positionId
+        this.model.address.addressName = data.address
+        this.model.address.addressId = data.addressId
+        this.model.dateLists.push({active: true, value: data.arrangementInfo.appointment})
         break;
       case 'add_address':
         this.model.type = 'add_address'
@@ -1100,7 +1107,13 @@ export default class Interview24h extends Vue {
         this.model.type = type
         this.model.showConfirmBtn = false
         this.model.btnTxt = '返回'
-        this.model.dateLists.push({active: true, value: data.handleEndTime})
+        if(data.status !== 11 || data.status !== 21) {
+          this.model.dateLists.push({active: true, value: data.handleEndTime})
+          this.model.position.name = data.positionName
+          this.model.position.positionId = data.positionId
+          this.model.address.addressName = data.address
+          this.model.address.addressId = data.addressId
+        }
         break;
       case 'position':
         this.positionLists = []
