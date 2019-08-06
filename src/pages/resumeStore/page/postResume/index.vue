@@ -647,7 +647,7 @@
           </h4>
           <el-form :model="form7" :rules="rules" ref="form7" class="demo-ruleForm" v-if="isEditForm7">
 
-            <el-form-item label="更多介绍" prop="describe">
+            <el-form-item label="更多介绍" prop="introduce">
               <el-input
                 style="width: 300px; float: left;margin-left: 90px;"
                 type="textarea"

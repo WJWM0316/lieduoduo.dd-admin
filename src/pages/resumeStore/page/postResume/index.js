@@ -139,18 +139,47 @@ export default class PostResume extends Vue {
       { min: 10, message: '工作内容不得少于10个字', trigger: 'blur' },
       { max: 1000, message: '工作内容最多输入1000个字', trigger: 'blur' }
     ],
+    introduce: [
+      { min: 1, message: '更多介绍不得少于1个字', trigger: 'blur' },
+      { max: 250, message: '更多介绍最多输入250个字', trigger: 'blur' }
+    ],
   }
   rules5 = {
-    name: [{ required: true, message: '请输入项目名称', trigger: "blur" }],
-    role: [{ required: true, message: '请填写担任角色', trigger: "blur" }],
-    position: [{ required: true, message: '请输入职位名称', trigger: "blur" }],
+    name: [
+      { required: true, message: '请输入项目名称', trigger: "blur" },
+      { min: 2, message: '项目名称不得少于2个字', trigger: 'blur' },
+      { max: 50, message: '项目名称最多输入50个字', trigger: 'blur' }
+    ],
+    role: [
+      { required: true, message: '请填写担任角色', trigger: "blur" },
+      { min: 2, message: '角色名称不得少于2个字', trigger: 'blur' },
+      { max: 50, message: '角色名称最多输入50个字', trigger: 'blur' }
+    ],
     startTime: [{ required: true, message: '请选择开始时间', trigger: "blur" }],
-    description: [{ required: true, message: '请填写项目描述', trigger: "blur" }],
+    description: [
+      { required: true, message: '请填写项目描述', trigger: "blur" },
+      { min: 6, message: '项目描述不得少于6个字', trigger: 'blur' },
+      { max: 1000, message: '项目描述最多输入1000个字', trigger: 'blur' }
+    ],
   }
   rules6 = {
-    school: [{ required: true, message: '请输入学校名称', trigger: "blur" }],
-    degree: [{ required: true, message: '请选择学历', trigger: "blur" }],
-    major: [{ required: true, message: '请输入专业名称', trigger: "blur" }],
+    school: [
+      { required: true, message: '请输入学校名称', trigger: "blur" },
+      { min: 2, message: '学校名称不得少于2个字', trigger: 'blur' },
+      { max: 50, message: '学校名称最多输入50个字', trigger: 'blur' }
+    ],
+    degree: [
+      { required: true, message: '请选择学历', trigger: "blur" }
+    ],
+    major: [
+      { required: true, message: '请输入专业名称', trigger: "blur" },
+      { min: 2, message: '专业名称不得少于2个字', trigger: 'blur' },
+      { max: 50, message: '专业名称最多输入50个字', trigger: 'blur' }
+    ],
+    experience: [
+      { min: 1, message: '在校经历不得少于1个字', trigger: 'blur' },
+      { max: 1000, message: '在校经历最多输入1000个字', trigger: 'blur' }
+    ],
     startTime: [{ required: true, message: '请选择开始时间', trigger: "blur" }],
   }
   options = []
