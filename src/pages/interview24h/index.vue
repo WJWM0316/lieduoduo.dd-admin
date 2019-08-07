@@ -611,7 +611,8 @@ import {
   getRecruiterCodeUrlApi,
   getPositionCodeUrlApi,
   getInterviewFisrtStatusListsApi,
-  getInterviewSecondStatusListsApi
+  getInterviewSecondStatusListsApi,
+  testDeleteApi
 } from "API/interview"
 import {
   getListApi,
@@ -1342,7 +1343,7 @@ export default class Interview24h extends Vue {
   getPositionList(data) {
     let params = {
       page: this.positionNum,
-      count: 20,
+      count: this.pageSize,
       status: '0,1,2'
     }
     params = Object.assign(params, data)
@@ -1364,7 +1365,7 @@ export default class Interview24h extends Vue {
   getSimplepageAddressesLists(data) {
     let params = {
       page: this.addressNum,
-      count: 20
+      count: this.pageSize
     }
     params = Object.assign(params, data)
     return getSimplepageAddressesListsApi(params).then(res => {
@@ -1642,6 +1643,7 @@ export default class Interview24h extends Vue {
   }
   mounted() {
     this.init()
+    // testDeleteApi()
   }
 }
 </script>
