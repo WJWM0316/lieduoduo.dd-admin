@@ -714,7 +714,8 @@ export default class PostResume extends Vue {
     /**
      * @detail  点击选择图片
      */
-    handleChooseImage() {
+    handleChooseImage(e) {
+      console.log(e)
       document.querySelector('#image').click()
       document.querySelector('#image').value = ''
     }
