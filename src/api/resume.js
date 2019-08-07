@@ -177,7 +177,7 @@ export const deleteCareerApi = data =>
   })
 
  /* 删除项目经历 */
-export const deleteProjectApi = data =>
+export const deleteProjectApi = data => 
   request({
     url: `/jobhunter/resume/project/${data.uid}/${data.id}`,
     type: "delete",

@@ -38,19 +38,19 @@ let Sumbitform = {
     getJobStatus (res) {
       switch(res){
         case 1:
-          return '在职暂不考虑'
+          return '在职-暂不考虑'
           break
         case 2:
-          return '离职随时到岗'
+          return '离职-随时到岗'
           break
         case 3:
-          return '在职月内到岗'
+          return '在职-月内到岗'
           break
         case 4:
-          return '在职考虑机会'
+          return '在职-考虑机会'
           break
         default:
-          return '在职暂不考虑'
+          return '暂无'
       }
     }
   },
@@ -133,7 +133,9 @@ export default class PostResume extends Vue {
       { min: 2, message: '职位名称不得少于2个字', trigger: 'blur' },
       { max: 20, message: '职位名称最多输入20个字', trigger: 'blur' }
     ],
+    labelIds: [{ required: true, message: '请选择技能标签', trigger: "blur" }],
     startTime: [{ required: true, message: '请选择开始时间', trigger: "blur" }],
+    endTime4: [{ required: true, message: '请选择结束时间', trigger: "blur" }],
     duty: [
       { required: true, message: '请输入工作内容', trigger: "blur" },
       { min: 10, message: '工作内容不得少于10个字', trigger: 'blur' },
@@ -156,6 +158,7 @@ export default class PostResume extends Vue {
       { max: 50, message: '角色名称最多输入50个字', trigger: 'blur' }
     ],
     startTime: [{ required: true, message: '请选择开始时间', trigger: "blur" }],
+    endTime: [{ required: true, message: '请选择结束时间', trigger: "blur" }],
     description: [
       { required: true, message: '请填写项目描述', trigger: "blur" },
       { min: 6, message: '项目描述不得少于6个字', trigger: 'blur' },
@@ -180,6 +183,7 @@ export default class PostResume extends Vue {
       { min: 1, message: '在校经历不得少于1个字', trigger: 'blur' },
       { max: 1000, message: '在校经历最多输入1000个字', trigger: 'blur' }
     ],
+    endTime: [{ required: true, message: '请选择结束时间', trigger: "blur" }],
     startTime: [{ required: true, message: '请选择开始时间', trigger: "blur" }],
   }
   options = []
@@ -525,23 +529,24 @@ export default class PostResume extends Vue {
       })
       return
     }
+    console.log(type)
     try {
-      if (type === '3') {
+      if (type === 3) {
         await deleteExpectApi({
           uid: this.uid,
           id: item.id
         })
-      } else if (type === '4') {
+      } else if (type === 4) {
         await deleteCareerApi({
           uid: this.uid,
           id: item.id
         })
-      } else if (type === '5') {
+      } else if (type === 5) {
         await deleteProjectApi({
           uid: this.uid,
           id: item.id
         })
-      } else if (type === '6') {
+      } else if (type === 6) {
         await deleteEducationApi({
           uid: this.uid,
           id: item.id
@@ -860,7 +865,7 @@ export default class PostResume extends Vue {
       }
     })
     if (isHas) return
-    if (this.selectedJobList.length>4) return
+    if (this.selectedJobList.length>2) return
     this.professionalLiteracyList.map(item => {
       if (item.labelId === e) {
         res = item
@@ -885,7 +890,7 @@ export default class PostResume extends Vue {
       }
     })
     if (isHas) return
-    if (this.selectedJobList.length>4) return
+    if (this.selectedJobList.length>2) return
     this.skillLabelsList.map(item => {
       if (item.labelId === e) {
         this.selectedJobList.push(item)

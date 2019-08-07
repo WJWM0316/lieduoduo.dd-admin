@@ -259,9 +259,9 @@
               ></el-cascader>
             </el-form-item>
             <el-form-item label="期望薪资">
-              <el-row style="margin-left:161px">
+              <el-row style="margin-left:160px">
                 <el-col :span="6">
-                  <el-form-item prop="salaryCeil" class="formItem">
+                  <el-form-item prop="salaryFloor" class="formItem">
                     <el-select
                       v-model="form3.salaryFloor "
                       placeholder="最低薪资"
@@ -273,8 +273,9 @@
                 </el-col>
 
                 <el-col :span="1">-</el-col>
+                
                 <el-col :span="6">
-                  <el-form-item prop="expectSalaryCeil" class="formItem">
+                  <el-form-item prop="salaryCeil" class="formItem">
                     <el-select
                       v-model="form3.salaryCeil"
                       placeholder="最高薪资"
@@ -305,7 +306,7 @@
           </el-form>
           <div class="infoCont" v-for="item,index in editMsg.expects" v-else>
             <span class="info_edit" v-if="!isEditForm3" @click="setEdit(3,item)">编辑</span>
-            <span class="info_delete" v-if="!isEditForm3" @click="setDelete(3,item)">删除</span>
+            <span class="info_delete" v-if="!isEditForm3 && editMsg.expects.length>1" @click="setDelete(3,item)">删除</span>
             <div class="line_blo">
               <div class="row_blo">
                 <span class="label_name">期望城市:</span>
@@ -368,7 +369,7 @@
                 style="width: 100%;"
               ></el-date-picker>
             </el-form-item>
-            <el-form-item  label-width="80px" label="结束时间" class="formItem" prop="endTime"> 
+            <el-form-item  label-width="80px" label="结束时间" class="formItem" prop="endTime4"> 
                 <el-date-picker
                   type="date"
                   placeholder="选择日期"
@@ -378,12 +379,12 @@
                 ></el-date-picker>
             </el-form-item>
 
-            <el-form-item label="技能标签" prop="labelIds">
+            <el-form-item label-width="80px" label="技能标签" prop="labelIds">
               <el-select
-                style="width: 300px;"
+                style="width: 300px;float: left;margin-left: 80px;"
                 v-model="form4.labelIds"
                 multiple
-                :multiple-limit="4"
+                :multiple-limit="3"
                 filterable
                 allow-create
                 default-first-option
@@ -399,7 +400,7 @@
 
             <el-form-item label="工作内容" prop="duty">
               <el-input
-                style="width: 300px; float: left;margin-left: 90px;"
+                style="width: 300px; float: left;margin-left: 80px;"
                 type="textarea"
                 :rows="6"
                 placeholder="工作内容1000以内"
@@ -414,7 +415,7 @@
           </el-form>
           <div class="infoCont" v-for="item,index in editMsg.careers" v-else>
             <span class="info_edit" v-if="!isEditForm4" @click="setEdit(4,item)">编辑</span>
-            <span class="info_delete" v-if="!isEditForm4" @click="setDelete(4,item)">删除</span>
+            <span class="info_delete" v-if="!isEditForm4 && editMsg.careers.length>1" @click="setDelete(4,item)">删除</span>
             <div class="line_blo">
               <div class="row_blo">
                 <span class="label_name">公司名称:</span>
@@ -422,7 +423,7 @@
               </div>
               <div class="row_blo">
                 <span class="label_name">职位类别:</span>
-                <div class="label_value">{{item.positionTypeId}}</div>
+                <div class="label_value">{{item.positionType}}</div>
               </div>
             </div>
 
@@ -444,7 +445,7 @@
               </div>
               <div class="row_blo">
                 <span class="label_name">工作内容:</span>
-                <div class="label_value">{{item.experience}}</div>              
+                <div class="label_value">{{item.duty}}</div>              
               </div>
             </div>
             <div class="line_blo">
@@ -517,7 +518,7 @@
           </el-form>
           <div class="infoCont" v-for="item,index in editMsg.projects" v-else>
             <span class="info_edit" v-if="!isEditForm5" @click="setEdit(5,item)">编辑</span>
-            <span class="info_delete" v-if="!isEditForm5" @click="setDelete(5,item)">删除</span>
+            <span class="info_delete" v-if="!isEditForm5 && editMsg.projects.length>1" @click="setDelete(5,item)">删除</span>
             <div class="line_blo">
               <div class="row_blo">
                 <span class="label_name">项目名称:</span>
@@ -608,7 +609,7 @@
           </el-form>
           <div class="infoCont" v-for="item,index in editMsg.educations" v-else>
             <span class="info_edit" v-if="!isEditForm6" @click="setEdit(6,item)">编辑</span>
-            <span class="info_delete" v-if="!isEditForm6" @click="setDelete(6,item)">删除</span>
+            <span class="info_delete" v-if="!isEditForm6 && editMsg.educations.length>1" @click="setDelete(6,item)">删除</span>
             <div class="line_blo">
               <div class="row_blo">
                 <span class="label_name">学校:</span>
