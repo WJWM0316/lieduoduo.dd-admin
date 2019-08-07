@@ -270,7 +270,16 @@
           </el-option>
         </el-select>
       </el-form-item>
-
+      <el-form-item label="跟进销售">
+        <el-select v-model="form.admin_uid" placeholder="跟进销售">
+          <el-option
+            v-for="item in saleLists"
+            :key="item.id"
+            :label="item.realname"
+            :value="item.id"
+          ></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="search">搜索</el-button>
         <el-button type="primary" @click="reset">重置</el-button>
@@ -527,10 +536,7 @@
         <ul class="time_list" v-if="model.dateLists.length">
           <li class="time_row" v-for="(item, index) in model.dateLists" :key="index">
             <i class="el-icon-remove" @click="deleteTime(index)"></i>
-            <span @click="selectTime(index)">
-              {{item.appointment}}
-              <span class="circle" :class="{active: item.active}"></span>
-            </span>
+            {{item.appointment}}
           </li>
         </ul>
         <el-button type="text" class="add_time" v-if="model.dateLists.length < 3">
@@ -569,9 +575,8 @@
         </ul>
         <ul class="time_list" v-if="model.dateLists.length">
           <li class="time_row" v-for="(item, index) in model.dateLists" :key="index" style="cursor: unset;">
-            <i class="el-icon-remove"></i>
+            <!-- <i class="el-icon-remove"></i> -->
             {{item.appointment}}
-            <span class="circle" :class="{active: item.active}"></span>
           </li>
         </ul>
       </div>
@@ -615,6 +620,8 @@ import {
   editPositionAddressApi,
   getPositionAddressApi
 } from "API/position"
+import { getSalerListApi } from "API/commont";
+
 @Component({
   name: 'Interview24h',
   components: {
@@ -624,6 +631,7 @@ import {
 })
 export default class Interview24h extends Vue {
   openType = ''
+  saleLists = []
   navigation = [
     {
       type: 'all',
@@ -692,6 +700,7 @@ export default class Interview24h extends Vue {
   total = 99
   pageSize = 20
   form = {
+    admin_uid: '',
     companyName: '',
     searchType: 'id',
     date1: '',
@@ -757,6 +766,9 @@ export default class Interview24h extends Vue {
     }
     if(this.form.companyName) {
       params = Object.assign(params, {companyName: this.form.companyName})
+    }
+    if(this.form.admin_uid) {
+      params = Object.assign(params, {admin_uid: this.form.admin_uid})
     }
     if(this.form.searchType && this.form.content) {
       params = Object.assign(params, {searchType: this.form.searchType, content: this.form.content})
@@ -850,7 +862,7 @@ export default class Interview24h extends Vue {
    * @param    {[type]}   index [description]
    */
   confirm() {
-    let dateList = this.model.dateLists.filter(field => field.active)
+    let dateList = this.model.dateLists
     if(dateList.length) dateList = dateList.map(field => field.appointmentTime).join(',')
     let data = this.model.item
     switch(this.model.type) {
@@ -1098,6 +1110,10 @@ export default class Interview24h extends Vue {
         this.model.type = type
         this.model.show = true
         this.model.title = '安排面试'
+        this.model.position.name = data.positionName
+        this.model.position.positionId = data.positionId
+        this.model.address.addressName = data.address
+        this.model.address.addressId = data.addressId
         break;
       case 'modify':
         let dateLists1 = data.arrangementInfo.appointmentList
@@ -1260,8 +1276,10 @@ export default class Interview24h extends Vue {
     } else {
       this.navigation[0].active = true
     }
+    if(this.form.admin_uid) this.form.admin_uid = Number(this.form.admin_uid)
     this.getQuickApplyInterview()
     this.getInterviewFisrtStatusLists()
+    this.getSalerList()
   }
   /**
    * @Author   小书包
@@ -1612,6 +1630,15 @@ export default class Interview24h extends Vue {
   }
   hide() {
     this.openType = ''
+  }
+  /**
+   * @Author   小书包
+   * @DateTime 2019-08-07
+   * @detail   获取销售列表
+   * @return   {[type]}   [description]
+   */
+  getSalerList() {
+    getSalerListApi().then(res => this.saleLists = res.data.data)
   }
   mounted() {
     this.init()
