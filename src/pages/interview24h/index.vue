@@ -1124,9 +1124,17 @@ export default class Interview24h extends Vue {
         this.model.showConfirmBtn = false
         this.model.btnTxt = '返回'
         if(data.arrangementInfo) {
-          let dateLists2 = data.arrangementInfo.appointmentList
-          dateLists2.map(field => field.active = false)
-          this.model.dateLists = dateLists2
+          if(data.arrangementInfo.appointmentList) {
+            let dateLists2 = data.arrangementInfo.appointmentList
+            dateLists2.map(field => field.active = false)
+            this.model.dateLists = dateLists2
+          } else {
+            this.model.dateLists.push({
+              active: true,
+              appointment: data.arrangementInfo.appointment,
+              appointmentTime: data.arrangementInfo.appointmentTime
+            })
+          }
           this.model.position.name = data.positionName
           this.model.position.positionId = data.positionId
           this.model.address.addressName = data.address
