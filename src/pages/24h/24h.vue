@@ -120,7 +120,7 @@
         prop="seatsNum"
         label="剩余席位">
         <template slot-scope="scope">
-          {{scope.row.seatsNum - scope.row.applyNum}}
+          {{scope.row.seatsNum - scope.row.applyNum - Math.floor(scope.row.seatsNum * 0.3)}}
         </template>
       </el-table-column>
       <el-table-column
