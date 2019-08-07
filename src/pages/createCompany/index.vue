@@ -222,7 +222,7 @@
               width="250"
               height="250"
               :showBtn="item.isEditing"
-              v-model="item.logoInfo.smallUrl || ''"
+              v-model="item.logoInfo.url || ''"
               @loaded="handleProductIconLoaded"
             />
             <div class="func_zone" style="position: absolute;right: 0;top: 0;" v-if="!item.isEditing">
