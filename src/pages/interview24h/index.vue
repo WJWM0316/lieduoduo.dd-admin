@@ -528,7 +528,7 @@
           <li class="time_row" v-for="(item, index) in model.dateLists" :key="index">
             <i class="el-icon-remove" @click="deleteTime(index)"></i>
             <span @click="selectTime(index)">
-              {{item.value}}
+              {{item.appointment}}
               <span class="circle" :class="{active: item.active}"></span>
             </span>
           </li>
@@ -850,25 +850,33 @@ export default class Interview24h extends Vue {
    * @param    {[type]}   index [description]
    */
   confirm() {
-    let interviewTime = this.model.dateLists.find(field => field.active)
-    if(interviewTime) interviewTime = String(Date.parse(new Date(interviewTime.appointment)) / 1000)
+    let dateList = this.model.dateLists.filter(field => field.active)
+    if(dateList.length) dateList = dateList.map(field => field.appointmentTime).join(',')
     let data = this.model.item
     switch(this.model.type) {
       case 'arrange':
-        if(interviewTime) {
-          this.model.show = false
-          this.setInterviewInfo({
-            interviewId: this.model.interviewId,
-            realname: this.form.realname,
-            mobile: this.form.mobile,
-            addressId: this.model.address.addressId,
-            interviewTime,
-            positionId: this.model.position.positionId
-          })
-        } else {
-          this.$message.error('请选择一个面试时间')
+        if(!this.model.position.positionId) {
+          this.$message.error('请选择一个职位')
+          return
         }
-        
+        if(!this.model.address.addressId) {
+          this.$message.error('请选择一个地址')
+          return
+        }
+        if(!dateList.length) {
+          this.$message.error('请至少添加一个约面时间')
+          return
+        }
+        this.setInterviewInfo({
+          interviewId: this.model.interviewId,
+          realname: this.form.realname,
+          mobile: this.form.mobile,
+          addressId: this.model.address.addressId,
+          interviewTime: dateList,
+          positionId: this.model.position.positionId
+        }).then(() => {
+          this.model.show = false
+        })
         break;
       case 'modify':
         this.model.show = false
@@ -877,7 +885,7 @@ export default class Interview24h extends Vue {
           realname: this.form.realname,
           mobile: this.form.mobile,
           addressId: this.model.address.addressId,
-          interviewTime,
+          interviewTime: dateList,
           positionId: this.model.position.positionId
         })
         break;
@@ -1205,7 +1213,8 @@ export default class Interview24h extends Vue {
   getTime(e) {
     this.model.dateLists.push({
       appointment: e,
-      active: false
+      active: false,
+      appointmentTime: Date.parse(new Date(e)) / 1000
     })
   }
   /**
