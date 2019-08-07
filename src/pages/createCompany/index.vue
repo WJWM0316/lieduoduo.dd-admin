@@ -873,8 +873,10 @@ export default class createCompany extends Vue {
    * @return   {[type]}   [description]
    */
   handleChangeImage() {
-    this.files = document.querySelector('#image').files
-    Array.from(this.files).map((file, index) => {
+    let commonList = this.commonList
+    let fileLists = document.querySelector('#image').files
+    fileLists = Array.from(fileLists).slice(0, 20 - this.commonList.length)
+    Array.from(fileLists).map((file, index) => {
       let reader = new FileReader()
       let formData = new FormData()
       reader.readAsDataURL(file)
