@@ -125,7 +125,14 @@ export default class H24_POST extends Vue {
     })
   }
   reset() {
-    this.getRapidlySurface()
+    this.$confirm('', '退出将不保存更改的内容, 是否继续?', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+      center: true
+    }).then(() => {
+      this.$router.go(-1)
+    }).catch(() => {})
   }
   created() {
     if(this.$route.name === 'h24_edit') this.getRapidlySurface()

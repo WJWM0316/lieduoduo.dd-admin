@@ -753,7 +753,7 @@ export default class Interview24h extends Vue {
     let params = {
       tab_status: tab.id,
       page: this.form.page,
-      count: 20
+      count: this.pageSize
     }
     if(this.form.companyName) {
       params = Object.assign(params, {companyName: this.form.companyName})
@@ -1058,6 +1058,7 @@ export default class Interview24h extends Vue {
    */
   pageChange(page) {
     this.form.page = page
+    this.getQuickApplyInterview()
   }
   /**
    * @Author   小书包
@@ -1244,12 +1245,15 @@ export default class Interview24h extends Vue {
   init() {
     let query = this.$route.query
     this.form = Object.assign(this.form, query)
+    if(this.form.status) this.form.status = Number(this.form.status)
+    if(this.form.last_status) this.form.last_status = Number(this.form.last_status)
     if(query.tab_status) {
       this.navigation.map(field => field.active = query.tab_status == field.id ? true : false)
     } else {
       this.navigation[0].active = true
     }
     this.getQuickApplyInterview()
+    this.getInterviewFisrtStatusLists()
   }
   /**
    * @Author   小书包
@@ -1508,6 +1512,10 @@ export default class Interview24h extends Vue {
    * @return   {[type]}          [description]
    */
   editPositionAddress(params) {
+    if(!params.areaName) {
+      delete params.areaName
+      params.areaId = this.form.address.areaId
+    }
     return editPositionAddressApi(params)
   }
   /**
@@ -1537,7 +1545,8 @@ export default class Interview24h extends Vue {
         doorplate: infos.doorplate,
         lng: infos.lng,
         lat: infos.lat,
-        id: infos.id
+        id: infos.id,
+        areaId: infos.areaId
       }
       this.model.type = 'edit_address'
       this.model.show = true
@@ -1576,6 +1585,7 @@ export default class Interview24h extends Vue {
    * @return   {[type]}   [description]
    */
   getInterviewFisrtStatusLists() {
+    let query = this.$route.query
     return getInterviewFisrtStatusListsApi().then(res0 => {
       getInterviewSecondStatusListsApi().then(res1 => {
         this.statusChildLists = res1.data.data
@@ -1597,7 +1607,6 @@ export default class Interview24h extends Vue {
   }
   mounted() {
     this.init()
-    this.getInterviewFisrtStatusLists()
   }
 }
 </script>

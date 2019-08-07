@@ -189,13 +189,13 @@ export default class H24 extends Vue {
     position_id: '',
     start_time: '',
     end_time: '',
-    count: 20
+    count: this.pageSize
   }
   lists = []
   getRapidlySurfaceList() {
     let tab = this.navigation.find(field => field.active)
     let params = {
-      count: 20,
+      count: this.pageSize,
       page: this.form.page,
       tab: tab.id
     }
@@ -225,6 +225,7 @@ export default class H24 extends Vue {
   }
   pageChange(page) {
     this.form.page = page
+    this.getRapidlySurfaceList()
   }
   todoAction(type, data) {
     switch(type) {
