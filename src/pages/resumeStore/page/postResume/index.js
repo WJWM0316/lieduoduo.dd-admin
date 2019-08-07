@@ -659,6 +659,12 @@ export default class PostResume extends Vue {
      */
     handleChangeImage() {
       this.files = document.querySelector('#image').files
+      console.log(this.files)
+      let num = this.files.length+this.introImgList.length
+      if(num>20){
+        this.$message.error('图片最多只能有20张')
+        return
+      }
       Array.from(this.files).map((file, index) => {
         let reader = new FileReader()
         let formData = new FormData()
