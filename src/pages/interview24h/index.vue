@@ -253,7 +253,7 @@
       </el-form-item>
 
       <el-form-item label="状态">
-        <el-select v-model="form.status" placeholder="全部状态">
+        <el-select v-model="form.status" placeholder="全部状态" :disabled="form.tab_status !== '1'">
           <el-option
             v-for="item in statusLists"
             :key="item.status"
@@ -290,7 +290,7 @@
       <el-table-column
         prop="interviewId"
         width="80"
-        label="面试id">
+        label="面试ID">
       </el-table-column>
       <el-table-column
         prop="jobhunterInfo"
@@ -656,7 +656,7 @@ export default class Interview24h extends Vue {
   options = [
     {
       value: 'id',
-      label: '面试id'
+      label: '面试ID'
     },
     {
       value: 'jobhunter',
@@ -701,6 +701,7 @@ export default class Interview24h extends Vue {
   total = 99
   pageSize = 20
   form = {
+    tab_status: '1',
     admin_uid: '',
     companyName: '',
     searchType: 'id',
@@ -780,7 +781,7 @@ export default class Interview24h extends Vue {
     if(this.form.status === 52) {
       params = Object.assign(params, {last_status: this.form.last_status})
     }
-    getQuickApplyInterviewApi(params).then(res => {
+    return getQuickApplyInterviewApi(params).then(res => {
       let infos = res.data
       this.total = infos.meta.total
       this.lists = infos.data
@@ -1061,7 +1062,10 @@ export default class Interview24h extends Vue {
   tabClick(type) {
     this.navigation.map(field => field.active = type === field.type ? true : false)
     this.form.content = ''
-    this.getQuickApplyInterview()
+    this.getQuickApplyInterview().then(() => {
+      this.form.tab_status = this.$route.query.tab_status
+      console.log(this.form)
+    })
   }
   /**
    * @Author   小书包
