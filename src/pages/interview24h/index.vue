@@ -1597,6 +1597,7 @@ export default class Interview24h extends Vue {
       mobile: '',
       realname: '',
       isAttend: '0',
+      tab_status: '1',
       address: {
         mobile: '',
         title: '',
