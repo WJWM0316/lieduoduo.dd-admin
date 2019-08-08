@@ -54,7 +54,7 @@ export default class login extends Vue {
     loginApi(this.loginForm)
       .then(res => {
         let { groupId, isAdmin, isGroupAdmin } = res.data.data;
-        let isShowResumeHandle = res.data.data.groupId === 3 && res.data.data.groupId === 4 && (res.data.data.groupId === 6 && !res.data.data.isGroupAdmin)
+        let isShowResumeHandle = res.data.data.groupId === 3 || res.data.data.groupId === 4 || (res.data.data.groupId === 6 && !res.data.data.isGroupAdmin)
         sessionStorage.setItem("email", this.loginForm.email);
         sessionStorage.setItem("avar", res.data.data.avatarInfo.smallUrl);
         sessionStorage.setItem("name", res.data.data.realname);

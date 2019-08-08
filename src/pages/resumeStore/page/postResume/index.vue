@@ -4,6 +4,7 @@
     <div class="TabView">
       <div class="createOrder">
         <!-- <p class="title">新建简历</p> -->
+        {{isShowResumeHandle}}
         <div class="CreateContent">
           <h4 class="classifyTitle">基本信息 <span class="edit_span" v-if="!isEditForm1" @click="setEdit(1)">编辑</span></h4>
           <div class="infoCont" v-if="!isEditForm1">

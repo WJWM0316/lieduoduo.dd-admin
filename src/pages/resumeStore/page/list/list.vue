@@ -10,6 +10,8 @@
       <!-- <div class="class" slot="text" @click.stop="createResume2">新建简历</div> -->
       <div class="formSumbit" slot="formContent">
         <div class="formReasult">
+        {{isShowResumeHandle}}
+
           <el-form ref="form" :model="form" class="form">
             <el-form-item label-width="80px" label="模糊搜索">
               <el-input
@@ -582,7 +584,7 @@ export default class resumeStore extends Vue {
   closeWork = false; /* 关闭工作经验弹框 */
   CompletionDisabled = false;
   TabShow = true;
-  isShowResumeHandle = false  //是否展示简历编辑添加按钮
+  isShowResumeHandle = true  //是否展示简历编辑添加按钮
   /* 完整度 */
   CompletionCheck(e) {
     /* 不限条件 0  全部条件1 */
@@ -869,6 +871,7 @@ export default class resumeStore extends Vue {
   mounted() {
     let AdminShow = +sessionStorage.getItem("AdminShow");
     this.isSales = /(3|4)/.test(AdminShow) ? false : true;
+    // this.isShowResumeHandle = sessionStorage.getItem("isShowResumeHandle")
   }
   created() {
     this.degreeData();
@@ -877,8 +880,6 @@ export default class resumeStore extends Vue {
     this.CityData();
     this.getData();
     this.field();
-    
-    this.isShowResumeHandle = Boolean(sessionStorage.getItem("isShowResumeHandle"))
   }
   field() {
     fieldApi().then(res => {

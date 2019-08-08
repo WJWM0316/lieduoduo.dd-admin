@@ -430,10 +430,14 @@ export default class PostResume extends Vue {
         await setIntroduceApi(params)
       } else if (type === '8') {
 
-        if(!this.form8.attach_name && !this.attach_resume){
-          await deleteAttachApi(this.uid)
+        if(!this.editMsg.resumeAttach && !this.form8.attach_resume){
+
         }else {
-          await setAttachResumeApi(params)
+          if(!this.form8.attach_name && !this.form8.attach_resume){
+            await deleteAttachApi(this.uid)
+          }else {
+            await setAttachResumeApi(params)
+          }
         }
       }
       this.haveCard = 2
