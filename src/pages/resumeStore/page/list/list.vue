@@ -647,7 +647,8 @@ export default class resumeStore extends Vue {
             this.$router.push({
               path: "/user/addUser",
               query: {
-                create_resume: true
+                create_resume: true,
+                resumetype: 2
               }
             })
           })

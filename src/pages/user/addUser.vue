@@ -273,9 +273,15 @@ export default class addUser extends Vue {
               gender: newUser.gender
             };
             if (create_resume) {
+              let name = `createNewResume`
+              let resumeType = this.$route.query.resumetype === 2
+              if(resumeType) {
+                userInfo.uid = newUser.uid
+                name = `postResume`
+              }
               // 重定向到创建微简历
               this.$router.replace({
-                path: "/resumeStore/list/createNewResume",
+                name: name,
                 query: {
                   userInfo: JSON.stringify(userInfo)
                 }

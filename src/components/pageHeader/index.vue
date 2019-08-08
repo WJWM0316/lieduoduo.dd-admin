@@ -6,7 +6,6 @@
         <a>{{nowLinkName}}</a>
       </el-breadcrumb-item>
     </el-breadcrumb>
-
     <ul class="navigation">
       <li style="position: relative; cursor: pointer;" @click.stop="showExit">
         <img v-if="avar" :src="avar" class="avar">

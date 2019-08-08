@@ -99,6 +99,7 @@ export const routes = [
     meta: {
       title: "新建微简历",
       haveParent: true,
+      parentPath:"/resumeStore/list",
       parentName: "简历列表",
       keepAlive: false,
       flag: "resumeStore"
@@ -113,6 +114,7 @@ export const routes = [
     meta: {
       title: "操作简历",
       haveParent: true,
+      parentPath:"/resumeStore/list",
       parentName: "简历列表",
       keepAlive: false,
       flag: "resumeStore"

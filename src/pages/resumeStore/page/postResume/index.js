@@ -66,7 +66,6 @@ export default class PostResume extends Vue {
   canform = Sumbitform
 
   /* 提示语 */
-  nowUserMsg = {} /* 当前操作的用户数据 */
   closeModel = false
   autoUpload = false
   showClose = false
@@ -81,7 +80,16 @@ export default class PostResume extends Vue {
   form = {
     mobile: "" /* 手机号 */,
   }
-
+  haveCard = null // 用户是否有简历
+  validate_salary = (rule, value, callback) => {
+    if (!value) {
+      callback(new Error("请选择期望的最低月薪"));
+    }else if(!this.form3.salaryCeil) {
+      callback(new Error("请选择期望的最高月薪"));
+    } else {
+      callback();
+    }
+  }
   rules = {
     name: [
       { required: true, message: '请输入姓名', trigger: "blur" },
@@ -117,33 +125,36 @@ export default class PostResume extends Vue {
       }
     ],
     salaryFloor: [
-      { required: true, message: "请选择期望的最低月薪", trigger: "blur" }
+        
+      { required: true, validator: this.validate_salary, trigger: "blur" }
     ],
     fieldIds: [
       { required: true, message: "请选择你期望的领域", trigger: "blur" }
     ],
+    introduce: [
+      { min: 1, message: '更多介绍不得少于1个字', trigger: 'blur' },
+      { max: 250, message: '更多介绍最多输入250个字', trigger: 'blur' }
+    ],
+  }
+  rules4 = {
     company: [
       { required: true, message: '请输入公司名称', trigger: "blur" },
       { min: 2, message: '公司名称不得少于2个字', trigger: 'blur' },
       { max: 50, message: '公司名称最多输入50个字', trigger: 'blur' }
     ],
-    positionTypeId: [{ required: true, message: '请选择职位类别', trigger: "blur" }],
     position: [
       { required: true, message: '请输入职位名称', trigger: "blur" },
       { min: 2, message: '职位名称不得少于2个字', trigger: 'blur' },
       { max: 20, message: '职位名称最多输入20个字', trigger: 'blur' }
     ],
-    labelIds: [{ required: true, message: '请选择技能标签', trigger: "blur" }],
+    positionTypeId: [{ required: true, message: '请选择职位类别', trigger: "blur" }],
     startTime: [{ required: true, message: '请选择开始时间', trigger: "blur" }],
-    endTime4: [{ required: true, message: '请选择结束时间', trigger: "blur" }],
+    endTime: [{ required: true, message: '请选择结束时间', trigger: "blur" }],
+    labelIds: [{ required: true, message: '请选择技能标签', trigger: "blur" }],
     duty: [
       { required: true, message: '请输入工作内容', trigger: "blur" },
       { min: 10, message: '工作内容不得少于10个字', trigger: 'blur' },
       { max: 1000, message: '工作内容最多输入1000个字', trigger: 'blur' }
-    ],
-    introduce: [
-      { min: 1, message: '更多介绍不得少于1个字', trigger: 'blur' },
-      { max: 250, message: '更多介绍最多输入250个字', trigger: 'blur' }
     ],
   }
   rules5 = {
@@ -183,11 +194,10 @@ export default class PostResume extends Vue {
       { min: 1, message: '在校经历不得少于1个字', trigger: 'blur' },
       { max: 1000, message: '在校经历最多输入1000个字', trigger: 'blur' }
     ],
-    endTime: [{ required: true, message: '请选择结束时间', trigger: "blur" }],
+    endTime4: [{ required: true, message: '请选择结束时间', trigger: "blur" }],
     startTime: [{ required: true, message: '请选择开始时间', trigger: "blur" }],
   }
   options = []
-  title = '创建简历'
   iconUploader = {
     point: '',
     src:"",
@@ -207,7 +217,9 @@ export default class PostResume extends Vue {
   }
   headicon = ''
   uid = null   // 求职者uid
-  editMsg = {}
+  editMsg = {
+
+  }
   handleStatus = ''  // add edit 
   // form1
     jobhuntStatus = [] // 求职状态
@@ -306,30 +318,33 @@ export default class PostResume extends Vue {
       attach_resume: '',     // 介绍文本
       attach_name: '',     // 图片附件ids，多个id以逗号分隔
     }
+
+  
   created() {
     let query = this.$route.query
     query.userInfo = JSON.parse(this.$route.query.userInfo)
-    this.form1.mobile = query.userInfo.mobile
-    this.uid = query.userInfo.uid
-    this.form1.gender = String(query.userInfo.gender);
-    this.form1.name = query.userInfo.name
 
-    this.title = query.isEdit ? '编辑简历' : '创建简历'
-    if (query.isEdit) {
-      this.editInit()
-    } else {
-      this.addInit()
+    // query.userInfo = {
+    //   mobile: 13093177279
+    // }
+    this.uid = query.userInfo.uid
+    console.log(query.userInfo)
+    if(!this.uid && !query.userInfo.mobile) {
+      this.$message({
+        message: '信息不全',
+        type: 'warning'
+      })
+      return
+    }else if(!this.uid && query.userInfo.mobile){
+      this.mobileToGetInfo(query.userInfo.mobile).then(() => {
+        this.init()
+      })
+    }else {
+      this.init()
     }
-    // /label/professionalSkills
-    this.getResumeDetails()
-    this.salary()
-    this.getField()
-    this.getCityData()
-    this.manageList()
-    this.getJobhuntStatus()
-    this.getDegreeList()
-    this.getProfessionalSkills()
-    this.getLifeLabel()
+    /*if (query.isEdit) {
+    }*/
+    
   }
   getLifeLabel() {
     getLifeLabelApi().then(res => {
@@ -340,14 +355,20 @@ export default class PostResume extends Vue {
     var date = new Date(time + 8 * 3600 * 1000)
     return date.toJSON().substr(0, 10).replace('T', ' ')
   }
-  addInit () {
-  }
-
-  editInit () {
+  init () {
+    if(this.haveCard !== 0) this.getResumeDetails()
+    this.salary()
+    this.getField()
+    this.getCityData()
+    this.manageList()
+    this.getJobhuntStatus()
+    this.getDegreeList()
+    this.getProfessionalSkills()
+    this.getLifeLabel()
   }
 
   getResumeDetails() {
-    GetResumeDetailsAPI(this.uid).then(res => {
+    return GetResumeDetailsAPI(this.uid).then(res => {
       console.log(res.data.data)
       this.editMsg = res.data.data
     })
@@ -436,19 +457,21 @@ export default class PostResume extends Vue {
     } 
 
     if(type === 1) {
+      console.log(this.editMsg.mobile)
       this[`form${type}`].mobile = this.editMsg.mobile
       this[`form${type}`].name = this.editMsg.name
       this[`form${type}`].gender = String(this.editMsg.gender)
-      this[`form${type}`].startWorkYear = this.editMsg.startWorkYear
+      this[`form${type}`].startWorkYear = this.editMsg.startWorkYear*1000
       this[`form${type}`].jobStatus = this.editMsg.jobStatus
       this[`form${type}`].wechat = this.editMsg.wechat
       this[`form${type}`].signature = this.editMsg.signature
-      this[`form${type}`].birth = this.editMsg.birth
+      this[`form${type}`].birth = this.editMsg.birth*1000
       this.iconUploader.src = this.editMsg.avatar.smallUrl
       this[`form${type}`].avatar = this.editMsg.avatar.id
     }
 
     if(type === 2) {
+
       this[`form${type}`].literacyLabels = []
       this[`form${type}`].skillLabels = []
       this[`form${type}`].lifeLabels = []
@@ -464,37 +487,38 @@ export default class PostResume extends Vue {
           this.selectedJobList.push(item)
         }
       })
-
-      console.log()
     }
 
     if(type === 3) {
-      this[`form${type}`].salaryCeil = item.salaryCeil
       this[`form${type}`].salaryFloor = item.salaryFloor
-      // this[`form${type}`].fieldIds = item.fieldIds[0]
+      this.changeMin(item.salaryFloor)
+      this[`form${type}`].salaryCeil = item.salaryCeil
+      this[`form${type}`].fieldIds = item.fieldIds.map(item => {
+        return parseInt(item)
+      })
       this[`form${type}`].cityNum = [item.provinceNum,item.cityNum]
-      this[`form${type}`].positionId = [item.fieldIds[0],item.positionId]
+      this[`form${type}`].positionId = [item.positionTypeTopPid,item.positionTypePid,item.positionId]
     }
 
     if(type === 4) {
       this[`form${type}`].company = item.company
       this[`form${type}`].positionTypeId = [item.positionTypeTopPid,item.positionTypePid,item.positionTypeId]
-      this[`form${type}`].startTime = item.startTime
-      this[`form${type}`].endTime = item.endTime
+      this[`form${type}`].startTime = item.startTime*1000
+      this[`form${type}`].endTime = item.endTime*1000
       this[`form${type}`].position = item.position
       this[`form${type}`].duty = item.duty
       this[`form${type}`].labelIds = item.technicalLabelIds.map(item => {
         return parseInt(item)
       })
-
+      // this[`form${type}`].labelIds = [item.positionTypePid]
       this.setProfessionalSkills()
     }
 
     if(type === 5) {
       this[`form${type}`].school = item.school
       this[`form${type}`].degree = item.degree
-      this[`form${type}`].startTime = item.startTime
-      this[`form${type}`].endTime = item.endTime
+      this[`form${type}`].startTime = item.startTime*1000
+      this[`form${type}`].endTime = item.endTime*1000
       this[`form${type}`].major = item.major
       this[`form${type}`].experience = item.experience
     }
@@ -502,8 +526,8 @@ export default class PostResume extends Vue {
     if(type === 6) {
       this[`form${type}`].school = item.school
       this[`form${type}`].degree = item.degree
-      this[`form${type}`].startTime = item.startTime
-      this[`form${type}`].endTime = item.endTime
+      this[`form${type}`].startTime = item.startTime*1000
+      this[`form${type}`].endTime = item.endTime*1000
       this[`form${type}`].major = item.major
       this[`form${type}`].experience = item.experience
     }
@@ -514,11 +538,16 @@ export default class PostResume extends Vue {
           ...item
         }
       })
-
-      console.log(this.introImgList)
     }
 
-    // this set value
+    if(type === 8) {
+      this[`form${type}`].attach_resume = this.editMsg.resumeAttach.id
+      this[`form${type}`].attach_name = this.editMsg.resumeAttach.fileName
+      this.fileList.push({
+        id: this.editMsg.resumeAttach.id,
+        name: this.editMsg.resumeAttach.fileName
+      })
+    }
   }
 
   async setDelete (type, item) {
@@ -529,7 +558,6 @@ export default class PostResume extends Vue {
       })
       return
     }
-    console.log(type)
     try {
       if (type === 3) {
         await deleteExpectApi({
@@ -753,20 +781,42 @@ export default class PostResume extends Vue {
             this.$router.push({
               path: "/user/addUser",
               query: {
-                create_resume: true
+                create_resume: true,
+                resumetype: 2
               }
             })
           })
         } else {
           // 满足需求
+
           canPush = 2
           this.uid = res.data.data.cardInfo.uid
           this.dialogVisible = false
-
-          this.getResumeDetails()
+          this.getResumeDetails().then( () => {
+            this.handleStatus = ''
+            this.setEdit(1)
+          })
         }
       })
     }
+  }
+  mobileToGetInfo(mobile){
+    return haveMobile(mobile).then(res => {
+      console.log(res.data.data.cardInfo)
+      let data = res.data.data
+      if (data.userExist) {
+        this.haveCard = data.haveCard
+        this.uid = data.cardInfo.uid
+        this.editMsg = {
+          avatar: data.cardInfo.avatar,
+          mobile: mobile,
+          gender: data.cardInfo.gender,
+          name: data.cardInfo.name
+        }
+
+        console.log(this.editMsg )
+      }
+    })
   }
   goPath(e) {
     this.$router.push({
@@ -788,7 +838,26 @@ export default class PostResume extends Vue {
   changeTimeStamp(e, type) {
     this.form[type] = parseInt(e / 1000)
   }
-  UploadImage(param) {
+
+  beforeUpload(param) {
+    console.log(param.name)
+    let name = param.name.split(".")[1]
+    let fileNames = ['png','jpg','pdf','doc','docx']
+    let isUpload = fileNames.indexOf(name)
+    if(isUpload<0){
+      this.$message({
+        message: "只支持png,jpg,pdf,doc,docx"
+      })
+      return false
+    }
+  }
+
+  removeUpload() {
+    this.form8.attach_resume = ''
+    this.form8.attach_name = ''
+  }
+
+  uploadFile(param) {
     let name = param.file.name.split(".")[1]
     let type = /(jpg|gif|png|peg|bmp)/.test(name) ? "img" : "doc"
     const formData = new FormData()
@@ -799,7 +868,7 @@ export default class PostResume extends Vue {
       const msg = res.data.data[0]
       this.form8.attach_resume = msg.id
       this.form8.attach_name = msg.fileName
-    });
+    })
   }
   /* 验证手机号码 */
   checkMobile(e) {
@@ -826,9 +895,8 @@ export default class PostResume extends Vue {
             type: "warning"
           })
         } else {
-          this.form.mobile = e
+          this.uid = res.data.data.cardInfo.uid
           this.dialogVisible = false
-          this.nowUserMsg = res.data.data.cardInfo
         }
         // if(res)
       })
@@ -908,7 +976,7 @@ export default class PostResume extends Vue {
   changeLifeLabels(e) {
     let res = {}
     let isHas = false
-    if (this.selectedLifeList.length>4) return
+    if (this.selectedLifeList.length>2) return
     this.selectedLifeList.map(item => {
       if (item.labelId === e) {
         isHas = true
@@ -940,8 +1008,17 @@ export default class PostResume extends Vue {
     for (let i = +val;i < length;i++) {
       this.maxSalary.push(parseInt(+i + 1))
     }
+    this.form3.salaryCeil = ''
   }
   changeCity(e) {
+    console.log(e)
+    // this.form3.cityNum = e[e.length - 1]
+  }
+  changepositionId(e) {
+    console.log(e)
+    // this.form3.cityNum = e[e.length - 1]
+  }
+  changefieldIds(e) {
     console.log(e)
     // this.form3.cityNum = e[e.length - 1]
   }
@@ -990,6 +1067,7 @@ export default class PostResume extends Vue {
       })
     })
   }
+
   // 行业
   getField() {
     fieldApi().then(res => {
@@ -997,6 +1075,7 @@ export default class PostResume extends Vue {
       // console.log("行业", this.fieldList)
     })
   }
+
   salary() {
     let minSalary = new Array(60)
     for (var i = 0; i < minSalary.length; i++) {
