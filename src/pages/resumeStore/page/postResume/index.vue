@@ -4,7 +4,6 @@
     <div class="TabView">
       <div class="createOrder">
         <!-- <p class="title">新建简历</p> -->
-        {{isShowResumeHandle}}
         <div class="CreateContent">
           <h4 class="classifyTitle">基本信息 <span class="edit_span" v-if="!isEditForm1" @click="setEdit(1)">编辑</span></h4>
           <div class="infoCont" v-if="!isEditForm1">
@@ -229,33 +228,7 @@
               求职意向
               <el-button class="titleAdd" size="medium" type="primary" @click="addBlock(3)">添加求职意向</el-button>
             </h4>
-            <div class="infoCont" v-for="item,index in editMsg.expects"  v-if="!isEditForm3">
-              <span class="info_edit" v-if="!isEditForm3" @click="setEdit(3,item)">编辑</span>
-              <span class="info_delete" v-if="!isEditForm3 && editMsg.expects.length>1" @click="setDelete(3,item)">删除</span>
-              <div class="line_blo">
-                <div class="row_blo">
-                  <span class="label_name">期望城市:</span>
-                  <div class="label_value">{{item.city}}</div>
-                </div>
-                <div class="row_blo">
-                  <span class="label_name">期望职位:</span>
-                  <div class="label_value">{{item.position}}</div>
-                </div>
-              </div>
-              <div class="line_blo">
-                <div class="row_blo">
-                  <span class="label_name">期望薪资:</span>
-                  <div class="label_value" v-if="item.salaryFloor">{{item.salaryFloor}}k-{{item.salaryCeil}}k</div>   
-                </div>
-                <div class="row_blo">
-                  <span class="label_name">期望领域:</span>
-                  <div class="label_value" v-if="item.fields">
-                    <span class="value_span" v-for="item2 in item.fields">{{item2.field}}</span>
-                  </div>              
-                </div>
-              </div>
-            </div>
-            <el-form :model="form3" :rules="rules" ref="form3" class="demo-ruleForm" v-else>
+            <el-form :model="form3" :rules="rules" ref="form3" class="demo-ruleForm" v-if="isEditForm3">
               <el-form-item label="期望城市" label-width="80px" class="formItem" prop="cityNum">
                 <el-cascader
                   v-model="form3.cityNum"
@@ -324,6 +297,33 @@
                 <el-button size="medium" type="primary" @click="handleSubmit(3)">确定</el-button>
               </el-form-item>
             </el-form>
+            <div class="infoCont" v-for="item,index in editMsg.expects"  v-else >
+              <span class="info_edit" v-if="!isEditForm3" @click="setEdit(3,item)">编辑</span>
+              <span class="info_delete" v-if="!isEditForm3 && editMsg.expects.length>1" @click="setDelete(3,item)">删除</span>
+              <div class="line_blo">
+                <div class="row_blo">
+                  <span class="label_name">期望城市:</span>
+                  <div class="label_value">{{item.city}}</div>
+                </div>
+                <div class="row_blo">
+                  <span class="label_name">期望职位:</span>
+                  <div class="label_value">{{item.position}}</div>
+                </div>
+              </div>
+              <div class="line_blo">
+                <div class="row_blo">
+                  <span class="label_name">期望薪资:</span>
+                  <div class="label_value" v-if="item.salaryFloor">{{item.salaryFloor}}k-{{item.salaryCeil}}k</div>   
+                </div>
+                <div class="row_blo">
+                  <span class="label_name">期望领域:</span>
+                  <div class="label_value" v-if="item.fields">
+                    <span class="value_span" v-for="item2 in item.fields">{{item2.field}}</span>
+                  </div>              
+                </div>
+              </div>
+            </div>
+            
 
             <h4 class="classifyTitle">
               工作经历

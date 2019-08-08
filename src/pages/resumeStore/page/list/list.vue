@@ -871,7 +871,8 @@ export default class resumeStore extends Vue {
   mounted() {
     let AdminShow = +sessionStorage.getItem("AdminShow");
     this.isSales = /(3|4)/.test(AdminShow) ? false : true;
-    // this.isShowResumeHandle = sessionStorage.getItem("isShowResumeHandle")
+    this.isShowResumeHandle = sessionStorage.getItem("isShowResumeHandle")
+    console.log(this.isShowResumeHandle)
   }
   created() {
     this.degreeData();
