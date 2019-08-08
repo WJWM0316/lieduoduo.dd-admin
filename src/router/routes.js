@@ -188,7 +188,7 @@ export const routes = [
         path: "24h",
         name: "interview24h",
         meta: {
-          title: "24h反馈专场管理",
+          title: "24h急速反馈",
           haveParent: true,
           flag: "interview"
         },
