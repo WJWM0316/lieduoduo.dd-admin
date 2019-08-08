@@ -489,6 +489,8 @@ export default class PostResume extends Vue {
       this[`form${type}`].literacyLabels = []
       this[`form${type}`].skillLabels = []
       this[`form${type}`].lifeLabels = []
+      this.selectedJobList = []
+      this.selectedLifeList = []
       this.editMsg.personalizedLabels.map(item => {
         if (item.type === 'label_life') {
           this[`form${type}`].lifeLabels.push({labelId: item.labelId})
@@ -621,6 +623,7 @@ export default class PostResume extends Vue {
       newForm.skillLabels = []
       newForm.literacyLabels =  []
       newForm.lifeLabels =  []
+
       this.selectedJobList.map(item => {
         if (item.type === 'label_professional_skills') {
           newForm.skillLabels.push({labelId:item.labelId})
@@ -640,7 +643,6 @@ export default class PostResume extends Vue {
     }
 
     if (name === 'form4') {
-      
       newForm.positionTypeId =  newForm.positionTypeId[newForm.positionTypeId.length - 1]
       newForm.startTime =  newForm.startTime/1000
       newForm.endTime =  newForm.endTime/1000
@@ -648,7 +650,6 @@ export default class PostResume extends Vue {
     }
 
     if (name === 'form5') {
-      newForm.startTime =  newForm.startTime/1000
       newForm.startTime =  newForm.startTime/1000
       newForm.endTime =  newForm.endTime/1000
     }
