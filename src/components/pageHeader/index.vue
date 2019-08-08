@@ -140,6 +140,7 @@ export default class ComponentHeader extends Vue {
   toLogin() {
     removeAccessToken();
     this.isShow = false;
+    sessionStorage.removeItem("isShowResumeHandle");
     this.$router.push({
       path: "/login"
     });

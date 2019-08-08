@@ -2,7 +2,7 @@
   <div class="resumeStore" @click.stop="closeSubEvent">
     <lyout-content
       :leftcontent="leftcontent"
-      :isShowbtn="true"
+      :isShowbtn="true && isShowResumeHandle"
       ref="methods"
       @handlePageChange="handlePageChange"
     >
@@ -10,8 +10,6 @@
       <!-- <div class="class" slot="text" @click.stop="createResume2">新建简历</div> -->
       <div class="formSumbit" slot="formContent">
         <div class="formReasult">
-        {{isShowResumeHandle}}
-
           <el-form ref="form" :model="form" class="form">
             <el-form-item label-width="80px" label="模糊搜索">
               <el-input
@@ -365,7 +363,14 @@ let Sumbitform = {
     resumePopup,
     filterAnswer
   },
-  watch: {}
+  watch: {
+    '$route': {
+      handler() {
+        this.isShowResumeHandle = sessionStorage.getItem('isShowResumeHandle') === 'false' ? false : true
+      },
+      immediate: true
+    }
+  }
 })
 export default class resumeStore extends Vue {
   startrules = false;
@@ -871,8 +876,6 @@ export default class resumeStore extends Vue {
   mounted() {
     let AdminShow = +sessionStorage.getItem("AdminShow");
     this.isSales = /(3|4)/.test(AdminShow) ? false : true;
-    this.isShowResumeHandle = sessionStorage.getItem("isShowResumeHandle")
-    console.log(this.isShowResumeHandle)
   }
   created() {
     this.degreeData();
