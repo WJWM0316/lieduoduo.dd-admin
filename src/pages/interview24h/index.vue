@@ -235,7 +235,7 @@
           <el-select
             v-model="form.searchType"
             slot="prepend"
-            placeholder="面试id"
+            placeholder="面试ID"
             @change="changeSearch"
           >
             <el-option
