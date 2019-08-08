@@ -6,7 +6,7 @@
       ref="methods"
       @handlePageChange="handlePageChange"
     >
-      <div class="class" slot="text" @click.stop="createResume">新建简历</div>
+      <div class="class" v-if="isShowResumeHandle" slot="text" @click.stop="createResume">新建简历</div>
       <!-- <div class="class" slot="text" @click.stop="createResume2">新建简历</div> -->
       <div class="formSumbit" slot="formContent">
         <div class="formReasult">
@@ -229,7 +229,7 @@
                 </div>
               </div>
               <div class="seeResume">
-                <el-button class="" @click.stop="editResume(item)">编辑简历</el-button>
+                <el-button class="" @click.stop="editResume(item)" v-if="isShowResumeHandle">编辑简历</el-button>
 
                 <div
                   class=""
@@ -582,6 +582,7 @@ export default class resumeStore extends Vue {
   closeWork = false; /* 关闭工作经验弹框 */
   CompletionDisabled = false;
   TabShow = true;
+  isShowResumeHandle = false  //是否展示简历编辑添加按钮
   /* 完整度 */
   CompletionCheck(e) {
     /* 不限条件 0  全部条件1 */
@@ -876,6 +877,8 @@ export default class resumeStore extends Vue {
     this.CityData();
     this.getData();
     this.field();
+    
+    this.isShowResumeHandle = Boolean(sessionStorage.getItem("isShowResumeHandle"))
   }
   field() {
     fieldApi().then(res => {

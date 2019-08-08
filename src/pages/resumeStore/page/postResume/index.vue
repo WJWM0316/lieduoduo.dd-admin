@@ -248,7 +248,9 @@
                 </div>
                 <div class="row_blo">
                   <span class="label_name">期望领域:</span>
-                  <div class="label_value" v-if="item.fields">{{item.fields[0].field}}</div>              
+                  <div class="label_value" v-if="item.fields">
+                    <span class="value_span" v-for="item2 in item.fields">{{item2.field}}</span>
+                  </div>              
                 </div>
               </div>
             </div>
@@ -285,7 +287,7 @@
                 ></el-cascader>
               </el-form-item>
               <el-form-item label="期望薪资" prop="salaryFloor" class="formItem" label-width="80px" >
-                <div style="margin-left: 80px;display: flex;justify-content: flex-start;">
+                <div style="display: flex;justify-content: flex-start;">
                   <el-select
                     v-model="form3.salaryFloor "
                     placeholder="最低薪资"
@@ -437,17 +439,18 @@
                   <div class="label_value">{{item.endTimeDesc}}</div>   
                 </div>
                 <div class="row_blo">
-                  <span class="label_name">工作内容:</span>
-                  <div class="label_value">{{item.duty}}</div>              
+                  <span class="label_name">技能标签:</span>
+                  <div class="label_value">
+                    <span class="value_span" v-for="item2 in item.technicalLabels"> {{item2.labelName}}  </span>
+                  </div>   
                 </div>
               </div>
               <div class="line_blo">
                 <div class="row_blo">
-                  <span class="label_name">技能标签:</span>
-                  <div class="label_value">
-                    <span v-for="item2 in item.technicalLabels"> {{item2.labelName}}  </span>
-                  </div>   
+                  <span class="label_name">工作内容:</span>
+                  <div class="label_value">{{item.duty}}</div>              
                 </div>
+                
               </div>
             </div>
 
@@ -577,7 +580,7 @@
                   style="width: 100%;"
                 ></el-date-picker>
               </el-form-item>
-              <el-form-item label-width="80px" label="结束时间" class="formItem" prop="endTime4">
+              <el-form-item label-width="80px" label="结束时间" class="formItem" prop="endTime">
                 <el-date-picker
                   type="date"
                   placeholder="选择日期"
@@ -686,7 +689,7 @@
               <div class="line_blo">
                 <div class="row_blo">
                   <span class="label_name">介绍图片:</span>
-                  <div class="label_value" v-if="editMsg.moreIntroduce">
+                  <div class="label_value pics" v-if="editMsg.moreIntroduce">
                     <img v-for="item,index in editMsg.moreIntroduce.imgs" :src="item.middleUrl"  />
                   </div>   
                 </div>

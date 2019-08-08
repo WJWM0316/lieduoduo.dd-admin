@@ -160,6 +160,13 @@ export const putEducationApi = data =>
     data
   })
 
+ /* 删除附件 */
+export const deleteAttachApi = data =>
+  request({
+    url: `/jobhunter/resume/attach_resume/${data}`,
+    type: "delete"
+  })
+
  /* 删除求职意向 */
 export const deleteExpectApi = data =>
   request({

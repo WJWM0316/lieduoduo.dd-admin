@@ -14,7 +14,7 @@ import {
 } from "API/resumeStore"
 import { 
   getLifeLabelApi,
-  deleteExpectApi, deleteCareerApi, deleteProjectApi, deleteEducationApi,
+  deleteAttachApi, deleteExpectApi, deleteCareerApi, deleteProjectApi, deleteEducationApi,
   putExpectApi, putEducationApi, putProjectApi, putCareerApi,
   setLabelsApi, setEducationApi, setProjectApi, setBaseInfoApi, setIntroduceApi, setAttachResumeApi, setExpectApi, setCareerApi } from "API/resume"
 import { professionalSkillsApi, getLabelPositionListApi } from "API/position"
@@ -194,7 +194,7 @@ export default class PostResume extends Vue {
       { min: 1, message: '在校经历不得少于1个字', trigger: 'blur' },
       { max: 1000, message: '在校经历最多输入1000个字', trigger: 'blur' }
     ],
-    endTime4: [{ required: true, message: '请选择结束时间', trigger: "blur" }],
+    endTime: [{ required: true, message: '请选择结束时间', trigger: "blur" }],
     startTime: [{ required: true, message: '请选择开始时间', trigger: "blur" }],
   }
   options = []
@@ -377,9 +377,13 @@ export default class PostResume extends Vue {
   addBlock (type) {
     if(this.handleStatus === 'add') return
     if (type) {
-      this.handleStatus = 'add'
+      console.log(Object.keys(this[`form${type}`]))
       let name = `isEditForm${type}`
+      let keys = Object.keys(this[`form${type}`])
       this[name] = true
+      this.handleStatus = 'add'
+
+      keys.map(item => this[`form${type}`][item] = '')
     }
   }
 
@@ -425,8 +429,14 @@ export default class PostResume extends Vue {
       } else if (type === '7') {
         await setIntroduceApi(params)
       } else if (type === '8') {
-        await setAttachResumeApi(params)
+
+        if(!this.form8.attach_name && !this.attach_resume){
+          await deleteAttachApi(this.uid)
+        }else {
+          await setAttachResumeApi(params)
+        }
       }
+      this.haveCard = 2
       this.$message.success('添加成功')
       this.handleStatus = ''
       this[`isEditForm${type}`] = false
