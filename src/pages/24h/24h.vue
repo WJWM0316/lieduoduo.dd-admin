@@ -110,17 +110,17 @@
         label="真实抢占席位">
       </el-table-column>
       <el-table-column
-        prop="seatsNum"
+        prop="natureApplyNum"
         label="虚拟抢占席位">
         <template slot-scope="scope">
-          {{Math.floor(scope.row.seatsNum * 0.3)}}
+          {{scope.row.natureApplyNum}}
         </template>
       </el-table-column>
       <el-table-column
         prop="seatsNum"
         label="剩余席位">
         <template slot-scope="scope">
-          {{scope.row.seatsNum - scope.row.applyNum - Math.floor(scope.row.seatsNum * 0.3)}}
+          {{scope.row.seatsNum - scope.row.applyNum - scope.row.natureApplyNum}}
         </template>
       </el-table-column>
       <el-table-column
