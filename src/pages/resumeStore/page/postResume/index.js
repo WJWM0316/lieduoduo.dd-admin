@@ -529,12 +529,12 @@ export default class PostResume extends Vue {
     }
 
     if(type === 5) {
-      this[`form${type}`].school = item.school
-      this[`form${type}`].degree = item.degree
+      this[`form${type}`].name = item.name
+      this[`form${type}`].role = item.role
       this[`form${type}`].startTime = item.startTime*1000
       this[`form${type}`].endTime = item.endTime*1000
-      this[`form${type}`].major = item.major
-      this[`form${type}`].experience = item.experience
+      this[`form${type}`].description = item.description
+      this[`form${type}`].link = item.link
     }
 
     if(type === 6) {
@@ -620,6 +620,7 @@ export default class PostResume extends Vue {
     if (name === 'form2') {
       newForm.skillLabels = []
       newForm.literacyLabels =  []
+      newForm.lifeLabels =  []
       this.selectedJobList.map(item => {
         if (item.type === 'label_professional_skills') {
           newForm.skillLabels.push({labelId:item.labelId})
@@ -647,6 +648,7 @@ export default class PostResume extends Vue {
     }
 
     if (name === 'form5') {
+      newForm.startTime =  newForm.startTime/1000
       newForm.startTime =  newForm.startTime/1000
       newForm.endTime =  newForm.endTime/1000
     }

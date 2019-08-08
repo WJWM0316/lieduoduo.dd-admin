@@ -657,7 +657,7 @@
               </el-form-item>
 
               <el-form-item label="介绍图片" prop="input" >
-                <ul class="introImgList" v-if="introImgList.length>0">
+                <ul class="introImgList" >
                   <li
                     v-for="(imageItem, imageIndex) in introImgList"
                     :key="imageIndex"
