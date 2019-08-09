@@ -25,7 +25,7 @@
               </div>
               <div class="row_blo">
                 <span class="label_name">性别:</span>
-                <div class="label_value">{{editMsg.gender === '1' ? '男' : '女'}}</div>              
+                <div class="label_value">{{editMsg.gender === 1 ? '男' : '女'}}</div>              
               </div>
             </div>
 

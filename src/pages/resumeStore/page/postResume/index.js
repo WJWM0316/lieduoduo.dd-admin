@@ -224,17 +224,6 @@ export default class PostResume extends Vue {
   // form1
     jobhuntStatus = [] // 求职状态
     isEditForm1 = false
-    formValue1 = {
-       avatar: '',        
-       name: '',          
-       gender: '1',        
-       birth: '',        
-       startWorkYear: '', 
-       jobStatus: '',     
-       mobile: '',        
-       wechat: '',       
-       signature: ''      
-    }
     form1 = {
        avatar: '',        // 头像附件id
        name: '',          // 姓名
@@ -348,7 +337,7 @@ export default class PostResume extends Vue {
   }
   getLifeLabel() {
     getLifeLabelApi().then(res => {
-      this.lifeLabelsList = res.data.data[1].children
+      this.lifeLabelsList = [...res.data.data[0].children,...res.data.data[1].children]
     })
   }
   time(time) {
