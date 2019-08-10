@@ -8,62 +8,103 @@
       <el-main width="200px">
         <!--筛选-->
         <div class="selectionBox" @keyup.enter="onSubmit">
-          <el-form ref="form" :model="form" label-width="80px" validate="validate">
-            <el-form-item class="content" prop="content" label-width="0">
-              <el-input type="text" placeholder="请输入内容" v-model="form.content" class="inputSelect">
+          <el-form ref="form" :model="form" :inline="true">
+            <div style="overflow: hidden;">
+              <el-form-item>
+                <el-input type="text" placeholder="请输入内容" v-model="form.content" class="inputSelect">
+                  <el-select
+                    class="selectTitle"
+                    v-model="form.searchType"
+                    slot="prepend"
+                    placeholder="请选择"
+                    @change="changeProvince"
+                  >
+                    <el-option label="面试ID" value="id"></el-option>
+                    <el-option label="求职者" value="jobhunter"></el-option>
+                    <el-option label="面试官" value="recruiter"></el-option>
+                    <el-option label="职位" value="position"></el-option>
+                    <!--<el-option label="公司名称" value="company"></el-option>-->
+                  </el-select>
+                </el-input>
+              </el-form-item>
+
+              <el-form-item label="公司名称">
+                <el-input v-model="form.companyName" placeholder="请输公司名字"></el-input>
+              </el-form-item>
+
+              <el-form-item label="状态">
                 <el-select
-                  class="selectTitle"
-                  v-model="form.searchType"
-                  slot="prepend"
-                  placeholder="请选择"
+                  class="selectState"
+                  v-model="form.status"
+                  placeholder="全部状态"
                   @change="changeProvince"
                 >
-                  <el-option label="面试ID" value="id"></el-option>
-                  <el-option label="求职者" value="jobhunter"></el-option>
-                  <el-option label="面试官" value="recruiter"></el-option>
-                  <el-option label="职位" value="position"></el-option>
-                  <!--<el-option label="公司名称" value="company"></el-option>-->
+                  <el-option
+                    v-for="item in stutusList"
+                    :key="item.status"
+                    :label="item.desc"
+                    :value="item.status"
+                  ></el-option>
                 </el-select>
-              </el-input>
-            </el-form-item>
-
-            <el-form-item class="state" label="公司名称" prop="searchType">
-              <el-input v-model="form.companyName" placeholder="请输公司名字"></el-input>
-            </el-form-item>
-
-            <el-form-item class="state" label-width="0" prop="searchType"></el-form-item>
-
-            <el-form-item class="state" label="状态" prop="status">
-              <el-select
-                class="selectState"
-                v-model="form.status"
-                placeholder="全部状态"
-                @change="changeProvince"
-              >
-                <el-option label="全部状态" value="0"></el-option>
-                <el-option
-                  v-for="item in stutusList"
-                  :key="item.status"
-                  :label="item.desc"
-                  :value="item.status"
-                ></el-option>
-              </el-select>
-              <el-select
-                v-if="showSecond"
-                class="selectState"
-                v-model="form.last_status"
-                placeholder="全部状态"
-              >
-                <el-option label="全部状态" value="0"></el-option>
-                <el-option
-                  v-for="item in reasonList"
-                  :key="item.status"
-                  :label="item.desc"
-                  :value="item.status"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-
+                <el-select
+                  v-if="showSecond"
+                  class="selectState"
+                  v-model="form.last_status"
+                  placeholder="全部状态"
+                >
+                  <el-option
+                    v-for="item in reasonList"
+                    :key="item.status"
+                    :label="item.desc"
+                    :value="item.status"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </div>
+            <div style="overflow: hidden;">
+              <el-form-item label="确认约面时间">
+                <el-date-picker
+                  v-model="form.appointmentConfirmTimeStart"
+                  :picker-options="pickerOptionsStart"
+                  value-format="yyyy-MM-dd HH:mm:ss"
+                  type="datetime"
+                  placeholder="请选择开始时间">
+                </el-date-picker>
+                -
+                <el-date-picker
+                  v-model="form.appointmentConfirmTimeEnd"
+                  :picker-options="pickerOptionsEnd"
+                  value-format="yyyy-MM-dd HH:mm:ss"
+                  type="datetime"
+                  placeholder="请选择结束时间">
+                </el-date-picker>
+              </el-form-item>
+              <el-form-item label="职位类别">
+                <el-cascader
+                  ref="cascader"
+                  placeholder="职位类别"
+                  :options="options"
+                  filterable
+                  change-on-select
+                  :props="positionManage"
+                  @change="type"
+                ></el-cascader>
+              </el-form-item>
+              <el-form-item label="城市">
+                <el-select
+                  v-model="form.cityName"
+                  filterable
+                  placeholder="请输入城市名"
+                  @change="change">
+                  <el-option
+                    v-for="(item, index) in cityLists"
+                    :key="index"
+                    :label="item.title"
+                    :value="item.areaId">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </div>
             <el-form-item class="btn">
               <el-button class="inquire" @click="onSubmit">查询</el-button>
               <el-button @click.stop="resetForm('form')">重置</el-button>
@@ -76,7 +117,7 @@
         :fields="fields"
         :list="list"
         :total="total"
-        :page="form.page"
+        :page="Number(form.page)"
         :page-count="pageCount"
         :rowspan="3"
         @page-change="handlePageChange"
@@ -235,6 +276,9 @@ import {
 } from "API/interview";
 import List from "@/components/list";
 import resumePopup from "COMPONENTS/resumePopup/resumePopup.vue";
+import { getListApi, getLabelPositionListApi } from "API/position";
+import { getAddressListsApi } from "API/company";
+
 @Component({
   name: "invite",
   components: {
@@ -293,12 +337,18 @@ export default class invite extends Vue {
   form = {
     searchType: "id",
     content: "",
-    status: "0",
+    status: "",
     last_status: "",
     companyName: "",
     page: 1,
-    count: 20
+    count: 20,
+    appointmentConfirmTimeStart: '',
+    appointmentConfirmTimeEnd: '',
+    positionLabel: '',
+    cityName: '',
+    areaId: ''
   };
+  loading = false
   reason = "";
   list = [];
   pageCount = 0; // 请求回的数据共几页
@@ -309,10 +359,68 @@ export default class invite extends Vue {
   stutusList = [];
   showSecond = false;
   reasonList = [];
+  options = [];
+  positionManage = {
+    value: "labelId",
+    label: "name",
+    children: "children"
+  }; //职位类别的配置
+  cityLists = [];
+  change(e) {
+    let result = this.cityLists.find(field => field.areaId = e)
+    this.form.areaId = result.areaId
+    this.form.areaName = result.title
+  }
+  getAddressLists() {
+    return getAddressListsApi({level: 3}).then(res => this.cityLists = res.data.data)
+  }
+  get pickerOptionsStart() {
+    let _this = this
+    return {
+      disabledDate(time) {
+        let endDateVal = _this.form.appointmentConfirmTimeEnd
+        if(endDateVal) {
+          return Date.parse(time) > Date.parse(new Date(endDateVal))
+        }
+      }
+    }
+  }
+  get pickerOptionsEnd() {
+    let _this = this
+    return {
+      disabledDate(time) {
+        let beginDateVal = _this.form.appointmentConfirmTimeStart
+        if(beginDateVal) {
+          return Date.parse(time) < Date.parse(new Date(beginDateVal))
+        }
+      }
+    }
+  }
+  ManageList() {
+    getLabelPositionListApi().then(res => {
+      this.options = res.data.data;
+      this.options.forEach(item => {
+        item.children.forEach(item1 => {
+          item1.children.forEach(item2 => {
+            let result = JSON.stringify(item2.children);
+            if (result === "[]") delete item2.children;
+          });
+        });
+      });
+    });
+  }
+  type(e) {
+    this.form.positionLabel = e[e.length - 1];
+  }
+  remoteMethod(query) {
+    this.loading = true
+  }
   created() {
     this.AdminShow = +sessionStorage.getItem("AdminShow");
     this.init();
     this.getInviteInterviewStatusType();
+    this.ManageList()
+    this.getAddressLists()
   }
   getInviteInterviewStatusType() {
     getInviteInterviewStatusType().then(res => {
@@ -323,31 +431,72 @@ export default class invite extends Vue {
     this.isShow = false;
   }
   toPath(id) {
-    console.log(id);
-    let routeUrl = this.$router.resolve({
-      path: "/positionManage/positionAuditDetail",
-      query: { id }
-    });
-    window.open(routeUrl.href, "_blank");
+    window.open(`/positionManage/positionAuditDetail?id=${id}`, "_blank");
   }
   /* 说出不合适原因 */
   sayResult(interviewId) {
-    console.log(interviewId);
     getInterviewComment(interviewId).then(res => {
       this.reason = res.data.data.reason;
       this.centerDialogVisible = true;
     });
   }
   init() {
-    this.getInterviewList();
+    let query = this.$route.query
+    let form = Object.assign({}, query)
+    this.form = form
+    this.getInterviewList()
   }
 
   /* 获取列表数据 */
   getInterviewList() {
-    getInviteListApi(this.form).then(res => {
+    // 默认搜索条件
+    let params = {
+      page: this.form.page,
+      count: this.form.count
+    }
+    // 已经有下拉筛选
+    if(this.form.searchType && this.form.content) {
+      params = Object.assign(params, {searchType: this.form.searchType, content: this.form.content})
+    }
+    // 已经存在公司名筛选
+    if(this.form.companyName && this.form.companyName.trim()) {
+      params = Object.assign(params, {companyName: this.form.companyName})
+    }
+    // 已经选择一级状态
+    if(this.form.status) {
+      params = Object.assign(params, {status: this.form.status})
+    }
+    // 已经选择二级状态
+    if(this.form.last_status) {
+      params = Object.assign(params, {last_status: this.form.last_status})
+    }
+    // 已经选择职位类型
+    if(this.form.positionLabel) {
+      params = Object.assign(params, {positionLabel: this.form.positionLabel})
+    }
+    // 已经选择时间
+    if(this.form.appointmentConfirmTimeStart && this.form.appointmentConfirmTimeEnd) {
+      params = Object.assign(params, {
+        appointmentConfirmTimeStart: this.form.appointmentConfirmTimeStart,
+        appointmentConfirmTimeEnd: this.form.appointmentConfirmTimeEnd
+      })
+    }
+    // 已经选择城市
+    if(this.form.areaId) {
+      params = Object.assign(params, {areaId: this.form.areaId})
+    }
+    getInviteListApi(params).then(res => {
       this.list = res.data.data;
       this.total = res.data.meta.total;
       this.pageCount = res.data.meta.lastPage;
+      if(this.form.areaId) {
+        params = Object.assign(params, {cityName: this.form.cityName})
+      }
+      this.$router.push({
+        query: {
+          ...params
+        }
+      })
     });
   }
 
@@ -367,7 +516,6 @@ export default class invite extends Vue {
         message: "用户暂无权限"
       });
     } else {
-      console.log(row.jobhunterInfo.uid);
       this.resumeId = String(row.jobhunterInfo.uid);
       this.isShow = true;
       this.$nextTick(() => {
@@ -404,7 +552,6 @@ export default class invite extends Vue {
   async creatLink(e, uid, index, type) {
     this.qrCode = "";
     // 是否已经加载过二维码
-    console.log("this.list[index]", this.list[index]);
     if (this.list[index].qrCode && type === 1) {
       this.qrCode = this.list[index].qrCode;
       this.$nextTick(() => {
@@ -492,7 +639,6 @@ export default class invite extends Vue {
   }
   /* 选择变更 */
   changeProvince(e) {
-    console.log(e);
     if (e === 52) {
       this.getNotSuitTypeList();
       this.showSecond = true;
@@ -502,7 +648,6 @@ export default class invite extends Vue {
   }
   getNotSuitTypeList() {
     getNotSuitTypeList().then(res => {
-      console.log(res);
       this.reasonList = res.data.data;
     });
   }
@@ -510,9 +655,21 @@ export default class invite extends Vue {
   /* 清除列表选项 */
   resetForm(name) {
     this.$refs[name].resetFields();
-    this.form.status = "";
-    this.form.last_status = "";
-    this.form.companyName = "";
+    this.form = {
+      searchType: "id",
+      content: "",
+      status: "",
+      last_status: "",
+      companyName: "",
+      page: 1,
+      count: 20,
+      appointmentConfirmTimeStart: '',
+      appointmentConfirmTimeEnd: '',
+      positionLabel: '',
+      cityName: '',
+      areaId: ''
+    };
+    this.getInterviewList()
   }
 
   /* 翻页 */
@@ -536,6 +693,7 @@ export default class invite extends Vue {
 @import "../../style/iconfont.less";
 .application {
   margin-left: 200px;
+  text-align: unset;
   .container {
     min-width: 1000px;
     margin: 22px;

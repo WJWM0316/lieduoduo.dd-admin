@@ -319,3 +319,10 @@ export const getCompanyProductListsApi = data => request({
   data,
   noGlobalLoading: true
 })
+
+/* 获取地址 */
+export const getAddressListsApi = data => request({
+  url: `/area/level/${data.level}`,
+  type: 'get',
+  noGlobalLoading: true
+})
