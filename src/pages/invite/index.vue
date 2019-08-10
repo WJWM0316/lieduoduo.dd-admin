@@ -674,6 +674,9 @@ export default class invite extends Vue {
       cityName: '',
       areaId: ''
     };
+    let obj = {}
+    obj.stopPropagation = () =>{}
+    this.$refs.cascader.clearValue(obj)
     this.getInterviewList()
   }
 
