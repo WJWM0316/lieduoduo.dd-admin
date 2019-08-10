@@ -92,10 +92,9 @@
               </el-form-item>
               <el-form-item label="城市">
                 <el-select
-                  v-model="form.cityName"
+                  v-model="form.areaId"
                   filterable
-                  placeholder="请输入城市名"
-                  @change="change">
+                  placeholder="请输入城市名">
                   <el-option
                     v-for="(item, index) in cityLists"
                     :key="index"
@@ -284,6 +283,19 @@ import { getAddressListsApi } from "API/company";
   components: {
     List,
     resumePopup
+  },
+  watch: {
+    'form.areaId': {
+      handler(areaId) {
+        if(areaId) {
+          let item = this.cityLists.find(field => field.areaId === areaId)
+          if(!item) return
+          this.form.areaId = item.areaId
+          this.form.areaName = item.title
+        }
+      },
+      immediate: true
+    }
   }
 })
 export default class invite extends Vue {
@@ -345,7 +357,7 @@ export default class invite extends Vue {
     appointmentConfirmTimeStart: '',
     appointmentConfirmTimeEnd: '',
     positionLabel: '',
-    cityName: '',
+    areaName: '',
     areaId: ''
   };
   loading = false
@@ -366,11 +378,6 @@ export default class invite extends Vue {
     children: "children"
   }; //职位类别的配置
   cityLists = [];
-  change(e) {
-    let result = this.cityLists.find(field => field.areaId = e)
-    this.form.areaId = result.areaId
-    this.form.areaName = result.title
-  }
   getAddressLists() {
     return getAddressListsApi({level: 3}).then(res => this.cityLists = res.data.data)
   }
@@ -442,8 +449,9 @@ export default class invite extends Vue {
   }
   init() {
     let query = this.$route.query
-    let form = Object.assign({}, query)
+    let form = Object.assign(this.form, query)
     this.form = form
+    this.form.areaId = Number(this.form.areaId)
     this.getInterviewList()
   }
 
@@ -489,9 +497,6 @@ export default class invite extends Vue {
       this.list = res.data.data;
       this.total = res.data.meta.total;
       this.pageCount = res.data.meta.lastPage;
-      if(this.form.areaId) {
-        params = Object.assign(params, {cityName: this.form.cityName})
-      }
       this.$router.push({
         query: {
           ...params

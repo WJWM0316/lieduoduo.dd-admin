@@ -104,10 +104,9 @@
             </el-form-item>
             <el-form-item label="城市">
               <el-select
-                v-model="form.cityName"
+                v-model="form.city"
                 filterable
-                placeholder="请输入城市名"
-                @change="change">
+                placeholder="请输入城市名">
                 <el-option
                   v-for="(item, index) in cityLists"
                   :key="index"
@@ -293,6 +292,19 @@ import { deflate } from "zlib";
   name: "course-list",
   components: {
     List
+  },
+  watch: {
+    'form.city': {
+      handler(areaId) {
+        if(areaId) {
+          let item = this.cityLists.find(field => field.areaId === areaId)
+          if(!item) return
+          this.form.city = item.areaId
+          this.form.cityName = item.title
+        }
+      },
+      immediate: true
+    }
   }
 })
 export default class companyCheck extends Vue {
@@ -569,6 +581,9 @@ export default class companyCheck extends Vue {
       cityName: '',
       work_experience: ''
     };
+    let obj = {}
+    obj.stopPropagation = () =>{}
+    this.$refs.cascader.clearValue(obj)
     this.getTemplist()
   }
 
@@ -635,9 +650,6 @@ export default class companyCheck extends Vue {
       this.list = res.data.data;
       this.total = res.data.meta.total;
       this.pageCount = res.data.meta.lastPage;
-      if(this.form.city) {
-        params = Object.assign(params, {cityName: this.form.cityName})
-      }
       this.$router.push({
         query: {
           ...params
