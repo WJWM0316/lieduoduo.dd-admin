@@ -236,7 +236,7 @@
               v-else-if="props.scope.column.property === 'emolumentMin'"
               style="height: 48px;"
             >
-              {{props.scope.row.emolumentMin}}k-{{props.scope.row.emolumentMax}}k
+              {{props.scope.row.emolumentMin}}k-{{props.scope.row.emolumentMax}}k x{{props.scope.row.annualSalary}}薪
             </div>
             <div
               class="btn-container"
