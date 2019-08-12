@@ -452,6 +452,9 @@ export default class invite extends Vue {
     let form = Object.assign(this.form, query)
     this.form = form
     this.form.areaId = Number(this.form.areaId)
+    this.form = Object.assign(this.form, this.$route.query)
+    if(!this.form.areaId) this.form.areaId = ''
+    console.log(this.form)
     this.getInterviewList()
   }
 

@@ -725,6 +725,7 @@ export default class companyCheck extends Vue {
   }
   created() {
     this.form = Object.assign(this.form, this.$route.query)
+    if(!this.form.city) this.form.city = ''
     this.AdminShow = +sessionStorage.getItem("AdminShow");
     this.getTemplist();
     this.ManageList();
