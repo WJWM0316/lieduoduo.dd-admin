@@ -454,7 +454,6 @@ export default class invite extends Vue {
     this.form.areaId = Number(this.form.areaId)
     this.form = Object.assign(this.form, this.$route.query)
     if(!this.form.areaId) this.form.areaId = ''
-    console.log(this.form)
     this.getInterviewList()
   }
 
@@ -495,6 +494,15 @@ export default class invite extends Vue {
     // 已经选择城市
     if(this.form.areaId) {
       params = Object.assign(params, {areaId: this.form.areaId})
+    }
+
+    if(this.form.appointmentConfirmTimeStart && !this.form.appointmentConfirmTimeEnd) {
+      this.$message({message: '请选择确认约面的结束时间', type: 'warning'})
+      return
+    }
+    if(!this.form.appointmentConfirmTimeStart && this.form.appointmentConfirmTimeEnd) {
+      this.$message({message: '请选择确认约面的开始时间', type: 'warning'})
+      return
     }
     getInviteListApi(params).then(res => {
       this.list = res.data.data;

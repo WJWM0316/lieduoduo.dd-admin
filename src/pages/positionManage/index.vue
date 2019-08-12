@@ -646,6 +646,14 @@ export default class companyCheck extends Vue {
     if(this.form.work_experience) {
       params = Object.assign(params, {work_experience: this.form.work_experience})
     }
+    if(this.form.update_start && !this.form.update_end) {
+      this.$message({message: '请选择职位的结束时间', type: 'warning'})
+      return
+    }
+    if(!this.form.update_start && this.form.update_end) {
+      this.$message({message: '请选择职位的开始时间', type: 'warning'})
+      return
+    }
     getListApi(params).then(res => {
       this.list = res.data.data;
       this.total = res.data.meta.total;
