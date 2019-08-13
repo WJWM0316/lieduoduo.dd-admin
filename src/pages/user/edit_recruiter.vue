@@ -307,7 +307,8 @@ export default class EditRecruiter extends Vue {
     this.labelProfessionalSkillsList.map(field => {
       if(field.labelId === e && !field.active) field.active = !field.active
     })
-    this.model.selected = this.form.professionalSkill.concat(this.labelProfessionalSkillsList.filter(field => field.active))
+    let activeList = this.labelProfessionalSkillsList.filter(field => field.active)
+    this.model.selected = this.userInfos.professionalSkill.concat(activeList)
   }
   removeSills(index) {
     this.model.selected.splice(index, 1)
@@ -335,12 +336,12 @@ export default class EditRecruiter extends Vue {
       let labelLife = []
       let list = res.data.data
       list.map(field => {
+        field.active = true
         if(field.type === 'label_professional_skills') professionalSkill.push(field)
         if(field.type === 'label_life') labelLife.push(field)
       })
       this.userInfos.professionalSkill = professionalSkill
       this.userInfos.labelLife = labelLife
-      console.log(this.userInfos)
     })
   }
   getUserInfo() {
@@ -377,13 +378,11 @@ export default class EditRecruiter extends Vue {
         this.model.show = true
         this.model.title = '添加自定义标签'
         this.model.type = 'customize_skills'
-        console.log(this.userInfos)
         break
       case 'customize_literacy':
         this.model.show = true
         this.model.title = '添加自定义标签'
         this.model.type = 'customize_literacy'
-        console.log(this.userInfos)
         break
       case 'skills':
         this.model.show = true
@@ -401,6 +400,7 @@ export default class EditRecruiter extends Vue {
         console.log(this.model)
         break;
       case 'customize_skills':
+        this
         console.log(this.model)
         break;
       case 'customize_literacy':
@@ -583,8 +583,8 @@ export default class EditRecruiter extends Vue {
       cursor: pointer;
     }
     .active{
-      border-color: red;
-      color: red;
+      border-color: #3a8ee6;
+      color: #3a8ee6;
     }
   }
   .html_content_box{

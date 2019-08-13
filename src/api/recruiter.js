@@ -140,3 +140,10 @@ export const getRecruiterLabelsListsApi = data => request({
   url: `/recruiter/label/${data.uid}`,
   type: 'get'
 })
+
+/* 设置招聘官个人标签 */
+export const addRecruiterLabelApi = data => request({
+  url: `/recruiter/label/${data.uid}`,
+  type: 'post',
+  data
+})
