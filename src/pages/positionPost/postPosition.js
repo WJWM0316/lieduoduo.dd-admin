@@ -135,7 +135,8 @@ export default class CommunityEdit extends Vue {
     work_experience: '', // integer(formData)	经验要求,1:不限, 2:暂无经历 , 3:一年以内, 4:1-3年, 5:3-5年, 6:5-10年, 7 10年以上
     education: '', // 学历要求,5 ：初中及以下，10： 中专 ，15：高中, 20: 大专, 25: 本科， 30: 硕士, 35：博士
     describe: '', // 职位描述
-    annual_salary: '12'
+    annual_salary: '12',
+    is_online: 1
   }
 
   // 表单验证规则
@@ -279,6 +280,7 @@ export default class CommunityEdit extends Vue {
         form.describe = data.data.describe
 
         form.type = data.data.type
+        form.is_online = data.data.isOnline
         this.selectPositionItem = {
           name: data.data.typeName,
           typeId: data.data.type

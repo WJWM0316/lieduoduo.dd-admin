@@ -220,7 +220,7 @@ export default class H24 extends Vue {
       id: '4'
     }
   ]
-  total = 99
+  total = 0
   pageSize = 20
   form = {
     page: 1,

@@ -2,9 +2,11 @@
 <template>
   <div class="createCompany">
     <div class="header">
-      <div class="creatTab" @click.stop="tab">
-        <div class="Info" :class="{'active': active === 0 }">公司信息</div>
-        <div class="userInfo" :class="{'active': active === 1 }">账户设置</div>
+      <div class="creatTab">
+        <div class="Info" :class="{'active': active === 0 }" @click.stop="tab(0)">公司信息</div>
+        <div class="userInfo" :class="{'active': active === 2 }" @click.stop="tab(2)">在招职位</div>
+        <div class="userInfo" :class="{'active': active === 3 }" @click.stop="tab(3)">招聘团队</div>
+        <div class="userInfo" :class="{'active': active === 1 }" @click.stop="tab(1)">账户设置</div>
       </div>
       <div>
         <!-- <el-button @click.stop="last" v-show="active === 1">返回上一步</el-button>
@@ -235,11 +237,22 @@ export default class createCompany extends Vue {
   // 是否是旧公司绑定管理员
   isOldEdit = false;
   /* 切换tab */
-  tab(e) {
-    if (e.target.className === "userInfo") {
-      this.active = 1;
-    } else {
-      this.active = 0;
+  tab(num) {
+    switch(num) {
+      case 0:
+        this.active = num
+        break
+      case 1:
+        this.active = num
+        break
+      case 2:
+        window.open(`/positionManage?page=1&count=20&is_online=1`, '_blank');
+        break
+      case 3:
+        window.open('/recruiter', '_blank');
+        break
+      default:
+        break
     }
   }
 

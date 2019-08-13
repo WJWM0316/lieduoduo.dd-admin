@@ -1064,7 +1064,6 @@ export default class Interview24h extends Vue {
     this.form.content = ''
     this.getQuickApplyInterview().then(() => {
       this.form.tab_status = this.$route.query.tab_status
-      console.log(this.form)
     })
   }
   /**

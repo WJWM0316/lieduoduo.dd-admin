@@ -176,7 +176,7 @@
             <!-- 序号 -->
             <div class="btn-container" v-else-if="props.scope.column.property === 'index'">
               <div>
-                <span>{{props.scope.$index +1}}</span>
+                <span>{{props.scope.row.uid}}</span>
               </div>
             </div>
             <!-- 所属公司 -->
@@ -347,7 +347,7 @@ export default class user extends Vue {
   fields = [
     {
       prop: "index",
-      label: "序号",
+      label: "用户ID",
       width: 80
     },
     {

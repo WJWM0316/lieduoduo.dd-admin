@@ -78,3 +78,17 @@ export const refundRecommendApi = data => request({
   data,
   noGlobalLoading: true
 })
+
+/* 获取职业素养标签列表 */
+export const getLabelProfessionalLiteracyListApi = data => request({
+  url: `/label/professionalLiteracy`,
+  type: 'get',
+  noGlobalLoading: true
+})
+
+/* 职位技能列表 */
+export const getLabelProfessionalSkillsListApi = data => request({
+  url: `/label/professionalSkills`,
+  type: 'get',
+  noGlobalLoading: true
+})
