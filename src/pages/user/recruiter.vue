@@ -459,12 +459,58 @@ export default class user extends Vue {
   }
   /* 请求招聘官审核列表 */
   getRecruiterList(newForm) {
-    let params = JSON.parse(JSON.stringify(newForm || this.form))
-    if(params.role === '99') params.role = '2,3'
+    let tem = JSON.parse(JSON.stringify(newForm || this.form))
+    let params = {
+      page: tem.page,
+      count: tem.count
+    }
+    if(tem.admin_uid) {
+      params = Object.assign(params, {admin_uid: tem.admin_uid})
+    }
+    if(tem.keyword) {
+      params = Object.assign(params, {keyword: tem.keyword})
+    }
+    if(tem.status) {
+      params = Object.assign(params, {status: tem.status})
+    }
+    if(tem.auth_status) {
+      params = Object.assign(params, {auth_status: tem.auth_status})
+    }
+    if(tem.createTimeStart) {
+      params = Object.assign(params, {createTimeStart: tem.createTimeStart})
+    }
+    if(tem.createTimeEnd) {
+      params = Object.assign(params, {createTimeEnd: tem.createTimeEnd})
+    }
+    if(tem.role === '99') {
+      params = Object.assign(params, {role: '2,3'})
+    } else {
+      params = Object.assign(params, {role: tem.role})
+    }
+    if(tem.createPositionRight) {
+      params = Object.assign(params, {createPositionRight: tem.createPositionRight})
+    }
+    if(tem.idAuth) {
+      params = Object.assign(params, {idAuth: tem.idAuth})
+    }
+    if(tem.companyName) {
+      params = Object.assign(params, {companyName: tem.companyName})
+    }
+    if(tem.mobile) {
+      params = Object.assign(params, {mobile: tem.mobile})
+    }
+    if(tem.name) {
+      params = Object.assign(params, {name: tem.name})
+    }
     getUserListApi(params).then(res => {
       this.list = res.data.data;
       this.total = res.data.meta.total;
       this.pageCount = res.data.meta.lastPage;
+      this.$router.push({
+        query: {
+          ...params
+        }
+      })
     });
   }
   /* 翻页 */
@@ -553,6 +599,8 @@ export default class user extends Vue {
   }
 
   created() {
+    this.form = Object.assign(this.form, this.$route.query)
+    console.log(this.$route.query)
     this.getRecruiterList();
   }
   activated() {
