@@ -57,7 +57,7 @@
       <el-form-item label="职位ID">
         <el-input v-model="form.position_id"></el-input>
       </el-form-item>
-
+    
       <el-form-item label="上架时间">
         <el-date-picker type="datetime" placeholder="选择日期" v-model="form.start_time" style="width: 100%;" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
       </el-form-item>
@@ -92,6 +92,10 @@
       <el-table-column
         prop="positionId"
         label="职位ID">
+      </el-table-column>
+      <el-table-column
+        prop="positionName"
+        label="职位名">
       </el-table-column>
       <el-table-column
         prop="startTime"
@@ -216,7 +220,7 @@ export default class H24 extends Vue {
       id: '4'
     }
   ]
-  total = 99
+  total = 0
   pageSize = 20
   form = {
     page: 1,

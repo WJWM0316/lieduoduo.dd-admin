@@ -122,6 +122,11 @@
           v-model="form.describe">
         </el-input>
       </el-form-item>
+      
+      <el-form-item label="职位状态" style="text-align: left;">
+        <el-radio v-model="form.is_online" :label="1">开启</el-radio>
+        <el-radio v-model="form.is_online" :label="2">关闭</el-radio>
+      </el-form-item>
 
       <p class="ruleHint">发布职位即表示同意遵守<a>《猎多多职位信息发布规则》</a>，如违反将导致您的账号被锁定</p>
       

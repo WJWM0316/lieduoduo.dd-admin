@@ -334,7 +334,9 @@
         prop="statusDesc"
         label="状态">
         <template slot-scope="scope">
-          <div>{{scope.row.statusDesc}}</div>
+          <div>{{scope.row.statusDesc}}
+            <span class="strong_name" style="margin-left: 50px;" @click="todoAction('viewReason', scope.row)" v-if="scope.row.status===52" >原因</span>
+          </div>
           <div>{{scope.row.updatedAt}}</div>
         </template>
       </el-table-column>
@@ -489,6 +491,9 @@
       <div class="html_content position_ul" v-show="model.type === 'improper'">
         <div class="improper">确定标记为不合适吗？</div>
       </div>
+      <div class="html_content position_ul" v-show="model.type === 'viewReason'">
+        <div style="padding: 10px 0 30px 0;">{{model.refuseReason}}</div>
+      </div>
       <div class="html_content position_ul" v-show="model.type === 'reason'">
         <ul>
           <li
@@ -580,7 +585,7 @@
           </li>
         </ul>
       </div>
-      <div slot="footer" class="dialog-footer">
+      <div slot="footer" class="dialog-footer" v-if="model.showFooter">
         <el-button @click="close" size="small">{{model.btnTxt}}</el-button>
         <el-button type="primary" @click="confirm" size="small">确 定</el-button>
       </div>
@@ -612,7 +617,8 @@ import {
   getPositionCodeUrlApi,
   getInterviewFisrtStatusListsApi,
   getInterviewSecondStatusListsApi,
-  testDeleteApi
+  testDeleteApi,
+  getInterviewComment
 } from "API/interview"
 import {
   getListApi,
@@ -722,7 +728,9 @@ export default class Interview24h extends Vue {
       doorplate: '',
       lng: '',
       lat: ''
-    }
+    },
+    showFooter: true,
+    refuseReason: ''
   }
   lists = []
   model = {
@@ -758,7 +766,6 @@ export default class Interview24h extends Vue {
   addressLists = []
   isLastPageOfAddress = false
   addressNum = 1
-
   getQuickApplyInterview() {
     let tab = this.navigation.find(field => field.active)
     let params = {
@@ -1064,7 +1071,6 @@ export default class Interview24h extends Vue {
     this.form.content = ''
     this.getQuickApplyInterview().then(() => {
       this.form.tab_status = this.$route.query.tab_status
-      console.log(this.form)
     })
   }
   /**
@@ -1220,9 +1226,21 @@ export default class Interview24h extends Vue {
       case 'evaluation':
         this.setUserInterviewComment({interviewId: data.interviewId}).then(() => this.init())
         break
+      case 'viewReason':
+        this.sayResult(data.interviewId).then(() => {
+          this.model.show = true
+          this.model.title = '不合适原因'
+          this.model.type = type
+          this.model.showFooter = false
+        })
+        break
       default:
         break
     }
+  }
+  /* 说出不合适原因 */
+  sayResult(interviewId) {
+    return getInterviewComment(interviewId).then(res => this.model.refuseReason = res.data.data.reason)
   }
   /**
    * @Author   小书包

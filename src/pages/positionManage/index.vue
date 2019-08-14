@@ -8,9 +8,9 @@
       </el-header>
       <el-main>
         <!--筛选-->
-        <div class="selectionBox" @keyup.enter="search">
-          <el-form ref="form" :model="form" validate="validate">
-            <el-form-item prop="name">
+        <div class="form_header" @keyup.enter="search">
+          <el-form ref="form" :inline="true">
+            <el-form-item>
               <!-- 筛选条件1 -->
               <div class="searchTab">
                 <el-input placeholder="请输入" v-model="form.name" class="inputSelect">
@@ -22,9 +22,9 @@
                 </el-input>
               </div>
             </el-form-item>
-            <el-form-item prop="name2">
+            <el-form-item>
               <!-- 筛选条件1 -->
-              <div class="searchTab" style="margin-left:20px;">
+              <div class="searchTab">
                 <el-input placeholder="请输入" v-model="form.name2" class="inputSelect">
                   <el-select v-model="select2" slot="prepend" placeholder="公司">
                     <el-option label="公司名" value="1"></el-option>
@@ -34,16 +34,16 @@
                 </el-input>
               </div>
             </el-form-item>
-            <el-form-item label-width="80px" label="上线/下线" prop="is_online">
+            <el-form-item label="上线/下线">
               <el-select v-model="form.is_online" placeholder="全部状态">
                 <el-option label="上线" value="1"></el-option>
                 <el-option label="下线" value="2"></el-option>
               </el-select>
             </el-form-item>
 
-            <el-form-item label-width="80px" label="审核状态" prop="status">
+            <el-form-item label="审核状态">
               <el-select v-model="form.status" placeholder="全部状态">
-                <el-option label="全部状态" value=" "></el-option>
+                <el-option label="全部状态" value=""></el-option>
                 <el-option label="关闭" value="0"></el-option>
                 <el-option label="已通过" value="1"></el-option>
                 <el-option label="待审核" value="2"></el-option>
@@ -52,28 +52,93 @@
               </el-select>
             </el-form-item>
             <!-- 职位来源 -->
-            <el-form-item label-width="80px" label="职位类别" prop="type">
+            <el-form-item label="职位类别">
               <el-cascader
                 ref="cascader"
                 placeholder="职位类别"
                 :options="options"
                 filterable
                 change-on-select
+                :clearable="clearable"
                 :props="positionManage"
                 @change="type"
               ></el-cascader>
             </el-form-item>
 
-            <el-form-item label-width="80px" label="职位来源" prop="wherefrom">
-              <el-select v-model="form.wherefrom" placeholder="全部状态">
+            <el-form-item label="职位来源">
+              <el-select v-model="form.wherefrom" placeholder="全部状态" style="width: 140px;">
                 <el-option label="全部" value="0"></el-option>
                 <el-option label="excel导入" value="3"></el-option>
                 <el-option label="小程序发布" value="1"></el-option>
                 <el-option label="后台添加" value="2"></el-option>
               </el-select>
             </el-form-item>
+            <!-- 职位来源 -->
+            <el-form-item label="薪资范围">
+              <el-select v-model="form.emolument_min" placeholder="请选择" @change="changeEmolumentMin"  style="width: 120px;">
+                <el-option
+                  v-for="item in emolumentMinList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+              -
+              <el-select v-model="form.emolument_max" placeholder="请选择"  style="width: 120px;" :disabled="!form.emolument_min">
+                <el-option
+                  v-for="item in emolumentMaxList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+              &nbsp;×&nbsp;
+              <el-select v-model="form.annual_salary" placeholder="请选择" style="width: 120px;" :disabled="!form.emolument_max">
+                <el-option
+                  v-for="item in annual_salary_list"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="城市">
+              <el-select
+                v-model="form.city"
+                filterable
+                placeholder="请输入城市名">
+                <el-option
+                  v-for="(item, index) in cityLists"
+                  :key="index"
+                  :label="item.title"
+                  :value="item.areaId">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="经验要求">
+              <el-select v-model="form.work_experience" placeholder="请选择">
+                <el-option :label="item.text" :value="item.id" v-for="item in experienceLists" :key="item.id"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="更新时间">
+              <el-date-picker
+                v-model="form.update_start"
+                :picker-options="pickerOptionsStart"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                type="datetime"
+                placeholder="请选择开始时间">
+              </el-date-picker>
+              -
+              <el-date-picker
+                v-model="form.update_end"
+                :picker-options="pickerOptionsEnd"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                type="datetime"
+                placeholder="请选择结束时间">
+              </el-date-picker>
+            </el-form-item>
           </el-form>
-          <div class="SumbitBtn">
+          <div class="SumbitBtn" style="overflow: hidden; text-align: right;">
             <el-button class="inquire" @click="onSubmit">查询</el-button>
             <el-button @click="resetForm('form')">重置</el-button>
           </div>
@@ -83,7 +148,7 @@
           :fields="fields"
           :list="list"
           :total="total"
-          :page="form.page"
+          :page="Number(form.page)"
           :page-count="pageCount"
           @page-change="handlePageChange"
         >
@@ -166,7 +231,13 @@
             >
               <span>{{props.scope.row.companyInfo.companyName}}</span>
             </div>
-
+            <div
+              class="btn-container"
+              v-else-if="props.scope.column.property === 'emolumentMin'"
+              style="height: 48px;"
+            >
+              {{props.scope.row.emolumentMin}}k-{{props.scope.row.emolumentMax}}k x{{props.scope.row.annualSalary}}薪
+            </div>
             <div
               class="btn-container"
               v-else-if="props.scope.column.property === 'isOnline'"
@@ -213,7 +284,7 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import List from "@/components/list";
-import { login, templistApi } from "API/company";
+import { login, templistApi, getAddressListsApi } from "API/company";
 import { getPositionCodeUrlApi } from "API/interview";
 import { getListApi, getLabelPositionListApi } from "API/position";
 import { deflate } from "zlib";
@@ -221,6 +292,19 @@ import { deflate } from "zlib";
   name: "course-list",
   components: {
     List
+  },
+  watch: {
+    'form.city': {
+      handler(areaId) {
+        if(areaId) {
+          let item = this.cityLists.find(field => field.areaId === areaId)
+          if(!item) return
+          this.form.city = item.areaId
+          this.form.cityName = item.title
+        }
+      },
+      immediate: true
+    }
   }
 })
 export default class companyCheck extends Vue {
@@ -236,6 +320,7 @@ export default class companyCheck extends Vue {
     keyword2: "",
     keyword3: ""
   };
+  clearable = true
   select1 = {
     value: ""
   };
@@ -251,9 +336,18 @@ export default class companyCheck extends Vue {
     page: 1,
     name: "", //职位名称，公司名，招聘官名（1）
     name2: "", //职位名称，公司名，招聘官名（2）
-    count: 20
+    count: 20,
+    update_start: '',
+    update_end: '',
+    annual_salary: '',
+    emolument_min: '',
+    emolument_max: '',
+    annual_salary: '',
+    city: '',
+    cityName: '',
+    work_experience: ''
   };
-  options = [];
+  cityLists = [];
   positionManage = {
     value: "labelId",
     label: "name",
@@ -292,6 +386,11 @@ export default class companyCheck extends Vue {
       width: 200
     },
     {
+      prop: "emolumentMin",
+      label: "薪资范围",
+      width: 200
+    },
+    {
       prop: "isOnline",
       label: "上线/下线",
       width: 150
@@ -313,14 +412,138 @@ export default class companyCheck extends Vue {
       label: "操作"
     }
   ];
+  loading = false
   list = [];
+  options = [];
+  positionManage = {
+    value: "labelId",
+    label: "name",
+    children: "children"
+  }; //职位类别的配置
+  experienceLists = [
+    {
+      id: '1',
+      text: '不限'
+    },
+    {
+      id: '2',
+      text: '应届生'
+    },
+    {
+      id: '3',
+      text: '一年以内'
+    },
+    {
+      id: '4',
+      text: '1-3年'
+    },
+    {
+      id: '5',
+      text: '3-5年'
+    },
+    {
+      id: '6',
+      text: '5-10年'
+    },
+    {
+      id: '7',
+      text: '10年以上'
+    }
+  ]
+  emolumentMaxList = [] //选择薪资范围
+  emolumentMinList = [] //选择薪资范围
+  annual_salary_list = []
+  change(e) {
+    let result = this.cityLists.find(field => field.areaId = e)
+    this.form.city = result.areaId
+    this.form.cityName = result.title
+  }
+  setEmolumentMin () {
+    let max = 250
+    let i = 0
+    let list = []
+
+    while (i<max)
+    {
+      if(i<30){
+        i++
+      } else if(i<100){
+        i+=5
+      } else if(i<max){
+        i+=10
+      }
+
+      list.push({
+        label : `${i}k`,
+        value : i
+      })
+    }
+
+    this.emolumentMinList = list
+  }
+
+  changeEmolumentMin(e){
+    this.form.emolument_max = ''
+    this.setEmolumentMax(e)
+  }
+
+  setEmolumentMax (num) {
+    let max = 0
+    let list = []
+
+    if (num <= 10) {
+      max = num+5
+    } else if (num > 10 && num < 31) {
+      max = num*2
+
+    } else if (num > 34 && num < 71) {
+      max = num+30
+
+    } else if (num > 74 && num < 96) {
+      max = num+30
+
+    } else if (num > 99 && num < 251) {
+      max = num*2
+    }
+
+    for (let i = num+1; i <= max; i++) {
+      list.push({
+        label : `${i}k`,
+        value : i
+      })
+    }
+
+    this.emolumentMaxList = list
+  }
+  get pickerOptionsStart() {
+    let _this = this
+    return {
+      disabledDate(time) {
+        let endDateVal = _this.form.appointmentConfirmTimeEnd
+        if(endDateVal) {
+          return Date.parse(time) > Date.parse(new Date(endDateVal))
+        }
+      }
+    }
+  }
+  get pickerOptionsEnd() {
+    let _this = this
+    return {
+      disabledDate(time) {
+        let beginDateVal = _this.form.appointmentConfirmTimeStart
+        if(beginDateVal) {
+          return Date.parse(time) < Date.parse(new Date(beginDateVal))
+        }
+      }
+    }
+  }
+   remoteMethod(query) {
+    this.loading = true
+  }
   type(e) {
-    // console.log(e);
     this.form.type = e[e.length - 1];
-    // console.log("this.form", this.form);
   }
   onSubmit(e) {
-    // console.log(this.form);
     this.form.page = 1;
     this.getTemplist();
   }
@@ -338,18 +561,34 @@ export default class companyCheck extends Vue {
   changeProvince() {}
   /* 重置 */
   resetForm(formName) {
-    this.$refs[formName].resetFields();
-    this.$nextTick(() => {
-      let obj = {};
-      obj.stopPropagation = () => {};
-      this.$refs.cascader.clearValue(obj);
-    });
+    this.form = {
+      wherefrom: "", //数据来源
+      type: "",
+      is_online: "", // 状态（1 上线，2 下线)
+      status: "", // 状态（0关闭，1开启，审核通过，2审核中，3审核失败）查询多种状态用，号分隔（1,2,3）
+      recruiter: "",
+      page: 1,
+      name: "", //职位名称，公司名，招聘官名（1）
+      name2: "", //职位名称，公司名，招聘官名（2）
+      count: 20,
+      update_start: '',
+      update_end: '',
+      annual_salary: '',
+      emolument_min: '',
+      emolument_max: '',
+      annual_salary: '',
+      city: '',
+      cityName: '',
+      work_experience: ''
+    };
+    let obj = {}
+    obj.stopPropagation = () =>{}
+    this.$refs.cascader.clearValue(obj)
+    this.getTemplist()
   }
 
   addPosition() {
-    this.$router.push({
-      path: "/positionManage/positionPost"
-    });
+    this.$router.push({path: "/positionManage/positionPost"});
   }
   handlePageChange(nowPage) {
     this.$route.meta.scrollY = 0;
@@ -359,10 +598,71 @@ export default class companyCheck extends Vue {
   }
   /* 请求职位管理列表 */
   getTemplist() {
-    getListApi(this.form).then(res => {
+    // 基本查询条件
+    let params = {
+      page: this.form.page,
+      count: this.form.count
+    }
+    // 已添加职位来源
+    if(this.form.wherefrom) {
+      params = Object.assign(params, {wherefrom: this.form.wherefrom})
+    }
+    // 已经选择时间
+    if(this.form.update_start && this.form.update_end) {
+      params = Object.assign(params, {
+        update_start: this.form.update_start,
+        update_end: this.form.update_end
+      })
+    }
+    // 已经选择城市
+    if(this.form.city) {
+      params = Object.assign(params, {city: this.form.city})
+    }
+    // 已经选择上下线
+    if(this.form.is_online) {
+      params = Object.assign(params, {is_online: this.form.is_online})
+    }
+    // 已经选择上下线
+    if(this.form.status) {
+      params = Object.assign(params, {status: this.form.status})
+    }
+    // 已经选择职位类别
+    if(this.form.type) {
+      params = Object.assign(params, {type: this.form.type})
+    }
+    // 已经选择薪资范围
+    if(this.form.emolument_min && this.form.emolument_max) {
+      params = Object.assign(params, {emolument_min: this.form.emolument_min, emolument_max: this.form.emolument_max, annual_salary: this.form.annual_salary})
+    }
+    // 已经符合筛选
+    if(this.form.name) {
+      params = Object.assign(params, {name: this.form.name})
+    }
+    // 已经符合筛选
+    if(this.form.name2) {
+      params = Object.assign(params, {name2: this.form.name2})
+    }
+    // 已经薪资范围
+    if(this.form.work_experience) {
+      params = Object.assign(params, {work_experience: this.form.work_experience})
+    }
+    if(this.form.update_start && !this.form.update_end) {
+      this.$message({message: '请选择职位的结束时间', type: 'warning'})
+      return
+    }
+    if(!this.form.update_start && this.form.update_end) {
+      this.$message({message: '请选择职位的开始时间', type: 'warning'})
+      return
+    }
+    getListApi(params).then(res => {
       this.list = res.data.data;
       this.total = res.data.meta.total;
       this.pageCount = res.data.meta.lastPage;
+      this.$router.push({
+        query: {
+          ...params
+        }
+      })
     });
   }
   toPath(row) {
@@ -416,12 +716,6 @@ export default class companyCheck extends Vue {
     let res = await this.getQr(positionId);
     this.qrCode = res.data.data.qrCodeUrl;
     this.list[index].qrCode = res.data.data.qrCodeUrl;
-
-    //  this.$nextTick(() => {
-    //    this.$refs['qrCode'].style.display = 'block'
-    //    this.$refs['qrCode'].style.left = e.clientX + 'px'
-    //    this.$refs['qrCode'].style.top = e.clientY + window.scrollY  + 'px'
-    //  })
   }
 
   /* 生成二维码 */
@@ -434,10 +728,20 @@ export default class companyCheck extends Vue {
       this.$refs["qrCode"].style.display = "none";
     });
   }
+  getAddressLists() {
+    return getAddressListsApi({level: 3}).then(res => this.cityLists = res.data.data)
+  }
   created() {
+    this.form = Object.assign(this.form, this.$route.query)
+    if(!this.form.city) this.form.city = ''
     this.AdminShow = +sessionStorage.getItem("AdminShow");
     this.getTemplist();
     this.ManageList();
+    this.setEmolumentMin()
+    this.getAddressLists()
+    for(let i = 12; i <= 24; i++) {
+      this.annual_salary_list.push({value: String(i), label: `${i}薪`})
+    }
   }
   ManageList() {
     getLabelPositionListApi().then(res => {
@@ -479,6 +783,15 @@ export default class companyCheck extends Vue {
 }
 .positionManage {
   margin-left: 200px;
+  text-align: unset;
+  .el-main,
+  .m-list{
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .form_header{
+    padding: 0 20px;
+  }
   .container {
     min-width: 1000px;
     margin: 22px;
@@ -513,7 +826,6 @@ export default class companyCheck extends Vue {
       display: flex;
       align-items: center;
       flex-wrap: wrap;
-      width: 1279px;
       .el-input {
         width: 200px;
       }

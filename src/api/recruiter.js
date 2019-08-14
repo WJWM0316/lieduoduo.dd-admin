@@ -83,3 +83,76 @@ export const delDemandIdentityApi = (uid) => request({
   url: `/usermanage/real_name/demand/${uid}`,
   type: 'post'
 })
+/* 关闭发布职位权限 */
+export const closePublicPosisionApi = data => request({
+  url: `/usermanage/create_position/block/${data.uid}`,
+  type: 'post'
+})
+
+/* 开启发布职位权限 */
+export const openPublicPosisionApi = data => request({
+  url: `/usermanage/create_position/block/${data.uid}`,
+  type: 'delete'
+})
+
+/* 获取招聘官基本信息 */
+export const getRecruiterBaseInfoApi = data => request({
+  url: `/recruiter/baseInfo/${data.uid}`,
+  type: 'get'
+})
+
+/* 获取招聘官个人简介 */
+export const getRecruiterBriefApi = data => request({
+  url: `/recruiter/brief/${data.uid}`,
+  type: 'get'
+})
+
+/* 获取招聘官个人标签 */
+export const getRecruiterLabelApi = data => request({
+  url: `/recruiter/label/${data.uid}`,
+  type: 'get'
+})
+
+
+/* 获取招聘官个人标签 */
+export const editUsermanageInfosApi = data => request({
+  url: `/usermanage/recruiter/${data.uid}`,
+  type: 'post',
+  data
+})
+
+/* 设置招聘官个人简介 */
+export const setRecruiterBriefApi = data => request({
+  url: `/recruiter/brief/${data.uid}`,
+  type: 'post',
+  data
+})
+
+/* 创建职业技能标签 */
+export const createLabelProfessionalSkillsApi = data => request({
+  url: `/label/professionalSkills/${data.uid}`,
+  type: 'post',
+  data
+})
+
+/* 获取招聘官个人标签 */
+export const getRecruiterLabelsListsApi = data => request({
+  url: `/recruiter/label/${data.uid}`,
+  type: 'get'
+})
+
+
+/* 创建职业技能标签 */
+export const addProfessionalSkillsLabelApi = data => request({
+  url: `/label/professionalSkills/${data.uid}`,
+  type: 'post',
+  data
+})
+
+/* 设置招聘官个人标签 */
+export const setRecruiterLabelsApi = data => request({
+  url: `/recruiter/label/${data.uid}`,
+  type: 'post',
+  data,
+  noGlobalLoading: true
+})
