@@ -141,9 +141,18 @@ export const getRecruiterLabelsListsApi = data => request({
   type: 'get'
 })
 
-/* 设置招聘官个人标签 */
-export const addRecruiterLabelApi = data => request({
-  url: `/recruiter/label/${data.uid}`,
+
+/* 创建职业技能标签 */
+export const addProfessionalSkillsLabelApi = data => request({
+  url: `/label/professionalSkills/${data.uid}`,
   type: 'post',
   data
+})
+
+/* 设置招聘官个人标签 */
+export const setRecruiterLabelsApi = data => request({
+  url: `/recruiter/label/${data.uid}`,
+  type: 'post',
+  data,
+  noGlobalLoading: true
 })

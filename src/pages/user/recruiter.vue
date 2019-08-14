@@ -459,7 +459,9 @@ export default class user extends Vue {
   }
   /* 请求招聘官审核列表 */
   getRecruiterList(newForm) {
-    getUserListApi(newForm || this.form).then(res => {
+    let params = JSON.parse(JSON.stringify(newForm || this.form))
+    if(params.role === '99') params.role = '2,3'
+    getUserListApi(params).then(res => {
       this.list = res.data.data;
       this.total = res.data.meta.total;
       this.pageCount = res.data.meta.lastPage;

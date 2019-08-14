@@ -4,20 +4,18 @@
 
     <div class="base_infos">
       <el-form label-suffix="：" label-width="160px">
-        <h3>基本信息</h3>
+        <h3>基本信息 <el-button type="text" v-if="!editBaseInfos" @click="todoAction('editBaseInfos')">编辑</el-button></h3>
 
         <el-form-item label="头像">
           <ul class="common-list">
             <li
               v-for="(imageItem, imageIndex) in userInfos.avatars"
               :key="imageIndex"
-              :data-key="imageIndex"
-              class="draggable"
               :style="`background-image: url(${imageItem.smallUrl}); background-size: cover; background-repeat: no-repeat; background-position: center center;`"
               draggable="true">
-              <div class="btn-close" @click="handleRemoveUploadImage(imageIndex)"><i class="el-icon-delete"></i></div>
+              <div class="btn-close" @click="handleRemoveUploadImage(imageIndex)" v-if="editBaseInfos"><i class="el-icon-delete"></i></div>
             </li>
-            <li class="upload-li" v-if="userInfos.avatars.length < model.limit" @click="handleChooseImage('#image')">
+            <li class="upload-li" v-if="userInfos.avatars.length < model.limit && editBaseInfos" @click="handleChooseImage('#image')">
               <i class="el-icon-plus"></i>
               <input type="file" multiple="multiple" @change="handleChangeImage('#image')" style="display: none;" id="image" name="image" accept="image/*" />
             </li>
@@ -30,12 +28,13 @@
             placeholder="请输入姓名"
             :maxlength="20"
             style="width: 400px;"
+            :disabled="!editBaseInfos"
           ></el-input>
         </el-form-item>
 
         <el-form-item label="性别">
-          <el-radio v-model="userInfos.gender" :label="1">男</el-radio>
-          <el-radio v-model="userInfos.gender" :label="2">女</el-radio>
+          <el-radio v-model="userInfos.gender" :label="1" :disabled="!editBaseInfos">男</el-radio>
+          <el-radio v-model="userInfos.gender" :label="2" :disabled="!editBaseInfos">女</el-radio>
         </el-form-item>
 
         <el-form-item label="担任职务">
@@ -43,6 +42,7 @@
             v-model="userInfos.position"
             placeholder="请输入担任职务"
             :maxlength="20"
+            :disabled="!editBaseInfos"
             style="width: 400px;"
           ></el-input>
         </el-form-item>
@@ -52,6 +52,7 @@
             v-model="userInfos.email"
             placeholder="请输入邮箱"
             :maxlength="20"
+            :disabled="!editBaseInfos"
             style="width: 400px;"
           ></el-input>
         </el-form-item>
@@ -61,6 +62,7 @@
             v-model="userInfos.wechat"
             placeholder="请输入微信"
             :maxlength="20"
+            :disabled="!editBaseInfos"
             style="width: 400px;"
           ></el-input>
         </el-form-item>
@@ -71,13 +73,14 @@
             :rows="4"
             placeholder="请输入内容"
             style="width: 400px;"
+            :disabled="!editBaseInfos"
             v-model="userInfos.signature">
           </el-input>
         </el-form-item>
         
-        <el-form-item>
+        <el-form-item v-if="editBaseInfos">
           <el-button type="primary" @click="saveUser">保存</el-button>
-          <el-button >取消</el-button>
+          <el-button @click="todoAction('editBaseInfos')">取消</el-button>
         </el-form-item>
 
       </el-form>
@@ -88,42 +91,36 @@
       <el-form label-suffix="：" label-width="160px">
 
         <el-form-item label="职业技能">
-          <ul class="label_ul">
+          <ul class="label_ul" v-if="userInfos.skillLabels.length">
             <li
               :class="{active: item.active}"
-              v-for="(item, index) in userInfos.professionalSkill"
-              :key="index"
-              @click="removeSills(index)">{{item.name || item.labelName}}
+              v-for="(item, index) in userInfos.skillLabels"
+              :key="index">{{item.name || item.labelName}}
             </li>
           </ul>
-          <el-button type="text" @click="todoAction('skills')">编辑</el-button>
+          <el-button type="text" @click="todoAction('skills')">{{userInfos.skillLabels.length ? '编辑' : '添加'}}</el-button>
         </el-form-item>
         
-        <el-form-item label="自定义职业技能标签">
-          <el-button type="text" @click="todoAction('customize_skills')">编辑</el-button>
-        </el-form-item>
-
         <el-form-item label="职业素养">
-          <ul class="label_ul">
+          <ul class="label_ul" v-if="userInfos.literacyLabels.length">
             <li
               :class="{active: item.active}"
-              v-for="(item, index) in userInfos.labelLife"
-              :key="index"
-              @click="removeSills(index)">{{item.name || item.labelName}}
+              v-for="(item, index) in userInfos.literacyLabels"
+              :key="index">{{item.name || item.labelName}}
             </li>
           </ul>
-          <el-button type="text" @click="todoAction('literacy')">编辑</el-button>
+          <el-button type="text" @click="todoAction('literacy')">{{userInfos.literacyLabels.length ? '编辑' : '添加'}}</el-button>
         </el-form-item>
         
-        <el-form-item label="自定义职业素养标签">
-          <el-button type="text" @click="todoAction('customize_literacy')">编辑</el-button>
+        <el-form-item label="自定义">
+          <el-button type="text" @click="todoAction('customize')">添加</el-button>
         </el-form-item>
 
       </el-form>
     </div>
 
     <div class="userLabel">
-      <h3>个人简介</h3>
+      <h3>个人简介 <el-button type="text" v-if="!editUserBreif" @click="todoAction('editUserBreif')">编辑</el-button></h3>
       <el-form label-suffix="：" label-width="160px">
 
         <el-form-item>
@@ -132,13 +129,14 @@
             :rows="4"
             placeholder="请输入个人简介"
             style="width: 400px;"
+            :disabled="!editUserBreif"
             v-model="userInfos.brief">
           </el-input>
         </el-form-item>
 
-        <el-form-item>
+        <el-form-item v-if="editUserBreif">
           <el-button type="primary" @click="setRecruiterBrief">保存</el-button>
-          <el-button >取消</el-button>
+          <el-button @click="todoAction('editUserBreif')">取消</el-button>
         </el-form-item>
 
       </el-form>
@@ -148,7 +146,7 @@
       <h3>所属公司</h3>
       <el-form label-suffix="：" label-width="160px" :inline="true">
 
-        <el-form-item style="margin-left: 150px;">
+        <el-form-item style="margin-left: 150px;" v-if="userInfos.companyInfo">
           公司全称：{{userInfos.companyInfo.companyName}}
         </el-form-item>
         
@@ -165,7 +163,8 @@
         </el-form-item>
 
         <el-form-item style="float: right;">
-          <el-button type="text">移出公司</el-button>
+          <el-button type="text" v-if="userInfos.companyInfo" @click="removeUser">移出公司</el-button>
+          <el-button type="text" v-if="!userInfos.companyInfo" @click="bindCompany">绑定公司</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -175,7 +174,7 @@
       <div class="html_content_box" v-if="model.type === 'skills'">
         <div class="m_h1">已选择标签：</div>
         <ul class="label_ul_dialog" v-if="model.selected.length">
-          <li :class="{active: item.active}" v-for="(item, index) in model.selected" :key="index" @click="removeSills(index)">{{item.name || item.labelName}}</li>
+          <li :class="{active: item.active}" v-for="(item, index) in model.selected" :key="index" @click="removeSkills(index)">{{item.name || item.labelName}}</li>
         </ul>
         <div class="m_h2">请选择标签：</div>
         <el-select v-model="model.value3" placeholder="请选择" @change="getLabelSkills">
@@ -191,7 +190,7 @@
       <div class="html_content_box" v-if="model.type === 'literacy'">
         <div class="m_h1">已选择标签：</div>
         <ul class="label_ul_dialog" v-if="model.selected.length">
-          <li :class="{active: item.active}" v-for="(item, index) in model.selected" :key="index" >{{item.name || item.labelName}}</li>
+          <li :class="{active: item.active}" v-for="(item, index) in model.selected" :key="index" @click="removeSkills(index)">{{item.name || item.labelName}}</li>
         </ul>
         <div class="m_h2">请选择标签：</div>
         <ul class="label_ul_dialog" v-if="model.list.length">
@@ -199,8 +198,8 @@
         </ul>
       </div>
 
-      <div class="html_content_box_01" v-if="model.type === 'customize_skills' || model.type === 'customize_literacy'">
-        <el-input v-model="model.value2" placeholder="请输入标签名称"></el-input>
+      <div class="html_content_box_01" v-if="model.type === 'customize'">
+        <el-input v-model="model.value2" placeholder="请输入标签名称" maxlength="6"></el-input>
       </div>
 
       <span slot="footer" class="dialog-footer">
@@ -208,7 +207,23 @@
         <el-button type="primary" @click="confirm">确 定</el-button>
       </span>
     </el-dialog>
-
+    <!-- 绑定与解绑模块 -->
+    <div v-if="showAdminWindow" class="bindAdminWindo">
+      <admin-control
+        :companyInfo="companyInfo"
+        :isNewCompany="isNewCompany"
+        @close="closeAdmin"
+        :AdduserInfo="userInfo"
+        @closeAdminWindow="refresh"
+        :isBindAdmin="isBindAdmin"
+        :userName="personalInfo.name"
+        :companyName="companyInfo ? companyInfo.companyName : ''"
+        :nextAdmin="nextAdmin"
+        :isFromUser="true"
+        :isAdmin="companyInfo? companyInfo.isAdmin: 1"
+        :companyId="companyInfo? companyInfo.id : 0"
+      ></admin-control>
+    </div>
   </div>
 </template>
 
@@ -216,6 +231,8 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import ImageUploader from "@/components/imageUploader";
+import adminControl from "@/components/adminControl/index";
+
 import {
   fieldApi,
   uploadApi,
@@ -242,7 +259,8 @@ import {
   setRecruiterBriefApi,
   createLabelProfessionalSkillsApi,
   getRecruiterLabelsListsApi,
-  addRecruiterLabelApi
+  addProfessionalSkillsLabelApi,
+  setRecruiterLabelsApi
 } from "API/recruiter";
 
 import {
@@ -251,17 +269,59 @@ import {
   addCompanyAddressApi,
   delCompanyAddressApi,
   getApplyUserInfoApi,
-  editApplyUserInfoApi
+  editApplyUserInfoApi,
+  setuserInfoApi,
+  editAdminNameApi,
+  getRecruitersListApi
 } from "API/company";
 import { getAccessToken, removeAccessToken } from "@/api/cacheService.js";
 
 @Component({
   name: "EditRecruiter",
   components: {
-    ImageUploader
+    ImageUploader,
+    adminControl
   }
 })
 export default class EditRecruiter extends Vue {
+  showAdminWindow = false
+  isNewCompany=false
+  isBindAdmin = false;
+  editBaseInfos = false
+  editUserLabel = false
+  editUserBreif = false
+  editBelongCompany = false
+  companyInfo = {
+    realname: "",
+    avatarIds: [],
+    avatars: [],
+    companyEmail: "",
+    companyId: "",
+    companyInfo: "",
+    createPositionRight: "",
+    email: "",
+    gender: "",
+    identityAuth: 0,
+    identityNum: "",
+    isBlockCreatePosition: 0,
+    mobile: "",
+    name: "",
+    needRealNameAuth: "",
+    passportFront: "",
+    passportFrontId: 0,
+    position: "",
+    status: "",
+    uid: "",
+    vkey: ""
+  }
+  /* 身份信息 */
+  personalInfo = {
+    name: "", // 姓名
+    gender: "",
+    realname: "", // 真实姓名
+    idNum: "", // 身份证号码
+    passportFront: "" // 身份证正面照片
+  }
   model = {
     show: false,
     type: '',
@@ -286,32 +346,93 @@ export default class EditRecruiter extends Vue {
     gender: '',
     realname: '',
     avatars: [],
-    companyInfo: {
-      companyName: ''
-    },
     brief: '',
     createPositionRight: '1',
-    professionalSkill: [],
-    labelLife: []
+    skillLabels: [],
+    literacyLabels: [],
+    lifeLabels: []
 
   };
+  userInfo = {}
+  nextAdmin = null; // 公司下一个管理员的信息
   labelProfessionalLiteracyList = []
   labelProfessionalSkillsList = []
+  // 关闭移除招聘官
+  closeAdmin() {
+    this.showAdminWindow = false
+  }
+  /* 获取用户信息 */
+  async getUserInfo() {
+    let res = await getUserInfoApi(this.$route.params.id);
+    let userInfo = res.data.data;
+    this.userInfo = userInfo;
+    this.isDetection = !userInfo.needRealNameAuth;
+    if (userInfo.companyInfo) {
+      this.companyInfo = userInfo.companyInfo;
+    } else {
+      this.companyInfo = {
+        realname: ""
+      };
+    }
+    this.createPositionRight = !!userInfo.createPositionRight;
+    this.phone = {
+      mobile: userInfo.mobile
+    };
+    /* 身份信息 */
+    this.personalInfo = {
+      uid: userInfo.uid,
+      name: userInfo.name, // 姓名
+      gender: userInfo.gender,
+      realname: userInfo.realname || "", // 真实姓名
+      idNum: userInfo.identityNum || "", // 身份证号码
+      passportFront: userInfo.passportFront
+        ? userInfo.passportFront.middleUrl
+        : "", // 身份证正面照片
+      identityAuth: userInfo.identityAuth
+    };
+  }
+  /* 移出公司 */
+  async removeUser() {
+    this.showAdminWindow = true;
+    this.isBindAdmin = true;
+    this.companyInfo.realName=this.userInfo.name
+    if (!!this.companyInfo.isAdmin) {
+      let param = {
+        page: 1,
+        count: 2
+      };
+      let res = await getRecruitersListApi(this.companyInfo.id, param);
+      res.data.data.forEach(item => {
+        if (this.userInfo.uid !== item.uid) {
+          this.nextAdmin = item;
+        }
+      });
+    }
+  }
+  /* 绑定公司 */
+  bindCompany() {
+    this.showAdminWindow = true;
+    this.isBindAdmin = false;
+  }
   setRecruiterBrief() {
     setRecruiterBriefApi({uid: this.$route.params.id, brief: this.userInfos.brief})
   }
   switchPublicBtn(e) {
     let funcApi = e === 'y' ? openPublicPosisionApi : closePublicPosisionApi
-    funcApi({uid: this.$route.params.id}).then(() => {})
+    funcApi({uid: this.$route.params.id})
   }
   getLabelSkills(e) {
+    let skillLabels = this.userInfos.skillLabels.map(field => field.labelId)
     this.labelProfessionalSkillsList.map(field => {
-      if(field.labelId === e && !field.active) field.active = !field.active
+      if(field.labelId === e && !field.active && !skillLabels.includes(field.labelId)) {
+        field.active = !field.active
+        field.source = 'system'
+      }
     })
     let activeList = this.labelProfessionalSkillsList.filter(field => field.active)
-    this.model.selected = this.userInfos.professionalSkill.concat(activeList)
+    this.model.selected = this.userInfos.skillLabels.concat(activeList)
   }
-  removeSills(index) {
+  removeSkills(index) {
     this.model.selected.splice(index, 1)
     this.model.value3 = ''
   }
@@ -333,16 +454,19 @@ export default class EditRecruiter extends Vue {
   }
   getRecruiterLabelsLists() {
     return getRecruiterLabelsListsApi({uid: this.$route.params.id}).then(res => {
-      let professionalSkill = []
-      let labelLife = []
+      let literacyLabels = []
+      let lifeLabels = []
+      let skillLabels = []
       let list = res.data.data
       list.map(field => {
         field.active = true
-        if(field.type === 'label_professional_skills') professionalSkill.push(field)
-        if(field.type === 'label_life') labelLife.push(field)
+        if(field.type === 'label_professional_literacy') literacyLabels.push(field)
+        if(field.type === 'label_life') lifeLabels.push(field)
+        if(field.type === 'label_professional_skills') skillLabels.push(field)
       })
-      this.userInfos.professionalSkill = professionalSkill
-      this.userInfos.labelLife = labelLife
+      this.userInfos.literacyLabels = literacyLabels
+      this.userInfos.lifeLabels = lifeLabels
+      this.userInfos.skillLabels = skillLabels
     })
   }
   addRecruiterLabel(data) {
@@ -352,7 +476,29 @@ export default class EditRecruiter extends Vue {
     let funcApi = this.$route.query.isFromCheck ? getApplyUserInfoApi : getUserInfoApi
     let isFromCheck = this.$route.query.isFromCheck
     return funcApi(this.$route.params.id).then(res => {
+
       let userInfos = res.data.data
+      this.userInfo = userInfos;
+      this.isDetection = !userInfos.needRealNameAuth;
+      if (userInfos.companyInfo) {
+        this.companyInfo = userInfos.companyInfo;
+      } else {
+        this.companyInfo = {realname: ''};
+      }
+      this.createPositionRight = !!userInfos.createPositionRight;
+      this.phone = {mobile: userInfos.mobile };
+      /* 身份信息 */
+      this.personalInfo = {
+        uid: userInfos.uid,
+        name: userInfos.name, // 姓名
+        gender: userInfos.gender,
+        realname: userInfos.realname || "", // 真实姓名
+        idNum: userInfos.identityNum || "", // 身份证号码
+        passportFront: userInfos.passportFront
+          ? userInfos.passportFront.middleUrl
+          : "", // 身份证正面照片
+        identityAuth: userInfos.identityAuth
+      };
       let params = {
         uid: userInfos.uid,
         name: userInfos.name,
@@ -367,62 +513,94 @@ export default class EditRecruiter extends Vue {
         companyInfo: userInfos.companyInfo
       }
       this.userInfos = Object.assign(this.userInfos, params)
+      this.companyInfo = userInfos.companyInfo
     })
   }
   todoAction(type) {
+    let literacyLabels = this.userInfos.literacyLabels.map(field => field.labelId)
     switch(type) {
       case 'literacy':
         this.model.show = true
         this.model.title = '添加职业素养标签'
         this.model.type = 'literacy'
+        this.model.selected = [].concat(this.userInfos.literacyLabels)
+        this.labelProfessionalLiteracyList.map(field => field.active = literacyLabels.includes(field.labelId) ? true : false)
         this.model.list = this.labelProfessionalLiteracyList
-        this.model.selected = this.userInfos.labelLife
         break;
-      case 'customize_skills':
+      case 'customize':
         this.model.show = true
         this.model.title = '添加自定义标签'
-        this.model.type = 'customize_skills'
-        break
-      case 'customize_literacy':
-        this.model.show = true
-        this.model.title = '添加自定义标签'
-        this.model.type = 'customize_literacy'
+        this.model.type = 'customize'
         break
       case 'skills':
         this.model.show = true
         this.model.title = '添加职业能力标签'
         this.model.type = 'skills'
-        this.model.selected = this.userInfos.professionalSkill
+        this.model.selected = [].concat(this.userInfos.skillLabels)
+        break
+      case 'editBaseInfos':
+        this.editBaseInfos = !this.editBaseInfos
+        break
+      case 'editUserLabel':
+        this.editUserLabel = !this.editUserLabel
+        break
+      case 'editUserBreif':
+        this.editUserBreif = !this.editUserBreif
         break
       default:
         break
     }
   }
   confirm() {
-    let jobList = []
+    let skillLabels = []
     let literacyLabels = []
-    let lifeList = []
+    let lifeLabels = []
+    // 设置默认值
+    this.userInfos.literacyLabels.map(item => {
+      literacyLabels.push({labelId: item.labelId, source: item.source})
+    })
+    this.userInfos.lifeLabels.map(item => {
+      lifeLabels.push({labelId: item.labelId, source: item.source})
+    })
+    this.userInfos.skillLabels.map(item => {
+      skillLabels.push({labelId: item.labelId, source: item.source})
+    })
     let data = {
-      skillLabels: jobList,
-      literacyLabels: literacyLabels,
-      lifeLabels: lifeList
+      uid: this.$route.params.id,
+      skillLabels,
+      literacyLabels,
+      lifeLabels
     }
     switch(this.model.type) {
       case 'literacy':
-        console.log(this.model)
+        data.literacyLabels = []
+        this.model.selected.map(item => data.literacyLabels.push({labelId: item.labelId, source: item.source}))
+        this.setRecruiterLabels(data)
         break;
-      case 'customize_skills':
-        console.log(this.model)
+      case 'skills':
+        data.skillLabels = []
+        this.model.selected.map(item => data.skillLabels.push({labelId: item.labelId, source: item.source}))
+        this.setRecruiterLabels(data)
         break;
-      case 'customize_literacy':
-        console.log(this.model)
+      case 'customize':
+        addProfessionalSkillsLabelApi({uid: this.$route.params.id, name: this.model.value2}).then(res => {
+          skillLabels.push(res.data.data)
+          this.setRecruiterLabels(data)
+        })
         break;
       default:
         break
     }
   }
+  setRecruiterLabels(data) {
+    return setRecruiterLabelsApi(data).then(() => {
+      this.model.show = false
+      this.getRecruiterLabelsLists()
+    })
+  }
   close() {
     this.model.show = false
+    this.showAdminWindow = false;
   }
   saveUser() {
     let params = {
@@ -450,10 +628,15 @@ export default class EditRecruiter extends Vue {
     return createLabelProfessionalSkillsApi({uid: this.$route.params.id})
   }
   getLabelItem(index) {
-    this.labelProfessionalLiteracyList[index].active = !this.labelProfessionalLiteracyList[index].active
+    this.labelProfessionalLiteracyList.map((field, i) => {
+      if(i === index) {
+        field.active = !field.active
+        field.source = 'system'
+      }
+    })
     let activeList = this.labelProfessionalLiteracyList.filter(field => field.active)
     this.model.list = this.labelProfessionalLiteracyList
-    this.model.selected = activeList
+    this.model.selected = this.userInfos.literacyLabels.concat(activeList)
   }
   handleAvatarLoaded(e) {
     let formData = new FormData()
@@ -545,7 +728,11 @@ export default class EditRecruiter extends Vue {
     let params = this.$route.query.isFromCheck ? tem : userInfo
     return funcApi(uid, params)
   }
-  created() {
+  refresh() {
+    this.showAdminWindow = false
+    this.init()
+  }
+  init() {
     this.getUserInfo()
     this.getLabelProfessionalLiteracyList()
     this.getLabelProfessionalSkillsList()
@@ -553,6 +740,14 @@ export default class EditRecruiter extends Vue {
     this.getRecruiterBrief()
     this.getRecruiterLabel()
     this.getRecruiterLabelsLists()
+  }
+  /* 绑定公司 */
+  bindCompany() {
+    this.showAdminWindow = true
+    this.isBindAdmin = false
+  }
+  created() {
+    this.init()
   }
 }
 </script>
@@ -649,72 +844,75 @@ export default class EditRecruiter extends Vue {
     margin: 20px;
   }
   .common-list {
-  li {
-    width:88px;
-    height:88px;
-    background:rgba(245,247,250,1);
-    border-radius:4px;
-    position: relative;
-    display: inline-block;
-    margin-right: 24px;
-    margin-bottom: 24px;
-    img {
-      width: 100%;
-      height: 100%;
-    }
-    &:hover{
-      .btn-close{
-        opacity: 1
+    li {
+      width:88px;
+      height:88px;
+      background:rgba(245,247,250,1);
+      border-radius:4px;
+      position: relative;
+      display: inline-block;
+      margin-right: 24px;
+      margin-bottom: 24px;
+      img {
+        width: 100%;
+        height: 100%;
       }
-    };
-  }
-  .upload-li {
-    position: relative;
-    box-sizing: border-box;
-    border: dotted 1px #DCDCDC;
-    background: #f5f7fa;
-    border-radius: 5px;
-    overflow: hidden;
-    .el-upload {
+      &:hover{
+        .btn-close{
+          opacity: 1
+        }
+      };
+    }
+    .upload-li {
+      position: relative;
+      box-sizing: border-box;
+      border: dotted 1px #DCDCDC;
+      background: #f5f7fa;
+      border-radius: 5px;
+      overflow: hidden;
+      .el-upload {
+        width: 100%;
+        height: 100%;
+      }
+      .el-icon-plus {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #DCDCDC;
+        font-size: 24px;
+      }
+    }
+    .btn-close{
+      position: absolute;
+      top: 0;
+      right: 0;
+      color: #BCBCBC;
+      font-size: 20px;
+      line-height: 1;
+      cursor: pointer;
       width: 100%;
       height: 100%;
-    }
-    .el-icon-plus {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: #DCDCDC;
-      font-size: 24px;
+      background: rgba(0,0,0,.6);
+      z-index: 2;
+      text-align: center;
+      line-height: 88px;
+      border-radius: 5px;
+      overflow: hidden;
+      color: white;
+      transition: all ease .4s;
+      opacity: 0;
     }
   }
-  .btn-close{
-    position: absolute;
+  .bindAdminWindo {
+    position: fixed;
     top: 0;
-    right: 0;
-    color: #BCBCBC;
-    font-size: 20px;
-    line-height: 1;
-    cursor: pointer;
+    left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,.6);
-    z-index: 2;
-    text-align: center;
-    line-height: 88px;
-    border-radius: 5px;
-    overflow: hidden;
-    color: white;
-    transition: all ease .4s;
-    opacity: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
   }
-  .el-progress--circle{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-}
 }
 </style>
 <style lang="less">

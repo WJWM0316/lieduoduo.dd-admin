@@ -177,10 +177,12 @@
       </div>
       <div class="companyName btn" v-show="userInfo.companyId" @click.stop="removeUser">移出公司</div>
     </div>
+
     <div class="companyMessage" v-else-if="isEditAdminName==false">
       <div>所属公司</div>
       <div class="companyName btn" @click.stop="bindCompany">绑定公司</div>
     </div>
+
     <div class="officerInfo" v-if="userInfo.companyId&&isEditAdminName==false">
       <div class="title">
         <span>招聘官信息</span>
