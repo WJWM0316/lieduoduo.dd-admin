@@ -241,7 +241,8 @@ import {
   editUsermanageInfosApi,
   setRecruiterBriefApi,
   createLabelProfessionalSkillsApi,
-  getRecruiterLabelsListsApi
+  getRecruiterLabelsListsApi,
+  addRecruiterLabelApi
 } from "API/recruiter";
 
 import {
@@ -344,6 +345,9 @@ export default class EditRecruiter extends Vue {
       this.userInfos.labelLife = labelLife
     })
   }
+  addRecruiterLabel(data) {
+    return addRecruiterLabelApi(data)
+  }
   getUserInfo() {
     let funcApi = this.$route.query.isFromCheck ? getApplyUserInfoApi : getUserInfoApi
     let isFromCheck = this.$route.query.isFromCheck
@@ -395,12 +399,19 @@ export default class EditRecruiter extends Vue {
     }
   }
   confirm() {
+    let jobList = []
+    let literacyLabels = []
+    let lifeList = []
+    let data = {
+      skillLabels: jobList,
+      literacyLabels: literacyLabels,
+      lifeLabels: lifeList
+    }
     switch(this.model.type) {
       case 'literacy':
         console.log(this.model)
         break;
       case 'customize_skills':
-        this
         console.log(this.model)
         break;
       case 'customize_literacy':
