@@ -4,7 +4,11 @@
 
     <div class="base_infos">
       <el-form label-suffix="：" label-width="160px">
-        <h3>基本信息 <el-button type="text" v-if="!editBaseInfos" @click="todoAction('editBaseInfos')">编辑</el-button></h3>
+        <h3>
+          基本信息
+          <el-button type="text" v-if="!editBaseInfos" @click="todoAction('editBaseInfos')">编辑</el-button>
+          <el-button type="text" @click="$router.back(-1)" style="float: right;">返回上一页</el-button>
+        </h3>
 
         <el-form-item label="头像">
           <ul class="common-list">
