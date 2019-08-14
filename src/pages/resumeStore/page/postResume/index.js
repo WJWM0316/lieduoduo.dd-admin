@@ -240,6 +240,7 @@ export default class PostResume extends Vue {
     professionalLiteracyList = []
     optionsSkills = []
     lifeLabelsList = []
+    characterLabelsList = []
     isEditForm2 = false
     selectedJobList = []
     selectedLifeList = []
@@ -337,7 +338,8 @@ export default class PostResume extends Vue {
   }
   getLifeLabel() {
     getLifeLabelApi().then(res => {
-      this.lifeLabelsList = [...res.data.data[0].children,...res.data.data[1].children]
+      this.characterLabelsList = [...res.data.data[0].children]
+      this.lifeLabelsList = [...res.data.data[1].children]
     })
   }
   time(time) {
@@ -977,7 +979,6 @@ export default class PostResume extends Vue {
         this.selectedJobList.push(item)
       }
     })
-    console.log(this.selectedJobList)
   }
   changeLifeLabels(e) {
     let res = {}
@@ -995,7 +996,23 @@ export default class PostResume extends Vue {
       }
     })
     this.selectedLifeList.push(res)
-    console.log(this.selectedLifeList)
+  }
+  changeCharacterLabels(e) {
+    let res = {}
+    let isHas = false
+    if (this.selectedLifeList.length>2) return
+    this.selectedLifeList.map(item => {
+      if (item.labelId === e) {
+        isHas = true
+      }
+    })
+    if (isHas) return
+    this.characterLabelsList.map(item => {
+      if (item.labelId === e) {
+        res = item
+      }
+    })
+    this.selectedLifeList.push(res)
   }
   // 编辑删除标签
   deleteLabel(type,index) {

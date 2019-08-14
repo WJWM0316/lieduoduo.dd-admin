@@ -136,11 +136,11 @@
             </el-form-item> -->
           </el-form>
           <template v-if="haveCard!==0">
-            <h4 class="classifyTitle">个性签名<span class="edit_span" v-if="!isEditForm2" @click="setEdit(2)">编辑</span></h4>
+            <h4 class="classifyTitle">个性标签<span class="edit_span" v-if="!isEditForm2" @click="setEdit(2)">编辑</span></h4>
             <div class="infoCont" v-if="!isEditForm2">
               <div class="line_blo">
                 <div class="row_blo">
-                  <span class="label_name">个性签名:</span>
+                  <span class="label_name">个性标签:</span>
                   <div class="label_value formItem">
                     <div class="selectedList selectCont">
                       <div class="selected_span" v-for="item, index in editMsg.personalizedLabels" >{{item.labelName}}</div>
@@ -200,6 +200,20 @@
                   placeholder="请选择">
                   <el-option
                     v-for="item in lifeLabelsList"
+                    :key="item.labelId"
+                    :label="item.name"
+                    :value="item.labelId">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label-width="80px" label="性格标签" class="formItem" prop="lifeLabels">
+                <el-select
+                  filterable
+                  default-first-option
+                  @change="changeCharacterLabels"
+                  placeholder="请选择">
+                  <el-option
+                    v-for="item in characterLabelsList"
                     :key="item.labelId"
                     :label="item.name"
                     :value="item.labelId">
