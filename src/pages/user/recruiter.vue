@@ -3,7 +3,7 @@
   <div class="recruiter_list" @click.stop="closeTopic">
     <el-container class="container" style="border: 1px solid #eee">
       <el-header class="header" style="text-align: right; font-size: 15px">
-        <div class="title">用户管理({{total}})</div>
+        <div class="title">招聘官管理({{total}})</div>
         <el-button @click.stop="addUser" class="btn-limit-width">+ 添加用户</el-button>
       </el-header>
       <el-main>

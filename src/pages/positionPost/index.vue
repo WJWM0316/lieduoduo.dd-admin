@@ -92,7 +92,7 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item prop="emolument_max" style="width: 0; text-align: left; margin:0;">
+      <el-form-item style="width: 0; text-align: left; margin:0;">
       </el-form-item>
 
       <el-form-item label="技能要求" prop="labels" style="width: 450px;">
@@ -131,7 +131,7 @@
       <p class="ruleHint">发布职位即表示同意遵守<a>《猎多多职位信息发布规则》</a>，如违反将导致您的账号被锁定</p>
       
       <div class="btn-container">
-        <el-button class="btn_submit" type="primary" @click="handleSubmit">发布</el-button>
+        <el-button class="btn_submit" type="primary" @click="handleSubmit">{{$route.query.id ? '保存' : '发布'}}</el-button>
         <el-button class="btn_cancel" @click="handleCancel">取消</el-button>
       </div>
 

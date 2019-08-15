@@ -32,7 +32,7 @@
             placeholder="请输入姓名"
             :maxlength="20"
             style="width: 400px;"
-            :disabled="!editBaseInfos"
+            :disabled="true"
           ></el-input>
         </el-form-item>
 
@@ -194,7 +194,7 @@
       <div class="html_content_box" v-if="model.type === 'literacy'">
         <div class="m_h1">已选择标签：</div>
         <ul class="label_ul_dialog" v-if="model.selected.length">
-          <li :class="{active: item.active}" v-for="(item, index) in model.selected" :key="index" @click="removeSkills(index)">{{item.name || item.labelName}}</li>
+          <li :class="{active: item.active}" v-for="(item, index) in model.selected" :key="index" @click="removeLabelItem(index)">{{item.name || item.labelName}}</li>
         </ul>
         <div class="m_h2">请选择标签：</div>
         <ul class="label_ul_dialog" v-if="model.list.length">
@@ -279,6 +279,9 @@ import {
   getRecruitersListApi
 } from "API/company";
 import { getAccessToken, removeAccessToken } from "@/api/cacheService.js";
+// 邮箱
+export const emailReg = /^([a-zA-Z0-9]+[_|\_|\.|\-]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[-_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,8}$/
+export const wechatReg = /^.{2,20}$/
 
 @Component({
   name: "EditRecruiter",
@@ -419,6 +422,13 @@ export default class EditRecruiter extends Vue {
     this.isBindAdmin = false;
   }
   setRecruiterBrief() {
+    if(this.userInfos.brief.trim() && (this.userInfos.brief.trim().length < 6 || this.userInfos.brief.trim().length > 5000)) {
+      this.$message({
+        message: '请输入有效的个人简介',
+        type: 'warning'
+      })
+      return
+    }
     setRecruiterBriefApi({uid: this.$route.params.id, brief: this.userInfos.brief})
   }
   switchPublicBtn(e) {
@@ -426,6 +436,13 @@ export default class EditRecruiter extends Vue {
     funcApi({uid: this.$route.params.id})
   }
   getLabelSkills(e) {
+    if(this.model.selected.length > 2) {
+      this.$message({
+        message: '最多只能添加三个标签',
+        type: 'warning'
+      })
+      return
+    }
     let skillLabels = this.userInfos.skillLabels.map(field => field.labelId)
     this.labelProfessionalSkillsList.map(field => {
       if(field.labelId === e && !field.active && !skillLabels.includes(field.labelId)) {
@@ -437,8 +454,33 @@ export default class EditRecruiter extends Vue {
     this.model.selected = this.userInfos.skillLabels.concat(activeList)
   }
   removeSkills(index) {
-    this.model.selected.splice(index, 1)
+    if(this.model.selected.length < 2) {
+      this.$message({
+        message: '至少选择一个标签',
+        type: 'warning'
+      });
+      return
+    }
+    let item = this.model.selected.splice(index, 1)
     this.model.value3 = ''
+    this.labelProfessionalSkillsList.map(field => {
+      if(field.labelId === item[0].labelId) field.active = false
+    })
+  }
+  removeLabelItem(index) {
+    if(this.model.selected.length < 2) {
+      this.$message({
+        message: '至少选择一个标签',
+        type: 'warning'
+      });
+      return
+    }
+    let item = this.model.selected.splice(index, 1)
+    this.model.value3 = ''
+    this.labelProfessionalLiteracyList.map(field => {
+      if(field.labelId === item[0].labelId) field.active = false
+    })
+    this.model.list = [].concat(this.labelProfessionalLiteracyList)
   }
   getRecruiterBaseInfo() {
     return getRecruiterBaseInfoApi({uid: this.$route.params.id})
@@ -620,6 +662,27 @@ export default class EditRecruiter extends Vue {
     if(this.userInfos.avatars.length) {
       params = Object.assign(params, {avatars: this.userInfos.avatars.map(field => field.id).join(',')})
     }
+    if(!emailReg.test(params.email)) {
+      this.$message({
+        message: '请输入有效邮箱',
+        type: 'warning'
+      })
+      return
+    }
+    if(params.wechat && !wechatReg.test(params.wechat)) {
+      this.$message({
+        message: '请输入有效的微信号',
+        type: 'warning'
+      })
+      return
+    }
+    if(params.signature.trim() && (params.signature.trim().length < 6 || params.signature.trim().length > 30)) {
+      this.$message({
+        message: '请输入有效的个性签名',
+        type: 'warning'
+      })
+      return
+    }
     editUsermanageInfosApi(params)
   }
   getLabelProfessionalLiteracyList() {
@@ -632,6 +695,20 @@ export default class EditRecruiter extends Vue {
     return createLabelProfessionalSkillsApi({uid: this.$route.params.id})
   }
   getLabelItem(index) {
+    if(this.model.selected.length > 2 && !this.labelProfessionalLiteracyList[index].active) {
+      this.$message({
+        message: '最多只能添加三个标签',
+        type: 'warning'
+      })
+      return
+    }
+    if(this.model.selected.length < 2 && this.labelProfessionalLiteracyList[index].active) {
+      this.$message({
+        message: '至少选择一个标签',
+        type: 'warning'
+      })
+      return
+    }
     this.labelProfessionalLiteracyList.map((field, i) => {
       if(i === index) {
         field.active = !field.active
@@ -640,7 +717,7 @@ export default class EditRecruiter extends Vue {
     })
     let activeList = this.labelProfessionalLiteracyList.filter(field => field.active)
     this.model.list = this.labelProfessionalLiteracyList
-    this.model.selected = this.userInfos.literacyLabels.concat(activeList)
+    this.model.selected = activeList
   }
   handleAvatarLoaded(e) {
     let formData = new FormData()

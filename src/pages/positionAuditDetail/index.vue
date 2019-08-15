@@ -177,6 +177,13 @@ export default class checkPage extends Vue {
 .describe {
   display: inline-block;
   text-align: left;
+  width: 100%;
+
+  white-space: pre-wrap;       
+  white-space: -moz-pre-wrap;  
+  white-space: -pre-wrap;      
+  white-space: -o-pre-wrap;    
+  word-wrap: break-word;   
 }
 .mask {
   position: fixed;

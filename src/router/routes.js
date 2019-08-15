@@ -303,7 +303,7 @@ export const routes = [
   {
     path: "/positionManage",
     name: "positionManage",
-    meta: { title: "职位管理", keepAlive: true },
+    meta: { title: "职位管理"},
     component: resolve => require(["@/pages/positionManage/index.vue"], resolve)
   },
   /* 职位审核详情 */
@@ -479,10 +479,10 @@ export const routes = [
     path: "/user/recruiterInfo/:id",
     name: "recruiter_info",
     meta: {
-      title: "查看用户详情",
+      title: "编辑详情",
       haveParent: true,
-      parentPath: "/user",
-      parentName: "用户管理"
+      parentPath: "/recruiter",
+      parentName: "招聘官管理"
     },
     component: resolve => require(["@/pages/user/info_recruiter.vue"], resolve)
   },
