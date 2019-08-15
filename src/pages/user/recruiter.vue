@@ -15,7 +15,7 @@
               <el-input
                 type="text"
                 placeholder="请输入内容"
-                v-model="searchType.keyword1"
+                v-model="form.companyName"
                 class="inputSelect"
               >
                 <el-select
@@ -154,7 +154,7 @@
           :fields="fields"
           :list="list"
           :total="total"
-          :page="form.page"
+          :page="Number(form.page)"
           :page-count="pageCount"
           @page-change="handlePageChange"
         >
@@ -502,6 +502,7 @@ export default class user extends Vue {
     if(tem.name) {
       params = Object.assign(params, {name: tem.name})
     }
+    console.log(this.form)
     getUserListApi(params).then(res => {
       this.list = res.data.data;
       this.total = res.data.meta.total;
@@ -600,20 +601,16 @@ export default class user extends Vue {
 
   created() {
     this.form = Object.assign(this.form, this.$route.query)
-    console.log(this.$route.query)
+    if(this.form.role == '2,3') this.form.role = '99'
     this.getRecruiterList();
   }
   activated() {
     this.getRecruiterList();
-    let that = this;
-    setTimeout(function() {
-      window.scrollTo(0, that.$route.meta.scrollY);
-    }, 300);
   }
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .recruiter_list {
   /*padding: 22px;*/
   margin-left: 200px;
