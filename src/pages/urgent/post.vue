@@ -128,6 +128,7 @@ export default class Urgent extends Vue {
   }
   created() {
     if(this.$route.name === 'urgent_edit') this.getUrgency()
+    if(this.$route.name === 'urgent_post') this.canUseRapidly = false
   }
 }
 </script>

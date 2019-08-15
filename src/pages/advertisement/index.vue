@@ -147,7 +147,7 @@
         prop="seatsNum"
         label="上架/下架">
         <template slot-scope="scope">
-          {{scope.row.isOnline === 1 ? '上线' : '下线'}}
+          {{scope.row.isOnline === 1 ? '上架' : '下架'}}
         </template>
       </el-table-column>
       <el-table-column
@@ -173,6 +173,7 @@
           <el-popover
             placement="bottom"
             width="300"
+            v-model="scope.row.canDisplay"
             trigger="click">
             <div>
               <div style="text-align: center;"v-if="!form.qrCode">
@@ -279,8 +280,10 @@ export default class Advertisement extends Vue {
     }
     getAdvertListApi(params).then(res => {
       let infos = res.data
+      let lists = infos.data
       this.total = infos.meta.total
-      this.lists = infos.data
+      lists.map(field => field.canDisplay = false)
+      this.lists = lists
       if(this.form.name) {
         params = Object.assign(params, {select1: this.form.select1})
       }
@@ -349,6 +352,10 @@ export default class Advertisement extends Vue {
     }
   }
   getPositionCodeUrl(uid) {
+    this.lists.map(field => {
+      field.canDisplay = false
+      if(field.uid === uid) field.canDisplay = true
+    })
     this.form.qrCode = ''
     return getPositionCodeUrlApi({id: uid}).then(res => this.form.qrCode = res.data.data.qrCodeUrl)
   }

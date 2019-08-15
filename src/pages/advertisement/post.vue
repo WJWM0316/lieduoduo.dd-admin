@@ -76,7 +76,7 @@ export default class AdvertisementPost extends Vue {
     start_time: '',
     end_time: '',
     positions: '',
-    is_rapidly: 1,
+    is_rapidly: 2,
     is_online: 1
   }
   onSubmit() {

@@ -70,7 +70,7 @@
         </div>
         <div class="item">
           <span class="lable">技能要求：</span>
-          <span v-for="item,index in positionData.skillsLabel">{{item.name}}</span>
+          <span v-for="item,index in positionData.skillsLabel">{{item.name}}{{index === positionData.skillsLabel.length - 1 ? '' : '、'}}</span>
         </div>
 
         <div class="item">

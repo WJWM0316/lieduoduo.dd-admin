@@ -66,7 +66,7 @@
             </el-form-item>
 
             <el-form-item label="职位来源">
-              <el-select v-model="form.wherefrom" placeholder="全部状态" style="width: 140px;">
+              <el-select v-model="form.wherefrom" placeholder="全部" style="width: 140px;">
                 <el-option label="全部" value="0"></el-option>
                 <el-option label="excel导入" value="3"></el-option>
                 <el-option label="小程序发布" value="1"></el-option>

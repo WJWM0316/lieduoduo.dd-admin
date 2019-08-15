@@ -156,3 +156,18 @@ export const setRecruiterLabelsApi = data => request({
   data,
   noGlobalLoading: true
 })
+
+/* 获取生活标签 */
+export const getLifeLabelsListsApi = data => request({
+  url: `/label/life`,
+  type: 'get',
+  noGlobalLoading: true
+})
+
+/* 添加生活标签 */
+export const addLifeLabelsApi = data => request({
+  url: `/label/life/${data.uid}`,
+  type: 'post',
+  data,
+  noGlobalLoading: false
+})
