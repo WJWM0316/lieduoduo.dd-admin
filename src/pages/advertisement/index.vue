@@ -121,10 +121,10 @@
         prop="positionName"
         label="职位名">
       </el-table-column>
-      <el-table-column
+<!--       <el-table-column
         prop="positionName"
         label="职位信息">
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         prop="recruiterInfo"
         label="招聘官">
@@ -278,6 +278,10 @@ export default class Advertisement extends Vue {
     if(this.form.name2) {
       params = Object.assign(params, {name2: this.form.name2})
     }
+    if(this.form.wherefrom) {
+      params = Object.assign(params, {wherefrom: this.form.wherefrom})
+    }
+    console.log(this.form)
     getAdvertListApi(params).then(res => {
       let infos = res.data
       let lists = infos.data
@@ -372,6 +376,9 @@ export default class Advertisement extends Vue {
       end_time: '',
       count: 20
     }
+    let obj = {}
+    obj.stopPropagation = () =>{}
+    this.$refs.cascader.clearValue(obj)
     this.getAdvertList()
   }
   mounted() {

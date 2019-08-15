@@ -365,6 +365,9 @@ export default class Urgent extends Vue {
       end_time: '',
       count: 20
     }
+    let obj = {}
+    obj.stopPropagation = () =>{}
+    this.$refs.cascader.clearValue(obj)
     this.getUrgencyList()
   }
   mounted() {

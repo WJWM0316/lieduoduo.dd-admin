@@ -1115,6 +1115,7 @@ export default class Interview24h extends Vue {
           this.model.show = true
           this.model.title = '不合适'
           this.model.item = data
+          this.model.showFooter = true
         })
         break;
       case 'arrange':
