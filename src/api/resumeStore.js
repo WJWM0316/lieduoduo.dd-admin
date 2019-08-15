@@ -186,3 +186,18 @@ export const getRecommendInterviewsSearchListApi = data => request({
   data,
   noGlobalLoading: true
 })
+
+/* 获取简历等级 */
+export const getResumeLevelApi = data =>
+request({
+  url: `/resume_grade/all`,
+  type: "get"
+})
+
+/* 设置简历等级 */
+export const setResumeLevelApi = data => request({
+  url: `/resume/grade/${data.uid}`,
+  type: 'put',
+  data,
+  noGlobalLoading: true
+})

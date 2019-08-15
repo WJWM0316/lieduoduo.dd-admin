@@ -207,3 +207,4 @@ export const getLifeLabelApi = data =>
     type: "get"
   })
 
+

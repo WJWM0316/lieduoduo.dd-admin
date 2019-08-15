@@ -181,7 +181,17 @@
           :key="index"
         >
           <div class="resumeNumber">
-            <span class="resumeNum">简历编号: {{item.resumeNum}}</span>
+            <div class="resumeNum">
+              简历编号: {{item.resumeNum}}
+              <el-select v-model="item.resumeGrade" placeholder="请选择" @change="changeGrade($event, item.uid)">
+                <el-option
+                  v-for="item in resumeLevel"
+                  :key="item.value"
+                  :label="item.text"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </div>
             <span class="jobStatusDesc" v-if="item.jobStatusDesc!=''">{{item.jobStatusDesc}}</span>
             <span class="resumeUpdateTime">最近更新：{{item.resumeUpdateTime}}</span>
             <span class="lastLoginTime">最近访问：{{item.lastLoginTime}}</span>
@@ -344,7 +354,9 @@ import {
   GetResumeHistory,
   addHistory,
   resumelist,
-  haveMobile
+  haveMobile,
+  getResumeLevelApi,
+  setResumeLevelApi
 } from "API/resumeStore.js";
 
 let lock = false;
@@ -378,6 +390,7 @@ export default class resumeStore extends Vue {
   dialogVisible = false;
   closeSelectStore = false;
   diyTabName = ""; /* 自定义标签名 */
+  resumeLevel = []
   needWorkProps = {
     value: "labelId",
     label: "name",
@@ -619,9 +632,10 @@ export default class resumeStore extends Vue {
       }
     })
   }
-
+  getResumeLevel() {
+    return getResumeLevelApi().then(res => this.resumeLevel = res.data.data)
+  }
   editResume(item) {
-    console.log(item)
     this.$router.push({
       path: "/resumeStore/list/postResume",
       query: {
@@ -852,9 +866,7 @@ export default class resumeStore extends Vue {
   }
   /* 满意度 */
   returnKeys(obj) {
-    console.log(obj);
     this.form = { ...this.form, ...obj };
-    console.log(this.form);
   }
   // 点击切换
   check(index) {
@@ -876,6 +888,7 @@ export default class resumeStore extends Vue {
   mounted() {
     let AdminShow = +sessionStorage.getItem("AdminShow");
     this.isSales = /(3|4)/.test(AdminShow) ? false : true;
+    this.getResumeLevel()
   }
   created() {
     this.degreeData();
@@ -1012,6 +1025,9 @@ export default class resumeStore extends Vue {
     this.form.page = nowPage;
     this.form.page = nowPage;
     this.getData();
+  }
+  changeGrade(e, uid) {
+    setResumeLevelApi({grade: e, uid})
   }
 }
 </script>
