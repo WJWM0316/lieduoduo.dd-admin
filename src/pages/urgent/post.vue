@@ -128,7 +128,7 @@ export default class Urgent extends Vue {
     }).catch(() => {})
   }
   hasDuplicates(str) {
-    let arr = str.split(',')
+    let arr = String(str).split(',')
     return arr.filter(( e , i ) => arr.lastIndexOf(e) !== i  &&  i === arr.indexOf(e)).length > 0
   }
   created() {
