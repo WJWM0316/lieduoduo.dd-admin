@@ -173,6 +173,7 @@
           <el-popover
             placement="bottom"
             width="300"
+            v-model="scope.row.canDisplay"
             trigger="click">
             <div>
               <div style="text-align: center;"v-if="!form.qrCode">
@@ -282,8 +283,10 @@ export default class Urgent extends Vue {
     }
     getUrgencyListApi(params).then(res => {
       let infos = res.data
+      let lists = infos.data
+      lists.map(field => field.canDisplay = false)
       this.total = infos.meta.total
-      this.lists = infos.data
+      this.lists = lists
       if(this.form.name) {
         params = Object.assign(params, {select1: this.form.select1})
       }
@@ -352,6 +355,10 @@ export default class Urgent extends Vue {
     }
   }
   getPositionCodeUrl(uid) {
+    this.lists.map(field => {
+      field.canDisplay = false
+      if(field.uid === uid) field.canDisplay = true
+    })
     this.form.qrCode = ''
     return getPositionCodeUrlApi({id: uid}).then(res => this.form.qrCode = res.data.data.qrCodeUrl)
   }

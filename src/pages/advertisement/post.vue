@@ -26,7 +26,7 @@
           type="datetime"
           value-format="yyyy-MM-dd HH:mm:ss"
           style="width: 400px;"
-          :disabled=" $route.name === 'advertisement_edit'"
+          :disabled="$route.name === 'advertisement_edit' && form.is_online === 1"
           placeholder="选择上架日期">
         </el-date-picker>
       </el-form-item>
@@ -35,7 +35,7 @@
           v-model="form.end_time"
           type="datetime"
           value-format="yyyy-MM-dd HH:mm:ss"
-          :disabled="$route.name === 'advertisement_edit'"
+          :disabled="$route.name === 'advertisement_edit' && form.is_online === 1"
           style="width: 400px;"
           placeholder="选择下架日期">
         </el-date-picker>

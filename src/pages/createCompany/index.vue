@@ -139,6 +139,7 @@
         <el-form-item
           label="一句话亮点"
           prop="one_sentence_intro"
+          :maxlength="30"
           v-if="!$route.params.checkId"
         >
           <el-input v-model="companyInfo.one_sentence_intro" placeholder="请输入内容" style="width: 400px;"></el-input>
