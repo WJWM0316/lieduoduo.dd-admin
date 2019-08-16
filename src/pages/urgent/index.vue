@@ -121,10 +121,10 @@
         prop="positionName"
         label="职位名">
       </el-table-column>
-      <el-table-column
+<!--       <el-table-column
         prop="positionName"
         label="职位信息">
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         prop="recruiterInfo"
         label="招聘官">

@@ -90,6 +90,7 @@ export default class H24_POST extends Vue {
     let endTime = new Promise((resolve, reject) => !this.form.end_time ? reject('请选择结束时间') : resolve())
     let positions = new Promise((resolve, reject) => !this.form.positions ? reject('请添加职位') : resolve())
     let seats_num = new Promise((resolve, reject) => !this.form.seats_num ? reject('请添加席位数量') : resolve())
+    let repeatPosition = new Promise((resolve, reject) => this.hasDuplicates(params.positions) ? reject('请不要重复添加职位') : resolve())
     let api = this.$route.name === 'h24_edit' ? 'editAction' : 'addAction'
     if(this.form.id) {
       params = Object.assign(params, {id: this.form.id})
@@ -100,7 +101,7 @@ export default class H24_POST extends Vue {
     if(Reflect.has(this.form, 'sort')) {
       params = Object.assign(params, {sort: this.form.sort})
     }
-    Promise.all([positions, startTime, endTime, seats_num]).then(() => this[api](params)).catch(err => this.$message.error(err))
+    Promise.all([repeatPosition, positions, startTime, endTime, seats_num]).then(() => this[api](params)).catch(err => this.$message.error(err))
   }
   addAction(params) {
     addRapidlySurfaceApi(params).then(() => this.$router.push({name: '24h'}))
@@ -133,6 +134,10 @@ export default class H24_POST extends Vue {
     }).then(() => {
       this.$router.go(-1)
     }).catch(() => {})
+  }
+  hasDuplicates(str) {
+    let arr = str.split(',')
+    return arr.filter(( e , i ) => arr.lastIndexOf(e) !== i  &&  i === arr.indexOf(e)).length > 0
   }
   created() {
     if(this.$route.name === 'h24_edit') this.getRapidlySurface()

@@ -83,6 +83,7 @@ export default class Urgent extends Vue {
     let startTime = new Promise((resolve, reject) => !this.form.start_time ? reject('请选择开始时间') : resolve())
     let endTime = new Promise((resolve, reject) => !this.form.end_time ? reject('请选择结束时间') : resolve())
     let positions = new Promise((resolve, reject) => !this.form.positions ? reject('请添加职位') : resolve())
+    let repeatPosition = new Promise((resolve, reject) => this.hasDuplicates(params.positions) ? reject('请不要重复添加职位') : resolve())
     let api = this.$route.name === 'urgent_edit' ? 'editAction' : 'addAction'
     if(this.form.id) {
       params = Object.assign(params, {id: this.form.id})
@@ -93,7 +94,7 @@ export default class Urgent extends Vue {
     if(Reflect.has(this.form, 'sort')) {
       params = Object.assign(params, {sort: this.form.sort})
     }
-    Promise.all([positions, startTime, endTime]).then(() => this[api](params)).catch(err => this.$message.error(err))
+    Promise.all([repeatPosition,positions, startTime, endTime]).then(() => this[api](params)).catch(err => this.$message.error(err))
   }
   addAction(params) {
     addUrgencyApi(params).then(() => this.$router.push({name: 'urgent'}))
@@ -125,6 +126,10 @@ export default class Urgent extends Vue {
     }).then(() => {
       this.$router.go(-1)
     }).catch(() => {})
+  }
+  hasDuplicates(str) {
+    let arr = str.split(',')
+    return arr.filter(( e , i ) => arr.lastIndexOf(e) !== i  &&  i === arr.indexOf(e)).length > 0
   }
   created() {
     if(this.$route.name === 'urgent_edit') this.getUrgency()
