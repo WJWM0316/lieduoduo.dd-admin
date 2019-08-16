@@ -341,9 +341,10 @@ export default class CommunityEdit extends Vue {
       if (!this.$route.query.id) {
         addPositionApi(params).then(res=>{
           this.$message.success('创建成功')
-          this.$router.push({
-            name: 'positionManage'
-          })
+          this.$router.go(-1)
+          // this.$router.push({
+          //   name: 'positionManage'
+          // })
 
         }).catch(e=>{
           this.$message.error(e.data.msg)
@@ -352,9 +353,10 @@ export default class CommunityEdit extends Vue {
         params.id = this.$route.query.id
         editPositionApi(params).then(res=>{
           this.$message.success('编辑成功')
-          this.$router.push({
-            name: 'positionManage'
-          })
+          this.$router.go(-1)
+          // this.$router.push({
+          //   name: 'positionManage'
+          // })
         }).catch(e=>{
           this.$message.error(e.data.msg)
         })
