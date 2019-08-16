@@ -205,7 +205,7 @@
           </el-option>
         </el-select>
         <ul class="label_ul_dialog" style="margin-top: 20px;">
-          <li :class="{active: item.active}" v-for="(item, index) in model.list" :key="index" @click="getSkillsItem(index)">{{item.name}}</li>
+          <li :class="{active: item.active}" v-for="(item, index) in model.list" :key="index" @click="getSkillsItem(index, item)">{{item.name}}</li>
         </ul>
       </div>
 
@@ -216,7 +216,7 @@
         </ul>
         <div class="m_h2">请选择标签：</div>
         <ul class="label_ul_dialog" v-if="model.list.length">
-          <li :class="{active: item.active}" v-for="(item, index) in model.list" :key="index" @click="getLabelItem(index)">{{item.name}}</li>
+          <li :class="{active: item.active}" v-for="(item, index) in model.list" :key="index" @click="getLabelItem(index, item)">{{item.name}}</li>
         </ul>
       </div>
       
@@ -848,7 +848,7 @@ export default class EditRecruiter extends Vue {
   createLabelProfessionalSkills() {
     return createLabelProfessionalSkillsApi({uid: this.$route.params.id})
   }
-  getLabelItem(index) {
+  getLabelItem(index, item) {
     if(this.model.selected.length > 2 && !this.labelProfessionalLiteracyList[index].active) {
       this.$message({
         message: '最多只能添加三个标签',
@@ -872,6 +872,7 @@ export default class EditRecruiter extends Vue {
     let activeList = this.labelProfessionalLiteracyList.filter(field => field.active)
     this.model.list = this.labelProfessionalLiteracyList
     this.model.selected = [].concat(this.userInfos.skillLabels, this.userInfos.literacyLabels,activeList)
+    console.log(this.model.selected)
   }
   getLifeLabel(type, index) {
     let lifeLabelsLists = this.lifeLabelsLists
@@ -918,7 +919,7 @@ export default class EditRecruiter extends Vue {
         break
     }
   }
-  getSkillsItem(index) {
+  getSkillsItem(index, item) {
     if(this.model.selected.length > 2 && !this.model.list[index].active) {
       this.$message({message: '最多只能添加三个标签', type: 'warning'})
       return
@@ -934,6 +935,7 @@ export default class EditRecruiter extends Vue {
     let active = list.filter(field => field.active)
     this.model.list = list
     this.model.selected = [].concat(this.userInfos.literacyLabels, this.userInfos.skillLabels, active)
+    console.log(item)
   }
   handleAvatarLoaded(e) {
     let formData = new FormData()
