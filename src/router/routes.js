@@ -435,7 +435,7 @@ export const routes = [
   {
     path: "/urgent",
     name: "urgent",
-    meta: { title: "广告职位管理", haveParent: false},
+    meta: { title: "急聘职位管理", haveParent: false},
     component: resolve => require(["@/pages/urgent/index.vue"], resolve)
   },
   /* 添加用户 */

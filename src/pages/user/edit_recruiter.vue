@@ -465,7 +465,9 @@ export default class EditRecruiter extends Vue {
       })
       return
     }
-    setRecruiterBriefApi({uid: this.$route.params.id, brief: this.userInfos.brief})
+    setRecruiterBriefApi({uid: this.$route.params.id, brief: this.userInfos.brief}).then(() => {
+      this.editUserBreif = !this.editUserBreif
+    })
   }
   switchPublicBtn(e) {
     let funcApi = e === 'y' ? openPublicPosisionApi : closePublicPosisionApi
@@ -833,7 +835,9 @@ export default class EditRecruiter extends Vue {
       })
       return
     }
-    editUsermanageInfosApi(params)
+    editUsermanageInfosApi(params).then(() => {
+      this.editBaseInfos = !this.editBaseInfos
+    })
   }
   getLabelProfessionalLiteracyList() {
     return getLabelProfessionalLiteracyListApi().then(res => this.labelProfessionalLiteracyList = res.data.data)
@@ -889,7 +893,7 @@ export default class EditRecruiter extends Vue {
         })
         this.lifeLabelsLists = lifeLabelsLists
         let activeList0 = lifeLabelsLists[0].children.filter(field => field.active)
-        this.model.selected = activeList0
+        this.model.selected = [].concat(this.userInfos.lifeLabels, activeList0)
         break
       case 'shenghuo':
         if(this.model.selected.length > 2 && !lifeLabelsLists[1].children[index].active) {
@@ -908,7 +912,7 @@ export default class EditRecruiter extends Vue {
         })
         this.lifeLabelsLists = lifeLabelsLists
         let activeList1 = lifeLabelsLists[1].children.filter(field => field.active)
-        this.model.selected = activeList1
+        this.model.selected = [].concat(this.userInfos.lifeLabels, activeList1)
         break
       default:
         break
