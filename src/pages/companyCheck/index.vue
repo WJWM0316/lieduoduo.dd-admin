@@ -108,6 +108,7 @@
               </el-select>
             </el-form-item>
             <el-form-item class="btn">
+              <el-button type="primary" @click="download">导出</el-button>
               <el-button type="primary" @click="onSubmit">查询</el-button>
               <el-button @click.stop="resetForm('form')">重置</el-button>
             </el-form-item>
@@ -382,16 +383,10 @@ export default class companyCheck extends Vue {
   getTemplist() {
     let params = this.form
     if (params.start !== "" && params.end === "") {
-      this.$message({
-        message: "申请时间必须选择开始时间和结束时间",
-        type: "warning"
-      });
+      this.$message({message: "申请时间必须选择开始时间和结束时间", type: "warning"});
       return;
     } else if (params.start === "" && params.end !== "") {
-      this.$message({
-        message: "申请时间必须选择开始时间和结束时间",
-        type: "warning"
-      });
+      this.$message({message: "申请时间必须选择开始时间和结束时间", type: "warning"});
       return;
     }
     // if(!params.customer_level) delete params.customer_level
@@ -421,8 +416,6 @@ export default class companyCheck extends Vue {
   }
   created() {
     this.userList();
-  }
-  mounted() {
     this.AdminShow = +sessionStorage.getItem("AdminShow");
     this.getTemplist();
     this.getCompanyCustomerLevelRange()
