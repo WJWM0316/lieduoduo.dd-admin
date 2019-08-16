@@ -14,35 +14,32 @@
               <el-input
                 type="text"
                 placeholder="请输入内容"
-                v-model="searchType.keyword1"
+                v-model="form.content"
                 class="inputSelect">
                 <el-select
                   class="selectTitle"
-                  v-model="searchType.condition1"
+                  v-model="form.searchType"
                   slot="prepend"
                   placeholder="公司名"
-                  @change="changeProvince"
+                  @change="changeSearchMethods"
                 >
                   <el-option
                     label="公司名"
                     value="keyword"
-                    v-show="searchType.condition2 !== 'keyword'"
                   ></el-option>
                   <el-option
                     label="手机号码"
                     value="mobile"
-                    v-show="searchType.condition2 !== 'mobile'"
                   ></el-option>
                   <el-option
                     label="公司ID"
                     value="companyId"
-                    v-show="searchType.condition2 !== 'companyId'"
                   ></el-option>
                 </el-select>
               </el-input>
             </div>
             <!-- 筛选条件2 -->
-            <div class="searchTab">
+<!--             <div class="searchTab">
               <el-input
                 type="text"
                 placeholder="请输入内容"
@@ -53,7 +50,7 @@
                   v-model="searchType.condition2"
                   slot="prepend"
                   placeholder="手机号"
-                  @change="changeProvince"
+                  @change="changeSearchType"
                 >
                   <el-option
                     label="公司名"
@@ -72,13 +69,13 @@
                   ></el-option>
                 </el-select>
               </el-input>
-            </div>
+            </div> -->
             <!--地区筛选-->
             <el-form-item class="area" label="地区筛选" prop="area">
               <el-select
                 v-model="form.firstAreaId"
                 placeholder="请选择省份"
-                @change="changeProvince"
+                @change="changeSearchType"
                 style="margin-right: 10px;">
                 <el-option
                   v-for="item in firstAreaIdList"
@@ -100,7 +97,7 @@
             <!-- 权益筛选 -->
             <el-form-item class="area" label="权益类型" prop="equity">
               <el-select v-model="form.equity" placeholder="请选择权益" style="margin-right: 10px;">
-                <el-option label="全部权益" value="0"></el-option>
+                <el-option label="全部权益" :value=0></el-option>
                 <el-option
                   v-for="item in rightList"
                   :key="item.id"
@@ -137,7 +134,7 @@
             <!-- 状态筛选 -->
             <el-form-item class="area" label="状态" prop="status" label-width="50px">
               <el-select v-model="form.status" placeholder="请选择状态" style="margin-right: 10px;">
-                <el-option label="全部" value></el-option>
+                <el-option label="全部" :value=0></el-option>
                 <el-option label="上线" value="1"></el-option>
                 <el-option label="下线" value="0"></el-option>
               </el-select>
@@ -147,7 +144,7 @@
             <el-form-item class="area" label="跟进销售" prop="adminUid" label-width="70px">
               <el-select v-model="form.adminUid" placeholder="请选择" style="margin-right: 10px;">
                 <el-option label="全部" value="all" v-if="AdminShow==4"></el-option>
-                <el-option label="无" value="0"></el-option>
+                <el-option label="无" :value=0></el-option>
                 <el-option
                   v-for="item in salerLis"
                   :key="item.id"
@@ -167,7 +164,7 @@
             <!-- 公司来源 -->
             <el-form-item label-width="77px" label="公司来源" prop="wherefrom">
               <el-select v-model="form.wherefrom" placeholder="全部状态">
-                <el-option label="全部" value="0"></el-option>
+                <el-option label="全部" :value=0></el-option>
                 <el-option label="后台创建" value="2"></el-option>
                 <el-option label="用户创建" value="1"></el-option>
               </el-select>
@@ -195,7 +192,7 @@
           :fields="fields"
           :list="list"
           :total="total"
-          :page="form.page"
+          :page="Number(form.page)"
           :page-count="pageCount"
           @page-change="handlePageChange"
         >
@@ -340,13 +337,12 @@ export default class indexPage extends Vue {
     status: "",
     adminUid: "",
     customer_level: '',
-    advisorUid: ''
-  };
-  searchType = {
-    condition1: "keyword",
-    condition2: "mobile",
-    keyword1: "",
-    keyword2: ""
+    advisorUid: '',
+    searchType: 'keyword',
+    keyword: '',
+    companyId: '',
+    mobile: '',
+    content: ''
   };
   rightList = []; // 权益列表
   salerLis = []; // 销售人员列表
@@ -411,6 +407,12 @@ export default class indexPage extends Vue {
   ];
   companyCustomerLevelRange = []
   advisorUserList = []
+  changeSearchMethods(e) {
+    this.form.content = ''
+    this.form.keyword = ''
+    this.form.mobile = ''
+    this.form.companyId = ''
+  }
   change(index, value) {
     let item = this.list.find((field, i) => index === i)
     setCompanyCustomerLevelApi({id: item.id, customerLevel: value})
@@ -440,20 +442,56 @@ export default class indexPage extends Vue {
    * @return   {[type]}           [description]
    */
   getCompanyList(newForm) {
-    let form = newForm || this.form
+    this.form[this.form.searchType] = this.form.content
     let params = {
       page: this.form.page,
       count: this.form.count
+    }
+    if(this.form.wherefrom) {
+      params = Object.assign(params, {wherefrom: this.form.wherefrom})
+    }
+    if(this.form.customer_level !== '') {
+      params = Object.assign(params, {customer_level: this.form.customer_level})
+    }
+    if(this.form.advisorUid) {
+      params = Object.assign(params, {advisorUid: this.form.advisorUid})
+    }
+    if(this.form.adminUid) {
+      params = Object.assign(params, {adminUid: this.form.adminUid})
+    }
+    if(this.form.status) {
+      params = Object.assign(params, {status: this.form.status})
+    }
+    if(this.form.equity) {
+      params = Object.assign(params, {equity: this.form.equity})
+    }
+    if(this.form.keyword) {
+      params = Object.assign(params, {keyword: this.form.keyword})
+    }
+    if(this.form.companyId) {
+      params = Object.assign(params, {companyId: this.form.companyId})
+    }
+    if(this.form.mobile) {
+      params = Object.assign(params, {mobile: this.form.mobile})
+    }
+    if (this.form.start !== "" && this.form.end === "") {
+      this.$message({
+        message: "权益截止时间必需选择区间时间",
+        type: "warning"
+      });
+      return;
+    } else if (this.form.start === "" && this.form.end !== "") {
+      this.$message({
+        message: "权益截止时间必需选择区间时间",
+        type: "warning"
+      });
+      return;
     }
     if(this.form.firstAreaId !== '' && this.form.area_id === '') {
       this.$message.error('请选择城市')
       return
     }
-    if(this.form.wherefrom) {
-      params = Object.assign(params, {wherefrom: this.form.wherefrom})
-    }
-    console.log(form, params)
-    getCompanyListApi(form).then(res => {
+    getCompanyListApi(params).then(res => {
       let list = res.data.data
       list.map((field, index) => {
         field.customer_level = [].concat(this.companyCustomerLevelRange)
@@ -462,55 +500,28 @@ export default class indexPage extends Vue {
       this.list = list;
       this.pageCount = res.data.meta.lastPage;
       this.total = res.data.meta.total;
+      if(this.form.keyword || this.form.mobile || this.form.companyId) {
+        params = Object.assign(params, {searchType: this.form.searchType, content: this.form.content})
+      }
+      this.$router.push({
+        query: {
+          ...params
+        }
+      })
     });
-  }
-  mounted() {
-    this.AdminShow = +sessionStorage.getItem("AdminShow");
   }
   /* 翻页 */
   handlePageChange(nowPage) {
-    let searchCondition = {};
-    if (this.searchType.condition1 && this.searchType.keyword1)
-      searchCondition[this.searchType.condition1] = this.searchType.keyword1;
-    if (this.searchType.condition2 && this.searchType.keyword2)
-      searchCondition[this.searchType.condition2] = this.searchType.keyword2;
-    let searchForm = Object.assign({}, this.form, searchCondition, {
-      page: nowPage
-    });
-    this.$route.meta.scrollY = 0;
-    window.scrollTo(0, 0);
-    // this.form.page = nowPage;
-    this.getCompanyList(searchForm);
+    this.form.page = nowPage;
+    this.getCompanyList();
   }
   /* 新建公司 */
   addCompany() {
-    this.$router.push({
-      path: "/index/createCompany"
-    });
+    this.$router.push({path: "/index/createCompany"});
   }
   onSubmit() {
     this.form.page = 1;
-    let searchCondition = {};
-
-    if (this.searchType.condition1 && this.searchType.keyword1)
-      searchCondition[this.searchType.condition1] = this.searchType.keyword1;
-    if (this.searchType.condition2 && this.searchType.keyword2)
-      searchCondition[this.searchType.condition2] = this.searchType.keyword2;
-    let searchForm = Object.assign({}, this.form, searchCondition);
-    if (searchForm.start !== "" && searchForm.end === "") {
-      this.$message({
-        message: "权益截止时间必需选择区间时间",
-        type: "warning"
-      });
-      return;
-    } else if (searchForm.start === "" && searchForm.end !== "") {
-      this.$message({
-        message: "权益截止时间必需选择区间时间",
-        type: "warning"
-      });
-      return;
-    }
-    this.getCompanyList(searchForm);
+    this.getCompanyList();
   }
   // 搜索公司
   search() {
@@ -519,10 +530,8 @@ export default class indexPage extends Vue {
   // 获取城市标签
   getCity() {
     getCityApi().then(res => {
-      res.data.data.map(item => {
-        this.firstAreaIdList.push(item);
-      });
-    });
+      res.data.data.map(item => this.firstAreaIdList.push(item))
+    })
   }
   // 获取权益列表
   async getRightList() {
@@ -535,7 +544,7 @@ export default class indexPage extends Vue {
     this.salerLis = res.data.data;
   }
   /* 选择省 */
-  changeProvince() {
+  changeSearchType() {
     this.firstAreaIdList.map(item => {
       if (item.areaId === this.form.firstAreaId) {
         this.cityLable = item.children;
@@ -543,20 +552,14 @@ export default class indexPage extends Vue {
       }
     });
   }
-  /* 清除列表选项 */
   resetForm(name) {
     this.$refs[name].resetFields();
-    // 清除筛选条件数据
-    this.searchType = {
-      condition1: "",
-      condition2: "",
-      keyword1: "",
-      keyword2: ""
-    };
-    // 清除地区数据
-    this.form.firstAreaId = "";
-    this.form.area_id = "";
-    this.cityLable = [];
+    this.form.searchType = 'keyword'
+    this.form.content = ''
+    this.form.keyword = ''
+    this.form.mobile = ''
+    this.form.companyId = ''
+    this.getCompanyList();
   }
   check(id) {
     this.$route.meta.scrollY = window.scrollY;
@@ -569,12 +572,14 @@ export default class indexPage extends Vue {
     this.$router.push({ path: `/user/userInfo/${uid}` });
   }
   created() {
+    this.form = Object.assign(this.form, this.$route.query)
     this.getCompanyList();
     this.getCity();
     this.getRightList();
     this.getSalerList();
     this.getCompanyCustomerLevelRange()
     this.getAdvisorUserList()
+    this.AdminShow = +sessionStorage.getItem("AdminShow");
   }
 }
 </script>

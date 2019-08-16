@@ -46,7 +46,7 @@
               ></el-cascader>
             </el-form-item>
             <el-form-item label="期望行业" prop="expectFieldId" class="formItem">
-              <el-select multiple collapse-tags v-model="comexpectFieldId" placeholder="请选择">
+              <el-select multiple collapse-tags v-model="form.comexpectFieldId" placeholder="请选择">
                 <el-option
                   :label="item.name"
                   :value="item.labelId"
@@ -367,6 +367,8 @@ let Sumbitform = {
   uid: '',
   mobile: ""
 };
+import { getAccessToken, removeAccessToken } from "API/cacheService";
+
 @Component({
   name: "resumeStore",
   components: {
@@ -557,7 +559,6 @@ export default class resumeStore extends Vue {
       introduce: ""
     }
   }; /* 简历详情 */
-  comexpectFieldId = "";
   searchList = []; /* 简历标签 */
   fieldList = []; /* 期望行业 */
   options = []; //期待职位信息
@@ -567,6 +568,7 @@ export default class resumeStore extends Vue {
   getCityList = []; //省市列表
   jobhuntStatusList = []; //求职状态
   form = {
+    page: 1,
     keyword: "" /* 模糊搜索 */,
     name: "",
     keyword: "", //关键字
@@ -590,7 +592,8 @@ export default class resumeStore extends Vue {
     wherefrom: "" /* 10:平台用户在小程序上自行创建简历，20:后台用户创建 */,
     resumeLabel: "", //简历标签名
     count: 20, //每页条数
-    expectFieldId: [] /* 期望行业 */
+    expectFieldId: [], /* 期望行业 */
+    comexpectFieldId: []
   };
   tabList = []; /* 标签栏 */
   isSales = 0; /* 权限字段 */
@@ -609,7 +612,6 @@ export default class resumeStore extends Vue {
     let isAll = e.includes("1");
     let empty = e.includes("0");
     if (empty || isAll) {
-      console.log("ds");
       this.CompletionDisabled = true;
     }
   }
@@ -648,13 +650,11 @@ export default class resumeStore extends Vue {
   }
 
   checkMobile(form) {
-    console.log(Sumbitform)
     this.$refs[form].validate(valid => {
       if (valid) {
         if (canPush === 2) {
           this.dialogVisible = false;
           this.$router.push({
-            // path: "/resumeStore/list/createNewResume",
             path: "/resumeStore/list/postResume",
             query: {
               isEdit: 0,
@@ -686,7 +686,6 @@ export default class resumeStore extends Vue {
     const scrollTop = el.scrollTop;
     const scrollHeight = el.scrollHeight;
     if (scrollTop + offsetHeight == scrollHeight) {
-      // console.log("滚动到底部");
       this.Tabresumelist();
     }
   }
@@ -703,7 +702,6 @@ export default class resumeStore extends Vue {
   /* 标签库 */
   Tabresumelist() {
     if (this.labelStorePage.haveData) {
-      console.log(this.labelStorePage.currentPage);
       resumelist({ count: 100, page: this.labelStorePage.page++ }).then(res => {
         this.tabList = [...this.tabList, ...res.data.data];
         this.labelStorePage.haveData = res.data.meta.haveData;
@@ -762,9 +760,6 @@ export default class resumeStore extends Vue {
 
   // 时间选择器
   TimeResult(e) {
-    console.log(e);
-    console.log(e, "最终提交数据");
-    /* workExpLower 最小年限 workExpUpper 最大 */
     let { SubpType, isStudent, min, max } = e;
     this.form.isStudent = isStudent == undefined ? "" : isStudent;
     this.form.workExpLower = min == undefined ? "" : min;
@@ -787,7 +782,6 @@ export default class resumeStore extends Vue {
     this.form.ageUpper = max == undefined ? "" : max;
     this.$refs["age"].checkTime = e.value;
     this.$refs["age"].closeSelect();
-    console.log(this.form);
   }
 
   /* 手动关闭事件 */
@@ -803,12 +797,10 @@ export default class resumeStore extends Vue {
   }
   delateSearch(index) {
     this.searchList.splice(index, 1);
-    console.log(this.searchList);
     this.nowCheckListTab = this.searchList;
     this.form.resumeLabelIds = this.nowCheckListTab
       .map(item => item.id)
       .join(",");
-    // console.log(this.nowCheckListTab);
   }
   /* 清除列表选项 */
   resetForm(name) {
@@ -843,8 +835,6 @@ export default class resumeStore extends Vue {
     await addHistory(uid, param);
   }
   type(e) {
-    console.log(e, "当前选中");
-    console.log(this.$refs.cascader);
     this.form.expectPositionId = e[e.length - 1];
   }
   choiceCity(e) {
@@ -852,17 +842,12 @@ export default class resumeStore extends Vue {
   }
   // 查询按钮
   onSubmit() {
-    console.log(this.form);
-
     this.form.page = 1;
     this.getData();
   }
   // 请求历史记录
   history(uid, form) {
-    GetResumeHistory(uid, form).then(res => {
-      // console.log(res);
-      this.historyList = res.data.data;
-    });
+    GetResumeHistory(uid, form).then(res => this.historyList = res.data.data);
   }
   /* 满意度 */
   returnKeys(obj) {
@@ -885,10 +870,47 @@ export default class resumeStore extends Vue {
       });
     }
   }
-  mounted() {
-    let AdminShow = +sessionStorage.getItem("AdminShow");
-    this.isSales = /(3|4)/.test(AdminShow) ? false : true;
-    this.getResumeLevel()
+  ajax() {
+    let senderItem = this.senderList.find(field => field.active)
+    let navItem = this.fromList.find(field => field.active)
+    let downloadName = `
+      ${navItem.desc}-${senderItem.desc}-${this.formatDate(this.start_time * 1000)}-${this.formatDate(this.end_time * 1000)}.xlsx
+    `
+    let url = `
+      ${API_ROOT}/resume/export
+      ?from=${this.from}
+      &sender=${this.sender}
+      &type=${this.type}
+      &start_time=${this.start_time}
+      &end_time=${this.end_time}
+    `
+    let xmlResquest = new XMLHttpRequest()
+    url = url.replace(/\s*/g, '')
+    downloadName = downloadName.replace(/\s*/g, '')
+    xmlResquest.open('get', url, true)
+    xmlResquest.setRequestHeader('Content-type', 'application/json')
+    xmlResquest.setRequestHeader('Authorization-Admin', getAccessToken())
+    xmlResquest.responseType = 'blob'
+    xmlResquest.onload = () => {
+      let content = xmlResquest.response
+      let link = document.createElement('a')
+      let blob = new Blob([content])
+      link.download = downloadName
+      link.style.display = 'none'
+      link.href = URL.createObjectURL(blob)
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    }
+    xmlResquest.send()
+  }
+  download() {
+    let startTime = new Promise((resolve, reject) => !this.start_time ? reject('请选择导出开始时间') : resolve())
+    let endTime = new Promise((resolve, reject) => !this.end_time ? reject('请选择导出结束时间') : resolve())
+    let searchType = new Promise((resolve, reject) => !this.type ? reject('请选择导出类型') : resolve())
+    Promise.all([searchType, startTime, endTime]).then(() => this.ajax()).catch(err => {
+      this.$message.error(err)
+    })
   }
   created() {
     this.degreeData();
@@ -897,6 +919,9 @@ export default class resumeStore extends Vue {
     this.CityData();
     this.getData();
     this.field();
+    let AdminShow = +sessionStorage.getItem("AdminShow");
+    this.isSales = /(3|4)/.test(AdminShow) ? false : true;
+    this.getResumeLevel()
   }
   field() {
     fieldApi().then(res => {
@@ -1008,10 +1033,23 @@ export default class resumeStore extends Vue {
     });
   }
   getData() {
-    this.comexpectFieldId.length > 0
-      ? (this.form.expectFieldId = this.comexpectFieldId.join(","))
-      : (this.form.expectFieldId = []);
-    // ;
+    let params = {
+      page: this.form.page,
+      count: this.form.count
+    }
+    if(this.form.keyword) {
+      params = Object.assign(params, {keyword: this.form.keyword})
+    }
+    if(this.form.expectPositionId) {
+      params = Object.assign(params, {expectPositionId: this.form.expectPositionId})
+    }
+    if(this.form.expectCityNum) {
+      params = Object.assign(params, {expectCityNum: this.form.expectCityNum})
+    }
+    if(this.form.comexpectFieldId.length) {
+      params = Object.assign(params, {expectFieldId: this.comexpectFieldId.join(',')})
+    }
+    console.log(this.form, params)
     GetResumeAPI(this.form).then(res => {
       this.itemList = res.data.data;
       this.leftcontent.total = parseInt(res.data.meta.total);
