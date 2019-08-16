@@ -147,7 +147,7 @@
         prop="seatsNum"
         label="上架/下架">
         <template slot-scope="scope">
-          {{scope.row.isOnline === 1 ? '上线' : '下线'}}
+          {{scope.row.upIsOnline === 1 ? '上线' : '下线'}}
         </template>
       </el-table-column>
       <el-table-column

@@ -184,7 +184,8 @@
               </el-select>
             </el-form-item>
             <el-form-item class="btn">
-              <el-button class="inquire" @click="onSubmit">查询</el-button>
+              <el-button type="primary" @click="onSubmit">导出</el-button>
+              <el-button type="primary" @click="onSubmit">查询</el-button>
               <el-button @click.stop="resetForm('form')">重置</el-button>
             </el-form-item>
           </el-form>
@@ -439,12 +440,20 @@ export default class indexPage extends Vue {
    * @return   {[type]}           [description]
    */
   getCompanyList(newForm) {
-    if (this.form.firstAreaId !== "" && this.form.area_id === "") {
-      this.$message.error("请选择城市");
-      return;
+    let form = newForm || this.form
+    let params = {
+      page: this.form.page,
+      count: this.form.count
     }
-    //  delete this.form.firstAreaId
-    getCompanyListApi(newForm || this.form).then(res => {
+    if(this.form.firstAreaId !== '' && this.form.area_id === '') {
+      this.$message.error('请选择城市')
+      return
+    }
+    if(this.form.wherefrom) {
+      params = Object.assign(params, {wherefrom: this.form.wherefrom})
+    }
+    console.log(form, params)
+    getCompanyListApi(form).then(res => {
       let list = res.data.data
       list.map((field, index) => {
         field.customer_level = [].concat(this.companyCustomerLevelRange)
@@ -567,12 +576,6 @@ export default class indexPage extends Vue {
     this.getCompanyCustomerLevelRange()
     this.getAdvisorUserList()
   }
-  activated() {
-    let that = this;
-    setTimeout(function() {
-      window.scrollTo(0, that.$route.meta.scrollY);
-    }, 300);
-  }
 }
 </script>
 
@@ -642,17 +645,6 @@ export default class indexPage extends Vue {
     }
     .btn {
       float: right;
-      .inquire {
-        color: #ffffff;
-        background-color: #652791;
-      }
-      span {
-        white-space: nowrap;
-        user-select: none;
-        cursor: pointer;
-        line-height: 12px;
-        color: #409eff;
-      }
     }
   }
 }
