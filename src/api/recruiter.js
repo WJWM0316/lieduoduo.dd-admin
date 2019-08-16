@@ -146,7 +146,8 @@ export const getRecruiterLabelsListsApi = data => request({
 export const addProfessionalSkillsLabelApi = data => request({
   url: `/label/professionalSkills/${data.uid}`,
   type: 'post',
-  data
+  data,
+  noGlobalLoading: true
 })
 
 /* 设置招聘官个人标签 */

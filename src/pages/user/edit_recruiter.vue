@@ -933,7 +933,7 @@ export default class EditRecruiter extends Vue {
     })
     let active = list.filter(field => field.active)
     this.model.list = list
-    this.model.selected = active
+    this.model.selected = [].concat(this.userInfos.literacyLabels, this.userInfos.skillLabels, active)
   }
   handleAvatarLoaded(e) {
     let formData = new FormData()

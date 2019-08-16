@@ -381,16 +381,40 @@ export default class companyCheck extends Vue {
   }
   /* 请求审核列表 */
   getTemplist() {
-    let params = this.form
-    if (params.start !== "" && params.end === "") {
-      this.$message({message: "申请时间必须选择开始时间和结束时间", type: "warning"});
-      return;
-    } else if (params.start === "" && params.end !== "") {
-      this.$message({message: "申请时间必须选择开始时间和结束时间", type: "warning"});
-      return;
+    let params = {
+      page: this.form.page,
+      count: this.form.count
     }
-    // if(!params.customer_level) delete params.customer_level
-    templistApi(params).then(res => {
+    if(this.form.keyword) {
+      params = Object.assign(params, {keyword: this.form.keyword})
+    }
+
+    if((params.start && !params.end) || (!params.start && params.end)) {
+      this.$message({message: "申请时间必须选择开始时间和结束时间", type: "warning"});
+    } else {
+      if(this.form.start && this.form.end) {
+        params = Object.assign(params, {start: this.form.start, end: this.form.end})
+      }
+    }
+    if(this.form.status) {
+      params = Object.assign(params, {status: this.form.status})
+    }
+    if(this.form.auth_status) {
+      params = Object.assign(params, {auth_status: this.form.auth_status})
+    }
+    if(this.form.admin_uid) {
+      params = Object.assign(params, {admin_uid: this.form.admin_uid})
+    }
+    if(this.form.is_license) {
+      params = Object.assign(params, {is_license: this.form.is_license})
+    }
+    if(this.form.wherefrom) {
+      params = Object.assign(params, {wherefrom: this.form.wherefrom})
+    }
+    if(this.form.customer_level !== '') {
+      params = Object.assign(params, {customer_level: this.form.customer_level})
+    }
+    templistApi(this.form).then(res => {
       let list = res.data.data
       list.map((field, index) => {
         field.customer_level = [].concat(this.companyCustomerLevelRange)
@@ -427,53 +451,37 @@ export default class companyCheck extends Vue {
   }
   download() {
     let date = new Date()
-    let downloadName = `公司库-${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}.xlsx`
+    let downloadName = `公司审核管理-${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}.xlsx`
     let url = `${API_ROOT}/company/export?p=1`
     
-    this.form[this.form.searchType] = this.form.content
-    if(this.form.wherefrom) {
-      url += `&wherefrom=${this.form.wherefrom}`
-    }
-    if(this.form.customer_level !== '') {
-      url += `&customer_level=${this.form.customer_level}`
-    }
-    if(this.form.advisorUid) {
-      url += `&advisorUid=${this.form.advisorUid}`
-    }
-    if(this.form.adminUid) {
-      url += `&adminUid=${this.form.adminUid}`
-    }
-    if(this.form.status) {
-      url += `&status=${this.form.status}`
-    }
-    if(this.form.equity) {
-      url += `&equity=${this.form.equity}`
-    }
     if(this.form.keyword) {
       url += `&keyword=${this.form.keyword}`
     }
-    if(this.form.companyId) {
-      url += `&companyId=${this.form.companyId}`
-    }
-    if(this.form.mobile) {
-      url += `&mobile=${this.form.mobile}`
-    }
-    if((this.form.start && !this.form.end) || (!this.form.start&& this.form.end)) {
-      this.$message({message: "权益截止时间必需选择区间时间", type: "warning"});
-      return;
+
+    if((params.start && !params.end) || (!params.start && params.end)) {
+      this.$message({message: "申请时间必须选择开始时间和结束时间", type: "warning"});
     } else {
       if(this.form.start && this.form.end) {
         url += `&start=${this.form.start}&end=${this.form.end}`
       }
     }
-
-    if((this.form.firstAreaId && !this.form.area_id) || (!this.form.firstAreaId && this.form.area_id)) {
-      this.$message.error('请选择城市');
-      return
-    } else {
-      if(this.form.firstAreaId && this.form.area_id) {
-        url += `&firstAreaId=${this.form.firstAreaId}&area_id=${this.form.area_id}`
-      }
+    if(this.form.status) {
+      url += `&status=${this.form.status}`
+    }
+    if(this.form.auth_status) {
+      url += `&auth_status=${this.form.auth_status}`
+    }
+    if(this.form.admin_uid) {
+      url += `&admin_uid=${this.form.admin_uid}`
+    }
+    if(this.form.is_license) {
+      url += `&is_license=${this.form.is_license}`
+    }
+    if(this.form.wherefrom) {
+      url += `&wherefrom=${this.form.wherefrom}`
+    }
+    if(this.form.customer_level !== '') {
+      url += `&customer_level=${this.form.customer_level}`
     }
 
     url = url.replace(/\s*/g, '')
