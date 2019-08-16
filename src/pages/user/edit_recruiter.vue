@@ -193,7 +193,7 @@
       <div class="html_content_box" v-if="model.type === 'skills'">
         <div class="m_h1">已选择标签：</div>
         <ul class="label_ul_dialog" v-if="model.selected.length">
-          <li :class="{active: item.active}" v-for="(item, index) in model.selected" :key="index" @click="removeSkills(index)">{{item.name || item.labelName}}</li>
+          <li :class="{active: item.active}" v-for="(item, index) in model.selected" :key="index" @click="removeSkills(index, item)">{{item.name || item.labelName}}</li>
         </ul>
         <div class="m_h2">请选择标签：</div>
         <el-select v-model="model.value3" placeholder="请选择" @change="changeSkills">
@@ -487,7 +487,7 @@ export default class EditRecruiter extends Vue {
     })
     this.model.list = list
   }
-  removeSkills(index) {
+  removeSkills(index, data) {
     if(this.model.selected.length < 2) {
       this.$message({
         message: '至少选择一个标签',
@@ -496,6 +496,13 @@ export default class EditRecruiter extends Vue {
       return
     }
     let item = this.model.selected.splice(index, 1)
+    if(data.type === 'label_professional_skills') {
+      this.userInfos.skillLabels.map(field => {
+        if(field.labelId === data.labelId) {
+          field.delete = 'true'
+        }
+      })
+    }
     this.model.value3 = ''
     this.model.list.map(field => {
       if(field.labelId === item[0].labelId) field.active = false
@@ -799,6 +806,7 @@ export default class EditRecruiter extends Vue {
   close() {
     this.model.show = false
     this.showAdminWindow = false;
+    this.userInfos.skillLabels.map(field => delete field.delete)
   }
   saveUser() {
     let params = {
@@ -934,8 +942,7 @@ export default class EditRecruiter extends Vue {
     })
     let active = list.filter(field => field.active)
     this.model.list = list
-    this.model.selected = [].concat(this.userInfos.literacyLabels, this.userInfos.skillLabels, active)
-    console.log(item)
+    this.model.selected = [].concat(this.userInfos.literacyLabels, this.userInfos.skillLabels, active).filter(field => !Reflect.has(field, 'delete'))
   }
   handleAvatarLoaded(e) {
     let formData = new FormData()

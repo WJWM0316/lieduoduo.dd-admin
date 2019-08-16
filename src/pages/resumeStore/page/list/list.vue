@@ -55,6 +55,16 @@
                 ></el-option>
               </el-select>
             </el-form-item>
+            <el-form-item label="简历等级" class="formItem">
+              <el-select v-model="form.resumeGrade" placeholder="请选择">
+                <el-option
+                  v-for="item in resumeLevel"
+                  :key="item.value"
+                  :label="item.text"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
             <custom-select
               :typeName="'自定义薪资'"
               :selectName="'期望薪资'"
@@ -184,7 +194,7 @@
           <div class="resumeNumber">
             <div class="resumeNum">
               简历编号: {{item.resumeNum}}
-              <el-select v-model="item.resumeGrade" placeholder="请选择" @change="changeGrade($event, item.uid)">
+              <el-select v-model="item.resumeGrade" placeholder="请选择" @change="changeGrade($event, item.uid)"  v-if="AdminShow === 0 || AdminShow === 5 || AdminShow === 6">
                 <el-option
                   v-for="item in resumeLevel"
                   :key="item.value"
@@ -389,6 +399,7 @@ import { API_ROOT } from 'API/index.js'
   }
 })
 export default class resumeStore extends Vue {
+  AdminShow = true
   startrules = false;
   nowCheckListTab = []; /* 添加标签数组 */
   dialogVisible = false;
@@ -594,7 +605,8 @@ export default class resumeStore extends Vue {
     wherefrom: "" /* 10:平台用户在小程序上自行创建简历，20:后台用户创建 */,
     resumeLabel: "", //简历标签名
     count: 20, //每页条数
-    expectFieldId: [] /* 期望行业 */
+    expectFieldId: [], /* 期望行业 */
+    resumeGrade: ''
   };
   tabList = []; /* 标签栏 */
   isSales = 0; /* 权限字段 */
@@ -946,18 +958,16 @@ export default class resumeStore extends Vue {
     }
     xmlResquest.send()
   }
-  mounted() {
-    let AdminShow = +sessionStorage.getItem("AdminShow");
-    this.isSales = /(3|4)/.test(AdminShow) ? false : true;
-    this.getResumeLevel()
-  }
   created() {
+    let AdminShow = +sessionStorage.getItem("AdminShow");
     this.degreeData();
     this.jobhuntStatus();
     this.ManageList();
     this.CityData();
     this.getData();
     this.field();
+    this.isSales = /(3|4)/.test(AdminShow) ? false : true;
+    this.getResumeLevel()
   }
   field() {
     fieldApi().then(res => {
