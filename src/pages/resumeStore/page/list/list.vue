@@ -46,7 +46,7 @@
               ></el-cascader>
             </el-form-item>
             <el-form-item label="期望行业" prop="expectFieldId" class="formItem">
-              <el-select multiple collapse-tags v-model="form.comexpectFieldId" placeholder="请选择">
+              <el-select multiple collapse-tags v-model="comexpectFieldId" placeholder="请选择">
                 <el-option
                   :label="item.name"
                   :value="item.labelId"
@@ -154,7 +154,8 @@
             </el-form-item>
 
             <div class="BtnList">
-              <el-button class="inquire" @click.stop="onSubmit">查询</el-button>
+              <el-button type="primary" @click.stop="download">导出</el-button>
+              <el-button type="primary" @click.stop="onSubmit">查询</el-button>
               <el-button @click.stop="resetForm('form')">重置</el-button>
             </div>
           </el-form>
@@ -368,6 +369,7 @@ let Sumbitform = {
   mobile: ""
 };
 import { getAccessToken, removeAccessToken } from "API/cacheService";
+import { API_ROOT } from 'API/index.js'
 
 @Component({
   name: "resumeStore",
@@ -559,6 +561,7 @@ export default class resumeStore extends Vue {
       introduce: ""
     }
   }; /* 简历详情 */
+  comexpectFieldId = "";
   searchList = []; /* 简历标签 */
   fieldList = []; /* 期望行业 */
   options = []; //期待职位信息
@@ -568,7 +571,6 @@ export default class resumeStore extends Vue {
   getCityList = []; //省市列表
   jobhuntStatusList = []; //求职状态
   form = {
-    page: 1,
     keyword: "" /* 模糊搜索 */,
     name: "",
     keyword: "", //关键字
@@ -592,8 +594,7 @@ export default class resumeStore extends Vue {
     wherefrom: "" /* 10:平台用户在小程序上自行创建简历，20:后台用户创建 */,
     resumeLabel: "", //简历标签名
     count: 20, //每页条数
-    expectFieldId: [], /* 期望行业 */
-    comexpectFieldId: []
+    expectFieldId: [] /* 期望行业 */
   };
   tabList = []; /* 标签栏 */
   isSales = 0; /* 权限字段 */
@@ -655,6 +656,7 @@ export default class resumeStore extends Vue {
         if (canPush === 2) {
           this.dialogVisible = false;
           this.$router.push({
+            // path: "/resumeStore/list/createNewResume",
             path: "/resumeStore/list/postResume",
             query: {
               isEdit: 0,
@@ -760,6 +762,7 @@ export default class resumeStore extends Vue {
 
   // 时间选择器
   TimeResult(e) {
+    /* workExpLower 最小年限 workExpUpper 最大 */
     let { SubpType, isStudent, min, max } = e;
     this.form.isStudent = isStudent == undefined ? "" : isStudent;
     this.form.workExpLower = min == undefined ? "" : min;
@@ -847,7 +850,9 @@ export default class resumeStore extends Vue {
   }
   // 请求历史记录
   history(uid, form) {
-    GetResumeHistory(uid, form).then(res => this.historyList = res.data.data);
+    GetResumeHistory(uid, form).then(res => {
+      this.historyList = res.data.data;
+    });
   }
   /* 满意度 */
   returnKeys(obj) {
@@ -870,23 +875,60 @@ export default class resumeStore extends Vue {
       });
     }
   }
-  ajax() {
-    let senderItem = this.senderList.find(field => field.active)
-    let navItem = this.fromList.find(field => field.active)
-    let downloadName = `
-      ${navItem.desc}-${senderItem.desc}-${this.formatDate(this.start_time * 1000)}-${this.formatDate(this.end_time * 1000)}.xlsx
-    `
-    let url = `
-      ${API_ROOT}/resume/export
-      ?from=${this.from}
-      &sender=${this.sender}
-      &type=${this.type}
-      &start_time=${this.start_time}
-      &end_time=${this.end_time}
-    `
-    let xmlResquest = new XMLHttpRequest()
+  download() {
+    let date = new Date()
+    let downloadName = `简历列表-${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}.xlsx`
+    let url = `${API_ROOT}/resume/export?p=1`
+    if(this.form.keyword) {
+      url += `&keyword=${this.form.keyword}`
+    }
+    if(this.form.expectPositionId) {
+      url += `&expectPositionId=${this.form.expectPositionId}`
+    }
+    if(this.form.expectCityNum) {
+      url += `&expectCityNum=${this.form.expectCityNum}`
+    }
+    if(this.comexpectFieldId.length > 0) {
+      url += `&expectFieldId=${this.comexpectFieldId.join(',')}`
+    }
+    if(this.form.salaryLower) {
+      url += `&salaryLower=${this.form.salaryLower}&salaryUpper=${this.form.salaryLower}`
+    }
+    if(this.form.ageLower) {
+      url += `&ageLower=${this.form.ageLower}&ageUpper=${this.form.ageUpper}`
+    }
+    if(this.form.jobStatus) {
+      url += `&jobStatus=${this.form.jobStatus}`
+    }
+    if(this.form.degree) {
+      url += `&jobStatus=${this.form.degree}`
+    }
+    if(this.form.workExpLower) {
+      url += `&workExpLower=${this.form.workExpLower}&workExpUpper=${this.form.workExpUpper}`
+    }
+    if(this.form.visitTimeLower) {
+      url += `&visitTimeLower=${this.form.visitTimeLower}&visitTimeUpper=${this.form.visitTimeUpper}`
+    }
+    if(this.form.completeCareer) {
+      url += `&completeCareer=${this.form.completeCareer}`
+    }
+    if(this.form.completeEducation) {
+      url += `&completeEducation=${this.form.completeEducation}`
+    }
+    if(this.form.completeExpect) {
+      url += `&completeExpect=${this.form.completeExpect}`
+    }
+    if(this.form.completeMoreIntro) {
+      url += `&completeMoreIntro=${this.form.completeMoreIntro}`
+    }
+    if(this.form.completeProject) {
+      url += `&completeProject=${this.form.completeProject}`
+    }
+    if(this.form.completeResumeAttach) {
+      url += `&completeResumeAttach=${this.form.completeResumeAttach}`
+    }
     url = url.replace(/\s*/g, '')
-    downloadName = downloadName.replace(/\s*/g, '')
+    let xmlResquest = new XMLHttpRequest()
     xmlResquest.open('get', url, true)
     xmlResquest.setRequestHeader('Content-type', 'application/json')
     xmlResquest.setRequestHeader('Authorization-Admin', getAccessToken())
@@ -904,13 +946,10 @@ export default class resumeStore extends Vue {
     }
     xmlResquest.send()
   }
-  download() {
-    let startTime = new Promise((resolve, reject) => !this.start_time ? reject('请选择导出开始时间') : resolve())
-    let endTime = new Promise((resolve, reject) => !this.end_time ? reject('请选择导出结束时间') : resolve())
-    let searchType = new Promise((resolve, reject) => !this.type ? reject('请选择导出类型') : resolve())
-    Promise.all([searchType, startTime, endTime]).then(() => this.ajax()).catch(err => {
-      this.$message.error(err)
-    })
+  mounted() {
+    let AdminShow = +sessionStorage.getItem("AdminShow");
+    this.isSales = /(3|4)/.test(AdminShow) ? false : true;
+    this.getResumeLevel()
   }
   created() {
     this.degreeData();
@@ -919,9 +958,6 @@ export default class resumeStore extends Vue {
     this.CityData();
     this.getData();
     this.field();
-    let AdminShow = +sessionStorage.getItem("AdminShow");
-    this.isSales = /(3|4)/.test(AdminShow) ? false : true;
-    this.getResumeLevel()
   }
   field() {
     fieldApi().then(res => {
@@ -1033,23 +1069,10 @@ export default class resumeStore extends Vue {
     });
   }
   getData() {
-    let params = {
-      page: this.form.page,
-      count: this.form.count
-    }
-    if(this.form.keyword) {
-      params = Object.assign(params, {keyword: this.form.keyword})
-    }
-    if(this.form.expectPositionId) {
-      params = Object.assign(params, {expectPositionId: this.form.expectPositionId})
-    }
-    if(this.form.expectCityNum) {
-      params = Object.assign(params, {expectCityNum: this.form.expectCityNum})
-    }
-    if(this.form.comexpectFieldId.length) {
-      params = Object.assign(params, {expectFieldId: this.comexpectFieldId.join(',')})
-    }
-    console.log(this.form, params)
+    this.comexpectFieldId.length > 0
+      ? (this.form.expectFieldId = this.comexpectFieldId.join(","))
+      : (this.form.expectFieldId = []);
+    // ;
     GetResumeAPI(this.form).then(res => {
       this.itemList = res.data.data;
       this.leftcontent.total = parseInt(res.data.meta.total);
