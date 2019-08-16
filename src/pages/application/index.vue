@@ -63,7 +63,8 @@
             </el-form-item>
 
             <el-form-item class="btn">
-              <el-button class="inquire" @click="onSubmit">查询</el-button>
+              <el-button type="primary" @click="download">导出</el-button>
+              <el-button type="primary" @click="onSubmit">查询</el-button>
               <el-button @click.stop="resetForm('form')">重置</el-button>
             </el-form-item>
           </el-form>
@@ -234,6 +235,8 @@ import {
   getNotSuitTypeList
 } from "API/interview";
 import List from "@/components/list";
+import { getAccessToken, removeAccessToken } from "API/cacheService";
+import { API_ROOT } from 'API/index.js'
 @Component({
   name: "application",
   components: {
@@ -309,14 +312,12 @@ export default class application extends Vue {
   address = "";
   /* 说出不合适原因 */
   sayResult(interviewId) {
-    console.log(interviewId);
     getInterviewComment(interviewId).then(res => {
       this.reason = res.data.data.reason;
       this.centerDialogVisible = true;
     });
   }
   toPath(id) {
-    console.log(id);
     let routeUrl = this.$router.resolve({
       path: "/positionManage/positionAuditDetail",
       query: { id }
@@ -333,13 +334,11 @@ export default class application extends Vue {
   }
   getNotSuitTypeList() {
     getNotSuitTypeList().then(res => {
-      console.log(res);
       this.reasonList = res.data.data;
     });
   }
   /* 选择变更 */
   changeProvince(e) {
-    console.log(e);
     if (e === 52) {
       this.getNotSuitTypeList();
       this.showSecond = true;
@@ -361,7 +360,6 @@ export default class application extends Vue {
         message: "用户暂无权限"
       });
     } else {
-      console.log(row.jobhunterInfo.uid);
       this.resumeId = String(row.jobhunterInfo.uid);
       this.isShow = true;
       this.$nextTick(() => {
@@ -379,6 +377,7 @@ export default class application extends Vue {
   }
   /* 获取列表数据 */
   getInterviewList() {
+    console.log(this.form)
     getApplyListApi(this.form).then(res => {
       this.list = res.data.data;
       this.total = res.data.meta.total;
@@ -523,6 +522,46 @@ export default class application extends Vue {
     let that = this;
     if (this.timeout !== null) clearTimeout(that.timeout);
     this.timeout = setTimeout(that.hideAdress, wait);
+  }
+  download() {
+    let date = new Date()
+    let downloadName = `申请列表-${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}.xlsx`
+    let url = `${API_ROOT}/interview/apply?isExport=1` 
+    // 已经有下拉筛选
+    if(this.form.searchType && this.form.content) {
+      url += `&searchType=${this.form.searchType}&content=${this.form.content}`
+    }
+    // 已经存在公司名筛选
+    if(this.form.companyName && this.form.companyName.trim()) {
+      url += `&companyName=${this.form.companyName}`
+    }
+    // 已经选择一级状态
+    if(this.form.status) {
+      url += `&status=${this.form.status}`
+    }
+    // 已经选择二级状态
+    if(this.form.last_status) {
+      url += `&last_status=${this.form.last_status}`
+    }
+
+    url = url.replace(/\s*/g, '')
+    let xmlResquest = new XMLHttpRequest()
+    xmlResquest.open('get', url, true)
+    xmlResquest.setRequestHeader('Content-type', 'application/json')
+    xmlResquest.setRequestHeader('Authorization-Admin', getAccessToken())
+    xmlResquest.responseType = 'blob'
+    xmlResquest.onload = () => {
+      let content = xmlResquest.response
+      let link = document.createElement('a')
+      let blob = new Blob([content])
+      link.download = downloadName
+      link.style.display = 'none'
+      link.href = URL.createObjectURL(blob)
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    }
+    xmlResquest.send()
   }
 }
 </script>

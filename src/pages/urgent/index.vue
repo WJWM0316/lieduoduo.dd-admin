@@ -277,6 +277,9 @@ export default class Urgent extends Vue {
     if(this.form.name2) {
       params = Object.assign(params, {name2: this.form.name2})
     }
+    if(this.form.wherefrom) {
+      params = Object.assign(params, {wherefrom: this.form.wherefrom})
+    }
     getUrgencyListApi(params).then(res => {
       let infos = res.data
       this.total = infos.meta.total

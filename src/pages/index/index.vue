@@ -39,37 +39,6 @@
               </el-input>
             </div>
             <!-- 筛选条件2 -->
-<!--             <div class="searchTab">
-              <el-input
-                type="text"
-                placeholder="请输入内容"
-                v-model="searchType.keyword2"
-                class="inputSelect">
-                <el-select
-                  class="selectTitle"
-                  v-model="searchType.condition2"
-                  slot="prepend"
-                  placeholder="手机号"
-                  @change="changeSearchType"
-                >
-                  <el-option
-                    label="公司名"
-                    value="keyword"
-                    v-show="searchType.condition1 !== 'keyword'"
-                  ></el-option>
-                  <el-option
-                    label="手机号码"
-                    value="mobile"
-                    v-show="searchType.condition1 !== 'mobile'"
-                  ></el-option>
-                  <el-option
-                    label="公司ID"
-                    value="companyId"
-                    v-show="searchType.condition1 !== 'companyId'"
-                  ></el-option>
-                </el-select>
-              </el-input>
-            </div> -->
             <!--地区筛选-->
             <el-form-item class="area" label="地区筛选" prop="area">
               <el-select
@@ -181,7 +150,7 @@
               </el-select>
             </el-form-item>
             <el-form-item class="btn">
-              <el-button type="primary" @click="onSubmit">导出</el-button>
+              <el-button type="primary" @click="download">导出</el-button>
               <el-button type="primary" @click="onSubmit">查询</el-button>
               <el-button @click.stop="resetForm('form')">重置</el-button>
             </el-form-item>
@@ -306,7 +275,8 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import { getCompanyListApi, getCityApi, setCompanyCustomerLevelApi } from "API/company";
 import { rightInfoApi, getSalerListApi, getCompanyCustomerLevelRangeApi, getAdvisorUserListApi } from "API/commont";
-
+import { getAccessToken, removeAccessToken } from "API/cacheService";
+import { API_ROOT } from 'API/index.js'
 import List from "@/components/list";
 Component.registerHooks([
   "beforeRouteEnter",
@@ -474,23 +444,24 @@ export default class indexPage extends Vue {
     if(this.form.mobile) {
       params = Object.assign(params, {mobile: this.form.mobile})
     }
-    if (this.form.start !== "" && this.form.end === "") {
-      this.$message({
-        message: "权益截止时间必需选择区间时间",
-        type: "warning"
-      });
+    if((this.form.start && !this.form.end) || (!this.form.start&& this.form.end)) {
+      this.$message({message: "权益截止时间必需选择区间时间", type: "warning"});
       return;
-    } else if (this.form.start === "" && this.form.end !== "") {
-      this.$message({
-        message: "权益截止时间必需选择区间时间",
-        type: "warning"
-      });
-      return;
+    } else {
+      if(this.form.start && this.form.end) {
+        params = Object.assign(params, {start: this.form.start, end: this.form.end})
+      }
     }
-    if(this.form.firstAreaId !== '' && this.form.area_id === '') {
-      this.$message.error('请选择城市')
+
+    if((this.form.firstAreaId && !this.form.area_id) || (!this.form.firstAreaId && this.form.area_id)) {
+      this.$message.error('请选择城市');
       return
+    } else {
+      if(this.form.firstAreaId && this.form.area_id) {
+        params = Object.assign(params, {firstAreaId: this.form.firstAreaId, area_id: this.form.area_id})
+      }
     }
+
     getCompanyListApi(params).then(res => {
       let list = res.data.data
       list.map((field, index) => {
@@ -529,7 +500,7 @@ export default class indexPage extends Vue {
   }
   // 获取城市标签
   getCity() {
-    getCityApi().then(res => {
+    return getCityApi().then(res => {
       res.data.data.map(item => this.firstAreaIdList.push(item))
     })
   }
@@ -571,15 +542,94 @@ export default class indexPage extends Vue {
   toUser(uid) {
     this.$router.push({ path: `/user/userInfo/${uid}` });
   }
+  download() {
+    let date = new Date()
+    let downloadName = `公司库-${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}.xlsx`
+    let url = `${API_ROOT}/company/export?p=1`
+
+    this.form[this.form.searchType] = this.form.content
+    if(this.form.wherefrom) {
+      url += `&wherefrom=${this.form.wherefrom}`
+    }
+    if(this.form.customer_level !== '') {
+      url += `&customer_level=${this.form.customer_level}`
+    }
+    if(this.form.advisorUid) {
+      url += `&advisorUid=${this.form.advisorUid}`
+    }
+    if(this.form.adminUid) {
+      url += `&adminUid=${this.form.adminUid}`
+    }
+    if(this.form.status) {
+      url += `&status=${this.form.status}`
+    }
+    if(this.form.equity) {
+      url += `&equity=${this.form.equity}`
+    }
+    if(this.form.keyword) {
+      url += `&keyword=${this.form.keyword}`
+    }
+    if(this.form.companyId) {
+      url += `&companyId=${this.form.companyId}`
+    }
+    if(this.form.mobile) {
+      url += `&mobile=${this.form.mobile}`
+    }
+    if((this.form.start && !this.form.end) || (!this.form.start&& this.form.end)) {
+      this.$message({message: "权益截止时间必需选择区间时间", type: "warning"});
+      return;
+    } else {
+      if(this.form.start && this.form.end) {
+        url += `&start=${this.form.start}&end=${this.form.end}`
+      }
+    }
+
+    if((this.form.firstAreaId && !this.form.area_id) || (!this.form.firstAreaId && this.form.area_id)) {
+      this.$message.error('请选择城市');
+      return
+    } else {
+      if(this.form.firstAreaId && this.form.area_id) {
+        url += `&firstAreaId=${this.form.firstAreaId}&area_id=${this.form.area_id}`
+      }
+    }
+
+    url = url.replace(/\s*/g, '')
+    let xmlResquest = new XMLHttpRequest()
+    xmlResquest.open('get', url, true)
+    xmlResquest.setRequestHeader('Content-type', 'application/json')
+    xmlResquest.setRequestHeader('Authorization-Admin', getAccessToken())
+    xmlResquest.responseType = 'blob'
+    xmlResquest.onload = () => {
+      let content = xmlResquest.response
+      let link = document.createElement('a')
+      let blob = new Blob([content])
+      link.download = downloadName
+      link.style.display = 'none'
+      link.href = URL.createObjectURL(blob)
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    }
+    xmlResquest.send()
+  }
   created() {
     this.form = Object.assign(this.form, this.$route.query)
     this.getCompanyList();
-    this.getCity();
+    this.getCity().then(() => {
+      this.form.firstAreaId = Number(this.form.firstAreaId) > 0 ? Number(this.form.firstAreaId) : ''
+      this.form.area_id = Number(this.form.area_id) > 0 ? Number(this.form.area_id) : ''
+      let result = {}
+      if(this.form.firstAreaId) {
+        result = this.firstAreaIdList.find(field => field.areaId === this.form.firstAreaId)
+        this.cityLable = result.children
+      }
+    })
     this.getRightList();
     this.getSalerList();
     this.getCompanyCustomerLevelRange()
     this.getAdvisorUserList()
     this.AdminShow = +sessionStorage.getItem("AdminShow");
+
   }
 }
 </script>

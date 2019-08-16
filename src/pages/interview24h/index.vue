@@ -281,6 +281,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
+        <el-button type="primary" @click="download">导出</el-button>
         <el-button type="primary" @click="search">搜索</el-button>
         <el-button type="primary" @click="reset">重置</el-button>
       </el-form-item>
@@ -628,7 +629,8 @@ import {
   getPositionAddressApi
 } from "API/position"
 import { getSalerListApi } from "API/commont";
-
+import { getAccessToken, removeAccessToken } from "API/cacheService";
+import { API_ROOT } from 'API/index.js'
 @Component({
   name: 'Interview24h',
   components: {
@@ -1664,6 +1666,49 @@ export default class Interview24h extends Vue {
    */
   getSalerList() {
     getSalerListApi().then(res => this.saleLists = res.data.data)
+  }
+  download() {
+    let date = new Date()
+    let downloadName = `24h急速反馈-${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}.xlsx`
+    let url = `${API_ROOT}/interview/quickApply?isExport=1` 
+    let tab = this.navigation.find(field => field.active)
+
+    url += `&tab_status=${tab.id}`
+
+    if(this.form.companyName) {
+      url += `&companyName=${this.form.companyName}`
+    }
+    if(this.form.admin_uid) {
+      url += `&admin_uid=${this.form.admin_uid}`
+    }
+    if(this.form.searchType && this.form.content) {
+      url += `&searchType=${this.form.searchType}&content=${this.form.content}`
+    }
+    if(this.form.status) {
+      url += `&status=${this.form.status}`
+    }
+    if(this.form.status === 52) {
+      url += `&last_status=${this.form.last_status}`
+    }
+
+    url = url.replace(/\s*/g, '')
+    let xmlResquest = new XMLHttpRequest()
+    xmlResquest.open('get', url, true)
+    xmlResquest.setRequestHeader('Content-type', 'application/json')
+    xmlResquest.setRequestHeader('Authorization-Admin', getAccessToken())
+    xmlResquest.responseType = 'blob'
+    xmlResquest.onload = () => {
+      let content = xmlResquest.response
+      let link = document.createElement('a')
+      let blob = new Blob([content])
+      link.download = downloadName
+      link.style.display = 'none'
+      link.href = URL.createObjectURL(blob)
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    }
+    xmlResquest.send()
   }
   mounted() {
     this.init()

@@ -108,7 +108,7 @@
               </el-select>
             </el-form-item>
             <el-form-item class="btn">
-              <el-button class="inquire" @click="onSubmit">查询</el-button>
+              <el-button type="primary" @click="onSubmit">查询</el-button>
               <el-button @click.stop="resetForm('form')">重置</el-button>
             </el-form-item>
           </el-form>
@@ -258,6 +258,8 @@ import Component from "vue-class-component";
 import List from "@/components/list";
 import { getSalerListApi, getCompanyCustomerLevelRangeApi } from "API/commont";
 import { templistApi, companyTempUserList, setCompanyCompanyLevelApi } from "API/company";
+import { getAccessToken, removeAccessToken } from "API/cacheService";
+import { API_ROOT } from 'API/index.js'
 @Component({
   name: "course-list",
   components: {
@@ -430,12 +432,75 @@ export default class companyCheck extends Vue {
       this.userList = res.data.data;
     });
   }
-  async activated() {
-    await this.getTemplist();
-    let that = this;
-    setTimeout(function() {
-      window.scrollTo(0, that.$route.meta.scrollY);
-    }, 300);
+  download() {
+    let date = new Date()
+    let downloadName = `公司库-${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}.xlsx`
+    let url = `${API_ROOT}/company/export?p=1`
+    
+    this.form[this.form.searchType] = this.form.content
+    if(this.form.wherefrom) {
+      url += `&wherefrom=${this.form.wherefrom}`
+    }
+    if(this.form.customer_level !== '') {
+      url += `&customer_level=${this.form.customer_level}`
+    }
+    if(this.form.advisorUid) {
+      url += `&advisorUid=${this.form.advisorUid}`
+    }
+    if(this.form.adminUid) {
+      url += `&adminUid=${this.form.adminUid}`
+    }
+    if(this.form.status) {
+      url += `&status=${this.form.status}`
+    }
+    if(this.form.equity) {
+      url += `&equity=${this.form.equity}`
+    }
+    if(this.form.keyword) {
+      url += `&keyword=${this.form.keyword}`
+    }
+    if(this.form.companyId) {
+      url += `&companyId=${this.form.companyId}`
+    }
+    if(this.form.mobile) {
+      url += `&mobile=${this.form.mobile}`
+    }
+    if((this.form.start && !this.form.end) || (!this.form.start&& this.form.end)) {
+      this.$message({message: "权益截止时间必需选择区间时间", type: "warning"});
+      return;
+    } else {
+      if(this.form.start && this.form.end) {
+        url += `&start=${this.form.start}&end=${this.form.end}`
+      }
+    }
+
+    if((this.form.firstAreaId && !this.form.area_id) || (!this.form.firstAreaId && this.form.area_id)) {
+      this.$message.error('请选择城市');
+      return
+    } else {
+      if(this.form.firstAreaId && this.form.area_id) {
+        url += `&firstAreaId=${this.form.firstAreaId}&area_id=${this.form.area_id}`
+      }
+    }
+
+    url = url.replace(/\s*/g, '')
+    let xmlResquest = new XMLHttpRequest()
+    xmlResquest.open('get', url, true)
+    xmlResquest.setRequestHeader('Content-type', 'application/json')
+    xmlResquest.setRequestHeader('Authorization-Admin', getAccessToken())
+    xmlResquest.responseType = 'blob'
+    xmlResquest.onload = () => {
+      let content = xmlResquest.response
+      let link = document.createElement('a')
+      let blob = new Blob([content])
+      link.download = downloadName
+      link.style.display = 'none'
+      link.href = URL.createObjectURL(blob)
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    }
+    xmlResquest.send()
   }
 }
 </script>
