@@ -251,14 +251,7 @@
               </div>
               <div class="seeResume">
                 <el-button class="" @click.stop="editResume(item)" v-if="isShowResumeHandle">编辑简历</el-button>
-
-                <div
-                  class=""
-                  @click.stop="seereResume(index)"
-                  v-show="item.resumeAttach!=null&&isSales"
-                >
-                  <el-button>查看简历附件</el-button>
-                </div>
+                <el-button @click.stop="seereResume(index)" v-show="item.resumeAttach!=null&&isSales">查看简历附件</el-button>
               </div>
               
             </div>
