@@ -150,7 +150,7 @@
               </el-select>
             </el-form-item>
             <el-form-item class="btn">
-              <el-button type="primary" @click="download" :disabled="!canDownloadData">导出</el-button>
+              <el-button type="primary" @click="download" :disabled="!canDownloadData" v-if="AdminShow == 0 || AdminShow == 5 || AdminShow == 6">导出</el-button>
               <el-button type="primary" @click="onSubmit">查询</el-button>
               <el-button @click.stop="resetForm('form')">重置</el-button>
             </el-form-item>
@@ -291,6 +291,7 @@ Component.registerHooks([
   }
 })
 export default class indexPage extends Vue {
+  AdminShow = true
   canDownloadData = true
   total = 0; // 筛查结果数量
   pageCount = 0; // 请求回的数据共几页
@@ -632,7 +633,7 @@ export default class indexPage extends Vue {
     this.getSalerList();
     this.getCompanyCustomerLevelRange()
     this.getAdvisorUserList()
-    this.AdminShow = +sessionStorage.getItem("AdminShow");
+    this.AdminShow = Number(+sessionStorage.getItem("AdminShow"));
 
   }
 }
