@@ -56,7 +56,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="简历等级" class="formItem">
-              <el-select v-model="form.resumeGrade" placeholder="请选择">
+              <el-select v-model="form.resumeGrades" placeholder="请选择">
                 <el-option
                   v-for="item in resumeLevel"
                   :key="item.value"
@@ -202,10 +202,10 @@
                   :value="item.value">
                 </el-option>
               </el-select>
+              <span class="jobStatusDesc" v-if="item.jobStatusDesc!=''">{{item.jobStatusDesc}}</span>
+              <span class="resumeUpdateTime">最近更新：{{item.resumeUpdateTime}}</span>
+              <span class="lastLoginTime">最近访问：{{item.lastLoginTime}}</span>
             </div>
-            <span class="jobStatusDesc" v-if="item.jobStatusDesc!=''">{{item.jobStatusDesc}}</span>
-            <span class="resumeUpdateTime">最近更新：{{item.resumeUpdateTime}}</span>
-            <span class="lastLoginTime">最近访问：{{item.lastLoginTime}}</span>
           </div>
           <div class="resumeContent">
             <div class="userMsg">
@@ -606,7 +606,7 @@ export default class resumeStore extends Vue {
     resumeLabel: "", //简历标签名
     count: 20, //每页条数
     expectFieldId: [], /* 期望行业 */
-    resumeGrade: ''
+    resumeGrades: ''
   };
   tabList = []; /* 标签栏 */
   isSales = 0; /* 权限字段 */
@@ -938,6 +938,9 @@ export default class resumeStore extends Vue {
     }
     if(this.form.completeResumeAttach) {
       url += `&completeResumeAttach=${this.form.completeResumeAttach}`
+    }
+    if(this.form.resumeGrades) {
+      url += `&resumeGrades=${this.form.resumeGrades}`
     }
     url = url.replace(/\s*/g, '')
     let xmlResquest = new XMLHttpRequest()

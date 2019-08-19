@@ -498,9 +498,11 @@ export default class EditRecruiter extends Vue {
     let item = this.model.selected.splice(index, 1)
     if(data.type === 'label_professional_skills') {
       this.userInfos.skillLabels.map(field => {
-        if(field.labelId === data.labelId) {
-          field.delete = 'true'
-        }
+        if(field.labelId === data.labelId) field.delete = 'true'
+      })
+    } else {
+      this.userInfos.literacyLabels.map(field => {
+        if(field.labelId === data.labelId) field.delete = 'true'
       })
     }
     this.model.value3 = ''
@@ -524,6 +526,7 @@ export default class EditRecruiter extends Vue {
     this.model.list = [].concat(this.labelProfessionalLiteracyList)
   }
   removeLifeItem(index, item) {
+    console.log(index, item)
     if(this.model.selected.length < 2) {
       this.$message({
         message: '至少选择一个标签',
@@ -532,6 +535,11 @@ export default class EditRecruiter extends Vue {
       return
     }
     this.model.selected.splice(index, 1)
+    if(item.source === 'diy') {
+      this.userInfos.lifeLabels.map(field => {
+        if(field.labelId === item.labelId) field.delete = 'true'
+      })
+    }
     let lifeLabelsLists = [].concat(this.lifeLabelsLists)
     lifeLabelsLists[0].children.map((e, i) => {
       if(item.labelId === e.labelId) e.active = false
@@ -902,7 +910,7 @@ export default class EditRecruiter extends Vue {
         })
         this.lifeLabelsLists = lifeLabelsLists
         let activeList0 = lifeLabelsLists[0].children.filter(field => field.active)
-        this.model.selected = [].concat(this.userInfos.lifeLabels, activeList0)
+        this.model.selected = [].concat(this.userInfos.lifeLabels, activeList0).filter(field => !Reflect.has(field, 'delete'))
         break
       case 'shenghuo':
         if(this.model.selected.length > 2 && !lifeLabelsLists[1].children[index].active) {
@@ -921,7 +929,7 @@ export default class EditRecruiter extends Vue {
         })
         this.lifeLabelsLists = lifeLabelsLists
         let activeList1 = lifeLabelsLists[1].children.filter(field => field.active)
-        this.model.selected = [].concat(this.userInfos.lifeLabels, activeList1)
+        this.model.selected = [].concat(this.userInfos.lifeLabels, activeList1).filter(field => !Reflect.has(field, 'delete'))
         break
       default:
         break
