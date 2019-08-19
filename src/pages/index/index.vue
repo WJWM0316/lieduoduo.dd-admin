@@ -150,7 +150,7 @@
               </el-select>
             </el-form-item>
             <el-form-item class="btn">
-              <el-button type="primary" @click="download">导出</el-button>
+              <el-button type="primary" @click="download" :disabled="!canDownloadData">导出</el-button>
               <el-button type="primary" @click="onSubmit">查询</el-button>
               <el-button @click.stop="resetForm('form')">重置</el-button>
             </el-form-item>
@@ -291,6 +291,7 @@ Component.registerHooks([
   }
 })
 export default class indexPage extends Vue {
+  canDownloadData = true
   total = 0; // 筛查结果数量
   pageCount = 0; // 请求回的数据共几页
   AdminShow = ""; //权限字段，限制搜索
@@ -592,7 +593,7 @@ export default class indexPage extends Vue {
         url += `&firstAreaId=${this.form.firstAreaId}&area_id=${this.form.area_id}`
       }
     }
-
+    this.canDownloadData = false
     url = url.replace(/\s*/g, '')
     let xmlResquest = new XMLHttpRequest()
     xmlResquest.open('get', url, true)
@@ -600,6 +601,7 @@ export default class indexPage extends Vue {
     xmlResquest.setRequestHeader('Authorization-Admin', getAccessToken())
     xmlResquest.responseType = 'blob'
     xmlResquest.onload = () => {
+      this.canDownloadData = true
       let content = xmlResquest.response
       let link = document.createElement('a')
       let blob = new Blob([content])

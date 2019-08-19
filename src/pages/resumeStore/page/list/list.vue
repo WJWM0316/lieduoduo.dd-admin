@@ -164,7 +164,7 @@
             </el-form-item>
 
             <div class="BtnList">
-              <el-button type="primary" @click.stop="download">导出</el-button>
+              <el-button type="primary" @click.stop="download" :disabled="!canDownloadData">导出</el-button>
               <el-button type="primary" @click.stop="onSubmit">查询</el-button>
               <el-button @click.stop="resetForm('form')">重置</el-button>
             </div>
@@ -392,6 +392,7 @@ import { API_ROOT } from 'API/index.js'
   }
 })
 export default class resumeStore extends Vue {
+  canDownloadData = true
   AdminShow = true
   startrules = false;
   nowCheckListTab = []; /* 添加标签数组 */
@@ -941,6 +942,7 @@ export default class resumeStore extends Vue {
     xmlResquest.setRequestHeader('Content-type', 'application/json')
     xmlResquest.setRequestHeader('Authorization-Admin', getAccessToken())
     xmlResquest.responseType = 'blob'
+    this.canDownloadData = false
     xmlResquest.onload = () => {
       let content = xmlResquest.response
       let link = document.createElement('a')
@@ -951,6 +953,7 @@ export default class resumeStore extends Vue {
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
+      this.canDownloadData = true
     }
     xmlResquest.send()
   }

@@ -63,7 +63,7 @@
             </el-form-item>
 
             <el-form-item class="btn">
-              <el-button type="primary" @click="download">导出</el-button>
+              <el-button type="primary" @click="download" :disabled="!canDownloadData">导出</el-button>
               <el-button type="primary" @click="onSubmit">查询</el-button>
               <el-button @click.stop="resetForm('form')">重置</el-button>
             </el-form-item>
@@ -245,6 +245,7 @@ import { API_ROOT } from 'API/index.js'
   }
 })
 export default class application extends Vue {
+  canDownloadData = true
   timeout = null; // 防抖
   total = 0;
   resumeId = "";
@@ -550,6 +551,7 @@ export default class application extends Vue {
     xmlResquest.setRequestHeader('Content-type', 'application/json')
     xmlResquest.setRequestHeader('Authorization-Admin', getAccessToken())
     xmlResquest.responseType = 'blob'
+    this.canDownloadData = false
     xmlResquest.onload = () => {
       let content = xmlResquest.response
       let link = document.createElement('a')
@@ -560,6 +562,7 @@ export default class application extends Vue {
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
+      this.canDownloadData = true
     }
     xmlResquest.send()
   }
