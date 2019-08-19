@@ -414,7 +414,7 @@ export default class companyCheck extends Vue {
     if(this.form.customer_level !== '') {
       params = Object.assign(params, {customer_level: this.form.customer_level})
     }
-    templistApi(this.form).then(res => {
+    templistApi(params).then(res => {
       let list = res.data.data
       list.map((field, index) => {
         field.customer_level = [].concat(this.companyCustomerLevelRange)
@@ -452,13 +452,13 @@ export default class companyCheck extends Vue {
   download() {
     let date = new Date()
     let downloadName = `公司审核管理-${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}.xlsx`
-    let url = `${API_ROOT}/company/export?p=1`
+    let url = `${API_ROOT}/company/templist?isExport=1`
     
     if(this.form.keyword) {
       url += `&keyword=${this.form.keyword}`
     }
 
-    if((params.start && !params.end) || (!params.start && params.end)) {
+    if((this.form.start && !this.form.end) || (!this.form.start && this.form.end)) {
       this.$message({message: "申请时间必须选择开始时间和结束时间", type: "warning"});
     } else {
       if(this.form.start && this.form.end) {

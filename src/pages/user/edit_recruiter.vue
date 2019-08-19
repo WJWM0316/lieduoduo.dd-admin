@@ -227,11 +227,11 @@
         </ul>
         <div class="m_h2">{{lifeLabelsLists[0].name}}:</div>
         <ul class="label_ul_dialog">
-          <li :class="{active: item.active}" v-for="(item, index) in lifeLabelsLists[0].children" :key="index" @click="getLifeLabel('xingge', index)">{{item.name}}</li>
+          <li :class="{active: item.active}" v-for="(item, index) in lifeLabelsLists[0].children" :key="index" @click="getLifeLabel('xingge', index, item)">{{item.name}}</li>
         </ul>
         <div class="m_h2">{{lifeLabelsLists[1].name}}:</div>
         <ul class="label_ul_dialog">
-          <li :class="{active: item.active}" v-for="(item, index) in lifeLabelsLists[1].children" :key="index" @click="getLifeLabel('shenghuo', index)">{{item.name}}</li>
+          <li :class="{active: item.active}" v-for="(item, index) in lifeLabelsLists[1].children" :key="index" @click="getLifeLabel('shenghuo', index, item)">{{item.name}}</li>
         </ul>
       </div>
 
@@ -472,43 +472,6 @@ export default class EditRecruiter extends Vue {
   switchPublicBtn(e) {
     let funcApi = e === 'y' ? openPublicPosisionApi : closePublicPosisionApi
     funcApi({uid: this.$route.params.id})
-  }
-  changeSkills(e) {
-    let item = this.labelProfessionalSkillsList.find(field => field.labelId === e)
-    let list = item.children
-    let temSkillsLists = [].concat(this.userInfos.skillLabels, this.userInfos.literacyLabels)
-    let temSkillsListsId = []
-    if(temSkillsLists.length) {
-      temSkillsLists.map(field => temSkillsListsId.push(field.labelId))
-    }
-    list.map(field => {
-      field.source = 'system'
-      if(temSkillsListsId.includes(field.labelId)) field.active = true
-    })
-    this.model.list = list
-  }
-  removeSkills(index, data) {
-    if(this.model.selected.length < 2) {
-      this.$message({
-        message: '至少选择一个标签',
-        type: 'warning'
-      });
-      return
-    }
-    let item = this.model.selected.splice(index, 1)
-    if(data.type === 'label_professional_skills') {
-      this.userInfos.skillLabels.map(field => {
-        if(field.labelId === data.labelId) field.delete = 'true'
-      })
-    } else {
-      this.userInfos.literacyLabels.map(field => {
-        if(field.labelId === data.labelId) field.delete = 'true'
-      })
-    }
-    this.model.value3 = ''
-    this.model.list.map(field => {
-      if(field.labelId === item[0].labelId) field.active = false
-    })
   }
   removeLabelItem(index) {
     if(this.model.selected.length < 2) {
@@ -870,91 +833,247 @@ export default class EditRecruiter extends Vue {
     return createLabelProfessionalSkillsApi({uid: this.$route.params.id})
   }
   getLabelItem(index, item) {
-    if(this.model.selected.length > 2 && !this.labelProfessionalLiteracyList[index].active) {
-      this.$message({
-        message: '最多只能添加三个标签',
-        type: 'warning'
-      })
-      return
-    }
-    if(this.model.selected.length < 2 && this.labelProfessionalLiteracyList[index].active) {
-      this.$message({
-        message: '至少选择一个标签',
-        type: 'warning'
-      })
-      return
-    }
-    this.labelProfessionalLiteracyList.map((field, i) => {
-      if(i === index) {
-        field.active = !field.active
-        field.source = 'system'
+    let selected = this.model.selected
+    let result = this.labelProfessionalLiteracyList[index]
+    let list = [].concat(this.labelProfessionalLiteracyList)
+    if(this.model.selected.length > 2) {
+      if(!result.active) {
+        this.$message({message: '最多只能添加三个标签', type: 'warning'})
+      } else {
+        list[index].active = false
+        this.model.list = list
+        selected.map((field, i) => {
+          if(item.labelId === field.labelId) {
+            selected.splice(i, 1)
+          }
+        })
+        this.model.selected = selected
       }
-    })
-    let activeList = this.labelProfessionalLiteracyList.filter(field => field.active)
-    this.model.list = this.labelProfessionalLiteracyList
-    this.model.selected = [].concat(this.userInfos.skillLabels, this.userInfos.literacyLabels,activeList)
+    } else {
+      if(!result.active) {
+        list[index].active = !list[index].active
+        item.active = true
+        selected.push(item)
+        this.model.list = list
+        this.model.selected = selected
+      } else {
+        if(selected.length < 2) {
+          this.$message({message: '至少选择一个标签', type: 'warning'})
+          return
+        }
+        list[index].active = false
+        this.model.list = list
+        selected.map((field, i) => {
+          if(item.labelId === field.labelId) {
+            selected.splice(i, 1)
+          }
+        })
+        this.model.selected = selected
+      }
+    }
   }
-  getLifeLabel(type, index) {
+  getSkillsItem(index, item) {
+    let list = [].concat(this.model.list)
+    let selected = this.model.selected
+    let result = this.model.list[index]
+    if(this.model.selected.length > 2) {
+      if(!result.active) {
+        this.$message({message: '最多只能添加三个标签', type: 'warning'})
+      } else {
+        list[index].active = false
+        this.model.list = list
+        selected.map((field, i) => {
+          if(item.labelId === field.labelId) {
+            selected.splice(i, 1)
+          }
+        })
+        this.model.selected = selected
+      }
+    } else {
+      if(!result.active) {
+        list[index].active = !list[index].active
+        item.active = true
+        selected.push(item)
+        this.model.list = list
+        this.model.selected = selected
+      } else {
+        if(selected.length < 2) {
+          this.$message({message: '至少选择一个标签', type: 'warning'})
+          return
+        }
+        list[index].active = false
+        this.model.list = list
+        selected.map((field, i) => {
+          if(item.labelId === field.labelId) {
+            selected.splice(i, 1)
+          }
+        })
+        this.model.selected = selected
+      }
+    }
+  }
+  getLifeLabel(type, index, item) {
     let lifeLabelsLists = this.lifeLabelsLists
+    let selected = this.model.selected
     switch(type) {
       case 'xingge':
-        if(this.model.selected.length > 2 && !lifeLabelsLists[0].children[index].active) {
-          this.$message({message: '最多只能添加三个标签', type: 'warning'})
-          return
-        }
-        if(this.model.selected.length < 2 && lifeLabelsLists[0].children[index].active) {
-          this.$message({message: '至少选择一个标签', type: 'warning'})
-          return
-        }
-        lifeLabelsLists[0].children.map((field, i) => {
-          if(i === index) {
-            field.active = !field.active
-            field.source = 'system'
+        selected = this.model.selected
+        if(selected.length > 2) {
+          if(!item.active) {
+            this.$message({message: '最多只能添加三个标签', type: 'warning'})
+          } else {
+            lifeLabelsLists[0].children[index].active = !lifeLabelsLists[0].children[index].active
+            lifeLabelsLists[0].children[index].source = 'system'
+            this.lifeLabelsLists = lifeLabelsLists
+            selected.map((field, i) => {
+              if(item.labelId === field.labelId) {
+                selected.splice(i, 1)
+              }
+            })
+            this.model.selected = selected
           }
-        })
-        this.lifeLabelsLists = lifeLabelsLists
-        let activeList0 = lifeLabelsLists[0].children.filter(field => field.active)
-        this.model.selected = [].concat(this.userInfos.lifeLabels, activeList0).filter(field => !Reflect.has(field, 'delete'))
+        } else {
+          if(!item.active) {
+            lifeLabelsLists[0].children[index].active = !lifeLabelsLists[0].children[index].active
+            item.active = true
+            selected.push(item)
+            this.lifeLabelsLists = lifeLabelsLists
+            this.model.selected = selected
+          } else {
+            if(selected.length < 2) {
+              this.$message({message: '至少选择一个标签', type: 'warning'})
+              return
+            }
+            lifeLabelsLists[0].children[index].active = false
+            this.lifeLabelsLists = lifeLabelsLists
+            selected.map((field, i) => {
+              if(item.labelId === field.labelId) {
+                selected.splice(i, 1)
+              }
+            })
+            this.model.selected = selected
+          }
+        }
         break
       case 'shenghuo':
-        if(this.model.selected.length > 2 && !lifeLabelsLists[1].children[index].active) {
-          this.$message({message: '最多只能添加三个标签', type: 'warning'})
-          return
-        }
-        if(this.model.selected.length < 2 && lifeLabelsLists[1].children[index].active) {
-          this.$message({message: '至少选择一个标签', type: 'warning'})
-          return
-        }
-        lifeLabelsLists[1].children.map((field, i) => {
-          if(i === index) {
-            field.active = !field.active
-            field.source = 'system'
+        selected = this.model.selected
+        if(selected.length > 2) {
+          if(!item.active) {
+            this.$message({message: '最多只能添加三个标签', type: 'warning'})
+          } else {
+            lifeLabelsLists[1].children[index].active = !lifeLabelsLists[1].children[index].active
+            lifeLabelsLists[1].children[index].source = 'system'
+            this.lifeLabelsLists = lifeLabelsLists
+            selected.map((field, i) => {
+              if(item.labelId === field.labelId) {
+                selected.splice(i, 1)
+              }
+            })
+            this.model.selected = selected
           }
-        })
-        this.lifeLabelsLists = lifeLabelsLists
-        let activeList1 = lifeLabelsLists[1].children.filter(field => field.active)
-        this.model.selected = [].concat(this.userInfos.lifeLabels, activeList1).filter(field => !Reflect.has(field, 'delete'))
+        } else {
+          if(!item.active) {
+            lifeLabelsLists[1].children[index].active = !lifeLabelsLists[1].children[index].active
+            item.active = true
+            selected.push(item)
+            this.lifeLabelsLists = lifeLabelsLists
+            this.model.selected = selected
+          } else {
+            if(selected.length < 2) {
+              this.$message({message: '至少选择一个标签', type: 'warning'})
+              return
+            }
+            lifeLabelsLists[1].children[index].active = false
+            this.lifeLabelsLists = lifeLabelsLists
+            selected.map((field, i) => {
+              if(item.labelId === field.labelId) {
+                selected.splice(i, 1)
+              }
+            })
+            this.model.selected = selected
+          }
+        }
         break
       default:
         break
     }
   }
-  getSkillsItem(index, item) {
-    if(this.model.selected.length > 2 && !this.model.list[index].active) {
-      this.$message({message: '最多只能添加三个标签', type: 'warning'})
-      return
+  changeSkills(e) {
+    let item = this.labelProfessionalSkillsList.find(field => field.labelId === e)
+    let list = item.children
+    let temSkillsLists = [].concat(this.userInfos.skillLabels, this.userInfos.literacyLabels)
+    let temSkillsListsId = []
+    if(temSkillsLists.length) {
+      temSkillsLists.map(field => temSkillsListsId.push(field.labelId))
     }
-    if(this.model.selected.length < 2 && this.model.list[index].active) {
-      this.$message({message: '至少选择一个标签', type: 'warning'})
-      return
-    }
-    let list = [].concat(this.model.list)
-    list.map((e, i) => {
-      if(i === index) e.active = !e.active
+    list.map(field => {
+      field.source = 'system'
+      if(temSkillsListsId.includes(field.labelId)) field.active = true
     })
-    let active = list.filter(field => field.active)
     this.model.list = list
-    this.model.selected = [].concat(this.userInfos.literacyLabels, this.userInfos.skillLabels, active).filter(field => !Reflect.has(field, 'delete'))
+  }
+  removeSkills(index, data) {
+    if(this.model.selected.length < 2) {
+      this.$message({
+        message: '至少选择一个标签',
+        type: 'warning'
+      });
+      return
+    }
+    let item = this.model.selected.splice(index, 1)
+    if(data.type === 'label_professional_skills') {
+      this.userInfos.skillLabels.map(field => {
+        if(field.labelId === data.labelId) field.delete = 'true'
+      })
+    } else {
+      this.userInfos.literacyLabels.map(field => {
+        if(field.labelId === data.labelId) field.delete = 'true'
+      })
+    }
+    this.model.value3 = ''
+    this.model.list.map(field => {
+      if(field.labelId === item[0].labelId) field.active = false
+    })
+  }
+  getSkillsItem(index, item) {
+    let list = [].concat(this.model.list)
+    let selected = this.model.selected
+    let result = this.model.list[index]
+    if(this.model.selected.length > 2) {
+      if(!result.active) {
+        this.$message({message: '最多只能添加三个标签', type: 'warning'})
+      } else {
+        list[index].active = false
+        this.model.list = list
+        selected.map((field, i) => {
+          if(item.labelId === field.labelId) {
+            selected.splice(i, 1)
+          }
+        })
+        this.model.selected = selected
+      }
+    } else {
+      if(!result.active) {
+        list[index].active = !list[index].active
+        item.active = true
+        selected.push(item)
+        this.model.list = list
+        this.model.selected = selected
+      } else {
+        if(selected.length < 2) {
+          this.$message({message: '至少选择一个标签', type: 'warning'})
+          return
+        }
+        list[index].active = false
+        this.model.list = list
+        selected.map((field, i) => {
+          if(item.labelId === field.labelId) {
+            selected.splice(i, 1)
+          }
+        })
+        this.model.selected = selected
+      }
+    }
   }
   handleAvatarLoaded(e) {
     let formData = new FormData()

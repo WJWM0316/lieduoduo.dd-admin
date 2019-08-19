@@ -545,7 +545,7 @@ export default class indexPage extends Vue {
   download() {
     let date = new Date()
     let downloadName = `公司库-${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}.xlsx`
-    let url = `${API_ROOT}/company/export?p=1`
+    let url = `${API_ROOT}/company/list?isExport=1`
 
     this.form[this.form.searchType] = this.form.content
     if(this.form.wherefrom) {
