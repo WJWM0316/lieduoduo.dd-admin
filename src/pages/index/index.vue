@@ -531,6 +531,8 @@ export default class indexPage extends Vue {
     this.form.keyword = ''
     this.form.mobile = ''
     this.form.companyId = ''
+    this.form.area_id = ''
+    this.form.firstAreaId = ''
     this.getCompanyList();
   }
   check(id) {
