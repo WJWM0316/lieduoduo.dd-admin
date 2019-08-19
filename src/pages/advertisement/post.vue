@@ -45,8 +45,8 @@
         <el-radio v-model="form.is_rapidly" :label="2">否</el-radio>
       </el-form-item>
       <el-form-item label="状态" v-if="$route.name === 'advertisement_edit'">
-        <el-radio v-model="form.is_online" :label="1">上架</el-radio>
-        <el-radio v-model="form.is_online" :label="2">下架</el-radio>
+        <el-radio v-model="form.is_online" :label="1" :disabled="form.is_online === 1">上架</el-radio>
+        <el-radio v-model="form.is_online" :label="2" :disabled="form.is_online === 1">下架</el-radio>
       </el-form-item>
       <el-form-item label="权重排序值" v-if="$route.name === 'advertisement_edit'">
         <el-input v-model="form.sort" style="width: 400px;"></el-input>
