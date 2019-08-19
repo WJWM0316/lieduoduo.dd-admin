@@ -55,7 +55,7 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="简历等级" class="formItem">
+            <el-form-item label="简历等级" class="formItem" v-if="AdminShow == 0 || AdminShow == 5 || AdminShow == 6">
               <el-select v-model="form.resumeGrades" placeholder="请选择">
                 <el-option
                   v-for="item in resumeLevel"
@@ -962,7 +962,7 @@ export default class resumeStore extends Vue {
     xmlResquest.send()
   }
   created() {
-    let AdminShow = +sessionStorage.getItem("AdminShow");
+    let AdminShow = Number(+sessionStorage.getItem("AdminShow"));
     this.degreeData();
     this.jobhuntStatus();
     this.ManageList();
@@ -971,11 +971,10 @@ export default class resumeStore extends Vue {
     this.field();
     this.isSales = /(3|4)/.test(AdminShow) ? false : true;
     this.getResumeLevel()
+    this.AdminShow = AdminShow
   }
   field() {
-    fieldApi().then(res => {
-      this.fieldList = res.data.data;
-    });
+    fieldApi().then(res => this.fieldList = res.data.data);
   }
   CityData() {
     getCityApi().then(res => {
@@ -1085,8 +1084,9 @@ export default class resumeStore extends Vue {
     this.comexpectFieldId.length > 0
       ? (this.form.expectFieldId = this.comexpectFieldId.join(","))
       : (this.form.expectFieldId = []);
-    // ;
-    GetResumeAPI(this.form).then(res => {
+    let params = this.form
+    if(params.resumeGrades == '') delete params.resumeGrades
+    GetResumeAPI(params).then(res => {
       this.itemList = res.data.data;
       this.leftcontent.total = parseInt(res.data.meta.total);
       this.leftcontent.lastPage = parseInt(res.data.meta.lastPage);
