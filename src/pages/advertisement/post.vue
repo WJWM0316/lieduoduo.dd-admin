@@ -26,7 +26,7 @@
           type="datetime"
           value-format="yyyy-MM-dd HH:mm:ss"
           style="width: 400px;"
-          :disabled="$route.name === 'advertisement_edit' && form.is_online === 1"
+          :disabled="$route.name === 'advertisement_edit' && !canEditFormData"
           placeholder="选择上架日期">
         </el-date-picker>
       </el-form-item>
@@ -35,21 +35,21 @@
           v-model="form.end_time"
           type="datetime"
           value-format="yyyy-MM-dd HH:mm:ss"
-          :disabled="$route.name === 'advertisement_edit' && form.is_online === 1"
+          :disabled="$route.name === 'advertisement_edit' && !canEditFormData"
           style="width: 400px;"
           placeholder="选择下架日期">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="是否设置急聘" v-if="$route.name === 'advertisement_post' || canUseRapidly">
+      <el-form-item label="是否设置急聘" v-if="$route.name === 'advertisement_post' || canEditFormData">
         <el-radio v-model="form.is_rapidly" :label="1">是</el-radio>
         <el-radio v-model="form.is_rapidly" :label="2">否</el-radio>
       </el-form-item>
       <el-form-item label="状态" v-if="$route.name === 'advertisement_edit'">
-        <el-radio v-model="form.is_online" :label="1" :disabled="form.is_online === 1">上架</el-radio>
-        <el-radio v-model="form.is_online" :label="2" :disabled="form.is_online === 1">下架</el-radio>
+        <el-radio v-model="form.is_online" :label="1">上架</el-radio>
+        <el-radio v-model="form.is_online" :label="2">下架</el-radio>
       </el-form-item>
       <el-form-item label="权重排序值" v-if="$route.name === 'advertisement_edit'">
-        <el-input v-model="form.sort" style="width: 400px;"></el-input>
+        <el-input v-model="form.sort" style="width: 400px;" :disabled="!canEditFormData"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">确定</el-button>
@@ -71,7 +71,8 @@ import {
   name: 'ADVERTISEMENT'
 })
 export default class AdvertisementPost extends Vue {
-  canUseRapidly = true
+  canEditFormData = true
+  canEditData = true
   form = {
     start_time: '',
     end_time: '',
@@ -121,7 +122,7 @@ export default class AdvertisementPost extends Vue {
         sort: infos.sort,
         is_rapidly: infos.isRapidly
       }
-      this.canUseRapidly = infos.isOnline === 2
+      this.canEditFormData = infos.isOnline === 2
       this.form = form
     })
   }

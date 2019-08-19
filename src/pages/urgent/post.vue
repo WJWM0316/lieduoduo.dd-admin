@@ -26,7 +26,7 @@
           type="datetime"
           value-format="yyyy-MM-dd HH:mm:ss"
           style="width: 400px;"
-          :disabled="canUseRapidly"
+          :disabled="canEditFormData"
           placeholder="选择上架日期">
         </el-date-picker>
       </el-form-item>
@@ -35,7 +35,7 @@
           v-model="form.end_time"
           type="datetime"
           value-format="yyyy-MM-dd HH:mm:ss"
-          :disabled="canUseRapidly"
+          :disabled="canEditFormData"
           style="width: 400px;"
           placeholder="选择下架日期">
         </el-date-picker>
@@ -45,7 +45,7 @@
         <el-radio v-model="form.is_online" :label="2">下架</el-radio>
       </el-form-item>
       <el-form-item label="权重排序值" v-if="$route.name === 'urgent_edit'">
-        <el-input v-model="form.sort" style="width: 400px;" :disabled="canUseRapidly"></el-input>
+        <el-input v-model="form.sort" style="width: 400px;" :disabled="canEditFormData"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">确定</el-button>
@@ -67,7 +67,7 @@ import {
   name: 'UrgentPost'
 })
 export default class Urgent extends Vue {
-  canUseRapidly = true
+  canEditFormData = true
   form = {
     start_time: '',
     end_time: '',
@@ -113,7 +113,7 @@ export default class Urgent extends Vue {
         is_online: infos.isOnline,
         sort: infos.sort
       }
-      this.canUseRapidly = infos.isOnline === 1
+      this.canEditFormData = infos.isOnline === 1
       this.form = form
     })
   }
@@ -133,7 +133,7 @@ export default class Urgent extends Vue {
   }
   created() {
     if(this.$route.name === 'urgent_edit') this.getUrgency()
-    if(this.$route.name === 'urgent_post') this.canUseRapidly = false
+    if(this.$route.name === 'urgent_post') this.canEditFormData = false
   }
 }
 </script>
