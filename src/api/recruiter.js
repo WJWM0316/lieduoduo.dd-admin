@@ -147,7 +147,7 @@ export const addProfessionalSkillsLabelApi = data => request({
   url: `/label/professionalSkills/${data.uid}`,
   type: 'post',
   data,
-  noGlobalLoading: true
+  noGlobalLoading: false
 })
 
 /* 设置招聘官个人标签 */
