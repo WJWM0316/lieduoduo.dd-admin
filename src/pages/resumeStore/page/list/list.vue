@@ -202,7 +202,7 @@
                   :value="item.value">
                 </el-option>
               </el-select>
-              <span class="jobStatusDesc" v-if="item.jobStatusDesc!=''">{{item.jobStatusDesc}}</span>
+              <span class="jobStatusDesc" v-if="item.jobStatusDesc!=''" style="margin-left: 20px;">{{item.jobStatusDesc}}</span>
               <span class="resumeUpdateTime">最近更新：{{item.resumeUpdateTime}}</span>
               <span class="lastLoginTime">最近访问：{{item.lastLoginTime}}</span>
             </div>
