@@ -804,6 +804,9 @@ export default class EditRecruiter extends Vue {
       default:
         break
     }
+    this.userInfos.skillLabels.map(field => delete field.delete)
+    this.userInfos.literacyLabels.map(field => delete field.delete)
+    this.userInfos.lifeLabels.map(field => delete field.delete)
   }
   setRecruiterLabels(data) {
     return setRecruiterLabelsApi(data).then(() => {
@@ -815,6 +818,8 @@ export default class EditRecruiter extends Vue {
     this.model.show = false
     this.showAdminWindow = false;
     this.userInfos.skillLabels.map(field => delete field.delete)
+    this.userInfos.literacyLabels.map(field => delete field.delete)
+    this.userInfos.lifeLabels.map(field => delete field.delete)
   }
   saveUser() {
     let params = {
@@ -888,7 +893,6 @@ export default class EditRecruiter extends Vue {
     let activeList = this.labelProfessionalLiteracyList.filter(field => field.active)
     this.model.list = this.labelProfessionalLiteracyList
     this.model.selected = [].concat(this.userInfos.skillLabels, this.userInfos.literacyLabels,activeList)
-    console.log(this.model.selected)
   }
   getLifeLabel(type, index) {
     let lifeLabelsLists = this.lifeLabelsLists
