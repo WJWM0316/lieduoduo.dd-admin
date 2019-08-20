@@ -710,7 +710,7 @@ export default class invite extends Vue {
   download() {
     let date = new Date()
     let downloadName = `邀约列表-${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}.xlsx`
-    let url = `${API_ROOT}/interview/apply?isExport=1` 
+    let url = `${API_ROOT}/interview/invite?isExport=1` 
     // 已经有下拉筛选
     if(this.form.searchType && this.form.content) {
       url += `&searchType=${this.form.searchType}&content=${this.form.content}`
