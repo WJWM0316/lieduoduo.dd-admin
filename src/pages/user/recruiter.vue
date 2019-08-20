@@ -15,22 +15,22 @@
               <el-input
                 type="text"
                 placeholder="请输入内容"
-                v-model="form.companyName"
+                v-model="form.keyword1"
                 class="inputSelect"
               >
                 <el-select
                   class="selectTitle"
-                  v-model="searchType.condition1"
+                  v-model="form.searchType1"
                   slot="prepend"
                   placeholder="请选择"
-                  @change="changeProvince"
+                  @change="changeType1"
                 >
                   <el-option
                     v-for="item in keyword"
                     :key="item.label"
                     :label="item.label"
                     :value="item.value"
-                    v-show="searchType.condition2 !== item.value"
+                    v-show="form.searchType2 !== item.value"
                   ></el-option>
                 </el-select>
               </el-input>
@@ -40,22 +40,22 @@
               <el-input
                 type="text"
                 placeholder="请输入内容"
-                v-model="searchType.keyword2"
+                v-model="form.keyword2"
                 class="inputSelect"
               >
                 <el-select
                   class="selectTitle"
-                  v-model="searchType.condition2"
+                  v-model="form.searchType2"
                   slot="prepend"
                   placeholder="请选择"
-                  @change="changeProvince"
+                  @change="changeType2"
                 >
                   <el-option
                     v-for="item in keyword"
                     :key="item.label"
                     :label="item.label"
                     :value="item.value"
-                    v-show="searchType.condition1 !== item.value"
+                    v-show="form.searchType1 !== item.value"
                   ></el-option>
                 </el-select>
               </el-input>
@@ -308,6 +308,22 @@ import { getSalerListApi } from "API/commont";
   name: "userList",
   components: {
     List
+  },
+  watch: {
+    'form.searchType1': {
+      handler(newV, oldV) {
+        this.form.keyword1 = ''
+        this.form[oldV] = ''
+      },
+      immediate: true
+    },
+    'form.searchType2': {
+      handler(newV, oldV) {
+        this.form.keyword2 = ''
+        this.form[oldV] = ''
+      },
+      immediate: true
+    }
   }
 })
 export default class user extends Vue {
@@ -330,13 +346,13 @@ export default class user extends Vue {
     mobile: "",
     name: "",
     page: 1,
-    count: 20
-  };
-  searchType = {
-    condition1: "companyName",
-    condition2: "mobile",
-    keyword1: "",
-    keyword2: ""
+    count: 20,
+    searchType1: 'companyName',
+    searchType2: 'userName',
+    keyword1: '',
+    keyword2: '',
+    createTimeStart: '',
+    createTimeEnd: ''
   };
   /* 搜索关键字 */
   keyword = [
@@ -388,46 +404,25 @@ export default class user extends Vue {
     }
   ];
   list = [];
+  changeType1(e) {
+    console.log(e)
+  }
+  changeType2(e) {
+    console.log(e)
+  }
   /* 添加用户 */
   addUser() {
     sessionStorage.setItem("up_router", this.$route.path);
     this.$route.meta.scrollY = window.scrollY;
     this.$router.push({ path: "/user/addUser" });
   }
-  mounted() {
-    this.AdminShow = +sessionStorage.getItem("AdminShow");
-    this.getSalerList();
-  }
-  /* 选择变更 */
   changeProvince(e) {}
   toCompany(companyId) {
     this.$router.push({ path: `/index/companyInfo?id=${companyId}` });
   }
   onSubmit(e) {
     this.form.page = 1;
-    let searchCondition = {};
-    if (this.searchType.condition1 && this.searchType.keyword1)
-      searchCondition[this.searchType.condition1] = this.searchType.keyword1;
-    if (this.searchType.condition2 && this.searchType.keyword2)
-      searchCondition[this.searchType.condition2] = this.searchType.keyword2;
-    let searchForm = Object.assign({}, this.form, searchCondition);
-    if (searchForm.createTimeStart !== "" && searchForm.createTimeEnd === "") {
-      this.$message({
-        message: "创建时间必须选择开始时间和结束时间",
-        type: "warning"
-      });
-      return;
-    } else if (
-      searchForm.createTimeStart === "" &&
-      searchForm.createTimeEnd !== ""
-    ) {
-      this.$message({
-        message: "创建时间必须选择开始时间和结束时间",
-        type: "warning"
-      });
-      return;
-    }
-    this.getRecruiterList(searchForm);
+    this.getRecruiterList();
   }
   // 获取销售人员名单
   async getSalerList() {
@@ -448,100 +443,103 @@ export default class user extends Vue {
   }
   /* 重置筛选 */
   resetForm(name) {
-    this.searchType = {
-      condition1: "companyName",
-      condition2: "mobile",
-      keyword1: "",
-      keyword2: ""
+    this.form = {
+      admin_uid: "", //跟进人
+      keyword: "",
+      status: "",
+      auth_status: "",
+      createTimeStart: "",
+      createTimeEnd: "",
+      role: "99",
+      createPositionRight: "99", // 发布职位权益
+      idAuth: "99",
+      companyName: "",
+      mobile: "",
+      name: "",
+      page: 1,
+      count: 20,
+      searchType1: 'companyName',
+      searchType2: 'userName',
+      keyword1: '',
+      keyword2: '',
+      createTimeStart: '',
+      createTimeEnd: ''
     };
-    this.form.createTimeEnd = "";
     this.$refs[name].resetFields();
+    this.getRecruiterList()
   }
   /* 请求招聘官审核列表 */
   getRecruiterList(newForm) {
-    let tem = JSON.parse(JSON.stringify(newForm || this.form))
+    this.form[this.form.searchType1] = this.form.keyword1
+    this.form[this.form.searchType2] = this.form.keyword2
     let params = {
-      page: tem.page,
-      count: tem.count
+      page: this.form.page,
+      count: this.form.count
     }
-    if(tem.admin_uid) {
-      params = Object.assign(params, {admin_uid: tem.admin_uid})
+    if(this.form.admin_uid) {
+      params = Object.assign(params, {admin_uid: this.form.admin_uid})
     }
-    if(tem.keyword) {
-      params = Object.assign(params, {keyword: tem.keyword})
+    if(this.form.keyword) {
+      params = Object.assign(params, {keyword: this.form.keyword})
     }
-    if(tem.status) {
-      params = Object.assign(params, {status: tem.status})
+    if(this.form.status) {
+      params = Object.assign(params, {status: this.form.status})
     }
-    if(tem.auth_status) {
-      params = Object.assign(params, {auth_status: tem.auth_status})
+    if(this.form.auth_status) {
+      params = Object.assign(params, {auth_status: this.form.auth_status})
     }
-    if(tem.createTimeStart) {
-      params = Object.assign(params, {createTimeStart: tem.createTimeStart})
-    }
-    if(tem.createTimeEnd) {
-      params = Object.assign(params, {createTimeEnd: tem.createTimeEnd})
-    }
-    if(tem.role === '99') {
+    if(this.form.role === '99') {
       params = Object.assign(params, {role: '2,3'})
     } else {
-      params = Object.assign(params, {role: tem.role})
+      params = Object.assign(params, {role: this.form.role})
     }
-    if(tem.createPositionRight) {
-      params = Object.assign(params, {createPositionRight: tem.createPositionRight})
+    if(this.form.createPositionRight) {
+      params = Object.assign(params, {createPositionRight: this.form.createPositionRight})
     }
-    if(tem.idAuth) {
-      params = Object.assign(params, {idAuth: tem.idAuth})
+    if(this.form.idAuth) {
+      params = Object.assign(params, {idAuth: this.form.idAuth})
     }
-    if(tem.companyName) {
-      params = Object.assign(params, {companyName: tem.companyName})
+    if(this.form.companyName) {
+      params = Object.assign(params, {companyName: this.form.companyName})
     }
-    if(tem.mobile) {
-      params = Object.assign(params, {mobile: tem.mobile})
+    if(this.form.mobile) {
+      params = Object.assign(params, {mobile: this.form.mobile})
     }
-    if(tem.name) {
-      params = Object.assign(params, {name: tem.name})
+    if(this.form.name) {
+      params = Object.assign(params, {name: this.form.name})
+    }
+    if(this.form.userName) {
+      params = Object.assign(params, {userName: this.form.userName})
+    }
+    if((this.form.createTimeStart && !this.form.createTimeEnd) || (!this.form.createTimeStart && this.form.createTimeEnd)) {
+      this.$message({message: "必须选择一个时间区间", type: "warning"});
+    } else {
+      if(this.form.createTimeStart && this.form.createTimeEnd) {
+        params = Object.assign(params, {createTimeStart: this.form.createTimeStart, createTimeEnd: this.form.createTimeEnd})
+      }
     }
     console.log(this.form)
     getUserListApi(params).then(res => {
       this.list = res.data.data;
       this.total = res.data.meta.total;
       this.pageCount = res.data.meta.lastPage;
-      this.$router.push({
-        query: {
-          ...params
-        }
-      })
+      if(this.form.searchType1 && this.form[this.form.searchType1]) {
+        params = Object.assign(params, {searchType1: this.form.searchType1, [this.form.searchType1]: this.form[this.form.searchType1]})
+      }
+      if(this.form.searchType2 && this.form[this.form.searchType2]) {
+        params = Object.assign(params, {searchType2: this.form.searchType2, [this.form.searchType2]: this.form[this.form.searchType2]})
+      }
+      // this.$router.push({
+      //   query: {
+      //     ...params
+      //   }
+      // })
     });
   }
   /* 翻页 */
   handlePageChange(nowPage) {
-    this.$route.meta.scrollY = 0;
-    window.scrollTo(0, 0);
-    this.form.page = nowPage;
-    let searchCondition = {};
-    if (this.searchType.condition1 && this.searchType.keyword1)
-      searchCondition[this.searchType.condition1] = this.searchType.keyword1;
-    if (this.searchType.condition2 && this.searchType.keyword2)
-      searchCondition[this.searchType.condition2] = this.searchType.keyword2;
-    let searchForm = Object.assign({}, this.form, searchCondition);
-    if (searchForm.createTimeStart !== "" && searchForm.createTimeEnd === "") {
-      this.$message({
-        message: "创建时间必须选择开始时间和结束时间",
-        type: "warning"
-      });
-      return;
-    } else if (
-      searchForm.createTimeStart === "" &&
-      searchForm.createTimeEnd !== ""
-    ) {
-      this.$message({
-        message: "创建时间必须选择开始时间和结束时间",
-        type: "warning"
-      });
-      return;
-    }
-    this.getRecruiterList(searchForm);
+    this.form.page = nowPage;    
+    this.getRecruiterList();
   }
   /* 查看相应的招聘官审核详情 */
   check(id) {
@@ -600,11 +598,12 @@ export default class user extends Vue {
   }
 
   created() {
+    this.AdminShow = +sessionStorage.getItem("AdminShow");
+    this.getSalerList();
     this.form = Object.assign(this.form, this.$route.query)
+    this.form.admin_uid = Number(this.form.admin_uid) > 0 ? Number(this.form.admin_uid) : ''
+    console.log(this.$route.query)
     if(this.form.role == '2,3') this.form.role = '99'
-    this.getRecruiterList();
-  }
-  activated() {
     this.getRecruiterList();
   }
 }
