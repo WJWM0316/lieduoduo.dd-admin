@@ -150,7 +150,7 @@
               </el-select>
             </el-form-item>
             <el-form-item class="btn">
-              <el-button type="primary" @click="download" :disabled="!canDownloadData" v-if="AdminShow == 0 || AdminShow == 5 || AdminShow == 6">导出</el-button>
+              <el-button type="primary" @click="download" :disabled="!canDownloadData" v-if="AdminShow == 0 || AdminShow == 1 || AdminShow == 4">导出</el-button>
               <el-button type="primary" @click="onSubmit">查询</el-button>
               <el-button @click.stop="resetForm('form')">重置</el-button>
             </el-form-item>
