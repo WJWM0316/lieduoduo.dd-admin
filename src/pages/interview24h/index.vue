@@ -325,6 +325,7 @@
               placement="bottom"
               width="50"
               trigger="click"
+              v-if="AdminShow!==3 && AdminShow!==4"
               :content="scope.row.jobhunterInfo.mobile">
               <span class="strong_name" slot="reference">联系用户</span>
             </el-popover>
@@ -639,7 +640,7 @@ import { API_ROOT } from 'API/index.js'
   }
 })
 export default class Interview24h extends Vue {
-  AdminShow = true
+  AdminShow = ''
   canDownloadData = true
   openType = ''
   saleLists = []
@@ -1716,7 +1717,7 @@ export default class Interview24h extends Vue {
   }
   mounted() {
     this.init()
-    this.AdminShow = Number(+sessionStorage.getItem("AdminShow"));
+    this.AdminShow = +sessionStorage.getItem("AdminShow");
     // testDeleteApi()
   }
 }

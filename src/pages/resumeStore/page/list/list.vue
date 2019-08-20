@@ -164,7 +164,7 @@
             </el-form-item>
 
             <div class="BtnList">
-              <el-button type="primary" @click.stop="download" :disabled="!canDownloadData">导出</el-button>
+              <el-button type="primary" @click.stop="download" :disabled="!canDownloadData" v-if="AdminShow == 0 || AdminShow == 5 || AdminShow == 6">导出</el-button>
               <el-button type="primary" @click.stop="onSubmit">查询</el-button>
               <el-button @click.stop="resetForm('form')">重置</el-button>
             </div>
@@ -194,7 +194,7 @@
           <div class="resumeNumber">
             <div class="resumeNum">
               简历编号: {{item.resumeNum}}
-              <el-select v-model="item.resumeGrade" placeholder="请选择" @change="changeGrade($event, item.uid)"  v-if="AdminShow === 0 || AdminShow === 5 || AdminShow === 6">
+              <el-select v-model="item.resumeGrade" placeholder="请选择" @change="changeGrade($event, item.uid)"  v-if="AdminShow == 0 || AdminShow == 5 || AdminShow == 6">
                 <el-option
                   v-for="item in resumeLevel"
                   :key="item.value"
@@ -968,6 +968,7 @@ export default class resumeStore extends Vue {
     this.isSales = /(3|4)/.test(AdminShow) ? false : true;
     this.getResumeLevel()
     this.AdminShow = AdminShow
+    console.log(AdminShow)
   }
   field() {
     fieldApi().then(res => this.fieldList = res.data.data);

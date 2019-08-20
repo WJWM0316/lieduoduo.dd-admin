@@ -291,7 +291,6 @@ Component.registerHooks([
   }
 })
 export default class indexPage extends Vue {
-  AdminShow = true
   canDownloadData = true
   total = 0; // 筛查结果数量
   pageCount = 0; // 请求回的数据共几页
@@ -633,7 +632,7 @@ export default class indexPage extends Vue {
     this.getSalerList();
     this.getCompanyCustomerLevelRange()
     this.getAdvisorUserList()
-    this.AdminShow = Number(+sessionStorage.getItem("AdminShow"));
+    this.AdminShow = +sessionStorage.getItem("AdminShow")
 
   }
 }
