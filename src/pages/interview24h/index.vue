@@ -218,6 +218,25 @@
   }
 }
 </style>
+<style>
+#interview24h .el-pagination{
+    text-align: center !important;
+    margin: 0 !important;
+    overflow: hidden;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    z-index: 200;
+    position: fixed;
+    bottom: 0;
+    left: 190px;
+    padding: 8px;
+    width: 100%;
+    background-color: #ffffff;
+    /* -webkit-box-shadow: 0px -1px 0px 0px #e8e9eb; */
+    /* box-shadow: 0px -1px 0px 0px #e8e9eb; */
+    border: 1px solid #e8e9eb;
+}
+</style>
 <template>
   <div id="interview24h">
 
