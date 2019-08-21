@@ -215,7 +215,7 @@
           <span @click.stop="email.isShow = true" v-else>验证邮箱</span>
         </el-form-item>
 
-        <h3>产品介绍</h3>
+        <h3>{{$route.query.from === "cp" ? '' : '产品介绍'}}</h3>
         <div v-for="(item, index) in companyInfo.product">
           <el-form-item class="full" label="产品logo" prop="icon">
             <image-uploader
@@ -284,7 +284,7 @@
           </el-form-item>
           <div class="line" style="height: 1px;background: #ebeef5;width: 100%; margin-bottom: 20px;" v-if="companyInfo.product.length !== index + 1"></div>
         </div>
-        <div class="add_product" @click="addAction" v-if="!companyInfo.product.length || companyInfo.product[companyInfo.product.length - 1].actionType === 'edit'"><i class="el-icon-plus"></i> 添加公司产品</div>
+        <div v-show="!$route.query.from" class="add_product" @click="addAction" v-if="!companyInfo.product.length || companyInfo.product[companyInfo.product.length - 1].actionType === 'edit'"><i class="el-icon-plus"></i> 添加公司产品</div>
       </el-form>
     </div>
     <!-- 跟进销售设置 -->
