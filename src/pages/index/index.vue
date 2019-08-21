@@ -413,6 +413,7 @@ export default class indexPage extends Vue {
    * @return   {[type]}           [description]
    */
   getCompanyList(newForm) {
+    console.log('233', this.form.is_license)
     this.form[this.form.searchType] = this.form.content
     let params = {
       page: this.form.page,
@@ -432,6 +433,9 @@ export default class indexPage extends Vue {
     }
     if(this.form.status) {
       params = Object.assign(params, {status: this.form.status})
+    }
+    if(this.form.is_license) {
+      params = Object.assign(params, {is_license: this.form.is_license})
     }
     if(this.form.equity) {
       params = Object.assign(params, {equity: this.form.equity})
