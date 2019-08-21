@@ -116,7 +116,7 @@
             </el-form-item>
           </el-form>
           <div class="BtnList">
-            <el-button class="inquire" @click.stop="getData(1)">查询</el-button>
+            <el-button type="primary" @click.stop="getData(1)">查询</el-button>
             <el-button @click.stop="resetForm('form')">重置</el-button>
           </div>
         </div>
