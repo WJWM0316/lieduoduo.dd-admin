@@ -86,6 +86,12 @@
                 <el-option :label="item.realname" :value="item.id" v-for="item in advisorUserList" :key="item.id"></el-option>
               </el-select>
             </el-form-item>
+            <!-- 是否口点筛选条件 -->
+            <el-form-item label-width="77px" label="是否扣点" prop="chargeStatus">
+              <el-select v-model="form.chargeStatus" placeholder="全部">
+                <el-option :label="item.realname" :value="item.id" v-for="item in pointsList" :key="item.id"></el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item label-width="1px" label prop="end"></el-form-item>
             <el-form-item label-width="80px" prop="startd">
               <el-checkbox v-model="form.isJobhunterApply">只看求职者自行约面</el-checkbox>
@@ -325,7 +331,8 @@ export default class invitPro extends Vue {
     isJobhunterApply: "",
     page: 1,
     count: 20,
-    followAdvisorUid: ''
+    followAdvisorUid: '',
+    chargeStatus: ''
   };
   page = 1;
   mobile = "";
@@ -356,6 +363,7 @@ export default class invitPro extends Vue {
     page: 1
   };
   tableHeight = 700;
+  pointsList = [{realname: '全部', id: 99}, {realname: '未扣点', id: 0}, {realname: '预扣点', id: 1}, {realname: '已扣点', id: 2}, {realname: '已返点', id: 3}]
   advisorUserList = []
   /**
    * @Author   小书包
@@ -404,6 +412,7 @@ export default class invitPro extends Vue {
       startTime: form.startTime,
       endTime: form.endTime,
       followAdvisorUid: form.followAdvisorUid,
+      chargeStatus: form.chargeStatus,
       isJobhunterApply: form.isJobhunterApply
     };
     param[this.searchType.key1] = this.form.commonKey1;
@@ -415,6 +424,7 @@ export default class invitPro extends Vue {
     if(obj.dealStatusId === '') delete obj.dealStatusId
     if(obj.company && !obj.company.trim()) delete obj.company
     if(!obj.followAdvisorUid) delete obj.followAdvisorUid
+    if(obj.chargeStatus === '') delete obj.chargeStatus
     if(!obj.startTime || !obj.endTime) {
       delete obj.startTime
       delete obj.endTime
