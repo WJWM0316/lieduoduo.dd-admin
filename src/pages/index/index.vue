@@ -125,7 +125,7 @@
 
             <el-form-item label-width="77px" label="营业执照" prop="is_license">
               <el-select v-model="form.is_license" placeholder="全部状态">
-                <el-option label="全部" value></el-option>
+                <el-option label="全部all" value></el-option>
                 <el-option label="无营业执照" value="0"></el-option>
                 <el-option label="有营业执照" value="1"></el-option>
               </el-select>
@@ -413,7 +413,6 @@ export default class indexPage extends Vue {
    * @return   {[type]}           [description]
    */
   getCompanyList(newForm) {
-    console.log('233', this.form.is_license)
     this.form[this.form.searchType] = this.form.content
     let params = {
       page: this.form.page,
