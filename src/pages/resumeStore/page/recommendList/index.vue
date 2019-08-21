@@ -125,7 +125,7 @@
             <el-form-item label-width="1px" label prop="endTime"></el-form-item>
             <div class="BtnList">
               <el-form-item class="btn">
-                <el-button class="inquire" @click.stop="getData(1)">查询</el-button>
+                <el-button type="primary" @click.stop="getData(1)">查询</el-button>
                 <el-button @click.stop="resetForm('form')">重置</el-button>
               </el-form-item>
             </div>

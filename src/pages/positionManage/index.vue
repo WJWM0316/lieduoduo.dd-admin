@@ -139,7 +139,7 @@
             </el-form-item>
           </el-form>
           <div class="SumbitBtn" style="overflow: hidden; text-align: right;">
-            <el-button class="inquire" @click="onSubmit">查询</el-button>
+            <el-button type="primary" @click="onSubmit">查询</el-button>
             <el-button @click="resetForm('form')">重置</el-button>
           </div>
         </div>

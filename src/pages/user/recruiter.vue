@@ -602,6 +602,7 @@ export default class user extends Vue {
     this.getSalerList();
     this.form = Object.assign(this.form, this.$route.query)
     this.form.admin_uid = Number(this.form.admin_uid) > 0 ? Number(this.form.admin_uid) : ''
+    this.form.keyword1 = this.$route.query.companyName
     console.log(this.$route.query)
     if(this.form.role == '2,3') this.form.role = '99'
     this.getRecruiterList();

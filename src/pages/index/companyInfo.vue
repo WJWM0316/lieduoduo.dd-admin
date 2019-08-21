@@ -466,7 +466,7 @@ export default class createCompany extends Vue {
     }
   }
   .sales {
-    border-radius: 4px;
+    border-radius: 0 0 4px 4px;
     padding: 30px 32px;
     h3 {
       font-size: 25px;
@@ -477,7 +477,7 @@ export default class createCompany extends Vue {
   }
   .companyInfo {
     border: 1px solid #cccccc;
-    border-radius: 4px;
+    border-radius: 0 0 4px 4px;
     h3 {
       color: #354048;
       font-size: 20px;

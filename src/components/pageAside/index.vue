@@ -55,6 +55,7 @@ import { admin_menu } from "API/commont";
       handler(route) {
         this.getMenu();
         this.init();
+        this.onePath = route.path;
       },
       immediate: true
     }
@@ -102,7 +103,6 @@ export default class PageAside extends Vue {
         (field, i) => (field.isShow = i === cIndex ? true : false)
       );
     }
-
     if (item.path == "/") {
       this.itemList.map((field, i) => {
         field.isShow = i === cIndex ? true : false;
