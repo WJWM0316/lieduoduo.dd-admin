@@ -17,7 +17,7 @@
               <i
                 style="margin-right: 16px;"
                 class="icon iconfont icongongneng"
-                :class="onePath===item.path?'iconold':'iconNew'"
+                :class="oneFlag===item.flag?'iconold':'iconNew'"
               ></i>
               <span>{{item.title}}</span>
               <i class="el-icon-arrow-up pathArrow" v-show="item.children.length"></i>
@@ -55,7 +55,9 @@ import { admin_menu } from "API/commont";
       handler(route) {
         this.getMenu();
         this.init();
-        this.onePath = route.path;
+        // this.onePath = route.path;
+        let arr = route.path.split("/");
+        this.oneFlag = arr[1]
       },
       immediate: true
     }
@@ -66,6 +68,7 @@ export default class PageAside extends Vue {
   routes = null;
   isActive = 0;
   onePath = "/index"; //当前一级路由
+  oneFlag = "index"; //默认选中第一个
   SecondPath = ""; //当前二级路由
   index = "";
   index1 = "";
@@ -92,7 +95,9 @@ export default class PageAside extends Vue {
     }
   }
   topath(type, pIndex, cIndex, item) {
-    this.onePath = item.path;
+    let arr = item.flag.split("/");
+    this.oneFlag = arr[0]
+    // this.onePath = item.path;
     if (type === "up") {
       this.itemList.map(field => {
         field.isShow = false;
