@@ -164,7 +164,7 @@
             </el-form-item>
 
             <div class="BtnList">
-              <el-button type="primary" @click.stop="download" :disabled="AdminShow == 0 || AdminShow == 2 || AdminShow == 1 || AdminShow == 4 || AdminShow == 5">导出</el-button>
+              <el-button type="primary" @click.stop="download" :disabled="!canDownloadData" v-if="AdminShow == 0 || AdminShow == 2 || AdminShow == 1 || AdminShow == 4 || AdminShow == 5">导出</el-button>
               <el-button type="primary" @click.stop="onSubmit">查询</el-button>
               <el-button @click.stop="resetForm('form')">重置</el-button>
             </div>
