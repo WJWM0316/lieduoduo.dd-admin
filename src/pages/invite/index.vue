@@ -105,7 +105,7 @@
               </el-form-item>
                <el-form-item label="邀约时间">
                 <el-date-picker
-                  v-model="form.appointmentConfirmTimeStart"
+                  v-model="form.createStartTime"
                   :picker-options="pickerOptionsStart"
                   value-format="yyyy-MM-dd HH:mm:ss"
                   type="datetime"
@@ -113,7 +113,7 @@
                 </el-date-picker>
                 -
                 <el-date-picker
-                  v-model="form.appointmentConfirmTimeEnd"
+                  v-model="form.createEndTime"
                   :picker-options="pickerOptionsEnd"
                   value-format="yyyy-MM-dd HH:mm:ss"
                   type="datetime"
@@ -376,8 +376,8 @@ export default class invite extends Vue {
     count: 20,
     appointmentConfirmTimeStart: '',
     appointmentConfirmTimeEnd: '',
-    sappointmentConfirmTimeStart: '',
-    sappointmentConfirmTimeEnd: '',
+    createEndTime: undefined,
+    createStartTime: undefined,
     positionLabel: '',
     areaName: '',
     areaId: ''
@@ -512,10 +512,12 @@ export default class invite extends Vue {
         appointmentConfirmTimeStart: this.form.appointmentConfirmTimeStart,
         appointmentConfirmTimeEnd: this.form.appointmentConfirmTimeEnd
       })
-    } else {
-       params = Object.assign(params, {
-        appointmentConfirmTimeStart: this.form.sappointmentConfirmTimeStart,
-        appointmentConfirmTimeEnd: this.form.sappointmentConfirmTimeEnd
+    }
+    // 邀约时间
+    if(this.form.createStartTime && this.form.createEndTime) {
+      params = Object.assign(params, {
+        createStartTime: this.form.createStartTime,
+        createEndTime: this.form.createEndTime
       })
     }
     // 已经选择城市

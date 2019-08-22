@@ -155,7 +155,7 @@
                   type="date"
                   placeholder="选择日期"
                   value-format="yyyy-MM-dd"
-                  v-model="form.sstart"
+                  v-model="form.exportStart"
                   style="width: 100%;"
                 ></el-date-picker>
               </el-col>
@@ -165,7 +165,7 @@
                   type="date"
                   placeholder="选择日期"
                   value-format="yyyy-MM-dd"
-                  v-model="form.send"
+                  v-model="form.exportEnd"
                   style="width: 100%;"
                 ></el-date-picker>
               </el-col>
@@ -321,8 +321,8 @@ export default class indexPage extends Vue {
     is_license: "",
     start: "",
     end: "",
-    sstart: undefined,
-    send: undefined,
+    exportStart: undefined,
+    exportEnd: undefined,
     page: 1,
     count: 20,
     area_id: "",
@@ -477,11 +477,11 @@ export default class indexPage extends Vue {
     } else {
       if(this.form.start && this.form.end) {
         params = Object.assign(params, {start: this.form.start, end: this.form.end})
-      } else {
-        params = Object.assign(params, {start: this.form.sstart, end: this.form.send})
       }
     }
-
+    if(this.form.exportStart && this.form.exportEnd) {
+      params = Object.assign(params, {exportStart: this.form.exportStart, exportEnd: this.form.exportEnd})
+    }
     if((this.form.firstAreaId && !this.form.area_id) || (!this.form.firstAreaId && this.form.area_id)) {
       this.$message.error('请选择城市');
       return
@@ -561,8 +561,8 @@ export default class indexPage extends Vue {
     this.form.companyId = ''
     this.form.area_id = ''
     this.form.firstAreaId = ''
-    this.form.sstart = undefined
-    this.form.send = undefined
+    this.form.exportStart = undefined
+    this.form.exportEnd = undefined
     this.getCompanyList();
   }
   check(id) {

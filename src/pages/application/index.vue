@@ -61,13 +61,13 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="申请时间" prop="start" style="margin-left: 10px;">
+            <el-form-item label="申请时间" prop="createStartTime" style="margin-left: 10px;">
             <el-col :span="11">
               <el-date-picker
                 type="date"
                 placeholder="选择日期"
                 value-format="yyyy-MM-dd"
-                v-model="form.appoint_start_time"
+                v-model="form.createStartTime"
                 style="width: 100%;"
               ></el-date-picker>
             </el-col>
@@ -77,7 +77,7 @@
                 type="date"
                 placeholder="选择日期"
                 value-format="yyyy-MM-dd"
-                v-model="form.appoint_end_time"
+                v-model="form.createEndTime"
                 style="width: 100%;"
               ></el-date-picker>
             </el-col>
@@ -321,8 +321,8 @@ export default class application extends Vue {
     searchType: "id",
     content: "",
     status: "0",
-    appoint_start_time: undefined,
-    appoint_end_time: undefined,
+    createStartTime: undefined,
+    createEndTime: undefined,
     companyName: "",
     page: 1,
     count: 20
@@ -530,8 +530,8 @@ export default class application extends Vue {
     this.form.companyName = "";
     this.form.status = "";
     this.form.last_status = "";
-    this.form.appoint_start_time = '';
-    this.form.appoint_end_time = '';
+    this.form.createEndTime = '';
+    this.form.createStartTime = '';
   }
 
   /* 翻页 */
