@@ -61,7 +61,27 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-
+            <el-form-item label="申请时间" prop="start" style="margin-left: 10px;">
+            <el-col :span="11">
+              <el-date-picker
+                type="date"
+                placeholder="选择日期"
+                value-format="yyyy-MM-dd"
+                v-model="form.appoint_start_time"
+                style="width: 100%;"
+              ></el-date-picker>
+            </el-col>
+            <el-col class="line" :span="2">—</el-col>
+            <el-col :span="11">
+              <el-date-picker
+                type="date"
+                placeholder="选择日期"
+                value-format="yyyy-MM-dd"
+                v-model="form.appoint_end_time"
+                style="width: 100%;"
+              ></el-date-picker>
+            </el-col>
+          </el-form-item>
             <el-form-item class="btn">
               <el-button type="primary" @click="download" :disabled="!canDownloadData" v-if="AdminShow == 0 || AdminShow == 2 || AdminShow == 1 || AdminShow == 4 || AdminShow == 5">导出</el-button>
               <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -301,6 +321,8 @@ export default class application extends Vue {
     searchType: "id",
     content: "",
     status: "0",
+    appoint_start_time: undefined,
+    appoint_end_time: undefined,
     companyName: "",
     page: 1,
     count: 20
@@ -508,6 +530,8 @@ export default class application extends Vue {
     this.form.companyName = "";
     this.form.status = "";
     this.form.last_status = "";
+    this.form.appoint_start_time = '';
+    this.form.appoint_end_time = '';
   }
 
   /* 翻页 */

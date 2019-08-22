@@ -64,7 +64,7 @@
             <div style="overflow: hidden;">
               <el-form-item label="确认约面时间">
                 <el-date-picker
-                  v-model="form.appointmentConfirmTimeStart"
+                  v-model="form.sappointmentConfirmTimeStart"
                   :picker-options="pickerOptionsStart"
                   value-format="yyyy-MM-dd HH:mm:ss"
                   type="datetime"
@@ -72,7 +72,7 @@
                 </el-date-picker>
                 -
                 <el-date-picker
-                  v-model="form.appointmentConfirmTimeEnd"
+                  v-model="form.sappointmentConfirmTimeEnd"
                   :picker-options="pickerOptionsEnd"
                   value-format="yyyy-MM-dd HH:mm:ss"
                   type="datetime"
@@ -102,6 +102,23 @@
                     :value="item.areaId">
                   </el-option>
                 </el-select>
+              </el-form-item>
+               <el-form-item label="邀约时间">
+                <el-date-picker
+                  v-model="form.appointmentConfirmTimeStart"
+                  :picker-options="pickerOptionsStart"
+                  value-format="yyyy-MM-dd HH:mm:ss"
+                  type="datetime"
+                  placeholder="请选择开始时间">
+                </el-date-picker>
+                -
+                <el-date-picker
+                  v-model="form.appointmentConfirmTimeEnd"
+                  :picker-options="pickerOptionsEnd"
+                  value-format="yyyy-MM-dd HH:mm:ss"
+                  type="datetime"
+                  placeholder="请选择结束时间">
+                </el-date-picker>
               </el-form-item>
             </div>
             <el-form-item class="btn">
@@ -359,6 +376,8 @@ export default class invite extends Vue {
     count: 20,
     appointmentConfirmTimeStart: '',
     appointmentConfirmTimeEnd: '',
+    sappointmentConfirmTimeStart: '',
+    sappointmentConfirmTimeEnd: '',
     positionLabel: '',
     areaName: '',
     areaId: ''
@@ -492,6 +511,11 @@ export default class invite extends Vue {
       params = Object.assign(params, {
         appointmentConfirmTimeStart: this.form.appointmentConfirmTimeStart,
         appointmentConfirmTimeEnd: this.form.appointmentConfirmTimeEnd
+      })
+    } else {
+       params = Object.assign(params, {
+        appointmentConfirmTimeStart: this.form.sappointmentConfirmTimeStart,
+        appointmentConfirmTimeEnd: this.form.sappointmentConfirmTimeEnd
       })
     }
     // 已经选择城市
@@ -684,6 +708,8 @@ export default class invite extends Vue {
       count: 20,
       appointmentConfirmTimeStart: '',
       appointmentConfirmTimeEnd: '',
+      sappointmentConfirmTimeStart: '',
+      sappointmentConfirmTimeEnd: '',
       positionLabel: '',
       cityName: '',
       areaId: ''

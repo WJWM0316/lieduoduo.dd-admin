@@ -149,6 +149,27 @@
                 <el-option :label="item.realname" :value="item.id" v-for="item in advisorUserList" :key="item.id"></el-option>
               </el-select>
             </el-form-item>
+            <el-form-item class="time" label="入库时间" prop="start" label-width="100px">
+              <el-col :span="11">
+                <el-date-picker
+                  type="date"
+                  placeholder="选择日期"
+                  value-format="yyyy-MM-dd"
+                  v-model="form.sstart"
+                  style="width: 100%;"
+                ></el-date-picker>
+              </el-col>
+              <el-col class="line" :span="1">—</el-col>
+              <el-col :span="11">
+                <el-date-picker
+                  type="date"
+                  placeholder="选择日期"
+                  value-format="yyyy-MM-dd"
+                  v-model="form.send"
+                  style="width: 100%;"
+                ></el-date-picker>
+              </el-col>
+            </el-form-item>
             <el-form-item class="btn">
               <el-button type="primary" @click="download" :disabled="!canDownloadData" v-if="AdminShow == 0 || AdminShow == 2 || AdminShow == 1 || AdminShow == 4 || AdminShow == 5">导出</el-button>
               <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -300,6 +321,8 @@ export default class indexPage extends Vue {
     is_license: "",
     start: "",
     end: "",
+    sstart: undefined,
+    send: undefined,
     page: 1,
     count: 20,
     area_id: "",
@@ -454,6 +477,8 @@ export default class indexPage extends Vue {
     } else {
       if(this.form.start && this.form.end) {
         params = Object.assign(params, {start: this.form.start, end: this.form.end})
+      } else {
+        params = Object.assign(params, {start: this.form.sstart, end: this.form.send})
       }
     }
 
@@ -536,6 +561,8 @@ export default class indexPage extends Vue {
     this.form.companyId = ''
     this.form.area_id = ''
     this.form.firstAreaId = ''
+    this.form.sstart = undefined
+    this.form.send = undefined
     this.getCompanyList();
   }
   check(id) {

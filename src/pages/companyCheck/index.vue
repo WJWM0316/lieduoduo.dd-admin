@@ -107,6 +107,27 @@
                 <el-option :label="item.text" :value="item.value" v-for="item in companyCustomerLevelRange" :key="item.value"></el-option>
               </el-select>
             </el-form-item>
+            <el-form-item label="提交时间" prop="start" style="margin-left: 10px;">
+              <el-col :span="11">
+                <el-date-picker
+                  type="date"
+                  placeholder="选择日期"
+                  value-format="yyyy-MM-dd"
+                  v-model="form.sstart"
+                  style="width: 100%;"
+                ></el-date-picker>
+              </el-col>
+              <el-col class="line" :span="2">—</el-col>
+              <el-col :span="11">
+                <el-date-picker
+                  type="date"
+                  placeholder="选择日期"
+                  value-format="yyyy-MM-dd"
+                  v-model="form.send"
+                  style="width: 100%;"
+                ></el-date-picker>
+              </el-col>
+            </el-form-item>
             <el-form-item class="btn">
               <el-button type="primary" @click="download" :disabled="!canDownloadData" v-if="AdminShow == 0 || AdminShow == 2 || AdminShow == 1 || AdminShow == 4 || AdminShow == 5">导出</el-button>
               <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -269,6 +290,7 @@ import { API_ROOT } from 'API/index.js'
 })
 export default class companyCheck extends Vue {
   canDownloadData = true
+  toggle = false;
   total = 0; // 筛查结果数量
   pageCount = 0; // 请求回的数据共几页
   AdminShow = ""; //权限字段，限制搜索
@@ -281,6 +303,8 @@ export default class companyCheck extends Vue {
     auth_status: "",
     start: "",
     end: "",
+    sstart: "",
+    send: "",
     page: 1,
     count: 20,
     customer_level: ''
@@ -389,12 +413,13 @@ export default class companyCheck extends Vue {
     if(this.form.keyword) {
       params = Object.assign(params, {keyword: this.form.keyword})
     }
-
     if((params.start && !params.end) || (!params.start && params.end)) {
       this.$message({message: "申请时间必须选择开始时间和结束时间", type: "warning"});
     } else {
       if(this.form.start && this.form.end) {
         params = Object.assign(params, {start: this.form.start, end: this.form.end})
+      } else {
+        params = Object.assign(params, {start: this.form.sstart, end: this.form.send})
       }
     }
     if(this.form.status) {
@@ -429,6 +454,8 @@ export default class companyCheck extends Vue {
 
   /* 清除列表选项 */
   resetForm(name) {
+    this.form.sstart = undefined;
+    this.form.send = undefined;
     this.$refs[name].resetFields();
   }
   /* 去选择跟进销售 */

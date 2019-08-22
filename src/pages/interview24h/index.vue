@@ -299,6 +299,27 @@
           ></el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="申请时间" prop="start" style="margin-left: 10px;">
+          <el-col :span="11">
+            <el-date-picker
+              type="date"
+              placeholder="选择日期"
+              value-format="yyyy-MM-dd"
+              v-model="form.appoint_start_time"
+              style="width: 100%;"
+            ></el-date-picker>
+          </el-col>
+          <el-col class="line" :span="2">—</el-col>
+          <el-col :span="11">
+            <el-date-picker
+              type="date"
+              placeholder="选择日期"
+              value-format="yyyy-MM-dd"
+              v-model="form.appoint_end_time"
+              style="width: 100%;"
+            ></el-date-picker>
+          </el-col>
+        </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="download" :disabled="!canDownloadData" v-if="AdminShow == 0 || AdminShow == 2 || AdminShow == 1 || AdminShow == 4 || AdminShow == 5">导出</el-button>
         <el-button type="primary" @click="search">搜索</el-button>
@@ -744,6 +765,8 @@ export default class Interview24h extends Vue {
     mobile: '',
     realname: '',
     isAttend: '0',
+    appoint_start_time: undefined,
+    appoint_end_time: undefined,
     address: {
       mobile: '',
       title: '',
@@ -805,6 +828,9 @@ export default class Interview24h extends Vue {
     }
     if(this.form.searchType && this.form.content) {
       params = Object.assign(params, {searchType: this.form.searchType, content: this.form.content})
+    }
+    if(this.form.appoint_start_time && this.form.appoint_end_time) {
+      params = Object.assign(params, {appoint_start_time: this.form.appoint_start_time, appoint_end_time: this.form.appoint_end_time})
     }
     if(this.form.status) {
       params = Object.assign(params, {status: this.form.status})
