@@ -403,8 +403,7 @@ export default class resumeStore extends Vue {
   needWorkProps = {
     value: "labelId",
     label: "name",
-    children: "children",
-    checkStrictly: true
+    children: "children"
   };
   labelStorePage = {
     page: 1,
@@ -832,8 +831,10 @@ export default class resumeStore extends Vue {
     this.$nextTick(() => {
       let obj = {};
       obj.stopPropagation = () => {};
-      this.$refs.cascader.clearValue(obj);
-      this.$refs.cityChoice.clearValue(obj);
+      this.$refs.cascader.inputValue = ''
+      this.$refs.cityChoice.inputValue = ''
+      // this.$refs.cascader.clearCheckedNodes(obj);
+      // this.$refs.cityChoice.clearValue(obj);
       this.$refs.diywork.clearValue();
       this.$refs.Money.clearValue();
       this.$refs.age.clearValue();
