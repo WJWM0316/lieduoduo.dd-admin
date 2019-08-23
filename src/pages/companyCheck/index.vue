@@ -424,7 +424,6 @@ export default class companyCheck extends Vue {
            this.$message({message: "提交时间必须选择开始时间和结束时间", type: "warning"});
             return;
         } else {
-          alert('gg')
           params = Object.assign(params, {start: this.form.sstart, end: this.form.send})
         }
       }
