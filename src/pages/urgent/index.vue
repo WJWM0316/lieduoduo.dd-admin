@@ -105,10 +105,10 @@
       <el-form-item label="职位类别">
         <el-cascader
           ref="cascader"
+          class="formItem"
           placeholder="职位类别"
           :options="options"
           filterable
-          change-on-select
           :props="positionManage"
           @change="type"
         ></el-cascader>
@@ -396,7 +396,8 @@ export default class Urgent extends Vue {
     }
     let obj = {}
     obj.stopPropagation = () =>{}
-    this.$refs.cascader.clearValue(obj)
+    this.$refs.cascader.inputValue = ''
+    // this.$refs.cascader.clearValue(obj)
     this.getUrgencyList()
   }
   mounted() {

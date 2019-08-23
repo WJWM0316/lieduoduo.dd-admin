@@ -58,7 +58,6 @@
                 placeholder="职位类别"
                 :options="options"
                 filterable
-                change-on-select
                 :clearable="clearable"
                 :props="positionManage"
                 @change="type"
@@ -583,7 +582,8 @@ export default class companyCheck extends Vue {
     };
     let obj = {}
     obj.stopPropagation = () =>{}
-    this.$refs.cascader.clearValue(obj)
+    this.$refs.cascader.inputValue = ''
+    // this.$refs.cascader.clearValue(obj)
     this.getTemplist()
   }
 
