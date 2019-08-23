@@ -852,6 +852,14 @@ export default class resumeStore extends Vue {
   }
   // 查询按钮
   onSubmit() {
+    if((this.form.updateTimeLower && !this.form.updateTimeUpper) || (!this.form.updateTimeLower&& this.form.updateTimeUpper)) {
+      this.$message({message: "更新时间必需选择区间时间", type: "warning"});
+      return;
+    }
+    if((this.form.visitTimeLower && !this.form.visitTimeUpper) || (!this.form.visitTimeLower&& this.form.visitTimeUpper)) {
+      this.$message({message: "访问时间必需选择区间时间", type: "warning"});
+      return;
+    }
     this.form.page = 1;
     this.getData();
   }

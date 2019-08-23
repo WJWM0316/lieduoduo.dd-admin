@@ -521,6 +521,10 @@ export default class application extends Vue {
   /* 查询 */
   onSubmit() {
     this.form.page = 1;
+    if((this.form.createStartTime && !this.form.createEndTime) || (!this.form.createStartTime&& this.form.createEndTime)) {
+      this.$message({message: "申请时间必需选择区间时间", type: "warning"});
+      return;
+    }
     this.getInterviewList();
   }
 
@@ -530,8 +534,8 @@ export default class application extends Vue {
     this.form.companyName = "";
     this.form.status = "";
     this.form.last_status = "";
-    this.form.createEndTime = '';
-    this.form.createStartTime = '';
+    this.form.createEndTime = undefined;
+    this.form.createStartTime = undefined;
   }
 
   /* 翻页 */

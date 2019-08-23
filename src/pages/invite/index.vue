@@ -64,7 +64,7 @@
             <div style="overflow: hidden;">
               <el-form-item label="确认约面时间">
                 <el-date-picker
-                  v-model="form.sappointmentConfirmTimeStart"
+                  v-model="form.appointmentConfirmTimeStart"
                   :picker-options="pickerOptionsStart"
                   value-format="yyyy-MM-dd HH:mm:ss"
                   type="datetime"
@@ -72,7 +72,7 @@
                 </el-date-picker>
                 -
                 <el-date-picker
-                  v-model="form.sappointmentConfirmTimeEnd"
+                  v-model="form.appointmentConfirmTimeEnd"
                   :picker-options="pickerOptionsEnd"
                   value-format="yyyy-MM-dd HH:mm:ss"
                   type="datetime"
@@ -374,8 +374,8 @@ export default class invite extends Vue {
     companyName: "",
     page: 1,
     count: 20,
-    appointmentConfirmTimeStart: '',
-    appointmentConfirmTimeEnd: '',
+    appointmentConfirmTimeStart: undefined,
+    appointmentConfirmTimeEnd: undefined,
     createEndTime: undefined,
     createStartTime: undefined,
     positionLabel: '',
@@ -507,31 +507,26 @@ export default class invite extends Vue {
       params = Object.assign(params, {positionLabel: this.form.positionLabel})
     }
     // 已经选择时间
-    if(this.form.appointmentConfirmTimeStart && this.form.appointmentConfirmTimeEnd) {
-      params = Object.assign(params, {
-        appointmentConfirmTimeStart: this.form.appointmentConfirmTimeStart,
-        appointmentConfirmTimeEnd: this.form.appointmentConfirmTimeEnd
-      })
+    if((this.form.appointmentConfirmTimeStart && !this.form.appointmentConfirmTimeEnd) || (!this.form.appointmentConfirmTimeStart&& this.form.appointmentConfirmTimeEnd)) {
+      this.$message({message: "确认面试时间必需选择区间时间", type: "warning"});
+      return;
+    } else {
+      if(this.form.appointmentConfirmTimeStart && this.form.appointmentConfirmTimeEnd) {
+        params = Object.assign(params, {appointmentConfirmTimeStart: this.form.appointmentConfirmTimeStart, appointmentConfirmTimeEnd: this.form.appointmentConfirmTimeEnd})
+      }
     }
     // 邀约时间
-    if(this.form.createStartTime && this.form.createEndTime) {
-      params = Object.assign(params, {
-        createStartTime: this.form.createStartTime,
-        createEndTime: this.form.createEndTime
-      })
+    if((this.form.createStartTime && !this.form.createEndTime) || (!this.form.createStartTime&& this.form.createEndTime)) {
+      this.$message({message: "邀约时间必需选择区间时间", type: "warning"});
+      return;
+    } else {
+      if(this.form.createStartTime && this.form.createEndTime) {
+        params = Object.assign(params, {createStartTime: this.form.createStartTime, createEndTime: this.form.createEndTime})
+      }
     }
     // 已经选择城市
     if(this.form.areaId) {
       params = Object.assign(params, {areaId: this.form.areaId})
-    }
-
-    if(this.form.appointmentConfirmTimeStart && !this.form.appointmentConfirmTimeEnd) {
-      this.$message({message: '请选择确认约面的结束时间', type: 'warning'})
-      return
-    }
-    if(!this.form.appointmentConfirmTimeStart && this.form.appointmentConfirmTimeEnd) {
-      this.$message({message: '请选择确认约面的开始时间', type: 'warning'})
-      return
     }
     getInviteListApi(params).then(res => {
       this.list = res.data.data;
@@ -708,10 +703,10 @@ export default class invite extends Vue {
       companyName: "",
       page: 1,
       count: 20,
-      appointmentConfirmTimeStart: '',
-      appointmentConfirmTimeEnd: '',
-      sappointmentConfirmTimeStart: '',
-      sappointmentConfirmTimeEnd: '',
+      appointmentConfirmTimeStart: undefined,
+      appointmentConfirmTimeEnd: undefined,
+      sappointmentConfirmTimeStart: undefined,
+      sappointmentConfirmTimeEnd: undefined,
       positionLabel: '',
       cityName: '',
       areaId: ''

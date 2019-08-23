@@ -439,6 +439,10 @@ export default class invitPro extends Vue {
     return param;
   }
   getData(page) {
+    if((this.form.startTime && !this.form.endTime) || (!this.form.startTime&& this.form.endTime)) {
+      this.$message({message: "面试日期必需选择区间时间", type: "warning"});
+      return;
+    } 
     let obj = this.forEachKeys(this.form, page);
     if(obj.isJobhunterApply === '') delete obj.isJobhunterApply
     if(obj.dealStatusId === '') delete obj.dealStatusId

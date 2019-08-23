@@ -479,9 +479,17 @@ export default class indexPage extends Vue {
         params = Object.assign(params, {start: this.form.start, end: this.form.end})
       }
     }
-    if(this.form.exportStart && this.form.exportEnd) {
-      params = Object.assign(params, {exportStart: this.form.exportStart, exportEnd: this.form.exportEnd})
+    if((this.form.exportStart && !this.form.exportEnd) || (!this.form.exportStart&& this.form.exportEnd)) {
+      this.$message({message: "入库时间必需选择区间时间", type: "warning"});
+      return;
+    } else {
+      if(this.form.exportStart && this.form.exportEnd) {
+        params = Object.assign(params, {exportStart: this.form.exportStart, exportEnd: this.form.exportEnd})
+      }
     }
+    // if(this.form.exportStart && this.form.exportEnd) {
+    //   params = Object.assign(params, {exportStart: this.form.exportStart, exportEnd: this.form.exportEnd})
+    // }
     if((this.form.firstAreaId && !this.form.area_id) || (!this.form.firstAreaId && this.form.area_id)) {
       this.$message.error('请选择城市');
       return

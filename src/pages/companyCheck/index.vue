@@ -413,13 +413,20 @@ export default class companyCheck extends Vue {
     if(this.form.keyword) {
       params = Object.assign(params, {keyword: this.form.keyword})
     }
-    if((params.start && !params.end) || (!params.start && params.end)) {
+    if((this.form.start && !this.form.end) || (!this.form.start && this.form.end)) {
       this.$message({message: "申请时间必须选择开始时间和结束时间", type: "warning"});
+      return;
     } else {
       if(this.form.start && this.form.end) {
         params = Object.assign(params, {start: this.form.start, end: this.form.end})
       } else {
-        params = Object.assign(params, {start: this.form.sstart, end: this.form.send})
+        if ((this.form.sstart && !this.form.send) || (!this.form.sstart && this.form.send)) {
+           this.$message({message: "提交时间必须选择开始时间和结束时间", type: "warning"});
+            return;
+        } else {
+          alert('gg')
+          params = Object.assign(params, {start: this.form.sstart, end: this.form.send})
+        }
       }
     }
     if(this.form.status) {
@@ -485,7 +492,7 @@ export default class companyCheck extends Vue {
     if(this.form.keyword) {
       url += `&keyword=${this.form.keyword}`
     }
-
+  
     if((this.form.start && !this.form.end) || (!this.form.start && this.form.end)) {
       this.$message({message: "申请时间必须选择开始时间和结束时间", type: "warning"});
     } else {

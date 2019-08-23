@@ -829,8 +829,13 @@ export default class Interview24h extends Vue {
     if(this.form.searchType && this.form.content) {
       params = Object.assign(params, {searchType: this.form.searchType, content: this.form.content})
     }
-    if(this.form.createStartTime && this.form.createEndTime) {
-      params = Object.assign(params, {createStartTime: this.form.createStartTime, createEndTime: this.form.createEndTime})
+    if((this.form.createStartTime && !this.form.createEndTime) || (!this.form.createStartTime&& this.form.createEndTime)) {
+      this.$message({message: "申请时间必需选择区间时间", type: "warning"});
+      return;
+    } else {
+      if(this.form.createStartTime && this.form.createEndTime) {
+        params = Object.assign(params, {createStartTime: this.form.createStartTime, createEndTime: this.form.createEndTime})
+      }
     }
     if(this.form.status) {
       params = Object.assign(params, {status: this.form.status})

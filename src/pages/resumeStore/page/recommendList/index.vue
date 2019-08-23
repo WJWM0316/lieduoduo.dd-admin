@@ -248,6 +248,10 @@ export default class recommend extends Vue {
     return param;
   }
   getData(page) {
+    if((this.form.startTime && !this.form.endTime) || (!this.form.startTime&& this.form.endTime)) {
+      this.$message({message: "创建时间必需选择区间时间", type: "warning"});
+      return;
+    } 
     let obj = this.forEachKeys(this.form, page);
     recommendList(obj).then(res => {
       this.tableData = res.data.data;
