@@ -82,7 +82,8 @@ export default class login extends Vue {
         });
       })
       .catch(err => {
-        this.$message.error(`用户账号或密码错误`);
+        console(err)
+        // this.$message.error(`用户账号或密码错误`);
       });
   }
   // 等级,身份

@@ -15,6 +15,13 @@ axios.defaults.baseURL = API_ROOT;
 // 请求拦截器
 axios.interceptors.request.use(
   config => {
+    if(window.document.location.pathname !== '/login') {
+      if (!getAccessToken()) {
+        router.push({ name: "login" });
+        if (loadingInstance) loadingInstance.close();
+        return;
+      }
+    }
     //  loadingInstance = Loading.service({})
     config.headers.common["Authorization-Admin"] = getAccessToken();
     return config;
