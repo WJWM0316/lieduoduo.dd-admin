@@ -631,6 +631,9 @@ export default class indexPage extends Vue {
           url += `&start=${this.form.start}&end=${this.form.end}`
         }
       }
+      if((this.form.exportStart && this.form.exportEnd)) {
+        url += `&exportStart=${this.form.exportStart}&exportEnd=${this.form.exportEnd}`
+      }
 
       if((this.form.firstAreaId && !this.form.area_id) || (!this.form.firstAreaId && this.form.area_id)) {
         this.$message.error('请选择城市');
