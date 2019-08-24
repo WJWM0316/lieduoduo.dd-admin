@@ -476,12 +476,13 @@ export default class invitPro extends Vue {
     });
   }
   created() {
-    this.getData(1);
-    this.dealStatus();
-    this.getAdvisorUserList()
+    this.dealStatus().then(() => {
+      this.getData(1);
+      this.getAdvisorUserList()
+    })
   }
   dealStatus() {
-    dealStatus().then(res => {
+    return dealStatus().then(res => {
       this.dealStatusList = res.data.data.dealStatus;
       this.reason = res.data.data.notSuitTypes;
     });

@@ -4,6 +4,7 @@
     <el-container class="container" style="border: 1px solid #eee">
       <el-header class="header" style="text-align: right; font-size: 15px">
         <div class="title">申请列表管理({{total}})</div>
+        <el-button type="primary" @click="download" :disabled="!canDownloadData" v-if="AdminShow == 0 || AdminShow == 2 || AdminShow == 1 || AdminShow == 4 || AdminShow == 5">导出</el-button>
       </el-header>
       <el-main width="200px">
         <!--筛选-->
@@ -82,8 +83,31 @@
               ></el-date-picker>
             </el-col>
           </el-form-item>
+            <el-form-item label="职位类别">
+              <el-cascader
+                ref="cascader"
+                placeholder="职位类别"
+                :options="options"
+                filterable
+                change-on-select
+                :props="positionManage"
+                @change="type"
+              ></el-cascader>
+            </el-form-item>
+            <el-form-item label="城市">
+              <el-select
+                v-model="form.areaId"
+                filterable
+                placeholder="请输入城市名">
+                <el-option
+                  v-for="(item, index) in cityLists"
+                  :key="index"
+                  :label="item.title"
+                  :value="item.areaId">
+                </el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item class="btn">
-              <el-button type="primary" @click="download" :disabled="!canDownloadData" v-if="AdminShow == 0 || AdminShow == 2 || AdminShow == 1 || AdminShow == 4 || AdminShow == 5">导出</el-button>
               <el-button type="primary" @click="onSubmit">查询</el-button>
               <el-button @click.stop="resetForm('form')">重置</el-button>
             </el-form-item>
@@ -245,6 +269,8 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import resumePopup from "COMPONENTS/resumePopup/resumePopup.vue";
+import { getLabelPositionListApi } from "API/position";
+import { getAddressListsApi } from "API/company";
 import {
   getApplyListApi,
   getResumeCodeUrlApi,
@@ -262,6 +288,19 @@ import { API_ROOT } from 'API/index.js'
   components: {
     List,
     resumePopup
+  },
+  watch: {
+    'form.areaId': {
+      handler(areaId) {
+        if(areaId) {
+          let item = this.cityLists.find(field => field.areaId === areaId)
+          if(!item) return
+          this.form.areaId = item.areaId
+          this.form.areaName = item.title
+        }
+      },
+      immediate: true
+    }
   }
 })
 export default class application extends Vue {
@@ -328,6 +367,16 @@ export default class application extends Vue {
     count: 20
   };
   list = [];
+  options = [];
+  positionManage = {
+    value: "labelId",
+    label: "name",
+    children: "children"
+  }; //职位类别的配置
+  cityLists = [];
+  getAddressLists() {
+    return getAddressListsApi({level: 3}).then(res => this.cityLists = res.data.data)
+  }
   pageCount = 0; // 请求回的数据共几页
   mobile = ""; // 当前查看的手机号码
   qrCode = "";
@@ -354,6 +403,8 @@ export default class application extends Vue {
     this.AdminShow = +sessionStorage.getItem("AdminShow");
     this.init();
     this.getApplyInterviewStatusType();
+    this.ManageList()
+    this.getAddressLists()
   }
   getNotSuitTypeList() {
     getNotSuitTypeList().then(res => {
@@ -536,6 +587,10 @@ export default class application extends Vue {
     this.form.last_status = "";
     this.form.createEndTime = undefined;
     this.form.createStartTime = undefined;
+    this.form.positionLabel = '';
+    this.form.cityName = '';
+    this.form.areaId = '';
+     this.$refs.cascader.inputValue = ''
   }
 
   /* 翻页 */
@@ -551,47 +606,74 @@ export default class application extends Vue {
     if (this.timeout !== null) clearTimeout(that.timeout);
     this.timeout = setTimeout(that.hideAdress, wait);
   }
+  ManageList() {
+    getLabelPositionListApi().then(res => {
+      this.options = res.data.data;
+      this.options.forEach(item => {
+        item.children.forEach(item1 => {
+          item1.children.forEach(item2 => {
+            let result = JSON.stringify(item2.children);
+            if (result === "[]") delete item2.children;
+          });
+        });
+      });
+    });
+  }
+  type(e) {
+    this.form.positionLabel = e[e.length - 1];
+  }
   download() {
-    let date = new Date()
-    let downloadName = `申请列表-${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}.xlsx`
-    let url = `${API_ROOT}/interview/apply?isExport=1` 
-    // 已经有下拉筛选
-    if(this.form.searchType && this.form.content) {
-      url += `&searchType=${this.form.searchType}&content=${this.form.content}`
-    }
-    // 已经存在公司名筛选
-    if(this.form.companyName && this.form.companyName.trim()) {
-      url += `&companyName=${this.form.companyName}`
-    }
-    // 已经选择一级状态
-    if(this.form.status) {
-      url += `&status=${this.form.status}`
-    }
-    // 已经选择二级状态
-    if(this.form.last_status) {
-      url += `&last_status=${this.form.last_status}`
-    }
+    this.$confirm('是否导出该列表数据？', '提示', {
+      confirmButtonText: '是',
+      cancelButtonText: '否',
+      type: 'warning'
+    }).then(() => {
+      let date = new Date()
+      let downloadName = `申请列表-${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}.xlsx`
+      let url = `${API_ROOT}/interview/apply?isExport=1` 
+      // 已经有下拉筛选
+      if(this.form.searchType && this.form.content) {
+        url += `&searchType=${this.form.searchType}&content=${this.form.content}`
+      }
+      // 已经存在公司名筛选
+      if(this.form.companyName && this.form.companyName.trim()) {
+        url += `&companyName=${this.form.companyName}`
+      }
+      // 已经选择一级状态
+      if(this.form.status) {
+        url += `&status=${this.form.status}`
+      }
+      // 已经选择二级状态
+      if(this.form.last_status) {
+        url += `&last_status=${this.form.last_status}`
+      }
 
-    url = url.replace(/\s*/g, '')
-    let xmlResquest = new XMLHttpRequest()
-    xmlResquest.open('get', url, true)
-    xmlResquest.setRequestHeader('Content-type', 'application/json')
-    xmlResquest.setRequestHeader('Authorization-Admin', getAccessToken())
-    xmlResquest.responseType = 'blob'
-    this.canDownloadData = false
-    xmlResquest.onload = () => {
-      let content = xmlResquest.response
-      let link = document.createElement('a')
-      let blob = new Blob([content])
-      link.download = downloadName
-      link.style.display = 'none'
-      link.href = URL.createObjectURL(blob)
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-      this.canDownloadData = true
-    }
-    xmlResquest.send()
+      url = url.replace(/\s*/g, '')
+      let xmlResquest = new XMLHttpRequest()
+      xmlResquest.open('get', url, true)
+      xmlResquest.setRequestHeader('Content-type', 'application/json')
+      xmlResquest.setRequestHeader('Authorization-Admin', getAccessToken())
+      xmlResquest.responseType = 'blob'
+      this.canDownloadData = false
+      xmlResquest.onload = () => {
+        let content = xmlResquest.response
+        let link = document.createElement('a')
+        let blob = new Blob([content])
+        link.download = downloadName
+        link.style.display = 'none'
+        link.href = URL.createObjectURL(blob)
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        this.canDownloadData = true
+      }
+      xmlResquest.send()
+    }).catch(() => {
+      this.$message({
+        type: 'info',
+        message: '已取消导出'
+      });          
+    })
   }
 }
 </script>

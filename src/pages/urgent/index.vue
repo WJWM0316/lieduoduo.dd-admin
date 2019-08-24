@@ -109,6 +109,7 @@
           placeholder="职位类别"
           :options="options"
           filterable
+          change-on-select
           :props="positionManage"
           @change="type"
         ></el-cascader>

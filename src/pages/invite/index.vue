@@ -4,6 +4,7 @@
     <el-container class="container" style="border: 1px solid #eee">
       <el-header class="header" style="text-align: right; font-size: 15px">
         <div class="title">邀请列表管理({{total}})</div>
+        <el-button type="primary" @click="download" :disabled="!canDownloadData" v-if="AdminShow == 0 || AdminShow == 2 || AdminShow == 1 || AdminShow == 4 || AdminShow == 5">导出</el-button>
       </el-header>
       <el-main width="200px">
         <!--筛选-->
@@ -122,7 +123,6 @@
               </el-form-item>
             </div>
             <el-form-item class="btn">
-              <el-button type="primary" @click="download" :disabled="!canDownloadData" v-if="AdminShow == 0 || AdminShow == 2 || AdminShow == 1 || AdminShow == 4 || AdminShow == 5">导出</el-button>
               <el-button type="primary" @click="onSubmit">查询</el-button>
               <el-button @click.stop="resetForm('form')">重置</el-button>
             </el-form-item>
@@ -711,9 +711,7 @@ export default class invite extends Vue {
       cityName: '',
       areaId: ''
     };
-    let obj = {}
-    obj.stopPropagation = () =>{}
-    this.$refs.cascader.clearValue(obj)
+    this.$refs.cascader.inputValue = ''
     this.getInterviewList()
   }
 
@@ -731,58 +729,69 @@ export default class invite extends Vue {
     this.timeout = setTimeout(that.hideAdress, wait);
   }
   download() {
-    let date = new Date()
-    let downloadName = `邀约列表-${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}.xlsx`
-    let url = `${API_ROOT}/interview/invite?isExport=1` 
-    // 已经有下拉筛选
-    if(this.form.searchType && this.form.content) {
-      url += `&searchType=${this.form.searchType}&content=${this.form.content}`
-    }
-    // 已经存在公司名筛选
-    if(this.form.companyName && this.form.companyName.trim()) {
-      url += `&companyName=${this.form.companyName}`
-    }
-    // 已经选择一级状态
-    if(this.form.status) {
-      url += `&status=${this.form.status}`
-    }
-    // 已经选择二级状态
-    if(this.form.last_status) {
-      url += `&last_status=${this.form.last_status}`
-    }
-    // 已经选择职位类型
-    if(this.form.positionLabel) {
-      url += `&positionLabel=${this.form.positionLabel}`
-    }
-    // 已经选择时间
-    if(this.form.appointmentConfirmTimeStart && this.form.appointmentConfirmTimeEnd) {
-      url += `&appointmentConfirmTimeStart=${this.form.appointmentConfirmTimeStart}&appointmentConfirmTimeEnd=${this.form.appointmentConfirmTimeEnd}`
-    }
-    // 已经选择城市
-    if(this.form.areaId) {
-      url += `&areaId=${this.form.areaId}`
-    }
+    this.$confirm('是否导出该列表数据？', '提示', {
+      confirmButtonText: '是',
+      cancelButtonText: '否',
+      type: 'warning'
+    }).then(() => {
+      let date = new Date()
+      let downloadName = `邀约列表-${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}.xlsx`
+      let url = `${API_ROOT}/interview/invite?isExport=1` 
+      // 已经有下拉筛选
+      if(this.form.searchType && this.form.content) {
+        url += `&searchType=${this.form.searchType}&content=${this.form.content}`
+      }
+      // 已经存在公司名筛选
+      if(this.form.companyName && this.form.companyName.trim()) {
+        url += `&companyName=${this.form.companyName}`
+      }
+      // 已经选择一级状态
+      if(this.form.status) {
+        url += `&status=${this.form.status}`
+      }
+      // 已经选择二级状态
+      if(this.form.last_status) {
+        url += `&last_status=${this.form.last_status}`
+      }
+      // 已经选择职位类型
+      if(this.form.positionLabel) {
+        url += `&positionLabel=${this.form.positionLabel}`
+      }
+      // 已经选择时间
+      if(this.form.appointmentConfirmTimeStart && this.form.appointmentConfirmTimeEnd) {
+        url += `&appointmentConfirmTimeStart=${this.form.appointmentConfirmTimeStart}&appointmentConfirmTimeEnd=${this.form.appointmentConfirmTimeEnd}`
+      }
+      // 已经选择城市
+      if(this.form.areaId) {
+        url += `&areaId=${this.form.areaId}`
+      }
 
-    url = url.replace(/\s*/g, '')
-    let xmlResquest = new XMLHttpRequest()
-    xmlResquest.open('get', url, true)
-    xmlResquest.setRequestHeader('Content-type', 'application/json')
-    xmlResquest.setRequestHeader('Authorization-Admin', getAccessToken())
-    xmlResquest.responseType = 'blob'
-    this.canDownloadData = false
-    xmlResquest.onload = () => {
-      let content = xmlResquest.response
-      let link = document.createElement('a')
-      let blob = new Blob([content])
-      link.download = downloadName
-      link.style.display = 'none'
-      link.href = URL.createObjectURL(blob)
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-      this.canDownloadData = true
-    }
-    xmlResquest.send()
+      url = url.replace(/\s*/g, '')
+      let xmlResquest = new XMLHttpRequest()
+      xmlResquest.open('get', url, true)
+      xmlResquest.setRequestHeader('Content-type', 'application/json')
+      xmlResquest.setRequestHeader('Authorization-Admin', getAccessToken())
+      xmlResquest.responseType = 'blob'
+      this.canDownloadData = false
+      xmlResquest.onload = () => {
+        let content = xmlResquest.response
+        let link = document.createElement('a')
+        let blob = new Blob([content])
+        link.download = downloadName
+        link.style.display = 'none'
+        link.href = URL.createObjectURL(blob)
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        this.canDownloadData = true
+      }
+      xmlResquest.send()
+    }).catch(() => {
+      this.$message({
+        type: 'info',
+        message: '已取消导出'
+      });          
+    })
   }
 }
 </script>

@@ -8,7 +8,7 @@
           <span class="title">{{leftcontent.title}}({{leftcontent.total}})</span>
         </div>
         <!-- 右上角按钮区域 -->
-        <div class="slotButton" v-if="isShowbtn">
+        <div :class="['slotButton', $route.path === '/resumeStore/list' ? 'weizhi' : '']" v-if="isShowbtn">
           <slot name="text"></slot>
         </div>
       </el-header>
@@ -167,6 +167,9 @@ export default class lyoutContent extends Vue {
         box-sizing: border-box;
         border: 1px solid #dcdfe6;
         cursor: pointer;
+      }
+      .weizhi{
+         margin-right: 110px;
       }
     }
   }

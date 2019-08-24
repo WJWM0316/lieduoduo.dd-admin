@@ -266,11 +266,12 @@ export default class recommend extends Vue {
     this.getData(this.form.page);
   }
   created() {
-    this.getData(1);
-    this.getList();
+    this.getList().then(() => {
+      this.getData(1);
+    })
   }
   getList() {
-    userList().then(res => {
+    return userList().then(res => {
       this.userList = res.data.data;
     });
   }

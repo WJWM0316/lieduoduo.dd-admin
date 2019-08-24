@@ -103,7 +103,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="职位类别">
-        <!-- <el-cascader
+        <el-cascader
           ref="cascader"
           placeholder="职位类别"
           :options="options"
@@ -111,8 +111,8 @@
           change-on-select
           :props="positionManage"
           @change="type"
-        ></el-cascader> -->
-        <el-cascader
+        ></el-cascader>
+        <!-- <el-cascader
           ref="cascader"
           class="formItem"
           placeholder="职位类别"
@@ -120,7 +120,7 @@
           filterable
           :props="positionManage"
           @change="type"
-        ></el-cascader>
+        ></el-cascader> -->
       </el-form-item>
       <el-form-item label="职位来源">
         <el-select v-model="form.wherefrom" placeholder="全部状态">

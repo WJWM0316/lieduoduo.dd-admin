@@ -58,6 +58,7 @@
                 placeholder="职位类别"
                 :options="options"
                 filterable
+                change-on-select
                 :clearable="clearable"
                 :props="positionManage"
                 @change="type"

@@ -41,7 +41,7 @@ axios.interceptors.response.use(
     if (err.response.data.httpStatus === 401) {
       router.push({ name: "login" });
       removeAccessToken();
-      Message.error(`登录状态已过期,请重新登录`);
+      // Message.error(`登录状态已过期,请重新登录`);
     }
     if (loadingInstance) loadingInstance.close();
     return Promise.reject(err.response);

@@ -5,6 +5,7 @@
       <el-header class="header" style="text-align: right; font-size: 15px">
         <div class="title">审核管理({{total}})</div>
         <el-button @click="addCompany" class="btn-limit-width">+ 新建公司</el-button>
+        <el-button type="primary" @click="download" :disabled="!canDownloadData" v-if="AdminShow == 0 || AdminShow == 2 || AdminShow == 1 || AdminShow == 4 || AdminShow == 5">导出</el-button>
       </el-header>
       <el-main>
         <!--筛选-->
@@ -129,7 +130,6 @@
               </el-col>
             </el-form-item>
             <el-form-item class="btn">
-              <el-button type="primary" @click="download" :disabled="!canDownloadData" v-if="AdminShow == 0 || AdminShow == 2 || AdminShow == 1 || AdminShow == 4 || AdminShow == 5">导出</el-button>
               <el-button type="primary" @click="onSubmit">查询</el-button>
               <el-button @click.stop="resetForm('form')">重置</el-button>
             </el-form-item>
@@ -484,60 +484,71 @@ export default class companyCheck extends Vue {
     });
   }
   download() {
-    let date = new Date()
-    let downloadName = `公司审核管理-${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}.xlsx`
-    let url = `${API_ROOT}/company/templist?isExport=1`
-    
-    if(this.form.keyword) {
-      url += `&keyword=${this.form.keyword}`
-    }
-  
-    if((this.form.start && !this.form.end) || (!this.form.start && this.form.end)) {
-      this.$message({message: "申请时间必须选择开始时间和结束时间", type: "warning"});
-    } else {
-      if(this.form.start && this.form.end) {
-        url += `&start=${this.form.start}&end=${this.form.end}`
+    this.$confirm('是否导出该列表数据?', '提示', {
+      confirmButtonText: '是',
+      cancelButtonText: '否',
+      type: 'warning'
+    }).then(() => {
+      let date = new Date()
+      let downloadName = `公司审核管理-${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}.xlsx`
+      let url = `${API_ROOT}/company/templist?isExport=1`
+      
+      if(this.form.keyword) {
+        url += `&keyword=${this.form.keyword}`
       }
-    }
-    if(this.form.status) {
-      url += `&status=${this.form.status}`
-    }
-    if(this.form.auth_status) {
-      url += `&auth_status=${this.form.auth_status}`
-    }
-    if(this.form.admin_uid) {
-      url += `&admin_uid=${this.form.admin_uid}`
-    }
-    if(this.form.is_license) {
-      url += `&is_license=${this.form.is_license}`
-    }
-    if(this.form.wherefrom) {
-      url += `&wherefrom=${this.form.wherefrom}`
-    }
-    if(this.form.customer_level !== '') {
-      url += `&customer_level=${this.form.customer_level}`
-    }
-
-    url = url.replace(/\s*/g, '')
-    let xmlResquest = new XMLHttpRequest()
-    xmlResquest.open('get', url, true)
-    xmlResquest.setRequestHeader('Content-type', 'application/json')
-    xmlResquest.setRequestHeader('Authorization-Admin', getAccessToken())
-    xmlResquest.responseType = 'blob'
-    this.canDownloadData = false
-    xmlResquest.onload = () => {
-      let content = xmlResquest.response
-      let link = document.createElement('a')
-      let blob = new Blob([content])
-      link.download = downloadName
-      link.style.display = 'none'
-      link.href = URL.createObjectURL(blob)
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-      this.canDownloadData = true
-    }
-    xmlResquest.send()
+    
+      if((this.form.start && !this.form.end) || (!this.form.start && this.form.end)) {
+        this.$message({message: "申请时间必须选择开始时间和结束时间", type: "warning"});
+      } else {
+        if(this.form.start && this.form.end) {
+          url += `&start=${this.form.start}&end=${this.form.end}`
+        }
+      }
+      if(this.form.status) {
+        url += `&status=${this.form.status}`
+      }
+      if(this.form.auth_status) {
+        url += `&auth_status=${this.form.auth_status}`
+      }
+      if(this.form.admin_uid) {
+        url += `&admin_uid=${this.form.admin_uid}`
+      }
+      if(this.form.is_license) {
+        url += `&is_license=${this.form.is_license}`
+      }
+      if(this.form.wherefrom) {
+        url += `&wherefrom=${this.form.wherefrom}`
+      }
+      if(this.form.customer_level !== '') {
+        url += `&customer_level=${this.form.customer_level}`
+      }
+      url = url.replace(/\s*/g, '')
+      let xmlResquest = new XMLHttpRequest()
+      xmlResquest.open('get', url, true)
+      xmlResquest.setRequestHeader('Content-type', 'application/json')
+      xmlResquest.setRequestHeader('Authorization-Admin', getAccessToken())
+      xmlResquest.responseType = 'blob'
+      this.canDownloadData = false
+      xmlResquest.onload = () => {
+        let content = xmlResquest.response
+        let link = document.createElement('a')
+        let blob = new Blob([content])
+        link.download = downloadName
+        link.style.display = 'none'
+        link.href = URL.createObjectURL(blob)
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        this.canDownloadData = true
+      }
+      xmlResquest.send()
+    }).catch(() => {
+      this.$message({
+        type: 'info',
+        message: '已取消导出'
+      });          
+    })
+    
   }
 }
 </script>

@@ -164,7 +164,6 @@
             </el-form-item>
 
             <div class="BtnList">
-              <el-button type="primary" @click.stop="download" :disabled="!canDownloadData" v-if="AdminShow == 0 || AdminShow == 2 || AdminShow == 1 || AdminShow == 4 || AdminShow == 5">导出</el-button>
               <el-button type="primary" @click.stop="onSubmit">查询</el-button>
               <el-button @click.stop="resetForm('form')">重置</el-button>
             </div>
@@ -181,6 +180,9 @@
               <i class="el-icon-circle-plus-outline"></i>
             </div>
           </div>
+        </div>
+        <div class="export">
+          <el-button type="primary" @click.stop="download" :disabled="!canDownloadData" v-if="AdminShow == 0 || AdminShow == 2 || AdminShow == 1 || AdminShow == 4 || AdminShow == 5">导出</el-button>
         </div>
       </div>
 
@@ -891,93 +893,105 @@ export default class resumeStore extends Vue {
     }
   }
   download() {
-    let date = new Date()
-    let downloadName = `简历列表-${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}.xlsx`
-    let url = `${API_ROOT}/resume/export?p=1`
-    if(this.form.keyword) {
-      url += `&keyword=${this.form.keyword}`
-    }
-    if(this.form.expectPositionId) {
-      url += `&expectPositionId=${this.form.expectPositionId}`
-    }
-    if(this.form.expectCityNum) {
-      url += `&expectCityNum=${this.form.expectCityNum}`
-    }
-    if(this.comexpectFieldId.length > 0) {
-      url += `&expectFieldId=${this.comexpectFieldId.join(',')}`
-    }
-    if(this.form.salaryLower) {
-      url += `&salaryLower=${this.form.salaryLower}&salaryUpper=${this.form.salaryLower}`
-    }
-    if(this.form.ageLower) {
-      url += `&ageLower=${this.form.ageLower}&ageUpper=${this.form.ageUpper}`
-    }
-    if(this.form.jobStatus) {
-      url += `&jobStatus=${this.form.jobStatus}`
-    }
-    if(this.form.degree) {
-      url += `&jobStatus=${this.form.degree}`
-    }
-    if(this.form.workExpLower) {
-      url += `&workExpLower=${this.form.workExpLower}&workExpUpper=${this.form.workExpUpper}`
-    }
-    if(this.form.visitTimeLower) {
-      url += `&visitTimeLower=${this.form.visitTimeLower}&visitTimeUpper=${this.form.visitTimeUpper}`
-    }
-    if(this.form.completeCareer) {
-      url += `&completeCareer=${this.form.completeCareer}`
-    }
-    if(this.form.completeEducation) {
-      url += `&completeEducation=${this.form.completeEducation}`
-    }
-    if(this.form.completeExpect) {
-      url += `&completeExpect=${this.form.completeExpect}`
-    }
-    if(this.form.completeMoreIntro) {
-      url += `&completeMoreIntro=${this.form.completeMoreIntro}`
-    }
-    if(this.form.completeProject) {
-      url += `&completeProject=${this.form.completeProject}`
-    }
-    if(this.form.completeResumeAttach) {
-      url += `&completeResumeAttach=${this.form.completeResumeAttach}`
-    }
-    if(this.form.resumeGrades) {
-      url += `&resumeGrades=${this.form.resumeGrades}`
-    }
-    url = url.replace(/\s*/g, '')
-    let xmlResquest = new XMLHttpRequest()
-    xmlResquest.open('get', url, true)
-    xmlResquest.setRequestHeader('Content-type', 'application/json')
-    xmlResquest.setRequestHeader('Authorization-Admin', getAccessToken())
-    xmlResquest.responseType = 'blob'
-    this.canDownloadData = false
-    xmlResquest.onload = () => {
-      let content = xmlResquest.response
-      let link = document.createElement('a')
-      let blob = new Blob([content])
-      link.download = downloadName
-      link.style.display = 'none'
-      link.href = URL.createObjectURL(blob)
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-      this.canDownloadData = true
-    }
-    xmlResquest.send()
+    this.$confirm('是否导出该列表数据？', '提示', {
+      confirmButtonText: '是',
+      cancelButtonText: '否',
+      type: 'warning'
+    }).then(() => {
+      let date = new Date()
+      let downloadName = `简历列表-${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}.xlsx`
+      let url = `${API_ROOT}/resume/export?p=1`
+      if(this.form.keyword) {
+        url += `&keyword=${this.form.keyword}`
+      }
+      if(this.form.expectPositionId) {
+        url += `&expectPositionId=${this.form.expectPositionId}`
+      }
+      if(this.form.expectCityNum) {
+        url += `&expectCityNum=${this.form.expectCityNum}`
+      }
+      if(this.comexpectFieldId.length > 0) {
+        url += `&expectFieldId=${this.comexpectFieldId.join(',')}`
+      }
+      if(this.form.salaryLower) {
+        url += `&salaryLower=${this.form.salaryLower}&salaryUpper=${this.form.salaryLower}`
+      }
+      if(this.form.ageLower) {
+        url += `&ageLower=${this.form.ageLower}&ageUpper=${this.form.ageUpper}`
+      }
+      if(this.form.jobStatus) {
+        url += `&jobStatus=${this.form.jobStatus}`
+      }
+      if(this.form.degree) {
+        url += `&jobStatus=${this.form.degree}`
+      }
+      if(this.form.workExpLower) {
+        url += `&workExpLower=${this.form.workExpLower}&workExpUpper=${this.form.workExpUpper}`
+      }
+      if(this.form.visitTimeLower) {
+        url += `&visitTimeLower=${this.form.visitTimeLower}&visitTimeUpper=${this.form.visitTimeUpper}`
+      }
+      if(this.form.completeCareer) {
+        url += `&completeCareer=${this.form.completeCareer}`
+      }
+      if(this.form.completeEducation) {
+        url += `&completeEducation=${this.form.completeEducation}`
+      }
+      if(this.form.completeExpect) {
+        url += `&completeExpect=${this.form.completeExpect}`
+      }
+      if(this.form.completeMoreIntro) {
+        url += `&completeMoreIntro=${this.form.completeMoreIntro}`
+      }
+      if(this.form.completeProject) {
+        url += `&completeProject=${this.form.completeProject}`
+      }
+      if(this.form.completeResumeAttach) {
+        url += `&completeResumeAttach=${this.form.completeResumeAttach}`
+      }
+      if(this.form.resumeGrades) {
+        url += `&resumeGrades=${this.form.resumeGrades}`
+      }
+      url = url.replace(/\s*/g, '')
+      let xmlResquest = new XMLHttpRequest()
+      xmlResquest.open('get', url, true)
+      xmlResquest.setRequestHeader('Content-type', 'application/json')
+      xmlResquest.setRequestHeader('Authorization-Admin', getAccessToken())
+      xmlResquest.responseType = 'blob'
+      this.canDownloadData = false
+      xmlResquest.onload = () => {
+        let content = xmlResquest.response
+        let link = document.createElement('a')
+        let blob = new Blob([content])
+        link.download = downloadName
+        link.style.display = 'none'
+        link.href = URL.createObjectURL(blob)
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        this.canDownloadData = true
+      }
+      xmlResquest.send()
+    }).catch(() => {
+      this.$message({
+        type: 'info',
+        message: '已取消导出'
+      })         
+    })
+    
   }
   created() {
     let AdminShow = Number(+sessionStorage.getItem("AdminShow"));
-    this.degreeData();
-    this.jobhuntStatus();
-    this.ManageList();
-    this.CityData();
-    this.getData();
-    this.field();
+    this.ManageList().then(() => {
+      this.degreeData();
+      this.jobhuntStatus();
+      this.CityData();
+      this.getData();
+      this.field();
+      this.getResumeLevel()
+    })
     this.isSales = /(3|4)/.test(AdminShow) ? false : true;
-    this.getResumeLevel()
     this.AdminShow = AdminShow
-    console.log(AdminShow)
   }
   field() {
     fieldApi().then(res => this.fieldList = res.data.data);
@@ -995,7 +1009,7 @@ export default class resumeStore extends Vue {
   }
   // 期待职位
   ManageList() {
-    getLabelPositionListApi().then(res => {
+    return getLabelPositionListApi().then(res => {
       this.options = res.data.data;
       this.options.forEach(item => {
         item.children.forEach(item1 => {

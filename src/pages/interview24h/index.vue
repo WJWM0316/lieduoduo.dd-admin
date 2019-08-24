@@ -23,6 +23,10 @@
       cursor: none;
       pointer-events: none;
     }
+    .export{
+      float: right;
+      margin-right: 20px;
+    }
   }
   .el-form {
     text-align: left;
@@ -242,8 +246,8 @@
 
     <ul class="h24_navigation">
       <li v-for="item in navigation" :key="item.type" :class="{active: item.active}" @click="tabClick(item.type)">{{item.msg}}</li>
+      <div class="export"><el-button type="primary" @click="download" :disabled="!canDownloadData" v-if="AdminShow == 0 || AdminShow == 2 || AdminShow == 1 || AdminShow == 4 || AdminShow == 5">导出</el-button></div>
     </ul>
-
     <el-form ref="form" :model="form" label-width="80px" :inline="true">
       
       <el-form-item>
@@ -299,6 +303,30 @@
           ></el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="城市">
+          <el-select
+            v-model="form.areaId"
+            filterable
+            placeholder="请输入城市名">
+            <el-option
+              v-for="(item, index) in cityLists"
+              :key="index"
+              :label="item.title"
+              :value="item.areaId">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="职位类别">
+          <el-cascader
+            ref="cascader"
+            placeholder="职位类别"
+            :options="mgoptions"
+            filterable
+            change-on-select
+            :props="positionManage"
+            @change="type"
+          ></el-cascader>
+        </el-form-item>
       <el-form-item label="申请时间" prop="createStartTime" style="margin-left: 10px;">
           <el-col :span="11">
             <el-date-picker
@@ -321,7 +349,6 @@
           </el-col>
         </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="download" :disabled="!canDownloadData" v-if="AdminShow == 0 || AdminShow == 2 || AdminShow == 1 || AdminShow == 4 || AdminShow == 5">导出</el-button>
         <el-button type="primary" @click="search">搜索</el-button>
         <el-button type="primary" @click="reset">重置</el-button>
       </el-form-item>
@@ -641,6 +668,7 @@
 import Vue from "vue"
 import Component from "vue-class-component"
 import resumePopup from "COMPONENTS/resumePopup/resumePopup.vue";
+import { getAddressListsApi } from "API/company";
 import mapSearch from '@/components/map'
 
 import {
@@ -667,6 +695,7 @@ import {
   openPositionApi,
   createPositionAddressApi,
   editPositionAddressApi,
+  getLabelPositionListApi,
   getPositionAddressApi
 } from "API/position"
 import { getSalerListApi } from "API/commont";
@@ -677,6 +706,19 @@ import { API_ROOT } from 'API/index.js'
   components: {
     resumePopup,
     mapSearch
+  },
+  watch: {
+    'form.areaId': {
+      handler(areaId) {
+        if(areaId) {
+          let item = this.cityLists.find(field => field.areaId === areaId)
+          if(!item) return
+          this.form.areaId = item.areaId
+          this.form.areaName = item.title
+        }
+      },
+      immediate: true
+    }
   }
 })
 export default class Interview24h extends Vue {
@@ -777,7 +819,20 @@ export default class Interview24h extends Vue {
       lat: ''
     },
     showFooter: true,
-    refuseReason: ''
+    refuseReason: '',
+    areaName: '',
+    positionLabel: '',
+    areaId: ''
+  }
+  positionManage = {
+    value: "labelId",
+    label: "name",
+    children: "children"
+  }; //职位类别的配置
+  mgoptions = []
+  cityLists = []
+  getAddressLists() {
+    return getAddressListsApi({level: 3}).then(res => this.cityLists = res.data.data)
   }
   lists = []
   model = {
@@ -839,6 +894,14 @@ export default class Interview24h extends Vue {
     }
     if(this.form.status) {
       params = Object.assign(params, {status: this.form.status})
+    }
+    // 已经选择职位类型
+    if(this.form.positionLabel) {
+      params = Object.assign(params, {positionLabel: this.form.positionLabel})
+    }
+    // 已经选择城市
+    if(this.form.areaId) {
+      params = Object.assign(params, {areaId: this.form.areaId})
     }
     if(this.form.status === 52) {
       params = Object.assign(params, {last_status: this.form.last_status})
@@ -1348,6 +1411,8 @@ export default class Interview24h extends Vue {
   init() {
     let query = this.$route.query
     this.form = Object.assign(this.form, query)
+    this.form.areaId = Number(this.form.areaId)
+    if(!this.form.areaId) this.form.areaId = ''
     if(this.form.status) this.form.status = Number(this.form.status)
     if(this.form.last_status) this.form.last_status = Number(this.form.last_status)
     if(query.tab_status) {
@@ -1682,6 +1747,7 @@ export default class Interview24h extends Vue {
         lat: ''
       }
     }
+    this.$refs.cascader.inputValue = ''
     this.getQuickApplyInterview()
   }
   /**
@@ -1721,52 +1787,81 @@ export default class Interview24h extends Vue {
     getSalerListApi().then(res => this.saleLists = res.data.data)
   }
   download() {
-    let date = new Date()
-    let downloadName = `24h急速反馈-${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}.xlsx`
-    let url = `${API_ROOT}/interview/quickApply?isExport=1` 
-    let tab = this.navigation.find(field => field.active)
+    this.$confirm('是否导出该列表数据？', '提示', {
+      confirmButtonText: '是',
+      cancelButtonText: '否',
+      type: 'warning'
+    }).then(() => {
+      let date = new Date()
+      let downloadName = `24h急速反馈-${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}.xlsx`
+      let url = `${API_ROOT}/interview/quickApply?isExport=1` 
+      let tab = this.navigation.find(field => field.active)
 
-    url += `&tab_status=${tab.id}`
+      url += `&tab_status=${tab.id}`
 
-    if(this.form.companyName) {
-      url += `&companyName=${this.form.companyName}`
-    }
-    if(this.form.admin_uid) {
-      url += `&admin_uid=${this.form.admin_uid}`
-    }
-    if(this.form.searchType && this.form.content) {
-      url += `&searchType=${this.form.searchType}&content=${this.form.content}`
-    }
-    if(this.form.status) {
-      url += `&status=${this.form.status}`
-    }
-    if(this.form.status === 52) {
-      url += `&last_status=${this.form.last_status}`
-    }
+      if(this.form.companyName) {
+        url += `&companyName=${this.form.companyName}`
+      }
+      if(this.form.admin_uid) {
+        url += `&admin_uid=${this.form.admin_uid}`
+      }
+      if(this.form.searchType && this.form.content) {
+        url += `&searchType=${this.form.searchType}&content=${this.form.content}`
+      }
+      if(this.form.status) {
+        url += `&status=${this.form.status}`
+      }
+      if(this.form.status === 52) {
+        url += `&last_status=${this.form.last_status}`
+      }
 
-    url = url.replace(/\s*/g, '')
-    let xmlResquest = new XMLHttpRequest()
-    xmlResquest.open('get', url, true)
-    xmlResquest.setRequestHeader('Content-type', 'application/json')
-    xmlResquest.setRequestHeader('Authorization-Admin', getAccessToken())
-    xmlResquest.responseType = 'blob'
-    this.canDownloadData = false
-    xmlResquest.onload = () => {
-      let content = xmlResquest.response
-      let link = document.createElement('a')
-      let blob = new Blob([content])
-      link.download = downloadName
-      link.style.display = 'none'
-      link.href = URL.createObjectURL(blob)
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-      this.canDownloadData = true
-    }
-    xmlResquest.send()
+      url = url.replace(/\s*/g, '')
+      let xmlResquest = new XMLHttpRequest()
+      xmlResquest.open('get', url, true)
+      xmlResquest.setRequestHeader('Content-type', 'application/json')
+      xmlResquest.setRequestHeader('Authorization-Admin', getAccessToken())
+      xmlResquest.responseType = 'blob'
+      this.canDownloadData = false
+      xmlResquest.onload = () => {
+        let content = xmlResquest.response
+        let link = document.createElement('a')
+        let blob = new Blob([content])
+        link.download = downloadName
+        link.style.display = 'none'
+        link.href = URL.createObjectURL(blob)
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        this.canDownloadData = true
+      }
+      xmlResquest.send()
+    }).catch(() => {
+      this.$message({
+        type: 'info',
+        message: '已取消导出'
+      })        
+    })
+  }
+  type(e) {
+    this.form.positionLabel = e[e.length - 1];
+  }
+  ManageList() {
+    getLabelPositionListApi().then(res => {
+      this.mgoptions = res.data.data;
+      this.mgoptions.forEach(item => {
+        item.children.forEach(item1 => {
+          item1.children.forEach(item2 => {
+            let result = JSON.stringify(item2.children);
+            if (result === "[]") delete item2.children;
+          });
+        });
+      });
+    });
   }
   mounted() {
+    this.getAddressLists()
     this.init()
+    this.ManageList()
     this.AdminShow = +sessionStorage.getItem("AdminShow");
     // testDeleteApi()
   }

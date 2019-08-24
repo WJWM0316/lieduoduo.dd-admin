@@ -24,22 +24,6 @@
 		"children":[]
 	},
 	{
-		"path":"/advertisement",
-		"title":"广告职位管理",
-		"name":"advertisement",
-		"isShow":false,
-		"flag":"advertisement",
-		"children":[]
-	},
-	{
-		"path":"/urgent",
-		"title":"急聘职位管理",
-		"name":"urgent",
-		"isShow":false,
-		"flag":"urgent",
-		"children":[]
-	},
-	{
 		"path":"/24h",
 		"title":"24h反馈专场管理",
 		"name":"24h",
@@ -48,12 +32,29 @@
 		"children":[]
 	},
 	{
-		"path":"/positionManage",
+	   "path":"/",
 		"title":"职位管理",
-		"name":"positionManage",
-		"isShow":false,
-		"flag":"positionManage",
-		"children":[]
+		"isShow":true,
+		"flag":"Manage",
+		"children":[
+			{
+				"path":"/advertisement",
+				"title":"广告职位管理",
+				"name":"advertisement",
+				"flag":"Manage"
+			},
+			{
+				"path":"/urgent",
+				"title":"急聘职位管理",
+				"name":"urgent",
+				"flag":"Manage"
+			},{
+				"path":"/positionManage",
+				"title":"全部职位",
+				"name":"positionManage",
+				"flag":"Manage"
+			}
+		]
 	},
 	{
 		"path":"/",

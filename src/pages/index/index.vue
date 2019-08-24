@@ -3,6 +3,9 @@
     <el-container class="container" style="border: 1px solid #eee">
       <el-header class="header" style="text-align: right; font-size: 15px">
         <div class="title">公司管理({{total}})</div>
+        <div class="export">
+        <el-button type="primary" @click="download" :disabled="!canDownloadData" v-if="AdminShow == 0 || AdminShow == 2 || AdminShow == 1 || AdminShow == 4 || AdminShow == 5">导出</el-button>
+        </div>
       </el-header>
       <el-main width="200px">
         <!--筛选-->
@@ -171,7 +174,6 @@
               </el-col>
             </el-form-item>
             <el-form-item class="btn">
-              <el-button type="primary" @click="download" :disabled="!canDownloadData" v-if="AdminShow == 0 || AdminShow == 2 || AdminShow == 1 || AdminShow == 4 || AdminShow == 5">导出</el-button>
               <el-button type="primary" @click="onSubmit">查询</el-button>
               <el-button @click.stop="resetForm('form')">重置</el-button>
             </el-form-item>
@@ -584,75 +586,86 @@ export default class indexPage extends Vue {
     this.$router.push({ path: `/user/userInfo/${uid}` });
   }
   download() {
-    let date = new Date()
-    let downloadName = `公司库-${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}.xlsx`
-    let url = `${API_ROOT}/company/list?isExport=1`
+    this.$confirm('是否导出该列表数据？', '提示', {
+      confirmButtonText: '是',
+      cancelButtonText: '否',
+      type: 'warning'
+    }).then(() => {
+      let date = new Date()
+      let downloadName = `公司库-${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}.xlsx`
+      let url = `${API_ROOT}/company/list?isExport=1`
 
-    this.form[this.form.searchType] = this.form.content
-    if(this.form.wherefrom) {
-      url += `&wherefrom=${this.form.wherefrom}`
-    }
-    if(this.form.customer_level !== '') {
-      url += `&customer_level=${this.form.customer_level}`
-    }
-    if(this.form.advisorUid) {
-      url += `&advisorUid=${this.form.advisorUid}`
-    }
-    if(this.form.adminUid) {
-      url += `&adminUid=${this.form.adminUid}`
-    }
-    if(this.form.status) {
-      url += `&status=${this.form.status}`
-    }
-    if(this.form.equity) {
-      url += `&equity=${this.form.equity}`
-    }
-    if(this.form.keyword) {
-      url += `&keyword=${this.form.keyword}`
-    }
-    if(this.form.companyId) {
-      url += `&companyId=${this.form.companyId}`
-    }
-    if(this.form.mobile) {
-      url += `&mobile=${this.form.mobile}`
-    }
-    if((this.form.start && !this.form.end) || (!this.form.start&& this.form.end)) {
-      this.$message({message: "权益截止时间必需选择区间时间", type: "warning"});
-      return;
-    } else {
-      if(this.form.start && this.form.end) {
-        url += `&start=${this.form.start}&end=${this.form.end}`
+      this.form[this.form.searchType] = this.form.content
+      if(this.form.wherefrom) {
+        url += `&wherefrom=${this.form.wherefrom}`
       }
-    }
+      if(this.form.customer_level !== '') {
+        url += `&customer_level=${this.form.customer_level}`
+      }
+      if(this.form.advisorUid) {
+        url += `&advisorUid=${this.form.advisorUid}`
+      }
+      if(this.form.adminUid) {
+        url += `&adminUid=${this.form.adminUid}`
+      }
+      if(this.form.status) {
+        url += `&status=${this.form.status}`
+      }
+      if(this.form.equity) {
+        url += `&equity=${this.form.equity}`
+      }
+      if(this.form.keyword) {
+        url += `&keyword=${this.form.keyword}`
+      }
+      if(this.form.companyId) {
+        url += `&companyId=${this.form.companyId}`
+      }
+      if(this.form.mobile) {
+        url += `&mobile=${this.form.mobile}`
+      }
+      if((this.form.start && !this.form.end) || (!this.form.start&& this.form.end)) {
+        this.$message({message: "权益截止时间必需选择区间时间", type: "warning"});
+        return;
+      } else {
+        if(this.form.start && this.form.end) {
+          url += `&start=${this.form.start}&end=${this.form.end}`
+        }
+      }
 
-    if((this.form.firstAreaId && !this.form.area_id) || (!this.form.firstAreaId && this.form.area_id)) {
-      this.$message.error('请选择城市');
-      return
-    } else {
-      if(this.form.firstAreaId && this.form.area_id) {
-        url += `&firstAreaId=${this.form.firstAreaId}&area_id=${this.form.area_id}`
+      if((this.form.firstAreaId && !this.form.area_id) || (!this.form.firstAreaId && this.form.area_id)) {
+        this.$message.error('请选择城市');
+        return
+      } else {
+        if(this.form.firstAreaId && this.form.area_id) {
+          url += `&firstAreaId=${this.form.firstAreaId}&area_id=${this.form.area_id}`
+        }
       }
-    }
-    this.canDownloadData = false
-    url = url.replace(/\s*/g, '')
-    let xmlResquest = new XMLHttpRequest()
-    xmlResquest.open('get', url, true)
-    xmlResquest.setRequestHeader('Content-type', 'application/json')
-    xmlResquest.setRequestHeader('Authorization-Admin', getAccessToken())
-    xmlResquest.responseType = 'blob'
-    xmlResquest.onload = () => {
-      this.canDownloadData = true
-      let content = xmlResquest.response
-      let link = document.createElement('a')
-      let blob = new Blob([content])
-      link.download = downloadName
-      link.style.display = 'none'
-      link.href = URL.createObjectURL(blob)
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-    }
-    xmlResquest.send()
+      this.canDownloadData = false
+      url = url.replace(/\s*/g, '')
+      let xmlResquest = new XMLHttpRequest()
+      xmlResquest.open('get', url, true)
+      xmlResquest.setRequestHeader('Content-type', 'application/json')
+      xmlResquest.setRequestHeader('Authorization-Admin', getAccessToken())
+      xmlResquest.responseType = 'blob'
+      xmlResquest.onload = () => {
+        this.canDownloadData = true
+        let content = xmlResquest.response
+        let link = document.createElement('a')
+        let blob = new Blob([content])
+        link.download = downloadName
+        link.style.display = 'none'
+        link.href = URL.createObjectURL(blob)
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+      }
+      xmlResquest.send()
+    }).catch(() => {
+      this.$message({
+        type: 'info',
+        message: '已取消导出'
+      });          
+    })
   }
   created() {
     this.form = Object.assign(this.form, this.$route.query)
@@ -704,6 +717,10 @@ export default class indexPage extends Vue {
           margin-right: 10px;
           width: 6px;
         }
+      }
+      .export{
+        margin-right: 20px;
+        margin-top: 10px;
       }
       .creatBtn {
         font-size: 15px;

@@ -146,6 +146,20 @@
           {{scope.row.seatsNum - scope.row.applyNum - scope.row.natureApplyNum}}
         </template>
       </el-table-column>
+      <!-- <el-table-column
+        prop="seatsNum"
+        label="浏览人数">
+        <template slot-scope="scope">
+          {{scope.row.seatsNum - scope.row.applyNum - scope.row.natureApplyNum}}
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="seatsNum"
+        label="浏览次数">
+        <template slot-scope="scope">
+          {{scope.row.seatsNum - scope.row.applyNum - scope.row.natureApplyNum}}
+        </template>
+      </el-table-column> -->
       <el-table-column
         prop="isOnline"
         label="上架状态">
