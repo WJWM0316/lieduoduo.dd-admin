@@ -182,28 +182,28 @@ export const routes = [
     path: "/manage",
     name: "manage",
     meta: { title: "职位管理", keepAlive: true, scrollY: 0, flag: "mangae" },
-    component: resolve => require(["../index.vue"], resolve),
+    component: resolve => require(["../App.vue"], resolve),
     children: [
       {
-        path: "/manage/advertisement",
+        path: "advertisement",
         name: "advertisement",
         meta: { title: "广告职位管理", keepAlive: true, flag: "mangae" },
         component: resolve =>
-          resolve => require(["@/pages/advertisement/index.vue"], resolve)
+          require(["@/pages/advertisement/index.vue"], resolve)
       },
       {
         path: "urgent",
         name: "urgent",
         meta: { title: "急聘职位管理", keepAlive: true, flag: "mangae" },
         component: resolve =>
-          resolve => require(["@/pages/urgent/index.vue"], resolve)
+          require(["@/pages/urgent/index.vue"], resolve)
       },
       {
         path: "positionManage",
         name: "positionManage",
         meta: { title: "全部职位", keepAlive: true, flag: "mangae" },
         component: resolve =>
-          resolve => require(["@/pages/positionManage/index.vue"], resolve)
+          require(["@/pages/positionManage/index.vue"], resolve)
       }
     ]
   },

@@ -661,7 +661,7 @@ export default class indexPage extends Vue {
       }
       xmlResquest.send()
     }).catch(() => {
-      this.$router.push({ name: 'advertisement' });
+      this.$router.push({ path: 'manage/advertisement' });
       this.$message({
         type: 'info',
         message: '已取消导出'
