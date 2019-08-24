@@ -95,6 +95,7 @@ export default class PageAside extends Vue {
     }
   }
   topath(type, pIndex, cIndex, item) {
+    console.log(item)
     let arr = item.flag.split("/");
     this.oneFlag = arr[0]
     // this.onePath = item.path;

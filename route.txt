@@ -35,24 +35,24 @@
 	   "path":"/",
 		"title":"职位管理",
 		"isShow":true,
-		"flag":"Manage",
+		"flag":"manage",
 		"children":[
 			{
-				"path":"/advertisement",
+				"path":"/manage/advertisement",
 				"title":"广告职位管理",
 				"name":"advertisement",
-				"flag":"Manage"
+				"flag":"manage"
 			},
 			{
-				"path":"/urgent",
+				"path":"/manage/urgent",
 				"title":"急聘职位管理",
 				"name":"urgent",
-				"flag":"Manage"
+				"flag":"manage"
 			},{
-				"path":"/positionManage",
+				"path":"/manage/positionManage",
 				"title":"全部职位",
 				"name":"positionManage",
-				"flag":"Manage"
+				"flag":"manage"
 			}
 		]
 	},

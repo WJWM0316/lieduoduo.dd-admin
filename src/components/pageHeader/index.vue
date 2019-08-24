@@ -114,6 +114,7 @@ import { getAccessToken, removeAccessToken } from "API/cacheService";
   watch: {
     $route: {
       handler(route) {
+        console.log(route, '123456')
         this.avar = sessionStorage.getItem("avar");
         this.userName = sessionStorage.getItem("name");
         this.nowLinkName = route.meta.title;

@@ -150,6 +150,63 @@ export const routes = [
     component: resolve =>
       require(["@/pages/resumeStore/page/OrderDetail/index.vue"], resolve)
   },
+  /* 24h反馈专场管理 */
+  {
+    path: "/24h",
+    name: "24h",
+    meta: { title: "24h反馈专场管理", haveParent: false},
+    component: resolve => require(["@/pages/24h/24h.vue"], resolve)
+  },
+  // /* 急聘职位管理 */
+  // {
+  //   path: "/urgent",
+  //   name: "urgent",
+  //   meta: { title: "急聘职位管理", haveParent: false},
+  //   component: resolve => require(["@/pages/urgent/index.vue"], resolve)
+  // },
+  // /* 职位管理 = 全部职位 */
+  // {
+  //   path: "/positionManage",
+  //   name: "positionManage",
+  //   meta: { title: "职位管理"},
+  //   component: resolve => require(["@/pages/positionManage/index.vue"], resolve)
+  // },
+  //  /* 广告职位列表 */
+  //  {
+  //   path: "/advertisement",
+  //   name: "advertisement",
+  //   meta: { title: "广告职位管理", haveParent: false},
+  //   component: resolve => require(["@/pages/advertisement/index.vue"], resolve)
+  // },
+  {
+    path: "/manage",
+    name: "manage",
+    meta: { title: "职位管理", keepAlive: true, scrollY: 0, flag: "mangae" },
+    component: resolve => require(["../index.vue"], resolve),
+    children: [
+      {
+        path: "/manage/advertisement",
+        name: "advertisement",
+        meta: { title: "广告职位管理", keepAlive: true, flag: "mangae" },
+        component: resolve =>
+          resolve => require(["@/pages/advertisement/index.vue"], resolve)
+      },
+      {
+        path: "urgent",
+        name: "urgent",
+        meta: { title: "急聘职位管理", keepAlive: true, flag: "mangae" },
+        component: resolve =>
+          resolve => require(["@/pages/urgent/index.vue"], resolve)
+      },
+      {
+        path: "positionManage",
+        name: "positionManage",
+        meta: { title: "全部职位", keepAlive: true, flag: "mangae" },
+        component: resolve =>
+          resolve => require(["@/pages/positionManage/index.vue"], resolve)
+      }
+    ]
+  },
   // 审核管理
   {
     path: "/check",
@@ -298,14 +355,6 @@ export const routes = [
     },
     component: resolve => require(["@/pages/index/companyInfo.vue"], resolve)
   },
-
-  /* 职位管理 */
-  {
-    path: "/positionManage",
-    name: "positionManage",
-    meta: { title: "职位管理"},
-    component: resolve => require(["@/pages/positionManage/index.vue"], resolve)
-  },
   /* 职位审核详情 */
   {
     path: "/positionManage/positionAuditDetail",
@@ -389,13 +438,6 @@ export const routes = [
   //   meta: { title: "招聘官管理", haveParent: false, keepAlive: true },
   //   component: resolve => require(["@/pages/user/edit_recruiter.vue"], resolve)
   // },
-  /* 广告职位管理 */
-  {
-    path: "/24h",
-    name: "24h",
-    meta: { title: "24h反馈专场管理", haveParent: false},
-    component: resolve => require(["@/pages/24h/24h.vue"], resolve)
-  },
   /* 广告职位编辑 */
   {
     path: "/advertisement/edit",
@@ -410,13 +452,6 @@ export const routes = [
     meta: { title: "新增职场大咖", haveParent: false},
     component: resolve => require(["@/pages/advertisement/post.vue"], resolve)
   },
-  /* 广告职位列表 */
-  {
-    path: "/advertisement",
-    name: "advertisement",
-    meta: { title: "广告职位管理", haveParent: false},
-    component: resolve => require(["@/pages/advertisement/index.vue"], resolve)
-  },
   /* 广告职位编辑 */
   {
     path: "/urgent/edit",
@@ -430,13 +465,6 @@ export const routes = [
     name: "urgent_post",
     meta: { title: "新增职场大咖", haveParent: false},
     component: resolve => require(["@/pages/urgent/post.vue"], resolve)
-  },
-  /* 广告职位列表 */
-  {
-    path: "/urgent",
-    name: "urgent",
-    meta: { title: "急聘职位管理", haveParent: false},
-    component: resolve => require(["@/pages/urgent/index.vue"], resolve)
   },
   /* 添加用户 */
   {
