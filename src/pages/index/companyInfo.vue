@@ -246,7 +246,7 @@ export default class createCompany extends Vue {
         this.active = num
         break
       case 2:
-        window.open(`/positionManage?page=1&count=20&is_online=1&name2=${this.companyInfo.companyName}`, '_blank');
+        window.open(`/manage/positionManage?page=1&count=20&is_online=1&name2=${this.companyInfo.companyName}`, '_blank');
         break
       case 3:
         window.open(`/recruiter?page=1&count=20&companyName=${this.companyInfo.companyName}`, '_blank');
