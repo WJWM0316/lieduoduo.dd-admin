@@ -386,7 +386,8 @@ export default class companyCheck extends Vue {
     this.$router.push({
       path: "/index/createCompany",
       query: {
-        isCreated: true
+        isCreated: true,
+        from: 'cp'
       }
     });
   }
