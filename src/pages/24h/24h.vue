@@ -1,6 +1,6 @@
 <style lang="less" scoped>
 #H24{
-  margin: 22px 22px 22px 222px;
+  margin: 22px 22px 60px 222px;
   border: 1px solid rgb(238, 238, 238);
   .h24_navigation{
     text-align: left;
