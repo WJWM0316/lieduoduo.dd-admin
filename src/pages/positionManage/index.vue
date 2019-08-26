@@ -554,9 +554,16 @@ export default class companyCheck extends Vue {
   check(id) {
     this.$route.meta.scrollY = window.scrollY;
     this.$router.push({
-      path: "/positionManage/positionAuditDetail",
-      query: { id: id }
-    });
+      name: 'positionAuditDetail',
+      query: {
+        id: id,
+        page: 1
+      }
+    })
+    // this.$router.push({
+    //   path: "/positionManage/positionAuditDetail",
+    //   query: { id: id }
+    // });
   }
   changeProvince() {}
   /* 重置 */

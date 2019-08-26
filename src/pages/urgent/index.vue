@@ -349,7 +349,7 @@ export default class Urgent extends Vue {
           name: 'positionAuditDetail',
           query: {
             id: data.id,
-            page: 'advertisement'
+            page: '1'
           }
         })
         break
