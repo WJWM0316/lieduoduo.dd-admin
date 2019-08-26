@@ -1814,7 +1814,9 @@ export default class Interview24h extends Vue {
       if(this.form.status === 52) {
         url += `&last_status=${this.form.last_status}`
       }
-
+      if(this.form.createStartTime && this.form.createEndTime) {
+          url += `&createStartTime=${this.form.createStartTime}&createEndTime=${this.form.createEndTime}`
+      }
       url = url.replace(/\s*/g, '')
       let xmlResquest = new XMLHttpRequest()
       xmlResquest.open('get', url, true)

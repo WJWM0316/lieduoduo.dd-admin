@@ -647,7 +647,9 @@ export default class application extends Vue {
       if(this.form.last_status) {
         url += `&last_status=${this.form.last_status}`
       }
-
+      if(this.form.createStartTime && this.form.createEndTime) {
+        url += `&createStartTime=${this.form.createStartTime}&createEndTime=${this.form.createEndTime}`
+      }
       url = url.replace(/\s*/g, '')
       let xmlResquest = new XMLHttpRequest()
       xmlResquest.open('get', url, true)

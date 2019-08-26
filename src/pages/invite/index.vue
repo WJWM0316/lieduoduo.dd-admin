@@ -761,6 +761,9 @@ export default class invite extends Vue {
       if(this.form.appointmentConfirmTimeStart && this.form.appointmentConfirmTimeEnd) {
         url += `&appointmentConfirmTimeStart=${this.form.appointmentConfirmTimeStart}&appointmentConfirmTimeEnd=${this.form.appointmentConfirmTimeEnd}`
       }
+      if(this.form.createStartTime && this.form.createEndTime) {
+        url += `&createStartTime=${this.form.createStartTime}&createEndTime=${this.form.createEndTime}`
+      }
       // 已经选择城市
       if(this.form.areaId) {
         url += `&areaId=${this.form.areaId}`

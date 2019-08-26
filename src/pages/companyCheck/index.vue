@@ -505,6 +505,9 @@ export default class companyCheck extends Vue {
           url += `&start=${this.form.start}&end=${this.form.end}`
         }
       }
+      if(this.form.sstart && this.form.send) {
+          url += `&start=${this.form.sstart}&end=${this.form.send}`
+      }
       if(this.form.status) {
         url += `&status=${this.form.status}`
       }

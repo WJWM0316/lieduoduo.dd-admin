@@ -952,6 +952,9 @@ export default class resumeStore extends Vue {
       if(this.form.resumeGrades) {
         url += `&resumeGrades=${this.form.resumeGrades}`
       }
+      if(this.form.updateTimeLower && this.form.updateTimeUpper) {
+        url += `&updateTimeLower=${this.form.updateTimeLower}&updateTimeUpper=${this.form.updateTimeUpper}`
+      }
       url = url.replace(/\s*/g, '')
       let xmlResquest = new XMLHttpRequest()
       xmlResquest.open('get', url, true)
