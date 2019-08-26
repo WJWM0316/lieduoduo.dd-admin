@@ -1814,6 +1814,13 @@ export default class Interview24h extends Vue {
       if(this.form.status === 52) {
         url += `&last_status=${this.form.last_status}`
       }
+      if(this.form.positionLabel) {
+        url += `&positionLabel=${this.form.positionLabel}`
+      }
+      // 已经选择城市
+      if(this.form.areaId) {
+        url += `&areaId=${this.form.areaId}`
+      }
       if(this.form.createStartTime && this.form.createEndTime) {
           url += `&createStartTime=${this.form.createStartTime}&createEndTime=${this.form.createEndTime}`
       }

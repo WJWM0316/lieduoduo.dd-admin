@@ -401,11 +401,11 @@ export default class Urgent extends Vue {
     // this.$refs.cascader.clearValue(obj)
     this.getUrgencyList()
   }
-  mounted() {
-    this.AdminShow = +sessionStorage.getItem("AdminShow");
+  created() {
     this.init()
     this.getUrgencyList()
     this.ManageList()
+    this.AdminShow = +sessionStorage.getItem("AdminShow");
   }
 }
 </script>
