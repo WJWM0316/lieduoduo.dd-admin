@@ -623,6 +623,9 @@ export default class indexPage extends Vue {
       if(this.form.mobile) {
         url += `&mobile=${this.form.mobile}`
       }
+      if(this.form.is_license) {
+        url += `&is_license=${this.form.is_license}`
+      }
       if((this.form.start && !this.form.end) || (!this.form.start&& this.form.end)) {
         this.$message({message: "权益截止时间必需选择区间时间", type: "warning"});
         return;
