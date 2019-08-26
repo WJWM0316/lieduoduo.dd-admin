@@ -923,7 +923,7 @@ export default class resumeStore extends Vue {
         url += `&jobStatus=${this.form.jobStatus}`
       }
       if(this.form.degree) {
-        url += `&jobStatus=${this.form.degree}`
+        url += `&degree=${this.form.degree}`
       }
       if(this.form.workExpLower) {
         url += `&workExpLower=${this.form.workExpLower}&workExpUpper=${this.form.workExpUpper}`
