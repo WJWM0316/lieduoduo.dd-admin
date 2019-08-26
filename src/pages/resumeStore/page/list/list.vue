@@ -914,7 +914,10 @@ export default class resumeStore extends Vue {
         url += `&expectFieldId=${this.comexpectFieldId.join(',')}`
       }
       if(this.form.salaryLower) {
-        url += `&salaryLower=${this.form.salaryLower}&salaryUpper=${this.form.salaryLower}`
+        url += `&salaryLower=${this.form.salaryLower}&salaryUpper=${this.form.salaryUpper}`
+      }
+      if(this.form.wherefrom) {
+        url += `&wherefrom=${this.form.wherefrom}`
       }
       if(this.form.ageLower) {
         url += `&ageLower=${this.form.ageLower}&ageUpper=${this.form.ageUpper}`
