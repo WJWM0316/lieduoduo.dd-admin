@@ -155,14 +155,6 @@
               draggable="true">
               <div class="btn-close" @click="handleRemoveUploadImage(imageIndex)"><i class="el-icon-delete"></i></div>
             </li>
-<!--             <el-image 
-              style="width: 88px; height: 88px"
-              v-for="(imageItem1, imageIndex1) in commonList"
-              :key="imageIndex1"
-              :data-key="imageIndex1"
-              :src="imageItem1.smallUrl"
-              :preview-src-list="imagesLists">
-            </el-image> -->
             <li class="upload-li" v-if="commonList.length < 20" @click="handleChooseImage">
               <i class="el-icon-plus"></i>
               <input type="file" multiple="multiple" @change="handleChangeImage" style="display: none;" id="image" name="image" accept="image/*" />
@@ -824,7 +816,10 @@ export default class createCompany extends Vue {
     };
     this.temProductList = [].concat(productList)
     this.commonList = newCompanyInfo.albumInfo
-    this.imagesLists = newCompanyInfo.albumInfo.map(field => field.url)
+    console.log(newCompanyInfo)
+    if (Reflect.has(newCompanyInfo, 'albumInfo')) {
+      this.imagesLists = newCompanyInfo.albumInfo.map(field => field.url)
+    }
     // 上传证件信息
     this.form = {
       logo: newCompanyInfo.logoInfo.url || "", // logo
