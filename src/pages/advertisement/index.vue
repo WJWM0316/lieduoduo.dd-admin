@@ -358,7 +358,7 @@ export default class Advertisement extends Vue {
           name: 'positionAuditDetail',
           query: {
             id: data.id,
-            page: '1'
+            page: 'advertisement'
           }
         })
         break

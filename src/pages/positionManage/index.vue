@@ -557,7 +557,7 @@ export default class companyCheck extends Vue {
       name: 'positionAuditDetail',
       query: {
         id: id,
-        page: 1
+        page: 'positionManage'
       }
     })
     // this.$router.push({
