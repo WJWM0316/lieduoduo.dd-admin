@@ -47,6 +47,7 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import { routes } from "@/router/routes";
 import { admin_menu } from "API/commont";
+import routelist from "./route.json"
 
 @Component({
   name: "page-asise",
@@ -55,7 +56,6 @@ import { admin_menu } from "API/commont";
       handler(route) {
         this.getMenu();
         this.init();
-        // this.onePath = route.path;
         let arr = route.path.split("/");
         this.oneFlag = arr[1]
       },
@@ -86,19 +86,20 @@ export default class PageAside extends Vue {
       if (itemList !== null) {
         this.itemList = JSON.parse(sessionStorage.getItem("itemList"));
       } else {
-        admin_menu().then(res => {
-          this.itemList = res.data.data;
-          sessionStorage.setItem("itemList", JSON.stringify(res.data.data));
-        });
+        // admin_menu().then(res => {
+        //   this.itemList = res.data.data;
+        //   sessionStorage.setItem("itemList", JSON.stringify(res.data.data));
+        // });
+        this.itemList = routelist
+        sessionStorage.setItem("itemList", JSON.stringify(routelist));
+        console.log(routelist)
       }
     } else {
     }
   }
   topath(type, pIndex, cIndex, item) {
-    console.log(item)
     let arr = item.flag.split("/");
     this.oneFlag = arr[0]
-    // this.onePath = item.path;
     if (type === "up") {
       this.itemList.map(field => {
         field.isShow = false;
