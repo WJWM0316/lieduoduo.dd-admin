@@ -389,6 +389,8 @@ export default class invitPro extends Vue {
     this.form.commonKey1 = "";
     this.form.dealStatusId = "";
     this.form.interviewNotSuitTypeId = "";
+    this.form.startTime = "";
+    this.form.endTime = "";
     this.form.isJobhunterApply = false;
     this.$refs[name].resetFields();
     this.form.isJobhunterApply = "";
