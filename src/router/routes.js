@@ -181,7 +181,7 @@ export const routes = [
   {
     path: "/manage",
     name: "manage",
-    meta: { title: "职位管理", keepAlive: true, scrollY: 0, flag: "mangae" },
+    meta: { title: "全部职位", keepAlive: true, scrollY: 0, flag: "mangae" },
     component: resolve => require(["../App.vue"], resolve),
     children: [
       {
@@ -201,7 +201,7 @@ export const routes = [
       {
         path: "positionManage",
         name: "positionManage",
-        meta: { title: "全部职位", keepAlive: false, flag: "mangae" },
+        meta: { title: "职位管理", keepAlive: false, flag: "mangae" },
         component: resolve =>
           require(["@/pages/positionManage/index.vue"], resolve)
       }

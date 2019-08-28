@@ -33,7 +33,7 @@
 	},
 	{
 	   "path":"/",
-		"title":"职位管理",
+		"title":"全部职位",
 		"isShow":true,
 		"flag":"manage",
 		"children":[
@@ -50,7 +50,7 @@
 				"flag":"manage"
 			},{
 				"path":"/manage/positionManage",
-				"title":"全部职位",
+				"title":"职位管理",
 				"name":"positionManage",
 				"flag":"manage"
 			}
