@@ -48,7 +48,8 @@
         <el-radio v-model="form.is_online" :label="2">下架</el-radio>
       </el-form-item> -->
       <el-form-item label="权重排序值" v-if="$route.name === 'advertisement_edit'">
-        <el-input v-model="form.sort" style="width: 400px;" :disabled="!canEditFormData"></el-input>
+        <el-input v-model="form.sort" style="width: 400px;"></el-input>
+        <!-- :disabled="!canEditFormData" -->
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">确定</el-button>
