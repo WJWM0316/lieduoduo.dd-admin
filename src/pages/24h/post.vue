@@ -26,16 +26,15 @@
           type="datetime"
           value-format="yyyy-MM-dd HH:mm:ss"
           style="width: 400px;"
-          :disabled="form.status === 1 && $route.name === 'h24_edit'"
           placeholder="选择上架日期">
         </el-date-picker>
       </el-form-item>
+      <!-- :disabled="form.status === 1 && $route.name === 'h24_edit'" -->
       <el-form-item label="截止时间">
         <el-date-picker
           v-model="form.end_time"
           type="datetime"
           value-format="yyyy-MM-dd HH:mm:ss"
-          :disabled="form.status === 1 && $route.name === 'h24_edit'"
           style="width: 400px;"
           placeholder="选择下架日期">
         </el-date-picker>
@@ -44,8 +43,8 @@
         <el-input v-model="form.seats_num" style="width: 400px;" :disabled="form.status === 1 && $route.name === 'h24_edit'"></el-input>
       </el-form-item>
       <el-form-item label="状态" v-if="$route.name === 'h24_edit'">
-        <el-radio v-model="form.is_online" :label="1">上架</el-radio>
-        <el-radio v-model="form.is_online" :label="2">下架</el-radio>
+        <!-- <el-radio v-model="form.is_online" :label="1">上架</el-radio>
+        <el-radio v-model="form.is_online" :label="2">下架</el-radio> -->
         <el-radio v-model="form.is_online" :label="3">立即截止</el-radio>
       </el-form-item>
       <el-form-item label="权重排序值" v-if="$route.name === 'h24_edit'">

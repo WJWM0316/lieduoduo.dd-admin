@@ -26,24 +26,23 @@
           type="datetime"
           value-format="yyyy-MM-dd HH:mm:ss"
           style="width: 400px;"
-          :disabled="canEditFormData"
           placeholder="选择上架日期">
         </el-date-picker>
       </el-form-item>
+      <!-- canEditFormData -->
       <el-form-item label="截止时间">
         <el-date-picker
           v-model="form.end_time"
           type="datetime"
           value-format="yyyy-MM-dd HH:mm:ss"
-          :disabled="canEditFormData"
           style="width: 400px;"
           placeholder="选择下架日期">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="状态" v-if="$route.name === 'urgent_edit'">
+      <!-- <el-form-item label="状态" v-if="$route.name === 'urgent_edit'">
         <el-radio v-model="form.is_online" :label="1">上架</el-radio>
         <el-radio v-model="form.is_online" :label="2">下架</el-radio>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="权重排序值" v-if="$route.name === 'urgent_edit'">
         <el-input v-model="form.sort" style="width: 400px;" :disabled="canEditFormData"></el-input>
       </el-form-item>
