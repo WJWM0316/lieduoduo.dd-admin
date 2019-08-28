@@ -33,10 +33,16 @@
 	},
 	{
 	   "path":"/",
-		"title":"全部职位",
+		"title":"职位管理",
 		"isShow":true,
 		"flag":"manage",
 		"children":[
+			{
+				"path":"/manage/positionManage",
+				"title":"全部职位",
+				"name":"positionManage",
+				"flag":"manage"
+			},
 			{
 				"path":"/manage/advertisement",
 				"title":"广告职位管理",
@@ -47,11 +53,6 @@
 				"path":"/manage/urgent",
 				"title":"急聘职位管理",
 				"name":"urgent",
-				"flag":"manage"
-			},{
-				"path":"/manage/positionManage",
-				"title":"职位管理",
-				"name":"positionManage",
 				"flag":"manage"
 			}
 		]
