@@ -518,7 +518,6 @@ export default class indexPage extends Vue {
     }
 
     getCompanyListApi(params).then(res => {
-      console.log(res)
       let list = res.data.data
       list.map((field, index) => {
         field.customer_level = [].concat(this.companyCustomerLevelRange)
