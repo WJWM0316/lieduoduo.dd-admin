@@ -737,7 +737,14 @@ export default class companyCheck extends Vue {
     });
   }
   getAddressLists() {
-    return getAddressListsApi({level: 3}).then(res => this.cityLists = res.data.data)
+    return getAddressListsApi({level: 3}).then((res) => {
+      let arr = res.data.data
+      arr.map((v, k) => {
+        v.areaId = ((v.areaId).toString())
+      })
+      this.cityLists = arr
+    })
+    // return getAddressListsApi({level: 3}).then(res => this.cityLists = res.data.data)
   }
   created() {
     this.form = Object.assign(this.form, this.$route.query)

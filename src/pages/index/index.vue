@@ -76,6 +76,10 @@
                   :label="item.name"
                   :value="item.id"
                 ></el-option>
+                <!-- <el-option label="全部权益" value="0"></el-option>
+                <el-option label="test" value="3"></el-option>
+                <el-option label="专业版" value="2"></el-option>
+                <el-option label="免费试用版" value="1"></el-option> -->
               </el-select>
             </el-form-item>
 
@@ -420,7 +424,13 @@ export default class indexPage extends Vue {
    * @return   {[type]}   [description]
    */
   getCompanyCustomerLevelRange() {
-    getCompanyCustomerLevelRangeApi().then(res => this.companyCustomerLevelRange = res.data.data)
+    getCompanyCustomerLevelRangeApi().then((res) => {
+      let arr = res.data.data
+      arr.map((v, k) => {
+        v.value = ((v.value).toString())
+      })
+      this.companyCustomerLevelRange = arr
+    })
   }
   /**
    * @Author   小书包
@@ -429,7 +439,13 @@ export default class indexPage extends Vue {
    * @return   {[type]}   [description]
    */
   getAdvisorUserList() {
-    getAdvisorUserListApi().then(res => this.advisorUserList = res.data.data)
+    getAdvisorUserListApi().then((res) => {
+      let arr = res.data.data
+      arr.map((v, k) => {
+        v.id = ((v.id).toString())
+      })
+      this.advisorUserList = arr
+    })
   }
   /**
    * @Author   小书包
@@ -546,12 +562,20 @@ export default class indexPage extends Vue {
   // 获取权益列表
   async getRightList() {
     let res = await rightInfoApi({ pageCount: 50 });
-    this.rightList = res.data.data;
+    let arr = res.data.data;
+    arr.map((v, k) => {
+      v.id = ((v.id).toString())
+    })
+    this.rightList = arr
   }
   // 获取销售人员名单
   async getSalerList() {
     let res = await getSalerListApi({ pageCount: 50 });
-    this.salerLis = res.data.data;
+    let arr = res.data.data;
+    arr.map((v, k) => {
+      v.id = ((v.id).toString())
+    })
+    this.salerLis = arr
   }
   /* 选择省 */
   changeSearchType() {
@@ -571,6 +595,13 @@ export default class indexPage extends Vue {
     this.form.companyId = ''
     this.form.area_id = ''
     this.form.firstAreaId = ''
+    this.form.equity = ''
+    this.form.status = ''
+    this.form.adminUid = ''
+    this.form.is_license = ''
+    this.form.wherefrom = ''
+    this.form.customer_level = ''
+    this.form.advisorUid = ''
     this.form.exportStart = undefined
     this.form.exportEnd = undefined
     this.getCompanyList();
