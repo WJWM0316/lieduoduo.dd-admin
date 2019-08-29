@@ -654,6 +654,7 @@
           </li>
         </ul>
       </div>
+       <!-- v-if="model.showFooter" -->
       <div slot="footer" class="dialog-footer" v-if="model.showFooter">
         <el-button @click="close" size="small">{{model.btnTxt}}</el-button>
         <el-button type="primary" @click="confirm" size="small">确 定</el-button>
