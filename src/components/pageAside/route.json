@@ -123,13 +123,6 @@
 				"flag":"resume","isShow":false
 			},
 			{
-				"path":"/resumeStore/invitationProgress",
-				"title":"邀约进展",
-				"name":"invitationProgress",
-				"flag":"resume",
-				"isShow":false
-			},
-			{
 				"path":"/resumeStore/consultantRecommendation",
 				"title":"顾问推荐进展",
 				"name":"consultantRecommendation",
