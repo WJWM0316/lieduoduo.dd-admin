@@ -524,7 +524,7 @@
             <i class="icon_circle_my" v-show="!item.active"></i>
             <i class="el-icon-success" v-show="item.active"></i>
             <div class="name">{{item.positionName}}</div>
-            <span v-if="item.status !== 0" style="margin-left: 10px;color: rgba(0,0,0,.2);">(已关闭)</span>
+            <span v-if="item.isOnline === 2" style="margin-left: 10px;color: rgba(0,0,0,.2);">(已关闭)</span>
           </li>
         </ul>
       </div>
