@@ -173,7 +173,7 @@ let timer = null
       	if (autoRefresh) {
       		timer = setTimeout(() => {
       			window.location.reload();
-      		}, 300000) 
+      		}, 60000) 
       	}
       },
       immediate: true
