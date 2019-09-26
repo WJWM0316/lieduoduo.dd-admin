@@ -1,6 +1,13 @@
 <template>
 	<div class="publish">
 		<div class="publishInner">
+			<div class="autoRefresh">
+				<span class="txt">{{autoRefresh ? '关闭自动刷新' : '开启自动刷新'}}</span>
+				<el-switch
+				  v-model="autoRefresh"
+				  active-color="#67C23A"
+				  inactive-color="#dcdfe6">
+				</el-switch></div>
 			<div class="card">
 				<div class="title">线上版本</div>
 				<div class="status-detail">
@@ -81,6 +88,13 @@
 <style scoped lang="less">
 	.publish {
 		margin-left: 200px;
+		.autoRefresh {
+			margin-bottom: 30px;
+			text-align: right;
+			.txt {
+				margin-right: 20px;
+			}
+		}
 		.publishInner {
 			margin: 22px;
 			min-width: 500px;
@@ -149,8 +163,22 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import { getDartsApi, addTemplateApi, getTemplateListApi, commitApi, getQrcodeApi, deleteTemplateApi } from "API/publish";
+let timer = null
 @Component({
-  name: "publish"
+  name: "publish",
+  watch: {
+    'autoRefresh': {
+      handler(autoRefresh) {
+      	clearTimeout(timer)
+      	if (autoRefresh) {
+      		timer = setTimeout(() => {
+      			window.location.reload();
+      		}, 300000) 
+      	}
+      },
+      immediate: true
+    }
+  }
 })
 export default class publish extends Vue {
 	dartData = {} // 最新草稿数据
@@ -159,6 +187,7 @@ export default class publish extends Vue {
 	experientialData  = {} // 体验服数据
 	appId = process.env.VUE_APP_ID
 	qrCodeUrl = ''
+	autoRefresh = true // 开启自动刷新
 	created() {
 		this.getDarts()
 		this.getTemplateList()
