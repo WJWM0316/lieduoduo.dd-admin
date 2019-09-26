@@ -251,10 +251,12 @@ export default class publish extends Vue {
 		})
 	}
 	toCommit () {
-		this.addTemplate().then(() => {
-			this.getTemplateList().then(() => {
-				this.commit().then(() => {
-					this.getQrcode()
+		this.getDarts().then(() => {
+			this.addTemplate().then(() => {
+				this.getTemplateList().then(() => {
+					this.commit().then(() => {
+						this.getQrcode()
+					})
 				})
 			})
 		})
