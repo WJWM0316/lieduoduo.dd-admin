@@ -172,7 +172,8 @@ let timer = null
       	clearTimeout(timer)
       	if (autoRefresh) {
       		timer = setTimeout(() => {
-      			window.location.reload();
+      			this.getDarts()
+						this.getTemplateList()
       		}, 60000) 
       	}
       },
@@ -231,7 +232,6 @@ export default class publish extends Vue {
 				}
 			})
 	  })
-		
 	}
 	getTemplateList () {
 		let parmas = {app_id: this.appId, page: 1, count: 50}
