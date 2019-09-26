@@ -18,7 +18,7 @@
         </el-form-item>
         <div class="inpBox">
           <i slot="prefix" class="icon iconfont iconicon_account"></i>
-          <input class="inp" placeholder="请输入登录账号" type="tel" v-model="loginForm.email" />
+          <input class="inp" maxlength="11" placeholder="请输入登录账号" type="tel" v-model="loginForm.email" />
         </div>
         <div class="inpBox">
           <i slot="prefix" class="icon iconfont iconicon_password"></i>
