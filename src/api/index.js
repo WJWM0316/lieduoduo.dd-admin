@@ -12,6 +12,7 @@ export const API_ROOT = process.env.VUE_APP_API;
 // 请求的跟地址
 export const upload_api = `${API_ROOT}/attaches`
 axios.defaults.baseURL = API_ROOT;
+
 // 请求拦截器
 axios.interceptors.request.use(
   config => {
@@ -22,7 +23,7 @@ axios.interceptors.request.use(
         return;
       }
     }
-    //  loadingInstance = Loading.service({})
+    loadingInstance = Loading.service({})
     config.headers.common["Authorization-Admin"] = getAccessToken();
     return config;
   },
@@ -59,7 +60,8 @@ export const request = ({
   } else {
     loadingInstance = Loading.service({});
   }
-  return axios[type](url, type === "get" ? { params: data } : data).catch(
+  let datas = type === 'get' ? {params: {...data}} : (data instanceof FormData ? data : {...data})
+  return axios[type](url, datas, config).catch(
     err => {
       /* 通用的错误捕获可以在这里操作 */
       // Message.error(`啊，好像出错了，数据跑到银河系外面去了。`)

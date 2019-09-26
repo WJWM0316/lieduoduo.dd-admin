@@ -1,0 +1,234 @@
+<template>
+	<div class="publish">
+		<div class="publishInner">
+			<div class="card">
+				<div class="title">线上版本</div>
+				<div class="status-detail">
+					<div class="number">
+						<p class="descTitle">版本号</p>
+						<p class="num">111</p>
+					</div>
+					<div class="content">
+						<p class="publisher"><span class="descTitle">发布人</span><span class="descData">1111</span></p>
+						<p class="publishTime"><span class="descTitle">发布时间</span><span class="descData">1111</span></p>
+						<p class="publishDesc"><span class="descTitle">描述</span><span class="descData">1111</span></p>
+					</div>
+					<div class="operArea">
+						<el-button type="success">版本回退</el-button>
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="title">审核版本</div>
+				<template v-if="true">
+					<p class="shenhe">你暂无提交审核的版本或者版本已发布上线</p>
+				</template>
+				<template v-else>
+					<div class="status-detail">
+					<div class="number">
+						<p class="descTitle">版本号</p>
+						<p class="num">111</p>
+					</div>
+					<div class="content">
+						<p class="publisher"><span class="descTitle">发布人</span><span class="descData">1111</span></p>
+						<p class="publishTime"><span class="descTitle">提交时间</span><span class="descData">1111</span></p>
+						<p class="publishDesc"><span class="descTitle">描述</span><span class="descData">1111</span></p>
+					</div>
+					<div class="operArea">
+						<el-button type="success">发布版本</el-button>
+					</div>
+					</div>
+				</template>
+			</div>
+			<div class="card">
+				<div class="title">体验版本</div>
+				<div class="status-detail">
+					<div class="number">
+						<p class="descTitle">版本号</p>
+						<p class="num">111</p>
+					</div>
+					<div class="content">
+						<p class="publisher"><span class="descTitle">发布人</span><span class="descData">1111</span></p>
+						<p class="publishTime"><span class="descTitle">提交时间</span><span class="descData">1111</span></p>
+						<p class="publishDesc"><span class="descTitle">描述</span><span class="descData">1111</span></p>
+					</div>
+					<div class="operArea">
+						<el-button type="success">提交审核</el-button>
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="title">开发版本</div>
+				<div class="status-detail">
+					<div class="number">
+						<p class="descTitle">版本号</p>
+						<p class="num">{{dartData.userVersion}}</p>
+						<img class="qrCode" :src="qrCodeUrl" alt="">
+					</div>
+					<div class="content">
+						<p class="publisher"><span class="descTitle">开发者</span><span class="descData">{{dartData.developer}}</span></p>
+						<p class="publishTime"><span class="descTitle">提交时间</span><span class="descData">{{dartData.createTime * 1000 | date}}</span></p>
+						<p class="publishDesc"><span class="descTitle">描述</span><span class="descData">{{dartData.userDesc}}</span></p>
+					</div>
+					<div class="operArea">
+						<el-button type="success" @click="toCommit">提交体验服</el-button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
+<style scoped lang="less">
+	.publish {
+		margin-left: 200px;
+		.publishInner {
+			margin: 22px;
+			min-width: 500px;
+			.card {
+				background-color: #fff;
+		    border-radius: 4px;
+		    box-shadow: 0 1px 2px rgba(150,150,150,0.3);
+		    padding: 20px 30px 30px;
+		    text-align: left;
+		    margin-bottom: 30px;
+		    .title {
+		    	font-size: 20px;
+		    	color: #353535;
+		    	margin-bottom: 30px;
+		    }
+		    .shenhe {
+		    	padding: 30px 0;
+		    	text-align: center;
+		    	color: #9a9a9a;
+		    	font-size: 14px;
+		    }
+		    .status-detail {
+		    	width: 100%;
+		    	overflow: hidden;
+		    	.descTitle {
+		    		color: #9a9a9a;
+		    		font-size: 14px;
+		    	}
+		    	.number {
+		    		width: 120px;
+		    		float: left;
+		    		.num {
+		    			font-size: 22px;
+		    			line-height: 1.6;
+		    			margin-top: 2px;
+		    		}
+		    		.qrCode {
+		    			width: 100px;
+		    		}
+		    	}
+		    	.content {
+		    		float: left;
+		    		.descTitle {
+		    			width: 6em;
+		    			margin-right: 1em;
+		    			display: inline-block;
+		    		}
+		    		.descData {
+							color: #353535;
+							font-size: 14px;
+		    		}
+		    		.publishTime, .publishDesc {
+		    			margin-top: 14px;
+		    		}
+		    	}
+		    	.operArea {
+		    		float: right;
+		    		margin-left: 30px;
+		    	}
+		    }
+			}
+		}
+	}
+</style>
+<script>
+import Vue from "vue";
+import Component from "vue-class-component";
+import { getDartsApi, addTemplateApi, getTemplateListApi, commitApi, getQrcodeApi, deleteTemplateApi } from "API/publish";
+@Component({
+  name: "publish"
+})
+export default class publish extends Vue {
+	dartData = {} // 最新草稿数据
+	dartId = 0 // 最新模板id
+	templateList = [] // 模板列表
+	experientialData  = {} // 体验服数据
+	appId = process.env.VUE_APP_ID
+	qrCodeUrl = ''
+	created() {
+		this.getDarts()
+		this.getTemplateList()
+	}
+	maxIndex = (list, typeId) => {
+		let array = []
+		list.forEach((item) => {
+			array.push(item[typeId])
+		})
+		return array.indexOf(Math.max(...array))
+	}
+	getDarts () {
+		let parmas = {app_id: this.appId}
+		return getDartsApi(parmas).then(res => {
+			let list = res.data.data.draftList
+			this.dartData = list[this.maxIndex(list, 'draftId')]
+			this.dartId = this.dartData.draftId
+		})
+	}
+	deleteTemplate (templateId) {
+		let formData = {
+			template_id: this.templateList[this.templateList.length - 1].templateId,
+			app_id: this.appId
+		}
+		return deleteTemplateApi(formData).then(res => {
+
+		})
+	}
+	addTemplate () {
+		let parmas = {app_id: this.appId, dart_id: this.dartId}
+	  return new Promise((resolve, reject) => {
+	  	addTemplateApi(parmas).then(res => {
+				// 模板已满删除 删除最后一个
+				if (res.data.httpStatus === 200 && res.data.code === 85065) {
+					this.deleteTemplate().then(() => {
+						this.toCommit()
+					})
+					reject('模板已满')
+				} else {
+					resolve(res)
+				}
+			})
+	  })
+		
+	}
+	getTemplateList () {
+		let parmas = {app_id: this.appId, page: 1, count: 50}
+		return getTemplateListApi(parmas).then(res => {
+			let list = res.data.data
+			this.templateList = list
+		})
+	}
+	commit () {
+		let parmas = {app_id: this.appId, template_id: this.templateList[0].templateId}
+		return commitApi(parmas).then(res => {})
+	}
+	getQrcode () {
+		let parmas = {app_id: this.appId, path: 'page/common/pages/homepage/homepage', format: 'base64'}
+		return getQrcodeApi(parmas).then(res => {
+			this.qrCodeUrl = res.data.data.qrcode
+		})
+	}
+	toCommit () {
+		this.addTemplate().then(() => {
+			this.getTemplateList().then(() => {
+				this.commit().then(() => {
+					this.getQrcode()
+				})
+			})
+		})
+	}
+}
+</script>

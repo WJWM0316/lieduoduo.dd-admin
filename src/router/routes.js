@@ -11,6 +11,13 @@ export const routes = [
     name: "login",
     component: resolve => require(["@/pages/login/index.vue"], resolve)
   },
+  /* 发布管理 */
+  {
+    path: "/publish",
+    name: "publish",
+    meta: { title: "发布管理", scrollY: 0, Aside: false },
+    component: resolve => require(["@/pages/publish/index.vue"], resolve)
+  },
   /* 公司管理 */
   {
     path: "/index",
