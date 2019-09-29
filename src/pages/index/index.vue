@@ -66,23 +66,6 @@
               </el-select>
             </el-form-item>
 
-            <!-- 权益筛选 -->
-            <el-form-item class="area" label="权益类型" prop="equity">
-              <el-select v-model="form.equity" placeholder="请选择权益" style="margin-right: 10px;">
-                <el-option label="全部权益" :value=0></el-option>
-                <el-option
-                  v-for="item in rightList"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id"
-                ></el-option>
-                <!-- <el-option label="全部权益" value="0"></el-option>
-                <el-option label="test" value="3"></el-option>
-                <el-option label="专业版" value="2"></el-option>
-                <el-option label="免费试用版" value="1"></el-option> -->
-              </el-select>
-            </el-form-item>
-
             <el-form-item class="time" label="权益截止时间" prop="start" label-width="100px">
               <el-col :span="11">
                 <el-date-picker
@@ -146,11 +129,6 @@
               </el-select>
             </el-form-item>
 
-            <el-form-item label-width="77px" label="客户等级" prop="customer_level">
-              <el-select v-model="form.customer_level" placeholder="请选择">
-                <el-option :label="item.text" :value="item.value" v-for="item in companyCustomerLevelRange" :key="item.value"></el-option>
-              </el-select>
-            </el-form-item>
             <el-form-item label-width="77px" label="跟进顾问" prop="advisorUid">
               <el-select v-model="form.advisorUid" placeholder="全部状态">
                 <el-option :label="item.realname" :value="item.id" v-for="item in advisorUserList" :key="item.id"></el-option>
@@ -204,6 +182,9 @@
                   @click="toUser(props.scope.row.createdUid)"
                   v-if="props.scope.row.createdUid"
                 >查看管理员</span>
+              </div>
+              <div>
+                <span class="check" @click="check(props.scope.row.id)">查看绑定小程序链接</span>
               </div>
             </div>
             <!-- 地址列 -->
@@ -301,7 +282,7 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import { getCompanyListApi, getCityApi, setCompanyCustomerLevelApi } from "API/company";
-import { rightInfoApi, getSalerListApi, getCompanyCustomerLevelRangeApi, getAdvisorUserListApi } from "API/commont";
+import { getSalerListApi, getAdvisorUserListApi } from "API/commont";
 import { getAccessToken, removeAccessToken } from "API/cacheService";
 import { API_ROOT } from 'API/index.js'
 import List from "@/components/list";
@@ -368,15 +349,14 @@ export default class indexPage extends Vue {
       width: 150
     },
     {
+      prop: "createdUserName",
+      label: "是否绑定小程序",
+      width: 150
+    },
+    {
       prop: "rtVersionName",
       label: "权益类型",
       width: 100
-    },
-    {
-      prop: "customer_level",
-      label: "客户等级",
-      width: 200,
-      align: "left"
     },
     {
       prop: "expiredDesc",
@@ -405,7 +385,6 @@ export default class indexPage extends Vue {
       label: "操作"
     }
   ];
-  companyCustomerLevelRange = []
   advisorUserList = []
   changeSearchMethods(e) {
     this.form.content = ''
@@ -416,21 +395,6 @@ export default class indexPage extends Vue {
   change(index, value) {
     let item = this.list.find((field, i) => index === i)
     setCompanyCustomerLevelApi({id: item.id, customerLevel: value})
-  }
-  /**
-   * @Author   小书包
-   * @DateTime 2019-07-19
-   * @detail   获取跟进人列表
-   * @return   {[type]}   [description]
-   */
-  getCompanyCustomerLevelRange() {
-    getCompanyCustomerLevelRangeApi().then((res) => {
-      let arr = res.data.data
-      arr.map((v, k) => {
-        v.value = ((v.value).toString())
-      })
-      this.companyCustomerLevelRange = arr
-    })
   }
   /**
    * @Author   小书包
@@ -519,10 +483,6 @@ export default class indexPage extends Vue {
 
     getCompanyListApi(params).then(res => {
       let list = res.data.data
-      list.map((field, index) => {
-        field.customer_level = [].concat(this.companyCustomerLevelRange)
-        field.customerVevelValue = (field.customerLevel).toString()
-      })
       this.list = list;
       this.pageCount = res.data.meta.lastPage;
       this.total = res.data.meta.total;
@@ -558,15 +518,6 @@ export default class indexPage extends Vue {
     return getCityApi().then(res => {
       res.data.data.map(item => this.firstAreaIdList.push(item))
     })
-  }
-  // 获取权益列表
-  async getRightList() {
-    let res = await rightInfoApi({ pageCount: 50 });
-    let arr = res.data.data;
-    arr.map((v, k) => {
-      v.id = ((v.id).toString())
-    })
-    this.rightList = arr
   }
   // 获取销售人员名单
   async getSalerList() {
@@ -716,9 +667,7 @@ export default class indexPage extends Vue {
         this.cityLable = result.children
       }
     })
-    this.getRightList();
-    this.getSalerList();
-    this.getCompanyCustomerLevelRange()
+    this.getSalerList()
     this.getAdvisorUserList()
     this.AdminShow = +sessionStorage.getItem("AdminShow")
 

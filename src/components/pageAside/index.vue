@@ -82,17 +82,12 @@ export default class PageAside extends Vue {
   }
   getMenu() {
     if (this.$route.path !== "/login" && this.$route.path !== "/") {
-      let itemList = JSON.parse(sessionStorage.getItem("itemList"));
+      let itemList = JSON.parse(sessionStorage.getItem("itemList"))
       if (itemList !== null) {
-        this.itemList = JSON.parse(sessionStorage.getItem("itemList"));
+        this.itemList = JSON.parse(sessionStorage.getItem("itemList"))
       } else {
-        // admin_menu().then(res => {
-        //   this.itemList = res.data.data;
-        //   sessionStorage.setItem("itemList", JSON.stringify(res.data.data));
-        // });
         this.itemList = routelist
-        sessionStorage.setItem("itemList", JSON.stringify(routelist));
-        console.log(routelist)
+        sessionStorage.setItem("itemList", JSON.stringify(routelist))
       }
     } else {
     }
