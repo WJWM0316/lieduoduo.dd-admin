@@ -4,13 +4,12 @@
     <div class="header">
       <div class="creatTab">
         <div class="Info" :class="{'active': active === 0 }" @click.stop="tab(0)">公司信息</div>
-        <div class="userInfo" :class="{'active': active === 2 }" @click.stop="tab(2)">在招职位</div>
-        <div class="userInfo" :class="{'active': active === 3 }" @click.stop="tab(3)">招聘团队</div>
         <div class="userInfo" :class="{'active': active === 1 }" @click.stop="tab(1)">账户设置</div>
       </div>
       <div>
         <!-- <el-button @click.stop="last" v-show="active === 1">返回上一步</el-button>
         <el-button @click.stop="next" v-show="active === 0">保存，下一步</el-button>-->
+        <el-button @click.stop="generate">生成绑定小程序链接</el-button>
         <el-button @click.stop="toEdit">编辑</el-button>
         <el-button @click.stop="bindAdmin" v-if="companyInfo.createdUid === 0">绑定管理员</el-button>
         <el-button @click.stop="delateAdmin" v-else>移除管理员</el-button>
@@ -75,10 +74,11 @@
         <el-form-item class label="公司邮箱">
           <span>{{companyInfo.email}}</span>
         </el-form-item>
-        
-        <el-form-item class label="*一句话亮点">
-          <span>{{companyInfo.oneSentenceIntro}}</span>
+
+        <el-form-item class label="团队福利">
+          <span class="temalabel" v-for="item in 3">五险{{item}}金</span>
         </el-form-item>
+        
         <el-form-item class label="公司图片">
           <ul class="common-list_01">
             <li
@@ -91,31 +91,7 @@
             </li>
           </ul>
         </el-form-item>
-        <h3>资质信息</h3>
-        <el-form-item class="full" label="营业执照" prop="icon" v-if="companyInfo.businessLicenseInfo">
-          <div class="seePhoto" v-if="companyInfo.businessLicenseInfo.smallUrl!=null">
-            <img :src="companyInfo.businessLicenseInfo.smallUrl" alt>
-            <div class="zoomBox" @click.stop="showImg(companyInfo.businessLicenseInfo.url)">
-              <i class="el-icon-zoom-in"></i>
-              查看大图
-            </div>
-          </div>
-        </el-form-item>
-        <!--工牌/名片/在职证明-->
-        <el-form-item
-          class="full"
-          label="工牌/名片/在职证明(三选一)"
-          prop="icon"
-          v-if="companyInfo.businessLicenseInfo"
-        >
-          <div class="seePhoto" v-if="companyInfo.onJobInfo.smallUrl!=null">
-            <img :src="companyInfo.onJobInfo.smallUrl" alt>
-            <div class="zoomBox" @click.stop="showImg(companyInfo.onJobInfo.url)">
-              <i class="el-icon-zoom-in"></i>
-              查看大图
-            </div>
-          </div>
-        </el-form-item>
+
         <h3 v-if="companyInfo.product.length">产品介绍</h3>
         <div v-for="(item, index) in companyInfo.product" v-if="companyInfo.product.length">
           <el-form-item class label="产品logo">
@@ -145,33 +121,6 @@
           <span>{{companyInfo.adminName}}</span>
         </el-form-item>
       </el-form>
-      <h3>权益类型</h3>
-      <el-form label-suffix="：">
-        <el-form-item label="权益类型">
-          <span>{{rightInfo.rtVersionName}}</span>
-        </el-form-item>
-        <el-form-item label="开始时间">
-          <span>{{rightInfo.startTimeDesc}}</span>
-        </el-form-item>
-        <el-form-item label="结束时间">
-          <span>{{rightInfo.expiredDesc}}</span>
-        </el-form-item>
-      </el-form>
-      <h3>权益点</h3>
-      <el-form label-suffix="：">
-        <el-form-item label="招聘成员上限">
-          <span>{{rightInfo.cRecruiterNum === -1 ? "无上限" : rightInfo.cRecruiterNum}}</span>
-        </el-form-item>
-        <el-form-item label="招聘职位上">
-          <span>{{rightInfo.rOnlinePosition === -1 ? "无上限" : rightInfo.rOnlinePosition}}</span>
-        </el-form-item>
-        <el-form-item label="每日邀约上限">
-          <span>{{rightInfo.rDayInviteInterview === -1 ? "无上限" : rightInfo.rDayInviteInterview}}</span>
-        </el-form-item>
-        <el-form-item label="每日查看简历上限">
-          <span>{{rightInfo.rDayBrowseResume === -1 ? "无上限" : rightInfo.rDayBrowseResume}}</span>
-        </el-form-item>
-      </el-form>
     </div>
     <!-- 绑定与解绑模块 -->
     <div v-if="showAdminWindow" class="bindAdminWindo">
@@ -185,6 +134,17 @@
         :nextAdmin="nextAdmin"
       ></admin-control>
     </div>
+
+    <el-dialog
+    title="生成小程序链接"
+    :visible.sync="dialogVisible"
+    width="30%">
+    <span>链接:{{url}}</span>
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="dialogVisible = false">重新生成</el-button>
+      <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+    </span>
+  </el-dialog>
   </div>
 </template>
 
@@ -218,6 +178,8 @@ export default class createCompany extends Vue {
   showAdminWindow = false;
   nowImg = ""; //预览大图
   nextAdmin = null; // 公司下一个管理员的信息
+  dialogVisible = false;
+  url = 'https://3gimg.qq.com/lightmap/api_v2/2/4/122/main.js';
   pop = {
     isShow: false,
     type: "position"
@@ -238,6 +200,7 @@ export default class createCompany extends Vue {
   isOldEdit = false;
   /* 切换tab */
   tab(num) {
+    console.log(num)
     switch(num) {
       case 0:
         this.active = num
@@ -278,6 +241,9 @@ export default class createCompany extends Vue {
   getCompanyProductLists() {
     let query = this.$route.query
     getCompanyProductListsApi({id: query.id, page: 1, count: 50})
+  }
+  generate () {
+    this.dialogVisible = true
   }
   // 绑定已有公司的管理员
   async bindAdmin() {
@@ -522,5 +488,13 @@ export default class createCompany extends Vue {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.7);
   z-index: 100;
+}
+.temalabel{
+  padding: 3px 8px;
+  border: 1px solid #3e294d;
+  margin-right: 10px;
+  color: #3e294d;
+  font-size: 12px;
+  border-radius: 16px;
 }
 </style>

@@ -326,3 +326,10 @@ export const getAddressListsApi = data => request({
   type: 'get',
   noGlobalLoading: true
 })
+
+// 创建标签
+export const createlabelTeam = data => request({
+  url: '/welfare/diylab',
+  type: 'post',
+  data
+})

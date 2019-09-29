@@ -66,27 +66,6 @@
               </el-select>
             </el-form-item>
 
-            <el-form-item class="time" label="权益截止时间" prop="start" label-width="100px">
-              <el-col :span="11">
-                <el-date-picker
-                  type="date"
-                  placeholder="选择日期"
-                  value-format="yyyy-MM-dd"
-                  v-model="form.start"
-                  style="width: 100%;"
-                ></el-date-picker>
-              </el-col>
-              <el-col class="line" :span="1">—</el-col>
-              <el-col :span="11">
-                <el-date-picker
-                  type="date"
-                  placeholder="选择日期"
-                  value-format="yyyy-MM-dd"
-                  v-model="form.end"
-                  style="width: 100%;"
-                ></el-date-picker>
-              </el-col>
-            </el-form-item>
             <!--用于代替清除结束时间-->
             <el-form-item label-width="1px" label prop="end"></el-form-item>
 
@@ -113,13 +92,6 @@
               </el-select>
             </el-form-item>
 
-            <el-form-item label-width="77px" label="营业执照" prop="is_license">
-              <el-select v-model="form.is_license" placeholder="全部状态">
-                <el-option label="全部" value></el-option>
-                <el-option label="无营业执照" value="0"></el-option>
-                <el-option label="有营业执照" value="1"></el-option>
-              </el-select>
-            </el-form-item>
             <!-- 公司来源 -->
             <el-form-item label-width="77px" label="公司来源" prop="wherefrom">
               <el-select v-model="form.wherefrom" placeholder="全部状态">
@@ -129,11 +101,6 @@
               </el-select>
             </el-form-item>
 
-            <el-form-item label-width="77px" label="跟进顾问" prop="advisorUid">
-              <el-select v-model="form.advisorUid" placeholder="全部状态">
-                <el-option :label="item.realname" :value="item.id" v-for="item in advisorUserList" :key="item.id"></el-option>
-              </el-select>
-            </el-form-item>
             <el-form-item class="time" label="入库时间" prop="start" label-width="100px">
               <el-col :span="11">
                 <el-date-picker
@@ -155,6 +122,16 @@
                 ></el-date-picker>
               </el-col>
             </el-form-item>
+
+            <!-- 状态筛选 -->
+            <el-form-item class="area" label="是否绑定小程序" prop="bind_wechat" label-width="120px">
+              <el-select v-model="form.bind_wechat" style="margin-right: 10px;">
+                <el-option label="全部" value=""></el-option>
+                <el-option label="是" value="1"></el-option>
+                <el-option label="否" value="0"></el-option>
+              </el-select>
+            </el-form-item>
+
             <el-form-item class="btn">
               <el-button type="primary" @click="onSubmit">查询</el-button>
               <el-button @click.stop="resetForm('form')">重置</el-button>
@@ -222,9 +199,9 @@
                 <div>
                   <span>{{props.scope.row.companyName}}</span>
                   <P class="label">
-                    <span class="industry">{{props.scope.row.industry}}</span>
-                    <span class="capital">{{props.scope.row.financingInfo}}</span>
-                    <span class="extent">{{props.scope.row.employeesInfo}}</span>
+                    <span class="industry" v-show="props.scope.row.industry">{{props.scope.row.industry}}</span>
+                    <span class="capital" v-show="props.scope.row.financingInfo">{{props.scope.row.financingInfo}}</span>
+                    <span class="extent" v-show="props.scope.row.employeesInfo">{{props.scope.row.employeesInfo}}</span>
                   </P>
                 </div>
               </div>
@@ -316,6 +293,7 @@ export default class indexPage extends Vue {
     firstAreaId: "",
     equity: "",
     status: "",
+    bind_wechat: '',
     adminUid: "",
     customer_level: '',
     advisorUid: '',
@@ -335,7 +313,7 @@ export default class indexPage extends Vue {
     {
       prop: "id",
       label: "公司ID",
-      width: 100
+      width: 150
     },
     {
       prop: "companyName",
@@ -346,37 +324,22 @@ export default class indexPage extends Vue {
     {
       prop: "address",
       label: "地区",
-      width: 150
+      width: 200
     },
     {
-      prop: "createdUserName",
+      prop: "bindWechat",
       label: "是否绑定小程序",
-      width: 150
-    },
-    {
-      prop: "rtVersionName",
-      label: "权益类型",
-      width: 100
-    },
-    {
-      prop: "expiredDesc",
-      label: "权益截止时间",
       width: 200
     },
     {
       prop: "adminName",
       label: "跟进销售",
-      width: 100
-    },
-    {
-      prop: "advisorName",
-      label: "跟进顾问",
-      width: 100
+      width: 200
     },
     {
       prop: "statusDesc",
       label: "状态",
-      width: 100
+      width: 200
     },
     {
       prop: "check",
@@ -443,6 +406,9 @@ export default class indexPage extends Vue {
     }
     if(this.form.equity) {
       params = Object.assign(params, {equity: this.form.equity})
+    }
+    if(this.form.bind_wechat) {
+      params = Object.assign(params, {bind_wechat: this.form.bind_wechat})
     }
     if(this.form.keyword) {
       params = Object.assign(params, {keyword: this.form.keyword})
@@ -553,6 +519,7 @@ export default class indexPage extends Vue {
     this.form.wherefrom = ''
     this.form.customer_level = ''
     this.form.advisorUid = ''
+    this.form.bind_wechat = ''
     this.form.exportStart = undefined
     this.form.exportEnd = undefined
     this.getCompanyList();
@@ -592,6 +559,9 @@ export default class indexPage extends Vue {
       }
       if(this.form.status) {
         url += `&status=${this.form.status}`
+      }
+       if(this.form.bind_wechat) {
+        url += `&bind_wechat=${this.form.bind_wechat}`
       }
       if(this.form.equity) {
         url += `&equity=${this.form.equity}`

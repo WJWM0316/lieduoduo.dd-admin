@@ -135,13 +135,13 @@
             {{`${item.address}${item.doorplate}`}}
           </span>
         </el-form-item>
-        
-        <el-form-item
-          label="一句话亮点"
-          prop="one_sentence_intro"
-          v-if="!$route.params.checkId"
-        >
-          <el-input v-model="companyInfo.one_sentence_intro" placeholder="请输入内容" style="width: 400px;" maxlength="30"></el-input>
+
+        <el-form-item class label="团队福利">
+          <div class="label" :key="i" v-for="(item, i) in welfarearr">
+            <span class="temalabel">{{item.title}}</span>
+            <i @click="deletelabel(i)">X</i>
+            </div>
+          <span class="addlabelbtn" @click="addlabelitem">添加标签</span>
         </el-form-item>
         
         <el-form-item label="公司图片" prop="input" v-if="!$route.params.checkId" >
@@ -176,28 +176,6 @@
           <el-input placeholder="请输入官网" :maxlength="5000" v-model="companyInfo.website"></el-input>
         </el-form-item>
 
-        <h3>资质信息</h3>
-        <el-form-item class="full" label="营业执照" prop="icon">
-          <image-uploader
-            :width="iconUploader.width"
-            :height="iconUploader.height"
-            :tips="iconUploader.tips"
-            type="business_license"
-            v-model="form.icon1"
-            @loaded="handleIconLoaded"
-          />
-        </el-form-item>
-        <!--工牌/名片/在职证明-->
-        <el-form-item class="full" label="工牌/名片/在职证明" prop="icon">
-          <image-uploader
-            :width="iconUploader.width"
-            :height="iconUploader.height"
-            :tips="iconUploader.tips"
-            type="on_job"
-            v-model="form.icon2"
-            @loaded="handleIconLoaded"
-          />
-        </el-form-item>
         <!-- 邮箱验证 -->
         <el-form-item class="email" label="公司邮箱" prop="icon" v-show="companyInfo.company_name">
           <span @click.stop="email.isShow = true" v-if="companyInfo.email">
@@ -365,6 +343,26 @@
         :nextAdmin="nextAdmin"
       ></admin-control>
     </div>
+
+    <div class="labeldiggle">
+		 <el-dialog
+      title=""
+      :visible.sync="labelVisible"
+			height="400px"
+      width="612px"
+      center>
+			<div class="addlabel clearfix">
+        <div class="text">
+            <input type="text" v-model="follow" maxlength="7" placeholder="请输入标签名" @input="follow=follow.replace(/\s+/g,'')">
+            <span class="leng">{{follow.length}}/7</span>
+          </div>
+					<div class="btn">
+						<div class="sure" @click="btnsure()">确定</div>
+							<div class="exit" @click="labelVisible = false">取消</div>
+					</div>
+			</div>
+    </el-dialog>
+		</div>
   </div>
 </template>
 
@@ -403,7 +401,8 @@ import {
   editCompanyProductApi,
   getCompanyProductApi,
   deleteCompanyProductApi,
-  getCompanyProductListsApi
+  getCompanyProductListsApi,
+  createlabelTeam
 } from "API/company";
 import mapSearch from "@/components/map";
 @Component({
@@ -453,6 +452,8 @@ export default class createCompany extends Vue {
   }
   nextAdmin = {}
   showAdminWindow = false
+  follow = ''
+  welfarearr = []
   companyInfo = {
     real_name: '',
     user_email: '',
@@ -465,6 +466,7 @@ export default class createCompany extends Vue {
     groupId: '',
     financing: '',
     employees: '',
+    welfare: '',
     business_license: '',
     on_job: '',
     intro: '',
@@ -479,6 +481,7 @@ export default class createCompany extends Vue {
   };
   dialogImageUrl = ''
   dialogVisible = false
+  labelVisible = false
   financing = [
     { name: "未融资", id: 1 },
     { name: "天使轮", id: 2 },
@@ -816,7 +819,8 @@ export default class createCompany extends Vue {
     };
     this.temProductList = [].concat(productList)
     this.commonList = newCompanyInfo.albumInfo
-    console.log(newCompanyInfo)
+    this.welfarearr = newCompanyInfo.welfare
+    console.log(this.welfarearr)
     if (Reflect.has(newCompanyInfo, 'albumInfo')) {
       this.imagesLists = newCompanyInfo.albumInfo.map(field => field.url)
     }
@@ -937,6 +941,38 @@ export default class createCompany extends Vue {
       field.isEditing = false
       if(i === index) field.isEditing = true
     })
+  }
+  addlabelitem () {
+    this.labelVisible = true
+  }
+  deletelabel (i) {
+    this.welfarearr.splice(i, 1)
+  }
+  // 确定添加
+  btnsure () {
+    this.welfarearr.push({title: this.follow})
+    return
+    let data = {title: this.follow}
+    if (this.follow === '') {
+      this.$message({
+        message: '标签名字不能为空哦',
+        type: 'warning'
+      })
+    } else if (this.welfarearr.length >= 8) {
+      this.$message({
+        message: '团队福利标签最多8个',
+        type: 'warning'
+      })
+    } else {
+      createlabelTeam(data).then((res) => {
+        this.$message({
+          message: '添加成功',
+          type: 'success'
+        })
+        this.follow = ''
+        this.getlabellist()
+      })
+    }
   }
   deleteAction(index) {
     this.companyInfo.product.splice(index, 1)
@@ -1188,5 +1224,85 @@ export default class createCompany extends Vue {
   text-align: center;
   font-size: 20px;
   margin-bottom: 22px;
+}
+.label{
+  float: left;
+  margin-right: 10px;
+  .temalabel{
+    padding: 3px 8px;
+    border: 1px solid #3e294d;
+    margin-right: 4px;
+    color: #3e294d;
+    font-size: 12px;
+    border-radius: 16px;
+  }
+  i{
+    color: #ccc;
+    cursor: pointer;
+  }
+}
+.addlabelbtn{
+  padding: 3px 8px;
+  border: 1px solid #3e294d;
+  margin-right: 10px;
+  color: #3e294d;
+  font-size: 12px;
+}
+.labeldiggle{
+	width: 100%;
+	.addlabel{
+    width: 100%;
+    	.text{
+        width:244px;
+        height:36px;
+        line-height: 36px;
+        background:rgba(255,255,255,1);
+        border-radius:4px;
+        padding-left: 12px;
+        margin: 0 auto;
+        margin-top: 15px;
+        position: relative;
+        border:1px solid rgba(220,220,220,1);
+        input{
+          background:rgba(255,255,255,1);
+        border-radius:4px;
+          line-height: 36px;
+        }
+        .leng{
+          position: absolute;
+          right: 12px;
+          color: #DCDCDC;
+        }
+      }
+		.btn{
+				width: 100%;
+				float: left;
+				margin-top: 30px;
+				.exit{
+					width:80px;
+					height:32px;
+					background:rgba(255,255,255,1);
+					border-radius:16px;
+					color:rgba(53,64,72,1);
+					font-size: 14px;
+					text-align: center;
+					line-height: 32px;
+					float: right;
+					margin-right: 16px;
+					border:1px solid rgba(220,220,220,1);
+				}
+				.sure{
+					width:80px;
+					height:32px;
+					background:rgba(101,39,145,1);
+					border-radius:16px;
+					color:rgba(255,255,255,1);
+					font-size: 14px;
+					text-align: center;
+					float: right;
+					line-height: 32px;
+				}
+			}
+	}
 }
 </style>
