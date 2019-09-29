@@ -52,12 +52,12 @@
 				<div class="status-detail">
 					<div class="number">
 						<p class="descTitle">版本号</p>
-						<p class="num">111</p>
+						<p class="num">{{experientialData.userVersion}}</p>
 					</div>
 					<div class="content">
-						<p class="publisher"><span class="descTitle">发布人</span><span class="descData">1111</span></p>
-						<p class="publishTime"><span class="descTitle">提交时间</span><span class="descData">1111</span></p>
-						<p class="publishDesc"><span class="descTitle">描述</span><span class="descData">1111</span></p>
+						<p class="publisher"><span class="descTitle">发布人</span><span class="descData">{{experientialData.developer}}</span></p>
+						<p class="publishTime"><span class="descTitle">提交时间</span><span class="descData">{{experientialData.createTime * 1000 | date}}</span></p>
+						<p class="publishDesc"><span class="descTitle">描述</span><span class="descData">{{experientialData.userDesc}}</span></p>
 					</div>
 					<div class="operArea">
 						<el-button type="success">提交审核</el-button>
@@ -209,13 +209,15 @@ export default class publish extends Vue {
 		})
 	}
 	deleteTemplate (templateId) {
+		let template_id = []
+		for (var i = 1; i <= 5; i++) {
+			template_id.push(this.templateList[this.templateList.length - i].templateId || '')
+		}
 		let formData = {
-			template_id: this.templateList[this.templateList.length - 1].templateId,
+			template_id: template_id.join(','),
 			app_id: this.appId
 		}
-		return deleteTemplateApi(formData).then(res => {
-
-		})
+		return deleteTemplateApi(formData)
 	}
 	addTemplate () {
 		let parmas = {app_id: this.appId, dart_id: this.dartId}
@@ -237,6 +239,7 @@ export default class publish extends Vue {
 		let parmas = {app_id: this.appId, page: 1, count: 50}
 		return getTemplateListApi(parmas).then(res => {
 			let list = res.data.data
+			this.experientialData = list.filter((item) => {return item.status === 4})[0]
 			this.templateList = list
 		})
 	}
