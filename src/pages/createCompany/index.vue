@@ -139,9 +139,9 @@
         <el-form-item class label="团队福利">
           <div class="label" :key="i" v-for="(item, i) in welfarearr">
             <span class="temalabel">{{item.title}}</span>
-            <i @click="deletelabel(i)">X</i>
+            <!-- <i @click="deletelabel(i)">X</i> -->
             </div>
-          <span class="addlabelbtn" @click="addlabelitem">添加标签</span>
+          <span class="addlabelbtn" @click="addlabel">添加标签</span>
         </el-form-item>
         
         <el-form-item label="公司图片" prop="input" v-if="!$route.params.checkId" >
@@ -352,10 +352,24 @@
       width="612px"
       center>
 			<div class="addlabel clearfix">
-        <div class="text">
-            <input type="text" v-model="follow" maxlength="7" placeholder="请输入标签名" @input="follow=follow.replace(/\s+/g,'')">
-            <span class="leng">{{follow.length}}/7</span>
-          </div>
+				<div class="top"> 
+					<div class="line-bold"></div>
+					<div class="name">选择团队福利</div>
+				</div>
+				<div :class="['item', item.cur ? 'active' : '']" @click="selectlabel(item), i" :key="i" v-for="(item, i) in labellist">{{item.title}}</div>
+				<div class="nolabel">
+					<span>未找到合适的，</span>
+					<span class="bg" @click="addlabelitem()">添加自定义标签</span>
+					<div class="textinput" v-show="labelshow">
+						<div class="title">新建自定义标签</div>
+						<div class="text">
+							<input type="text" v-model="follow" maxlength="7" placeholder="请输入标签名" @input="follow=follow.replace(/\s+/g,'')">
+							<span class="leng">{{follow.length}}/7</span>
+						</div>
+						<div class="quxiao" @click="quxiao()">取消</div>
+						<div class="queding" @click="sureaddlabel()">确定</div>
+					</div>
+					</div>
 					<div class="btn">
 						<div class="sure" @click="btnsure()">确定</div>
 							<div class="exit" @click="labelVisible = false">取消</div>
@@ -402,6 +416,7 @@ import {
   getCompanyProductApi,
   deleteCompanyProductApi,
   getCompanyProductListsApi,
+  labelTeamlist,
   createlabelTeam
 } from "API/company";
 import mapSearch from "@/components/map";
@@ -482,6 +497,8 @@ export default class createCompany extends Vue {
   dialogImageUrl = ''
   dialogVisible = false
   labelVisible = false
+  labelshow = false
+  labellist = []
   financing = [
     { name: "未融资", id: 1 },
     { name: "天使轮", id: 2 },
@@ -820,7 +837,6 @@ export default class createCompany extends Vue {
     this.temProductList = [].concat(productList)
     this.commonList = newCompanyInfo.albumInfo
     this.welfarearr = newCompanyInfo.welfare
-    console.log(this.welfarearr)
     if (Reflect.has(newCompanyInfo, 'albumInfo')) {
       this.imagesLists = newCompanyInfo.albumInfo.map(field => field.url)
     }
@@ -842,6 +858,7 @@ export default class createCompany extends Vue {
       this.companyInfoRules.company_name.splice(1, 1);
       if (id) {
         this.getCompanyInfo();
+        this.getlabellist()
       } else {
         this.getCheckCompanyInfo();
       }
@@ -942,37 +959,85 @@ export default class createCompany extends Vue {
       if(i === index) field.isEditing = true
     })
   }
-  addlabelitem () {
+  addlabel () {
     this.labelVisible = true
+    this.labellist= this.labellist.filter(item => {
+      let idList= this.welfarearr.map(v => v.labId)
+      if(idList.includes(item.id)){
+        item.cur = true
+      }
+      return item
+    })
   }
-  deletelabel (i) {
-    this.welfarearr.splice(i, 1)
+  // 点击自定义标签
+  addlabelitem () {
+    this.labelshow = !this.labelshow 
   }
-  // 确定添加
+  quxiao () {
+    this.labelshow = false
+  }
+  selectlabel (data, i) {
+    data.cur = !data.cur
+  }
   btnsure () {
-    this.welfarearr.push({title: this.follow})
-    return
-    let data = {title: this.follow}
-    if (this.follow === '') {
-      this.$message({
-        message: '标签名字不能为空哦',
-        type: 'warning'
-      })
-    } else if (this.welfarearr.length >= 8) {
-      this.$message({
-        message: '团队福利标签最多8个',
-        type: 'warning'
-      })
-    } else {
-      createlabelTeam(data).then((res) => {
-        this.$message({
-          message: '添加成功',
-          type: 'success'
-        })
-        this.follow = ''
-        this.getlabellist()
-      })
+  let arr = []
+  let titlearr = []
+  this.labellist.map((v, k) => {
+    if (v.cur) {
+      arr.push(v.id)
+      titlearr.push({title: v.title})
     }
+  })
+  if (titlearr.length === 0) {
+      this.$message({
+      message: '请至少选择一个标签',
+      type: 'warning'
+    })
+  } else if (titlearr.length >= 9) {
+    this.$message({
+      message: '最多只能添加8个标签',
+      type: 'warning'
+    })
+  } else {
+    this.companyInfo.welfare = arr.join(',')
+    this.welfarearr = titlearr
+    this.labelVisible = false
+  }
+  }
+  		// 确定添加
+		sureaddlabel () {
+      let data = {title: this.follow}
+			if (this.follow === '') {
+				this.$message({
+          message: '标签名字不能为空哦',
+          type: 'warning'
+        })
+			} else if (this.labellist.length >= 8) {
+				this.$message({
+          message: '团队福利标签最多8个',
+          type: 'warning'
+        })
+			} else {
+				createlabelTeam(data).then((res) => {
+					this.$message({
+						message: '添加成功',
+						type: 'success'
+					})
+					this.follow = ''
+					this.getlabellist()
+					this.labelshow = false
+				})
+			}
+		}
+
+  getlabellist () {
+    labelTeamlist().then((res) => {
+      let arr = res.data.data
+      arr.map((v, k) => {
+        v.cur = false
+      })
+      this.labellist = arr
+    })
   }
   deleteAction(index) {
     this.companyInfo.product.splice(index, 1)
@@ -1031,7 +1096,7 @@ export default class createCompany extends Vue {
    * @return   {[type]}   [description]
    */
   created() {
-    this.init();
+    this.init()
   }
 }
 </script>
@@ -1251,33 +1316,114 @@ export default class createCompany extends Vue {
 .labeldiggle{
 	width: 100%;
 	.addlabel{
-    width: 100%;
-    	.text{
-        width:244px;
-        height:36px;
-        line-height: 36px;
-        background:rgba(255,255,255,1);
-        border-radius:4px;
-        padding-left: 12px;
-        margin: 0 auto;
-        margin-top: 15px;
-        position: relative;
-        border:1px solid rgba(220,220,220,1);
-        input{
-          background:rgba(255,255,255,1);
-        border-radius:4px;
-          line-height: 36px;
-        }
-        .leng{
-          position: absolute;
-          right: 12px;
-          color: #DCDCDC;
-        }
-      }
+		width: 100%;
+		.top{
+			width: 100%;
+			height: 20px;
+			margin-bottom: 26px;
+			.line-bold{
+				width:6px;
+				height:16px;
+				background:rgba(101,39,145,1);
+				float: left;
+			}
+			.name{
+				color:rgba(40,40,40,1);
+				font-size: 16px;
+				float: left;
+				line-height: 20px;
+        margin-left: 8px;
+			}
+		}
+		.item{
+			height:32px;
+			padding: 0 34px;
+			border-radius:18px;
+			float: left;
+			text-align: center;
+			line-height: 32px;
+			margin-right: 12px;
+			margin-bottom: 16px;
+			border:1px solid rgba(220,220,220,1);
+		}
+		.active{
+			border-color: rgba(101,39,145,1);
+			color:rgba(101,39,145,1);
+		}
+		.nolabel{
+			width: 100%;
+			position: relative;
+			float: left;
+			.bg{
+				color:rgba(101,39,145,1);
+				font-weight: bold;
+			}
+			.textinput{
+				width:304px;
+				height:184px;
+				position:absolute;
+				top: 32px;
+				background:rgba(255,255,255,1);
+				box-shadow:0px 2px 12px 0px rgba(0,0,0,0.06);
+				border:1px solid rgba(237,237,237,1);
+				.title{
+					color:rgba(40,40,40,1);
+					font-size: 14px;
+					padding-top:35px;
+					padding-left: 34px;
+				}
+				.text{
+					width:244px;
+					height:36px;
+					line-height: 36px;
+					background:rgba(255,255,255,1);
+					border-radius:4px;
+					padding-left: 12px;
+					margin-left: 30px;
+					margin-top: 15px;
+					position: relative;
+					border:1px solid rgba(220,220,220,1);
+					input{
+						background:rgba(255,255,255,1);
+					border-radius:4px;
+						line-height: 36px;
+					}
+					.leng{
+						position: absolute;
+						right: 12px;
+						color: #DCDCDC;
+					}
+				}
+				.quxiao{
+					float: left;
+					width:76px;
+					height:28px;
+					line-height: 30px;
+					text-align: center;
+					color:rgba(90,94,102,1);
+					border-radius:14px;
+					margin-top: 36px;
+					margin-left: 106px;
+					border:1px solid rgba(220,223,230,1);
+				}
+				.queding{
+					float: left;
+					width:76px;
+					height:28px;
+					line-height: 30px;
+					text-align: center;
+					margin-top: 36px;
+					margin-left: 16px;
+					color:rgba(255,255,255,1);
+					background:rgba(101,39,145,1);
+					border-radius:14px;
+				}
+			}
+		}
 		.btn{
 				width: 100%;
 				float: left;
-				margin-top: 30px;
+				margin-top: 76px;
 				.exit{
 					width:80px;
 					height:32px;

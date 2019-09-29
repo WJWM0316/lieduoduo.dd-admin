@@ -76,7 +76,7 @@
         </el-form-item>
 
         <el-form-item class label="团队福利">
-          <span class="temalabel" v-for="item in 3">五险{{item}}金</span>
+          <span class="temalabel" :key="j" v-for="(item, j) in companyInfo.welfare">{{item.title}}</span>
         </el-form-item>
         
         <el-form-item class label="公司图片">

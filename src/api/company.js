@@ -333,3 +333,9 @@ export const createlabelTeam = data => request({
   type: 'post',
   data
 })
+// 团队标签列表
+export const labelTeamlist = data => request({
+  url: '/welfare/list',
+  type: 'get',
+  data
+})
