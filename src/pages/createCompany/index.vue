@@ -858,11 +858,11 @@ export default class createCompany extends Vue {
       this.companyInfoRules.company_name.splice(1, 1);
       if (id) {
         this.getCompanyInfo();
-        this.getlabellist()
       } else {
         this.getCheckCompanyInfo();
       }
     }
+    this.getlabellist()
     this.getfieldList();
     // 编辑跟进人
     if (isEditSaller) {

@@ -165,6 +165,14 @@
               label="资质信息与公司信息不符 / 伪造公章或证件 / 未盖章 / 运营人信息不实"
               value="资质信息与公司信息不符 / 伪造公章或证件 / 未盖章 / 运营人信息不实"
             ></el-option>
+            <el-option
+              label="您申请的公司已存在，请联系管理员加入公司"
+              value="您申请的公司已存在，请联系管理员加入公司"
+            ></el-option>
+            <el-option
+              label="您所申请机构的上级公司已存在，请联系管理员创建机构"
+              value="您所申请机构的上级公司已存在，请联系管理员创建机构"
+            ></el-option>
           </el-select>
           <el-select v-model="form.reason" placeholder="请选择审核结果" v-else>
             <el-option label="您提供的身份信息与身份证上登记的信息不符" value="您提供的身份信息与身份证上登记的信息不符"></el-option>
