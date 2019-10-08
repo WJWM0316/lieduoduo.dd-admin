@@ -64,60 +64,6 @@
             <el-option label="女" value="2"></el-option>
           </el-select>
         </el-form-item>
-
-        <template v-if="editIdentityAuth !== 1">
-          <h3>身份信息</h3>
-          <el-form-item label="真实姓名" prop="realname">
-            <el-input
-              v-model="personalInfo.realname"
-              placeholder="请输入真实姓名"
-              :maxlength="20"
-              style="width: 400px;"
-            ></el-input>
-          </el-form-item>
-
-          <el-form-item label="身份证号码" prop="idNum">
-            <el-input
-              v-model="personalInfo.idNum"
-              placeholder="请输入身份证号码"
-              :maxlength="18"
-              style="width: 400px;"
-            ></el-input>
-          </el-form-item>
-
-          <!--身份证正面-->
-          <el-form-item class="full" label="身份证正面" prop="icon">
-            <image-uploader
-              :width="iconUploader.width"
-              :height="iconUploader.height"
-              :tips="iconUploader.tips"
-              type="front"
-              v-model="form.icon3"
-              @loaded="handleIconLoaded"
-            />
-          </el-form-item>
-          <el-button class="detection" type="danger" round @click.stop="detectionInfo">提交校验身份证信息</el-button>
-        </template>
-        <template v-else>
-          <h3>
-            身份信息
-            <span class="status" v-show="editIdentityAuth === 1">
-              <i class="el-icon-success" style="color: #67C23A;"></i> 验证通过
-            </span>
-          </h3>
-          <el-form-item label="真实姓名" prop="realname">
-            <span>{{personalInfo.realname}}</span>
-          </el-form-item>
-
-          <el-form-item label="身份证号码" prop="idNum">
-            <span>{{personalInfo.idNum}}</span>
-          </el-form-item>
-
-          <!--身份证正面-->
-          <el-form-item class="full" label="身份证正面" prop="icon">
-            <img class="frontImg" :src="form.icon3" alt style="width:400px;height:300px;" />
-          </el-form-item>
-        </template>
       </el-form>
     </div>
   </div>

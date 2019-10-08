@@ -91,9 +91,10 @@
                 @change="changeProvince"
               >
                 <el-option label="全部" value="99"></el-option>
-                <!-- <el-option label="无身份" value="0"></el-option> -->
+                <el-option label="无身份" value="0"></el-option>
                 <el-option label="招聘官" value="2"></el-option>
-                <el-option label="管理员" value="3"></el-option>
+                <el-option label="机构管理员" value="3"></el-option>
+                <el-option label="超级管理员" value="4"></el-option>
               </el-select>
             </el-form-item>
 
@@ -116,20 +117,6 @@
               </el-select>
             </el-form-item>
 
-            <el-form-item class="state" label="身份认证状态" label-width="120px" prop="idAuth">
-              <el-select
-                class="selectState"
-                v-model="form.idAuth"
-                placeholder="全部状态"
-                @change="changeProvince"
-              >
-                <el-option label="全部" value="99"></el-option>
-                <el-option label="未提交" value="-1"></el-option>
-                <el-option label="待审核" value="0"></el-option>
-                <el-option label="已通过" value="1"></el-option>
-                <el-option label="未通过" value="2"></el-option>
-              </el-select>
-            </el-form-item>
             <!-- 跟进人筛选 -->
             <el-form-item class="area" label="跟进人" prop="admin_uid" label-width="70px">
               <el-select v-model="form.admin_uid" placeholder="请选择" style="margin-right: 10px;">
@@ -168,10 +155,6 @@
               <div>
                 <span class="check" @click.stop="check(props.scope.row.uid)">查看</span>
               </div>
-              <div
-                style="width: 100%; cursor: pointer; color: #652791;"
-                @click.stop="creatLink($event, props.scope.row, props.scope.$index)"
-              >查看招聘官</div>
             </div>
             <!-- 序号 -->
             <div class="btn-container" v-else-if="props.scope.column.property === 'index'">
@@ -191,6 +174,19 @@
                 >{{props.scope.row[props.scope.column.property]}}</span>
                 <p v-if="props.scope.row.isAdmin === 1">管理员</p>
                 <p v-else>招聘官</p>
+              </div>
+              <div v-else>无</div>
+            </div>
+          <!-- 所属机构 -->
+            <div
+              class="btn-container companyName"
+              v-else-if="props.scope.column.property === 'companyTopName'"
+            >
+              <div v-if="props.scope.row.companyTopName">
+                {{props.scope.row.companyTopName}}
+              </div>
+              <div v-else>
+                无
               </div>
             </div>
             <!-- 发布职位权益 -->
@@ -308,22 +304,6 @@ import { getSalerListApi } from "API/commont";
   name: "userList",
   components: {
     List
-  },
-  watch: {
-    'form.searchType1': {
-      handler(newV, oldV) {
-        this.form.keyword1 = ''
-        this.form[oldV] = ''
-      },
-      immediate: true
-    },
-    'form.searchType2': {
-      handler(newV, oldV) {
-        this.form.keyword2 = ''
-        this.form[oldV] = ''
-      },
-      immediate: true
-    }
   }
 })
 export default class user extends Vue {
@@ -341,13 +321,12 @@ export default class user extends Vue {
     createTimeEnd: "",
     role: "99",
     createPositionRight: "99", // 发布职位权益
-    idAuth: "99",
     companyName: "",
     mobile: "",
     name: "",
     page: 1,
     count: 20,
-    searchType1: 'companyName',
+    searchType1: 'companyTopName',
     searchType2: 'userName',
     keyword1: '',
     keyword2: '',
@@ -356,9 +335,10 @@ export default class user extends Vue {
   };
   /* 搜索关键字 */
   keyword = [
-    { label: "公司名字", value: "companyName" },
+    { label: "公司名字", value: "companyTopName" },
     { label: "手机号", value: "mobile" },
-    { label: "人名", value: "userName" }
+    { label: "人名", value: "userName" },
+    { label: "机构名字", value: "companyName" }
   ];
   fields = [
     {
@@ -375,6 +355,12 @@ export default class user extends Vue {
       prop: "companyName",
       label: "所属公司",
       align: "left",
+      width: 200
+    },
+    {
+      prop: "companyTopName",
+      label: "所属机构",
+      align: "left",
       width: 300
     },
     {
@@ -386,11 +372,6 @@ export default class user extends Vue {
       prop: "adminName",
       label: "跟进人",
       width: 150
-    },
-    {
-      prop: "identityAuth",
-      label: "身份认证状态",
-      width: 220
     },
     {
       prop: "createdAt",
@@ -452,13 +433,12 @@ export default class user extends Vue {
       createTimeEnd: "",
       role: "99",
       createPositionRight: "99", // 发布职位权益
-      idAuth: "99",
       companyName: "",
       mobile: "",
       name: "",
       page: 1,
       count: 20,
-      searchType1: 'companyName',
+      searchType1: 'companyTopName',
       searchType2: 'userName',
       keyword1: '',
       keyword2: '',
@@ -488,19 +468,17 @@ export default class user extends Vue {
     if(this.form.auth_status) {
       params = Object.assign(params, {auth_status: this.form.auth_status})
     }
-    if(this.form.role === '99') {
-      params = Object.assign(params, {role: '2,3'})
-    } else {
+    if(this.form.role) {
       params = Object.assign(params, {role: this.form.role})
     }
     if(this.form.createPositionRight) {
       params = Object.assign(params, {createPositionRight: this.form.createPositionRight})
     }
-    if(this.form.idAuth) {
-      params = Object.assign(params, {idAuth: this.form.idAuth})
-    }
     if(this.form.companyName) {
       params = Object.assign(params, {companyName: this.form.companyName})
+    }
+    if(this.form.companyTopName) {
+      params = Object.assign(params, {companyTopName: this.form.companyTopName})
     }
     if(this.form.mobile) {
       params = Object.assign(params, {mobile: this.form.mobile})
@@ -518,7 +496,6 @@ export default class user extends Vue {
         params = Object.assign(params, {createTimeStart: this.form.createTimeStart, createTimeEnd: this.form.createTimeEnd})
       }
     }
-    console.log(this.form)
     getUserListApi(params).then(res => {
       this.list = res.data.data;
       this.total = res.data.meta.total;
@@ -545,7 +522,7 @@ export default class user extends Vue {
   check(id) {
     this.$route.meta.scrollY = window.scrollY;
     this.$router.push({
-      path: `/user/recruiterInfo/${id}`,
+      path: `/recruiter/recruiterInfo/${id}`,
       query: {
         isEditAdminName: false
       }

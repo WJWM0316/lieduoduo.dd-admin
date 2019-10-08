@@ -7,21 +7,6 @@
         <div class="editAdminName" :class="{'active': isEditAdminName == true }" @click.self="tab">账户设置</div>
       </div>
       <div class="editBox" v-if="isEditAdminName==false">
-        <el-button
-          class="inquire"
-          @click.stop="Review(personalInfo.uid, 'company')"
-          v-show="userInfo.status === 0"
-        >审核</el-button>
-        <div
-          style="display:inline-block;margin-right:10px;"
-          v-if="AdminShow==0||AdminShow==1||AdminShow==2"
-        >
-          <el-button
-            type="info"
-            disabled
-            v-show="userInfo.status !== 0"
-          >{{userInfo.status === 1? '已通过' : '审核'}}</el-button>
-        </div>
         <el-button class="inquire" @click.stop="toEdit(personalInfo.uid)">编辑</el-button>
       </div>
       <div class="editBox" v-if="isEditAdminName==true">
@@ -117,49 +102,23 @@
           <span v-if="personalInfo.gender === 1">男</span>
           <span v-else>女</span>
         </el-form-item>
-
-        <h3>
-          身份信息
-          <span class="status" v-show="personalInfo.identityAuth === 1">
-            <i class="el-icon-success" style="color: #67C23A;"></i> 验证通过
-          </span>
-          <span class="status" v-show="personalInfo.identityAuth === 0">
-            <i class="el-icon-error" style="color: #F56C6C;"></i> 验证失败
-          </span>
-        </h3>
-        <el-form-item
-          label="不需要身份认证"
-          prop="realname"
-          v-if="userInfo.companyId && personalInfo.identityAuth !== 1"
-        >
-          <el-switch v-model="isDetection" @change="changeDemand"></el-switch>
-        </el-form-item>
-        <el-form-item label="真实姓名" prop="realname">
-          <span>{{personalInfo.realname}}</span>
-        </el-form-item>
-
-        <el-form-item label="身份证号码" prop="idNum">
-          <span>{{personalInfo.idNum}}</span>
-        </el-form-item>
-
-        <!--身份证正面-->
-        <el-form-item class="full" label="身份证正面" prop="icon">
-          <div class="seeBigImg" v-if="personalInfo.passportFront">
-            <img class="frontImg" :src="personalInfo.passportFront" alt>
-            <div class="zoomBox" @click.stop="showImg(personalInfo.passportFront)">
-              <i class="el-icon-zoom-in"></i>
-              查看大图
-            </div>
-          </div>
-        </el-form-item>
       </el-form>
     </div>
     <div class="companyMessage" v-if="isEditAdminName==false&&userInfo.companyInfo!=null">
       <div>所属公司</div>
       <div class="companyName" v-show="companyInfo!=''">
         <span class="label">公司全称</span>
-        <div>{{companyInfo.companyName}}</div>
+        <div v-if="companyInfo.companyName">{{companyInfo.companyName}}</div>
+        <div v-else>
+          无
+        </div>
       </div>
+      <div class="companyName" v-show="userInfo.companyTopInfo!=''">
+        <span class="label">所属机构</span>
+        <div v-if="userInfo.companyTopInfo.companyTopName">{{userInfo.companyTopInfo.companyTopName}}</div>
+        <div v-else>无</div>
+      </div>
+
       <div class="companyName" v-show="companyInfo.isAdmin!=''">
         <span class="label">身份类型</span>
         <div>{{companyInfo.isAdmin === 1? '管理员' : '招聘官'}}</div>

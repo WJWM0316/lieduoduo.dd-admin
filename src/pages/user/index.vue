@@ -93,7 +93,8 @@
                 <el-option label="全部" value="99"></el-option>
                 <el-option label="无身份" value="0"></el-option>
                 <el-option label="招聘官" value="2"></el-option>
-                <el-option label="管理员" value="3"></el-option>
+                <el-option label="机构管理员" value="3"></el-option>
+                <el-option label="超级管理员" value="4"></el-option>
               </el-select>
             </el-form-item>
 
@@ -116,20 +117,6 @@
               </el-select>
             </el-form-item>
 
-            <el-form-item class="state" label="身份认证状态" label-width="120px" prop="idAuth">
-              <el-select
-                class="selectState"
-                v-model="form.idAuth"
-                placeholder="全部状态"
-                @change="changeProvince"
-              >
-                <el-option label="全部" value="99"></el-option>
-                <el-option label="未提交" value="-1"></el-option>
-                <el-option label="待审核" value="0"></el-option>
-                <el-option label="已通过" value="1"></el-option>
-                <el-option label="未通过" value="2"></el-option>
-              </el-select>
-            </el-form-item>
             <!-- 跟进人筛选 -->
             <el-form-item class="area" label="跟进人" prop="admin_uid" label-width="70px">
               <el-select v-model="form.admin_uid" placeholder="请选择" style="margin-right: 10px;">
@@ -168,10 +155,10 @@
               <div>
                 <span class="check" @click.stop="check(props.scope.row.uid)">查看</span>
               </div>
-              <div
+              <!-- <div
                 style="width: 100%; cursor: pointer; color: #652791;"
                 @click.stop="creatLink($event, props.scope.row, props.scope.$index)"
-              >查看招聘官</div>
+              >查看招聘官</div> -->
             </div>
             <!-- 序号 -->
             <div class="btn-container" v-else-if="props.scope.column.property === 'index'">
@@ -191,6 +178,19 @@
                 >{{props.scope.row[props.scope.column.property]}}</span>
                 <p v-if="props.scope.row.isAdmin === 1">管理员</p>
                 <p v-else>招聘官</p>
+              </div>
+              <div v-else>无</div>
+            </div>
+            <!-- 所属机构 -->
+            <div
+              class="btn-container companyName"
+              v-else-if="props.scope.column.property === 'companyTopName'"
+            >
+              <div v-if="props.scope.row.companyTopName">
+                {{props.scope.row.companyTopName}}
+              </div>
+              <div v-else>
+                无
               </div>
             </div>
             <!-- 发布职位权益 -->
@@ -333,16 +333,17 @@ export default class user extends Vue {
     count: 20
   };
   searchType = {
-    condition1: "companyName",
+    condition1: "companyTopName",
     condition2: "mobile",
     keyword1: "",
     keyword2: ""
   };
   /* 搜索关键字 */
   keyword = [
-    { label: "公司名字", value: "companyName" },
+    { label: "公司名字", value: "companyTopName" },
     { label: "手机号", value: "mobile" },
-    { label: "人名", value: "userName" }
+    { label: "人名", value: "userName" },
+    { label: "机构名字", value: "companyName" }
   ];
   fields = [
     {
@@ -359,22 +360,23 @@ export default class user extends Vue {
       prop: "companyName",
       label: "所属公司",
       align: "left",
+      width: 200
+    },
+    {
+      prop: "companyTopName",
+      label: "所属机构",
+      align: "left",
       width: 300
     },
     {
       prop: "createPositionRight",
       label: "发布职位权益",
-      width: 150
+      width: 200
     },
     {
       prop: "adminName",
       label: "跟进人",
-      width: 150
-    },
-    {
-      prop: "identityAuth",
-      label: "身份认证状态",
-      width: 220
+      width: 200
     },
     {
       prop: "createdAt",
@@ -450,7 +452,7 @@ export default class user extends Vue {
   /* 重置筛选 */
   resetForm(name) {
     this.searchType = {
-      condition1: "companyName",
+      condition1: "companyTopName",
       condition2: "mobile",
       keyword1: "",
       keyword2: ""

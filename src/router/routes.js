@@ -213,7 +213,7 @@ export const routes = [
   },
   /* 招聘官详情 */
   {
-    path: "/user/recruiterInfo/:id",
+    path: "/recruiter/recruiterInfo/:id",
     name: "recruiter_info",
     meta: {
       title: "编辑详情",

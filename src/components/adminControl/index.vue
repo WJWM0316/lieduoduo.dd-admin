@@ -36,8 +36,7 @@
                 <div v-if="bindCompanyId">
                     <el-form-item label="选择身份类型" prop="is_admin">
                         <el-select class="selectState" v-model="bindCompanyForm.is_admin" placeholder="请选择身份">
-                            <el-option label="招聘官" value=0></el-option>
-                            <el-option label="管理员" value=1></el-option>
+                            <el-option label="超级管理员" value=1></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="担任职务" prop="position">
