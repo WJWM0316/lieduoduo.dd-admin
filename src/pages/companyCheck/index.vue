@@ -51,26 +51,7 @@
                 <el-option label="未提交" value="3"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item
-              label-width="100px"
-              label="身份认证状态"
-              prop="auth_status"
-              style="margin-left: 20px;"
-            >
-              <el-select v-model="form.auth_status" placeholder="全部状态">
-                <el-option label="待审核" value="0"></el-option>
-                <el-option label="已通过" value="1"></el-option>
-                <el-option label="未通过" value="2"></el-option>
-                <el-option label="未提交" value="3"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label-width="100px" label="营业执照" prop="is_license">
-              <el-select v-model="form.is_license" placeholder="全部状态">
-                <el-option label="全部" value></el-option>
-                <el-option label="无营业执照" value="0"></el-option>
-                <el-option label="有营业执照" value="1"></el-option>
-              </el-select>
-            </el-form-item>
+
             <el-form-item
               label-width="90px"
               label="跟进销售"
@@ -97,15 +78,6 @@
                 <el-option label="全部" value></el-option>
                 <el-option label="后台创建" value="2"></el-option>
                 <el-option label="用户创建" value="1"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item
-              label-width="90px"
-              label="客户等级"
-              prop="customer_level"
-              style="margin-left: 20px;">
-              <el-select v-model="form.customer_level" placeholder="客户等级">
-                <el-option :label="item.text" :value="item.value" v-for="item in companyCustomerLevelRange" :key="item.value"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="提交时间" prop="start" style="margin-left: 10px;">
@@ -278,7 +250,7 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import List from "@/components/list";
-import { getSalerListApi, getCompanyCustomerLevelRangeApi } from "API/commont";
+import { getSalerListApi } from "API/commont";
 import { templistApi, companyTempUserList, setCompanyCompanyLevelApi } from "API/company";
 import { getAccessToken, removeAccessToken } from "API/cacheService";
 import { API_ROOT } from 'API/index.js'
@@ -296,18 +268,15 @@ export default class companyCheck extends Vue {
   AdminShow = ""; //权限字段，限制搜索
   form = {
     wherefrom: "",
-    is_license: "",
     admin_uid: "",
     keyword: "",
     status: "",
-    auth_status: "",
     start: "",
     end: "",
     sstart: "",
     send: "",
     page: 1,
-    count: 20,
-    customer_level: ''
+    count: 20
   };
   fields = [
      // {
@@ -323,35 +292,24 @@ export default class companyCheck extends Vue {
     {
       prop: "realName",
       label: "提交人",
-      width: 100,
-      align: "left"
-    },
-    {
-      prop: "customer_level",
-      label: "客户等级",
       width: 200,
       align: "left"
     },
     {
       prop: "adminName",
       label: "跟进销售",
-      width: 200,
+      width: 250,
       align: "left"
     },
     {
       prop: "status",
       label: "公司认证状态",
-      width: 200
-    },
-    {
-      prop: "authStatus",
-      label: "身份认证状态",
-      width: 200
+      width: 250
     },
     {
       prop: "createdAt",
       label: "申请时间",
-      width: 200
+      width: 250
     },
     {
       prop: "id",
@@ -371,9 +329,6 @@ export default class companyCheck extends Vue {
    * @detail   获取跟进销售列表
    * @return   {[type]}   [description]
    */
-  getCompanyCustomerLevelRange() {
-    getCompanyCustomerLevelRangeApi().then(res => this.companyCustomerLevelRange = res.data.data)
-  }
   onSubmit(e) {
     this.form.page = 1;
     this.getTemplist();
@@ -432,20 +387,11 @@ export default class companyCheck extends Vue {
     if(this.form.status) {
       params = Object.assign(params, {status: this.form.status})
     }
-    if(this.form.auth_status) {
-      params = Object.assign(params, {auth_status: this.form.auth_status})
-    }
     if(this.form.admin_uid) {
       params = Object.assign(params, {admin_uid: this.form.admin_uid})
     }
-    if(this.form.is_license) {
-      params = Object.assign(params, {is_license: this.form.is_license})
-    }
     if(this.form.wherefrom) {
       params = Object.assign(params, {wherefrom: this.form.wherefrom})
-    }
-    if(this.form.customer_level !== '') {
-      params = Object.assign(params, {customer_level: this.form.customer_level})
     }
     templistApi(params).then(res => {
       let list = res.data.data
@@ -476,8 +422,7 @@ export default class companyCheck extends Vue {
   created() {
     this.userList();
     this.AdminShow = +sessionStorage.getItem("AdminShow");
-    this.getTemplist();
-    this.getCompanyCustomerLevelRange()
+    this.getTemplist()
   }
   userList() {
     getSalerListApi().then(res => {
@@ -511,20 +456,11 @@ export default class companyCheck extends Vue {
       if(this.form.status) {
         url += `&status=${this.form.status}`
       }
-      if(this.form.auth_status) {
-        url += `&auth_status=${this.form.auth_status}`
-      }
       if(this.form.admin_uid) {
         url += `&admin_uid=${this.form.admin_uid}`
       }
-      if(this.form.is_license) {
-        url += `&is_license=${this.form.is_license}`
-      }
       if(this.form.wherefrom) {
         url += `&wherefrom=${this.form.wherefrom}`
-      }
-      if(this.form.customer_level !== '') {
-        url += `&customer_level=${this.form.customer_level}`
       }
       url = url.replace(/\s*/g, '')
       let xmlResquest = new XMLHttpRequest()

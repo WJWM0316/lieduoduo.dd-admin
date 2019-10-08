@@ -88,29 +88,6 @@
           <span class="lable">公司邮箱：</span>
           {{companyInfo.email || "未绑定邮箱"}}
         </div>
-        <div class="title">认证信息</div>
-        <div class="item">
-          <span class="lable">上传资质：</span>
-        </div>
-        <div class="item">
-          <div class="imgBox" v-if="companyInfo.businessLicenseInfo">
-            <div class="imgNote">营业执照</div>
-            <img :src="companyInfo.businessLicenseInfo.middleUrl">
-            <div class="zoomBox" @click.stop="showImg(companyInfo.businessLicenseInfo.url)">
-              <i class="el-icon-zoom-in"></i>
-              查看大图
-            </div>
-          </div>
-          <div class="imgBox" v-if="companyInfo.onJobInfo">
-            <div class="imgNote">上传工牌/名片/在职证明</div>
-            <img :src="companyInfo.onJobInfo.middleUrl">
-            <div class="zoomBox" @click.stop="showImg(companyInfo.onJobInfo.url)">
-              <i class="el-icon-zoom-in"></i>
-              查看大图
-            </div>
-          </div>
-        </div>
-        <!-- <div class="title">其他信息</div> -->
       </div>
     </div>
 
@@ -119,19 +96,6 @@
       <!--头部-->
       <div class="header" :class="{edit : isEdit}">
         <div class="left" v-if="!isEdit">
-          <span class="title">身份认证信息</span>
-          <span class="status" v-show="personalInfo.status === 0">
-            <i class="el-icon-warning" style="color: #E6A23C;"></i> 已提交
-          </span>
-          <span class="status" v-show="personalInfo.status === 1">
-            <i class="el-icon-success" style="color: #67C23A;"></i> 已通过
-          </span>
-          <span class="status" v-show="personalInfo.status === 2">
-            <i class="el-icon-error" style="color: #F56C6C;"></i> 未通过
-          </span>
-          <span class="status" v-show="!personalInfo.status && personalInfo.status !== 0">
-            <i class="el-icon-error" style="color: #F56C6C;"></i> 相关信息未提交
-          </span>
         </div>
         <div class="editBox" v-if="!isEdit">
           <el-button class="inquire" @click.stop="editIdentity(companyInfo.createdUid)">编辑</el-button>
@@ -157,25 +121,6 @@
         <div class="item">
           <span class="lable">性别：</span>
           {{personalInfo.gender === 1? "男" : "女"}}
-        </div>
-        <div class="title">认证资料</div>
-        <div class="item">
-          <span class="lable">真实姓名：</span>
-          {{personalInfo.realName}}
-        </div>
-        <div class="item">
-          <span class="lable">身份证号码：</span>
-          {{personalInfo.identityNum}}
-        </div>
-        <div class="item">
-          <div class="imgBox" v-if="personalInfo.passportFrontInfo">
-            <div class="imgNote">身份证（正面）：</div>
-            <img :src="personalInfo.passportFrontInfo.middleUrl">
-            <div class="zoomBox" @click.stop="showImg(personalInfo.passportFrontInfo.url)">
-              <i class="el-icon-zoom-in"></i>
-              查看大图
-            </div>
-          </div>
         </div>
       </div>
     </div>
