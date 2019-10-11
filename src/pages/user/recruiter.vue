@@ -90,7 +90,7 @@
                 placeholder="全部状态"
                 @change="changeProvince"
               >
-                <el-option label="全部" value="99"></el-option>
+                <el-option label="全部" value="2,3,4"></el-option>
                 <!-- <el-option label="无身份" value="0"></el-option> -->
                 <el-option label="招聘官" value="2"></el-option>
                 <el-option label="机构管理员" value="3"></el-option>
@@ -319,7 +319,7 @@ export default class user extends Vue {
     auth_status: "",
     createTimeStart: "",
     createTimeEnd: "",
-    role: "99",
+    role: "2,3,4",
     createPositionRight: "99", // 发布职位权益
     companyName: "",
     mobile: "",

@@ -92,3 +92,10 @@ export const getLabelProfessionalSkillsListApi = data => request({
   type: 'get',
   noGlobalLoading: true
 })
+
+// 查看生成小程序链接
+export const generatebindUrlApi = data => request({
+	url: `/open/platform/auth/url/`,
+	type: 'get',
+	data
+})

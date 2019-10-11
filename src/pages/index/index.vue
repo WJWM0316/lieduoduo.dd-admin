@@ -161,7 +161,8 @@
                 >查看管理员</span>
               </div>
               <div>
-                <span class="check" @click="check(props.scope.row.id)">查看绑定小程序链接</span>
+                <span v-if="props.scope.row.bindWechat === '是'" class="check" @click="generate(props.scope.row.id)">查看绑定小程序链接</span>
+                <span v-else class="check" @click="generate(props.scope.row.id)">生成绑定小程序链接</span>
               </div>
             </div>
             <!-- 地址列 -->
@@ -252,6 +253,18 @@
         </list>
       </el-main>
     </el-container>
+    
+    <el-dialog
+    title="生成小程序链接"
+    :visible.sync="dialogVisible"
+    width="30%">
+    <div @click="copytext()" :style="'cursor:pointer'">链接:page/common/pages/homepage/homepage?companyId={{cpid}}</div>
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="restsucess()">重新生成</el-button>
+      <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+    </span>
+  </el-dialog>
+
   </div>
 </template>
 
@@ -259,7 +272,7 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import { getCompanyListApi, getCityApi, setCompanyCustomerLevelApi } from "API/company";
-import { getSalerListApi, getAdvisorUserListApi } from "API/commont";
+import { getSalerListApi, getAdvisorUserListApi, generatebindUrlApi } from "API/commont";
 import { getAccessToken, removeAccessToken } from "API/cacheService";
 import { API_ROOT } from 'API/index.js'
 import List from "@/components/list";
@@ -277,6 +290,8 @@ Component.registerHooks([
 })
 export default class indexPage extends Vue {
   canDownloadData = true
+  dialogVisible = false
+  cpid = ''
   total = 0; // 筛查结果数量
   pageCount = 0; // 请求回的数据共几页
   AdminShow = ""; //权限字段，限制搜索
@@ -478,6 +493,34 @@ export default class indexPage extends Vue {
   // 搜索公司
   search() {
     this.onSubmit();
+  }
+  generate (id) {
+    this.cpid = id
+    this.dialogVisible = true
+  }
+  restsucess () {
+    this.$message({
+      message: '重新生成成功',
+      type: 'success'
+    })
+  }
+  copytext () {
+    this.copyStringToClipboard(`page/common/pages/homepage/homepage?companyId=${this.cpid}`)
+    this.$message({
+      message: '复制成功',
+      type: 'success'
+    })
+  }
+  copyStringToClipboard (str) {
+	   var el = document.createElement('textarea');
+	   el.value = str;
+	   el.setAttribute('readonly', '');
+	   el.style.position = "absolute";
+	   el.style.left="-9999px";
+	   document.body.appendChild(el)
+	   el.select()
+	   document.execCommand('copy')
+	   document.body.removeChild(el);
   }
   // 获取城市标签
   getCity() {

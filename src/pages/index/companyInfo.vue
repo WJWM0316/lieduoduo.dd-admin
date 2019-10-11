@@ -9,7 +9,8 @@
       <div>
         <!-- <el-button @click.stop="last" v-show="active === 1">返回上一步</el-button>
         <el-button @click.stop="next" v-show="active === 0">保存，下一步</el-button>-->
-        <el-button @click.stop="generate">生成绑定小程序链接</el-button>
+        <el-button v-if="companyInfo.bindWechat === '是'" @click.stop="generate(companyInfo.id)">查看绑定小程序链接</el-button>
+        <el-button v-else @click.stop="generate(companyInfo.id)">生成绑定小程序链接</el-button>
         <el-button @click.stop="toEdit">编辑</el-button>
         <el-button @click.stop="bindAdmin" v-if="companyInfo.createdUid === 0">绑定管理员</el-button>
         <el-button @click.stop="delateAdmin" v-else>移除管理员</el-button>
@@ -138,9 +139,9 @@
     title="生成小程序链接"
     :visible.sync="dialogVisible"
     width="30%">
-    <span>链接:{{url}}</span>
+    <div @click="copytext()" :style="'cursor:pointer'">链接:page/common/pages/homepage/homepage?companyId={{cpid}}</div>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="dialogVisible = false">重新生成</el-button>
+      <el-button @click="restsucess()">重新生成</el-button>
       <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
     </span>
   </el-dialog>
@@ -187,6 +188,7 @@ export default class createCompany extends Vue {
   email = {
     isShow: false
   };
+  cpid = ''
   /* 公司信息 */
   companyInfo = {
     product: [],
@@ -241,8 +243,33 @@ export default class createCompany extends Vue {
     let query = this.$route.query
     getCompanyProductListsApi({id: query.id, page: 1, count: 50})
   }
-  generate () {
+  generate (id) {
+    this.cpid = id
     this.dialogVisible = true
+  }
+  restsucess () {
+    this.$message({
+      message: '重新生成成功',
+      type: 'success'
+    })
+  }
+  copytext () {
+    this.copyStringToClipboard(`page/common/pages/homepage/homepage?companyId=${this.cpid}`)
+    this.$message({
+      message: '复制成功',
+      type: 'success'
+    })
+  }
+  copyStringToClipboard (str) {
+	   var el = document.createElement('textarea');
+	   el.value = str;
+	   el.setAttribute('readonly', '');
+	   el.style.position = "absolute";
+	   el.style.left="-9999px";
+	   document.body.appendChild(el)
+	   el.select()
+	   document.execCommand('copy')
+	   document.body.removeChild(el);
   }
   // 绑定已有公司的管理员
   async bindAdmin() {
