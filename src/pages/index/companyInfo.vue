@@ -55,13 +55,12 @@
           <span>{{companyInfo.employeesInfo}}</span>
         </el-form-item>
 
-        <el-form-item label="公司地址" prop="address_id">
-          <!--公司地址列表-->
+        <!-- <el-form-item label="公司地址" prop="address_id">
           <span
             class="AdressList"
             v-for="(item, index) in companyInfo.address"
           >{{`${index+1}、${item.address}${item.doorplate}`}}</span>
-        </el-form-item>
+        </el-form-item> -->
 
         <el-form-item class label="公司简介">
           <span>{{companyInfo.intro}}</span>
@@ -117,7 +116,7 @@
     <div class="sales" v-if="active === 1">
       <h3>跟进销售</h3>
       <el-form label-suffix="：">
-        <el-form-item label="跟进人">
+        <el-form-item label="跟进销售">
           <span>{{companyInfo.adminName}}</span>
         </el-form-item>
       </el-form>

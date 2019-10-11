@@ -10,7 +10,7 @@
         <el-button class="inquire" @click.stop="toEdit(personalInfo.uid)">编辑</el-button>
       </div>
       <div class="editBox" v-if="isEditAdminName==true">
-        <el-button class="saveAdminName" @click.stop="saveAdminName">保存跟进人</el-button>
+        <el-button class="saveAdminName" @click.stop="saveAdminName">保存跟进销售</el-button>
       </div>
     </div>
     <!--大图蒙层-->
@@ -57,12 +57,12 @@
       <div class="sales">
         <h3>跟进销售</h3>
         <el-form>
-          <el-form-item label="跟进人">
+          <el-form-item label="跟进销售">
             <el-select
               style="width: 400px;"
               ref="salesList"
               v-model="companyInfo.realname"
-              placeholder="请选择跟进人"
+              placeholder="请选择跟进销售"
               @change="ground"
             >
               <el-option label="无" :value="0"/>
@@ -104,19 +104,19 @@
         </el-form-item>
       </el-form>
     </div>
-    <div class="companyMessage" v-if="isEditAdminName==false&&userInfo.companyInfo!=null">
+    <div class="companyMessage" v-if="isEditAdminName==false&&userInfo.companyInfo.id !==0">
       <div>所属公司</div>
-      <div class="companyName" v-show="companyInfo!=''">
+      <div class="companyName" v-show="userInfo.companyTopInfo!=''">
         <span class="label">公司全称</span>
-        <div v-if="companyInfo.companyName">{{companyInfo.companyName}}</div>
+        <div v-if="userInfo.companyTopInfo.companyTopName ">{{userInfo.companyTopInfo.companyTopName}}</div>
         <div v-else>
           无
         </div>
       </div>
 
-      <div class="companyName" v-show="userInfo.companyTopInfo!=''">
+      <div class="companyName" v-show="companyInfo!=''">
         <span class="label">所属机构</span>
-        <div v-if="userInfo.companyTopInfo.companyTopName">{{userInfo.companyTopInfo.companyTopName}}</div>
+        <div v-if="companyInfo.companyName">{{companyInfo.companyName}}</div>
         <div v-else>无</div>
       </div>
 
@@ -125,7 +125,7 @@
         <div>{{companyInfo.isAdmin === 1? '管理员' : '招聘官'}}</div>
       </div>
       <div class="companyName" v-show="companyInfo && userInfo.companyId">
-        <span class="label">是否可以发布职位</span>
+        <span class="label" :style="'margin-right:10px'">是否可以发布职位</span>
         <el-switch v-model="createPositionRight" @change="changeRight"></el-switch>
       </div>
       <div class="companyName" v-show="companyInfo && companyInfo.applyType">
@@ -696,7 +696,7 @@ export default class addUser extends Vue {
     align-items: center;
     font-weight: 700;
     .label {
-      margin-right: 10px;
+      // margin-right: 10px;
       font-weight: 300;
       color: #909399;
     }

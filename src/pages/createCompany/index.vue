@@ -116,7 +116,7 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item
+        <!-- <el-form-item
           label="公司地址"
           prop="address_id"
           style="width: 380px;"
@@ -125,7 +125,6 @@
           <span class="addAdress" @click.stop="changeAdress">
             <i class="el-icon-circle-plus" style="color: #67C23A;"></i>点击添加公司地址
           </span>
-          <!--公司地址列表-->
           <span class="AdressList" v-for="(item, index) in adressList" :key="index">
             <i
               @click.stop="delAdress(index)"
@@ -134,9 +133,9 @@
             ></i>
             {{`${item.address}${item.doorplate}`}}
           </span>
-        </el-form-item>
+        </el-form-item> -->
 
-        <el-form-item class label="团队福利">
+        <el-form-item class label="团队福利" prop="welfare">
           <div class="label" :key="i" v-for="(item, i) in welfarearr">
             <span class="temalabel">{{item.title}}</span>
             <!-- <i @click="deletelabel(i)">X</i> -->
@@ -557,7 +556,8 @@ export default class createCompany extends Vue {
       { required: true, message: '所属行业必选', trigger: 'change' }
     ],
     financing: [{ required: true, message: '融资情况必选', trigger: 'change' }],
-    employees: [{ required: true, message: '人员规模必选', trigger: 'change' }]
+    employees: [{ required: true, message: '人员规模必选', trigger: 'change' }],
+    welfare: [{ required: true, message: '团队福利必选', trigger: 'change' }]
   }
   advisorUserList = []
   // 关闭
@@ -1010,11 +1010,6 @@ export default class createCompany extends Vue {
 			if (this.follow === '') {
 				this.$message({
           message: '标签名字不能为空哦',
-          type: 'warning'
-        })
-			} else if (this.labellist.length >= 8) {
-				this.$message({
-          message: '团队福利标签最多8个',
           type: 'warning'
         })
 			} else {
