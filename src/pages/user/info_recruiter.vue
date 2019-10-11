@@ -119,9 +119,12 @@
         <div v-else>无</div>
       </div>
 
-      <div class="companyName" v-show="companyInfo.isAdmin!=''">
+      <div class="companyName">
         <span class="label">身份类型</span>
-        <div>{{companyInfo.isAdmin === 1? '管理员' : '招聘官'}}</div>
+        <div v-if="userInfo.isTopAdmin">超级管理员</div>
+        <div v-else-if="userInfo.isAdmin">机构管理员</div>
+        <div v-else-if="userInfo.isRecruiter">招聘官</div>
+        <div v-else>无</div>
       </div>
       <div class="companyName" v-show="companyInfo && userInfo.companyId">
         <span :style="'margin-right:10px'" class="label">是否可以发布职位</span>
