@@ -308,7 +308,7 @@ export const getCompanyProductApi = data => request({
 /* 删除公司产品 */
 export const deleteCompanyProductApi = data => request({
   url: `/company/product/${data.id}`,
-  type: 'get',
+  type: 'delete',
   noGlobalLoading: true
 })
 

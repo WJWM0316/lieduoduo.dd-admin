@@ -196,7 +196,7 @@
             />
             <div class="func_zone" style="position: absolute;right: 0;top: 0;" v-if="!item.isEditing">
               <el-button type="text" @click="editAction(index)">编辑</el-button>
-              <el-button type="text" @click="deleteAction(index)">删除</el-button>
+              <el-button type="text" @click="deleteAction(item)">删除</el-button>
             </div>
           </el-form-item>
 
@@ -1024,8 +1024,16 @@ export default class createCompany extends Vue {
       this.labellist = arr
     })
   }
-  deleteAction(index) {
-    this.companyInfo.product.splice(index, 1)
+  deleteAction(data) {
+    let params = {id: data.id}
+    deleteCompanyProductApi(params).then((res) => {
+      this.$message({
+        message: '删除成功',
+        type: 'success'
+      });
+      this.getCompanyInfo();
+    })
+    // this.companyInfo.product.splice(index, 1)
   }
   addAction() {
     this.companyInfo.product.push({
