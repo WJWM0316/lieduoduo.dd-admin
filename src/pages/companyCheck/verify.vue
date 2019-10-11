@@ -224,8 +224,7 @@ Component.registerHooks([
   computed: {
     clickAble () {
       return this.companyInfo 
-              && this.companyInfo.companyName 
-              && this.companyInfo.companyShortname 
+              && this.companyInfo.companyName
               && this.companyInfo.financing 
               && this.companyInfo.employees
               && this.companyInfo.industry
