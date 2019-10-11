@@ -59,14 +59,14 @@
           ></el-input>
         </el-form-item>
 
-        <el-form-item label="公司简称" prop="company_shortname">
+        <!-- <el-form-item label="公司简称" prop="company_shortname">
           <el-input
             v-model="companyInfo.company_shortname"
             placeholder="请输入名称"
             :maxlength="10"
             style="width: 400px;"
           ></el-input>
-        </el-form-item>
+        </el-form-item> -->
 
         <el-form-item label="所属行业" prop="industry_id">
           <el-select
@@ -543,15 +543,6 @@ export default class createCompany extends Vue {
       },
       { validator: this.companyNameRule, trigger: 'blur' }
     ],
-    company_shortname: [
-      {
-        required: true,
-        message: "公司简称必填，要求1-10个字",
-        trigger: "blur",
-        min: 1,
-        max: 10
-      }
-    ],
     industry_id: [
       { required: true, message: '所属行业必选', trigger: 'change' }
     ],
@@ -629,6 +620,7 @@ export default class createCompany extends Vue {
   }
   /* 创建公司 */
   async createdCompany() {
+    console.log(this.companyInfo)
     let companyInfo = {}
     this.companyInfo.address = this.adressList;
     this.$refs["companyInfo"].validate(async valid => {
@@ -836,6 +828,11 @@ export default class createCompany extends Vue {
     };
     this.temProductList = [].concat(productList)
     this.commonList = newCompanyInfo.albumInfo
+    let arr = []
+    newCompanyInfo.welfare.map((v, k) => {
+      arr.push(v.labId)
+    })
+    this.companyInfo.welfare = arr.join(',')
     this.welfarearr = newCompanyInfo.welfare
     if (Reflect.has(newCompanyInfo, 'albumInfo')) {
       this.imagesLists = newCompanyInfo.albumInfo.map(field => field.url)

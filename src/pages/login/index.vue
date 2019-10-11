@@ -1,8 +1,8 @@
 <template>
   <div id="login" @keyup.enter="login">
     <div class="title">
-      <img src="../../assets/logintitle.png" />
-      <div class="info">机会多，面试多</div>
+      <div class="bigtitle">多多社交招聘系统</div>
+      <div class="info">你的专属招聘小程序</div>
     </div>
     <div class="box">
       <el-form
@@ -14,7 +14,7 @@
         label-position="left"
       >
         <el-form-item label-width="0px">
-          <h2>猎多多业务后台登录</h2>
+          <h2>多多招聘系统业务后台登录</h2>
         </el-form-item>
         <div class="inpBox">
           <i slot="prefix" class="icon iconfont iconicon_account"></i>
@@ -136,14 +136,12 @@ export default class login extends Vue {
 <style lang="less" scoped="scoped">
 @import "../../style/iconfont.less";
 #login {
-  background: url(../../assets/loginbg.png);
-  background-color: #fbfbff;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100vh;
-  background-color: #ffffff;
+  background: url("../../assets/login.png") no-repeat center center #00C4CD;
   z-index: 999;
   display: flex;
   flex-direction: column;
@@ -154,20 +152,25 @@ export default class login extends Vue {
       width: 160px;
       height: 58px;
     }
+    .bigtitle{
+      color: #fff;
+      font-size: 54px;
+      font-weight: 700;
+    }
     .info {
       font-weight: 400;
-      color: #652791;
+      color: #fff;
       line-height: 33px;
-      font-size: 24px;
+      font-size: 28px;
       margin-top: 14px;
       margin-bottom: 66px;
     }
   }
   .box {
     h2 {
-      color: #354048;
+      color: #00C4CD;
       font-size: 20px;
-      font-weight: 500;
+      font-weight: bold;
     }
     .el-form {
       width: 100%;
@@ -216,6 +219,7 @@ export default class login extends Vue {
       box-shadow: 0px 8px 12px 0px rgba(48, 50, 51, 0.1);
       border-radius: 4px;
       overflow: hidden;
+      background: #00C4CD !important;
     }
   }
 }

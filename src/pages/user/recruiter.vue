@@ -91,7 +91,7 @@
                 @change="changeProvince"
               >
                 <el-option label="全部" value="99"></el-option>
-                <el-option label="无身份" value="0"></el-option>
+                <!-- <el-option label="无身份" value="0"></el-option> -->
                 <el-option label="招聘官" value="2"></el-option>
                 <el-option label="机构管理员" value="3"></el-option>
                 <el-option label="超级管理员" value="4"></el-option>

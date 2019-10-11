@@ -40,9 +40,9 @@
           <span>{{companyInfo.companyName}}</span>
         </el-form-item>
 
-        <el-form-item label="公司简称" prop="company_shortname">
+        <!-- <el-form-item label="公司简称" prop="company_shortname">
           <span>{{companyInfo.companyShortname}}</span>
-        </el-form-item>
+        </el-form-item> -->
 
         <el-form-item label="所属行业" prop="industry_id">
           <span>{{companyInfo.industry}}</span>

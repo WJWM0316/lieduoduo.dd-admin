@@ -52,10 +52,10 @@
           <span class="lable">公司全称：</span>
           {{companyInfo.companyName}}
         </div>
-        <div class="item">
+        <!-- <div class="item">
           <span class="lable">公司简称：</span>
           {{companyInfo.companyShortname}}
-        </div>
+        </div> -->
         <div class="item">
           <span class="lable">所属行业：</span>
           {{companyInfo.industry}}
