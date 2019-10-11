@@ -135,7 +135,7 @@
           </span>
         </el-form-item> -->
 
-        <el-form-item class label="团队福利" prop="welfare">
+        <el-form-item class label="团队福利">
           <div class="label" :key="i" v-for="(item, i) in welfarearr">
             <span class="temalabel">{{item.title}}</span>
             <!-- <i @click="deletelabel(i)">X</i> -->
@@ -547,8 +547,7 @@ export default class createCompany extends Vue {
       { required: true, message: '所属行业必选', trigger: 'change' }
     ],
     financing: [{ required: true, message: '融资情况必选', trigger: 'change' }],
-    employees: [{ required: true, message: '人员规模必选', trigger: 'change' }],
-    welfare: [{ required: true, message: '团队福利必选', trigger: 'change' }]
+    employees: [{ required: true, message: '人员规模必选', trigger: 'change' }]
   }
   advisorUserList = []
   // 关闭
@@ -620,7 +619,6 @@ export default class createCompany extends Vue {
   }
   /* 创建公司 */
   async createdCompany() {
-    console.log(this.companyInfo)
     let companyInfo = {}
     this.companyInfo.address = this.adressList;
     this.$refs["companyInfo"].validate(async valid => {
@@ -985,12 +983,7 @@ export default class createCompany extends Vue {
       titlearr.push({title: v.title})
     }
   })
-  if (titlearr.length === 0) {
-      this.$message({
-      message: '请至少选择一个标签',
-      type: 'warning'
-    })
-  } else if (titlearr.length >= 9) {
+  if (titlearr.length >= 9) {
     this.$message({
       message: '最多只能添加8个标签',
       type: 'warning'

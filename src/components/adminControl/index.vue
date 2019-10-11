@@ -5,7 +5,7 @@
             <header>绑定管理员</header>
             <el-form ref="form" :model="bindForm" :rules="bindRules" class="bindForm" label-width="120px" label-suffix="：" @keyup.enter="done">
                 <el-form-item label="管理员账号" prop="mobile">
-                    <el-input v-model="bindForm.mobile" @blur.stop="checkUser"></el-input>
+                    <el-input v-model="bindForm.mobile" @input="bindForm.mobile=bindForm.mobile.replace(/\s*/g,'')" @blur.stop="checkUser"></el-input>
                 </el-form-item>
                 <p v-if="toCretedUser"><i class="el-icon-warning" style="color: #E6A23C;"></i> 该用户不存在，请先 <span class="addUser" @click.stop="addUser">添加用户</span></p>
                 <div v-if="isNewUser && !toCretedUser">
@@ -292,8 +292,8 @@ export default class adminBox extends Vue {
     }
     // 检测手机号码
     checkUser () {
-        console.log()
-        checkIdentityApi(this.bindForm.mobile).then(res => {
+        if (this.bindForm.mobile) {
+            checkIdentityApi(this.bindForm.mobile).then(res => {
             if (res.data.data.isExisted) {
                 if(res.data.data.companyId!==0||res.data.data.companyName!==""){
                     this.$message({
@@ -326,6 +326,7 @@ export default class adminBox extends Vue {
                 new Error('手机号码尚未注册，请先注册用户')
             }
         })
+        }
     }
     // 检测已有公司名，并且将该公司与管理员绑定
     checkCompany () {

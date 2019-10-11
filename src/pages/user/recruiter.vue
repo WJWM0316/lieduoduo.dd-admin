@@ -23,7 +23,6 @@
                   v-model="form.searchType1"
                   slot="prepend"
                   placeholder="请选择"
-                  @change="changeType1"
                 >
                   <el-option
                     v-for="item in keyword"
@@ -48,7 +47,6 @@
                   v-model="form.searchType2"
                   slot="prepend"
                   placeholder="请选择"
-                  @change="changeType2"
                 >
                   <el-option
                     v-for="item in keyword"
@@ -304,6 +302,22 @@ import { getSalerListApi } from "API/commont";
   name: "userList",
   components: {
     List
+  },
+  watch: {
+    'form.searchType1': {
+      handler(newV, oldV) {
+        this.form.keyword1 = ''
+        this.form[oldV] = ''
+      },
+      immediate: true
+    },
+    'form.searchType2': {
+      handler(newV, oldV) {
+        this.form.keyword2 = ''
+        this.form[oldV] = ''
+      },
+      immediate: true
+    }
   }
 })
 export default class user extends Vue {
@@ -322,6 +336,7 @@ export default class user extends Vue {
     role: "2,3,4",
     createPositionRight: "99", // 发布职位权益
     companyName: "",
+    companyTopName: "",
     mobile: "",
     name: "",
     page: 1,
@@ -384,13 +399,7 @@ export default class user extends Vue {
       label: "操作"
     }
   ];
-  list = [];
-  changeType1(e) {
-    console.log(e)
-  }
-  changeType2(e) {
-    console.log(e)
-  }
+  list = []
   /* 添加用户 */
   addUser() {
     sessionStorage.setItem("up_router", this.$route.path);
