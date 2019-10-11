@@ -186,8 +186,6 @@
             >
               <div v-if="props.scope.row.isRecruiter">
                 <span
-                  class="toCompany"
-                  @click.stop="toCompany(props.scope.row.companyId)"
                 >{{props.scope.row[props.scope.column.property]}}</span>
               </div>
               <div v-else>无</div>

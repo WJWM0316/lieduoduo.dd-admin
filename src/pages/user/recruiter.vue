@@ -177,16 +177,24 @@
               class="btn-container companyName"
               v-else-if="props.scope.column.property === 'companyName'"
             >
+            <!-- @click.stop="toCompany(props.scope.row.companyId)" -->
               <div v-if="props.scope.row.isRecruiter">
                 <span
-                  class="toCompany"
-                  @click.stop="toCompany(props.scope.row.companyId)"
                 >{{props.scope.row[props.scope.column.property]}}</span>
-                <p v-if="props.scope.row.isAdmin === 1">管理员</p>
-                <p v-else>招聘官</p>
               </div>
               <div v-else>无</div>
             </div>
+             <!-- 身份类型 -->
+            <div
+              class="btn-container companyName"
+              v-else-if="props.scope.column.property === 'usertype'"
+            >
+            <div v-if="props.scope.row.isTopAdmin">超级管理员</div>
+            <div v-else-if="props.scope.row.isAdmin">机构管理员</div>
+            <div v-else-if="props.scope.row.isRecruiter">招聘官</div>
+            <div v-else>无</div>
+            </div>
+            
             <!-- 发布职位权益 -->
             <div
               class="btn-container"
@@ -370,13 +378,19 @@ export default class user extends Vue {
       prop: "companyTopName",
       label: "所属公司",
       align: "left",
-      width: 200
+      width: 300
     },
     {
       prop: "companyName",
       label: "所属机构",
       align: "left",
-      width: 300
+      width: 200
+    },
+    {
+      prop: "usertype",
+      label: "身份类型",
+      align: "left",
+      width: 200
     },
     {
       prop: "createPositionRight",
