@@ -165,6 +165,18 @@
             <!-- 所属公司 -->
             <div
               class="btn-container companyName"
+              v-else-if="props.scope.column.property === 'companyTopName'"
+            >
+            <div v-if="props.scope.row.companyTopName">
+                {{props.scope.row.companyTopName}}
+              </div>
+              <div v-else>
+                无
+              </div>
+            </div>
+          <!-- 所属机构 -->
+            <div
+              class="btn-container companyName"
               v-else-if="props.scope.column.property === 'companyName'"
             >
               <div v-if="props.scope.row.isRecruiter">
@@ -176,18 +188,6 @@
                 <p v-else>招聘官</p>
               </div>
               <div v-else>无</div>
-            </div>
-          <!-- 所属机构 -->
-            <div
-              class="btn-container companyName"
-              v-else-if="props.scope.column.property === 'companyTopName'"
-            >
-              <div v-if="props.scope.row.companyTopName">
-                {{props.scope.row.companyTopName}}
-              </div>
-              <div v-else>
-                无
-              </div>
             </div>
             <!-- 发布职位权益 -->
             <div
@@ -352,13 +352,13 @@ export default class user extends Vue {
       width: 200
     },
     {
-      prop: "companyName",
+      prop: "companyTopName",
       label: "所属公司",
       align: "left",
       width: 200
     },
     {
-      prop: "companyTopName",
+      prop: "companyName",
       label: "所属机构",
       align: "left",
       width: 300

@@ -106,16 +106,16 @@
     </div>
     <div class="companyMessage" v-if="isEditAdminName==false&&userInfo.companyInfo!=null">
       <div>所属公司</div>
-      <div class="companyName" v-show="companyInfo!=''">
+      <div class="companyName" v-show="userInfo.companyTopInfo!=''">
         <span class="label">公司全称</span>
-        <div v-if="companyInfo.companyName">{{companyInfo.companyName}}</div>
+        <div v-if="userInfo.companyTopInfo.companyTopName">{{userInfo.companyTopInfo.companyTopName}}</div>
         <div v-else>
           无
         </div>
       </div>
-      <div class="companyName" v-show="userInfo.companyTopInfo!=''">
+      <div class="companyName" v-show="companyInfo!=''">
         <span class="label">所属机构</span>
-        <div v-if="userInfo.companyTopInfo.companyTopName">{{userInfo.companyTopInfo.companyTopName}}</div>
+        <div v-if="companyInfo.companyName">{{companyInfo.companyName}}</div>
         <div v-else>无</div>
       </div>
 
@@ -124,7 +124,7 @@
         <div>{{companyInfo.isAdmin === 1? '管理员' : '招聘官'}}</div>
       </div>
       <div class="companyName" v-show="companyInfo && userInfo.companyId">
-        <span class="label">是否可以发布职位</span>
+        <span :style="'margin-right:10px'" class="label">是否可以发布职位</span>
         <el-switch v-model="createPositionRight" @change="changeRight"></el-switch>
       </div>
       <div class="companyName" v-show="companyInfo && companyInfo.applyType">
@@ -669,7 +669,7 @@ export default class addUser extends Vue {
     align-items: center;
     font-weight: 700;
     .label {
-      margin-right: 10px;
+      // margin-right: 10px;
       font-weight: 300;
       color: #909399;
     }
