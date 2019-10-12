@@ -43,7 +43,7 @@
             </div>
             <!-- 筛选条件2 -->
             <!--地区筛选-->
-            <el-form-item class="area" label="地区筛选" prop="area">
+            <!-- <el-form-item class="area" label="地区筛选" prop="area">
               <el-select
                 v-model="form.firstAreaId"
                 placeholder="请选择省份"
@@ -64,7 +64,7 @@
                   :value="item.areaId"
                 ></el-option>
               </el-select>
-            </el-form-item>
+            </el-form-item> -->
 
             <!--用于代替清除结束时间-->
             <el-form-item label-width="1px" label prop="end"></el-form-item>
@@ -333,28 +333,23 @@ export default class indexPage extends Vue {
     {
       prop: "companyName",
       label: "申请信息",
-      width: 350
+      width: 400
       //    align: 'left'
-    },
-    {
-      prop: "address",
-      label: "地区",
-      width: 200
     },
     {
       prop: "bindWechat",
       label: "是否绑定小程序",
-      width: 200
+      width: 250
     },
     {
       prop: "adminName",
       label: "跟进销售",
-      width: 200
+      width: 250
     },
     {
       prop: "statusDesc",
       label: "状态",
-      width: 200
+      width: 250
     },
     {
       prop: "check",
