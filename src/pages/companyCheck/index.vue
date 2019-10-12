@@ -442,6 +442,12 @@ export default class companyCheck extends Vue {
       if(this.form.keyword) {
         url += `&keyword=${this.form.keyword}`
       }
+      if(this.form.page) {
+        url += `&page=${this.form.page}`
+      }
+      if(this.form.count) {
+        url += `&count=${this.form.count}`
+      }
     
       if((this.form.start && !this.form.end) || (!this.form.start && this.form.end)) {
         this.$message({message: "申请时间必须选择开始时间和结束时间", type: "warning"});

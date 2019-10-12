@@ -591,6 +591,12 @@ export default class indexPage extends Vue {
       if(this.form.wherefrom) {
         url += `&wherefrom=${this.form.wherefrom}`
       }
+      if(this.form.page) {
+        url += `&page=${this.form.page}`
+      }
+      if(this.form.count) {
+        url += `&count=${this.form.count}`
+      }
       if(this.form.customer_level !== '') {
         url += `&customer_level=${this.form.customer_level}`
       }
