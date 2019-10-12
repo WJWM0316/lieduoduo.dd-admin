@@ -452,7 +452,7 @@ export default class user extends Vue {
       auth_status: "",
       createTimeStart: "",
       createTimeEnd: "",
-      role: "99",
+      role: "2,3,4",
       createPositionRight: "99", // 发布职位权益
       companyName: "",
       mobile: "",
