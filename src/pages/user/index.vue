@@ -184,9 +184,8 @@
               class="btn-container companyName"
               v-else-if="props.scope.column.property === 'companyName'"
             >
-              <div v-if="props.scope.row.isRecruiter">
-                <span
-                >{{props.scope.row[props.scope.column.property]}}</span>
+              <div v-if="props.scope.row.companyName && !props.scope.row.isTopAdmin">
+                {{props.scope.row.companyName}}
               </div>
               <div v-else>无</div>
             </div>

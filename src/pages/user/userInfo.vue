@@ -116,14 +116,18 @@
 
       <div class="companyName" v-show="companyInfo!=''">
         <span class="label">所属机构</span>
-        <div v-if="companyInfo.companyName">{{companyInfo.companyName}}</div>
+        <div v-if="companyInfo.companyName && !userInfo.isTopAdmin">{{companyInfo.companyName}}</div>
         <div v-else>无</div>
       </div>
 
-      <div class="companyName" v-show="companyInfo.isAdmin!=''">
+      <div class="companyName">
         <span class="label">身份类型</span>
-        <div>{{companyInfo.isAdmin === 1? '管理员' : '招聘官'}}</div>
+        <div v-if="userInfo.isTopAdmin">超级管理员</div>
+        <div v-else-if="userInfo.isAdmin">机构管理员</div>
+        <div v-else-if="userInfo.isRecruiter">招聘官</div>
+        <div v-else>无</div>
       </div>
+
       <div class="companyName" v-show="companyInfo && userInfo.companyId">
         <span class="label" :style="'margin-right:10px'">是否可以发布职位</span>
         <el-switch v-model="createPositionRight" @change="changeRight"></el-switch>

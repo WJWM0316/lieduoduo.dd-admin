@@ -115,7 +115,7 @@
       </div>
       <div class="companyName" v-show="companyInfo!=''">
         <span class="label">所属机构</span>
-        <div v-if="companyInfo.companyName">{{companyInfo.companyName}}</div>
+        <div v-if="companyInfo.companyName && !userInfo.isTopAdmin">{{companyInfo.companyName}}</div>
         <div v-else>无</div>
       </div>
 
