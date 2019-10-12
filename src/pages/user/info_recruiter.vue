@@ -79,7 +79,7 @@
     </div>
     <!--身份信息表格-->
     <div class="personalInfo" v-if="isEditAdminName==false">
-      <div class="point">上传工牌/名片/在职证明等信息需要与身份信息保持一致</div>
+      <div class="point"></div>
       <el-form class="edit-form" ref="mobile" :model="phone" label-width="150px" label-suffix="：">
         <h3>账号信息</h3>
         <el-form-item label="手机号码" prop="mobile">

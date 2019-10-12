@@ -10,7 +10,7 @@
     </div>
     <!--身份信息表格-->
     <div class="personalInfo">
-      <div class="point">上传工牌/名片/在职证明等信息需要与身份信息保持一致</div>
+      <div class="point"></div>
       <el-form
         class="edit-form"
         ref="mobile"

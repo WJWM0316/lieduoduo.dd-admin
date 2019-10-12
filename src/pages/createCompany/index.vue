@@ -14,7 +14,7 @@
     </div>
     <!--公司信息表格-->
     <div class="companyInfo" v-if="active === 0">
-      <div class="point">上传工牌/名片/在职证明等信息需要与身份信息保持一致</div>
+      <div class="point"></div>
       
       <el-form
         class="edit-form"

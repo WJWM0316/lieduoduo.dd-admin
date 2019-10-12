@@ -623,6 +623,7 @@ export default class EditRecruiter extends Vue {
         this.model.list = this.labelProfessionalLiteracyList
         break;
       case 'customize':
+        this.model.value2 = ''
         let customize = [].concat(this.userInfos.skillLabels, this.userInfos.literacyLabels)
         if(customize.length >= 3) {
           this.$message({message: '最多只能添加三个技能标签', type: 'warning'})
@@ -657,6 +658,7 @@ export default class EditRecruiter extends Vue {
         this.model.list = skillsList
         break
       case 'customize_life':
+        this.model.value2 = ''
         let customize_life = [].concat(this.userInfos.lifeLabels)
         if(customize_life.length >= 3) {
           this.$message({message: '最多只能添加三个生活标签', type: 'warning'})
