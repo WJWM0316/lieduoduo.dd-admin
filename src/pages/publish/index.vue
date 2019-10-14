@@ -27,19 +27,19 @@
 			</div>
 			<div class="card">
 				<div class="title">审核版本</div>
-				<template v-if="true">
+				<template v-if="!auditData">
 					<p class="shenhe">你暂无提交审核的版本或者版本已发布上线</p>
 				</template>
 				<template v-else>
 					<div class="status-detail">
 					<div class="number">
 						<p class="descTitle">版本号</p>
-						<p class="num">111</p>
+						<p class="num">{{auditData.version}}</p>
 					</div>
 					<div class="content">
-						<p class="publisher"><span class="descTitle">发布人</span><span class="descData">1111</span></p>
-						<p class="publishTime"><span class="descTitle">提交时间</span><span class="descData">1111</span></p>
-						<p class="publishDesc"><span class="descTitle">描述</span><span class="descData">1111</span></p>
+						<p class="publisher"><span class="descTitle">发布人</span><span class="descData">{{auditData.developer}}</span></p>
+						<p class="publishTime"><span class="descTitle">提交时间</span><span class="descData">{{auditData.createdAt}}</span></p>
+						<p class="publishDesc"><span class="descTitle">描述</span><span class="descData">{{auditData.comment}}</span></p>
 					</div>
 					<div class="operArea">
 						<el-button type="success">发布版本</el-button>
@@ -52,12 +52,13 @@
 				<div class="status-detail">
 					<div class="number">
 						<p class="descTitle">版本号</p>
-						<p class="num">{{experientialData.userVersion}}</p>
+						<p class="num">{{experientialData.version}}</p>
+						<img class="qrCode" :src="qrCodeUrl1" alt="">
 					</div>
 					<div class="content">
 						<p class="publisher"><span class="descTitle">发布人</span><span class="descData">{{experientialData.developer}}</span></p>
-						<p class="publishTime"><span class="descTitle">提交时间</span><span class="descData">{{experientialData.createTime * 1000 | date}}</span></p>
-						<p class="publishDesc"><span class="descTitle">描述</span><span class="descData">{{experientialData.userDesc}}</span></p>
+						<p class="publishTime"><span class="descTitle">提交时间</span><span class="descData">{{experientialData.createdAt}}</span></p>
+						<p class="publishDesc"><span class="descTitle">描述</span><span class="descData">{{experientialData.comment}}</span></p>
 					</div>
 					<div class="operArea">
 						<el-button type="success">提交审核</el-button>
@@ -189,6 +190,8 @@ export default class publish extends Vue {
 	appId = process.env.VUE_APP_ID
 	qrCodeUrl = ''
 	autoRefresh = true // 开启自动刷新
+	qrCodeUrl1 = ''
+	auditData = {}
 	created() {
 		this.getDarts()
 		this.getTemplateList()
@@ -206,6 +209,7 @@ export default class publish extends Vue {
 			let list = res.data.data.draftList
 			this.dartData = list[this.maxIndex(list, 'draftId')]
 			this.dartId = this.dartData.draftId
+			this.getQrcode().then(src => this.qrCodeUrl = src)
 		})
 	}
 	deleteTemplate (templateId) {
@@ -238,9 +242,11 @@ export default class publish extends Vue {
 	getTemplateList () {
 		let parmas = {app_id: this.appId, page: 1, count: 50}
 		return getTemplateListApi(parmas).then(res => {
-			let list = res.data.data
-			this.experientialData = list.filter((item) => {return item.status === 4})[0]
+			let list = res.data.data.items
+			this.experientialData = list.find(item => item.type === 1)
+			this.auditData = list.find(item => item.type === 2)
 			this.templateList = list
+			this.getQrcode().then(src => this.qrCodeUrl1 = src)
 		})
 	}
 	commit () {
@@ -251,6 +257,7 @@ export default class publish extends Vue {
 		let parmas = {app_id: this.appId, path: 'page/common/pages/homepage/homepage', format: 'base64'}
 		return getQrcodeApi(parmas).then(res => {
 			this.qrCodeUrl = res.data.data.qrcode
+			return res.data.data.qrcode
 		})
 	}
 	toCommit () {
@@ -258,7 +265,7 @@ export default class publish extends Vue {
 			this.addTemplate().then(() => {
 				this.getTemplateList().then(() => {
 					this.commit().then(() => {
-						this.getQrcode()
+						this.getQrcode().then(src => this.qrCodeUrl = src)
 					})
 				})
 			})

@@ -27,7 +27,7 @@ export const deleteTemplateApi = (data, config) => request({
 
 // 获取模板
 export const getTemplateListApi = data => request({
-	url: `/open/platform/code_manager/templates`,
+	url: `/open/platform/code_manager/vcs`,
 	type: 'get',
 	data,
 	noGlobalLoading: false
