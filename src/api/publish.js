@@ -49,3 +49,10 @@ export const getQrcodeApi = data => request({
 	noGlobalLoading: false
 })
 
+// 提交审核申请
+export const postMiniAppApi = data => request({
+	url: `/open/platform/code_manager/submit`,
+	type: 'post',
+	data,
+	noGlobalLoading: false
+})

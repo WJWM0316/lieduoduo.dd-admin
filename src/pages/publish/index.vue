@@ -61,7 +61,7 @@
 						<p class="publishDesc"><span class="descTitle">描述</span><span class="descData">{{experientialData.comment}}</span></p>
 					</div>
 					<div class="operArea">
-						<el-button type="success">提交审核</el-button>
+						<el-button type="success" @click="postMiniApp">提交审核</el-button>
 					</div>
 				</div>
 			</div>
@@ -163,7 +163,7 @@
 <script>
 import Vue from "vue";
 import Component from "vue-class-component";
-import { getDartsApi, addTemplateApi, getTemplateListApi, commitApi, getQrcodeApi, deleteTemplateApi } from "API/publish";
+import { getDartsApi, addTemplateApi, getTemplateListApi, commitApi, getQrcodeApi, deleteTemplateApi, postMiniAppApi } from "API/publish";
 let timer = null
 @Component({
   name: "publish",
@@ -270,6 +270,9 @@ export default class publish extends Vue {
 				})
 			})
 		})
+	}
+	postMiniApp() {
+		postMiniAppApi({app_id: this.appId})
 	}
 }
 </script>
