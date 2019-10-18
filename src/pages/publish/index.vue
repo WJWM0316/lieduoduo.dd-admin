@@ -163,7 +163,7 @@
 <script>
 import Vue from "vue";
 import Component from "vue-class-component";
-import { getDartsApi, addTemplateApi, getTemplateListApi, commitApi, getQrcodeApi, deleteTemplateApi, postMiniAppApi } from "API/publish";
+import { getDartsApi, addTemplateApi, getTemplateListApi, commitApi, getQrcodeApi, deleteTemplateApi, postMiniAppApi, getcodeManagerVcsListsApi } from "API/publish";
 let timer = null
 @Component({
   name: "publish",
@@ -175,6 +175,7 @@ let timer = null
       		timer = setTimeout(() => {
       			this.getDarts()
 						this.getTemplateList()
+						this.getcodeManagerVcsLists()
       		}, 60000) 
       	}
       },
@@ -195,6 +196,7 @@ export default class publish extends Vue {
 	created() {
 		this.getDarts()
 		this.getTemplateList()
+		this.getcodeManagerVcsLists()
 	}
 	maxIndex = (list, typeId) => {
 		let array = []
@@ -242,15 +244,26 @@ export default class publish extends Vue {
 	getTemplateList () {
 		let parmas = {app_id: this.appId, page: 1, count: 50}
 		return getTemplateListApi(parmas).then(res => {
+			let list = res.data.data
+			this.templateList = list
+			// console.log(list, 'a')
+			this.getQrcode().then(src => this.qrCodeUrl1 = src)
+		})
+	}
+	getcodeManagerVcsLists() {
+		let parmas = {app_id: this.appId, page: 1, count: 50}
+		return getcodeManagerVcsListsApi(parmas).then(res => {
 			let list = res.data.data.items
 			this.experientialData = list.find(item => item.type === 1)
 			this.auditData = list.find(item => item.type === 2)
 			this.templateList = list
+			// console.log(list, 'b')
 			this.getQrcode().then(src => this.qrCodeUrl1 = src)
 		})
 	}
 	commit () {
 		let parmas = {app_id: this.appId, template_id: this.templateList[0].templateId}
+		// console.log(parmas); return
 		return commitApi(parmas).then(res => {})
 	}
 	getQrcode () {
