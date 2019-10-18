@@ -33,6 +33,14 @@ export const getTemplateListApi = data => request({
 	noGlobalLoading: false
 })
 
+// 获取对应小程序当前版本控制信息列表
+export const getcodeManagerVcsListsApi = data => request({
+	url: `/open/platform/code_manager/vcs`,
+	type: 'get',
+	data,
+	noGlobalLoading: false
+})
+
 // 提交体验服
 export const commitApi = data => request({
 	url: `/open/platform/code_manager/commit`,
@@ -49,3 +57,10 @@ export const getQrcodeApi = data => request({
 	noGlobalLoading: false
 })
 
+// 提交审核申请
+export const postMiniAppApi = data => request({
+	url: `/open/platform/code_manager/submit`,
+	type: 'post',
+	data,
+	noGlobalLoading: false
+})
