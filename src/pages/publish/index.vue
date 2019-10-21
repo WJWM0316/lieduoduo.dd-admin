@@ -259,10 +259,12 @@ export default class publish extends Vue {
 			this.templateList = list
 		})
 	}
+	// 提审
 	commit () {
 		let parmas = {app_id: this.appId, template_id: this.templateList[0].templateId}
 		return commitApi(parmas).then(res => {})
 	}
+	// 生成二维码
 	getQrcode () {
 		let parmas = {app_id: this.appId, path: 'page/common/pages/homepage/homepage', format: 'base64'}
 		return getQrcodeApi(parmas).then(res => {
@@ -270,6 +272,7 @@ export default class publish extends Vue {
 			return res.data.data.qrcode
 		})
 	}
+	// 提交代码到体验服
 	toCommit () {
 		this.getDarts().then(() => {
 			this.addTemplate().then(() => {
@@ -281,6 +284,7 @@ export default class publish extends Vue {
 			})
 		})
 	}
+	// 发布小程序
 	postMiniApp() {
 		postMiniAppApi({app_id: this.appId})
 	}
