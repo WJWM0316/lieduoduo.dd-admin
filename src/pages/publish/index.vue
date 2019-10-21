@@ -58,7 +58,7 @@
 					<div class="content">
 						<p class="publisher"><span class="descTitle">发布人</span><span class="descData">{{experientialData.developer}}</span></p>
 						<p class="publishTime"><span class="descTitle">提交时间</span><span class="descData">{{experientialData.createdAt}}</span></p>
-						<p class="publishDesc"><span class="descTitle">描述</span><span class="descData">{{experientialData.comment}}</span></p>
+						<p class="publishDesc"><span class="descTitle">描述</span><span class="descData">{{experientialData.userDesc}}</span></p>
 					</div>
 					<div class="operArea">
 						<el-button type="success" @click="postMiniApp">提交审核</el-button>
@@ -71,8 +71,8 @@
 					<div class="number">
 						<p class="descTitle">版本号</p>
 						<p class="num">{{dartData.userVersion}}</p>
-						<img class="qrCode" :src="qrCodeUrl" alt="">
-					</div>
+<!-- 						<img class="qrCode" :src="qrCodeUrl" alt="">
+ -->					</div>
 					<div class="content">
 						<p class="publisher"><span class="descTitle">开发者</span><span class="descData">{{dartData.developer}}</span></p>
 						<p class="publishTime"><span class="descTitle">提交时间</span><span class="descData">{{dartData.createTime * 1000 | date}}</span></p>
@@ -211,7 +211,7 @@ export default class publish extends Vue {
 			let list = res.data.data.draftList
 			this.dartData = list[this.maxIndex(list, 'draftId')]
 			this.dartId = this.dartData.draftId
-			this.getQrcode().then(src => this.qrCodeUrl = src)
+			// this.getQrcode().then(src => this.qrCodeUrl = src)
 		})
 	}
 	deleteTemplate (templateId) {
@@ -246,7 +246,7 @@ export default class publish extends Vue {
 		return getTemplateListApi(parmas).then(res => {
 			let list = res.data.data
 			this.templateList = list
-			// console.log(list, 'a')
+			this.experientialData = list[0]
 			this.getQrcode().then(src => this.qrCodeUrl1 = src)
 		})
 	}
@@ -254,16 +254,13 @@ export default class publish extends Vue {
 		let parmas = {app_id: this.appId, page: 1, count: 50}
 		return getcodeManagerVcsListsApi(parmas).then(res => {
 			let list = res.data.data.items
-			this.experientialData = list.find(item => item.type === 1)
+			// this.experientialData = list.find(item => item.type === 1)
 			this.auditData = list.find(item => item.type === 2)
 			this.templateList = list
-			// console.log(list, 'b')
-			this.getQrcode().then(src => this.qrCodeUrl1 = src)
 		})
 	}
 	commit () {
 		let parmas = {app_id: this.appId, template_id: this.templateList[0].templateId}
-		// console.log(parmas); return
 		return commitApi(parmas).then(res => {})
 	}
 	getQrcode () {
@@ -278,7 +275,7 @@ export default class publish extends Vue {
 			this.addTemplate().then(() => {
 				this.getTemplateList().then(() => {
 					this.commit().then(() => {
-						this.getQrcode().then(src => this.qrCodeUrl = src)
+						this.getTemplateList()
 					})
 				})
 			})
