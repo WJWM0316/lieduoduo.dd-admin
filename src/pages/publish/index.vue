@@ -52,7 +52,7 @@
 				<div class="status-detail">
 					<div class="number">
 						<p class="descTitle">版本号</p>
-						<p class="num">{{experientialData.version}}</p>
+						<p class="num">{{experientialData.userVersion}}</p>
 						<img class="qrCode" :src="qrCodeUrl1" alt="">
 					</div>
 					<div class="content">
