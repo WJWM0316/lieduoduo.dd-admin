@@ -250,6 +250,7 @@ export default class publish extends Vue {
 			this.getQrcode().then(src => this.qrCodeUrl1 = src)
 		})
 	}
+	// 状态列表
 	getcodeManagerVcsLists() {
 		let parmas = {app_id: this.appId, page: 1, count: 50}
 		return getcodeManagerVcsListsApi(parmas).then(res => {
@@ -262,7 +263,9 @@ export default class publish extends Vue {
 	// 提审
 	commit () {
 		let parmas = {app_id: this.appId, template_id: this.templateList[0].templateId}
-		return commitApi(parmas).then(res => {})
+		return commitApi(parmas).then(res => {
+			this.getcodeManagerVcsLists()
+		})
 	}
 	// 生成二维码
 	getQrcode () {
