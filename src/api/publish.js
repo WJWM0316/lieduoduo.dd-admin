@@ -64,3 +64,11 @@ export const postMiniAppApi = data => request({
 	data,
 	noGlobalLoading: false
 })
+
+// 生成二维码
+export const getTemplateListNewApi = data => request({
+	url: `/open/platform/code_manager/template_lists`,
+	type: 'get',
+	data,
+	noGlobalLoading: false
+})
