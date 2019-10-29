@@ -52,13 +52,13 @@
 				<div class="status-detail">
 					<div class="number">
 						<p class="descTitle">版本号</p>
-						<p class="num">{{experientialData.version}}</p>
+						<p class="num">{{experientialData.userVersion}}</p>
 						<img class="qrCode" :src="qrCodeUrl1" alt="">
 					</div>
 					<div class="content">
 						<p class="publisher"><span class="descTitle">发布人</span><span class="descData">{{experientialData.developer}}</span></p>
 						<p class="publishTime"><span class="descTitle">提交时间</span><span class="descData">{{experientialData.createdAt}}</span></p>
-						<p class="publishDesc"><span class="descTitle">描述</span><span class="descData">{{experientialData.comment}}</span></p>
+						<p class="publishDesc"><span class="descTitle">描述</span><span class="descData">{{experientialData.userDesc}}</span></p>
 					</div>
 					<div class="operArea">
 						<el-button type="success" @click="postMiniApp">提交审核</el-button>
@@ -71,8 +71,8 @@
 					<div class="number">
 						<p class="descTitle">版本号</p>
 						<p class="num">{{dartData.userVersion}}</p>
-						<img class="qrCode" :src="qrCodeUrl" alt="">
-					</div>
+<!-- 						<img class="qrCode" :src="qrCodeUrl" alt="">
+ -->					</div>
 					<div class="content">
 						<p class="publisher"><span class="descTitle">开发者</span><span class="descData">{{dartData.developer}}</span></p>
 						<p class="publishTime"><span class="descTitle">提交时间</span><span class="descData">{{dartData.createTime * 1000 | date}}</span></p>
@@ -163,7 +163,7 @@
 <script>
 import Vue from "vue";
 import Component from "vue-class-component";
-import { getDartsApi, addTemplateApi, getTemplateListApi, commitApi, getQrcodeApi, deleteTemplateApi, postMiniAppApi, getcodeManagerVcsListsApi } from "API/publish";
+import { getTemplateListNewApi, getDartsApi, addTemplateApi, getTemplateListApi, commitApi, getQrcodeApi, deleteTemplateApi, postMiniAppApi, getcodeManagerVcsListsApi } from "API/publish";
 let timer = null
 @Component({
   name: "publish",
@@ -211,7 +211,7 @@ export default class publish extends Vue {
 			let list = res.data.data.draftList
 			this.dartData = list[this.maxIndex(list, 'draftId')]
 			this.dartId = this.dartData.draftId
-			this.getQrcode().then(src => this.qrCodeUrl = src)
+			// this.getQrcode().then(src => this.qrCodeUrl = src)
 		})
 	}
 	deleteTemplate (templateId) {
@@ -246,26 +246,38 @@ export default class publish extends Vue {
 		return getTemplateListApi(parmas).then(res => {
 			let list = res.data.data
 			this.templateList = list
+			this.experientialData = list[0]
+			this.getQrcode().then(src => this.qrCodeUrl1 = src)
+		})
+	}
+	getTemplateListNew() {
+		let parmas = {app_id: this.appId, page: 1, count: 50}
+		return getTemplateListNewApi(parmas).then(res => {
+			console.log(res)
+			let list = res.data.data.templateList
+			this.templateList = list
 			// console.log(list, 'a')
 			this.getQrcode().then(src => this.qrCodeUrl1 = src)
 		})
 	}
+	// 状态列表
 	getcodeManagerVcsLists() {
 		let parmas = {app_id: this.appId, page: 1, count: 50}
 		return getcodeManagerVcsListsApi(parmas).then(res => {
 			let list = res.data.data.items
-			this.experientialData = list.find(item => item.type === 1)
+			// this.experientialData = list.find(item => item.type === 1)
 			this.auditData = list.find(item => item.type === 2)
 			this.templateList = list
-			// console.log(list, 'b')
-			this.getQrcode().then(src => this.qrCodeUrl1 = src)
 		})
 	}
+	// 提审
 	commit () {
 		let parmas = {app_id: this.appId, template_id: this.templateList[0].templateId}
-		// console.log(parmas); return
-		return commitApi(parmas).then(res => {})
+		return commitApi(parmas).then(res => {
+			this.getcodeManagerVcsLists()
+		})
 	}
+	// 生成二维码
 	getQrcode () {
 		let parmas = {app_id: this.appId, path: 'page/common/pages/homepage/homepage', format: 'base64'}
 		return getQrcodeApi(parmas).then(res => {
@@ -273,17 +285,19 @@ export default class publish extends Vue {
 			return res.data.data.qrcode
 		})
 	}
+	// 提交代码到体验服
 	toCommit () {
 		this.getDarts().then(() => {
 			this.addTemplate().then(() => {
-				this.getTemplateList().then(() => {
+				this.getTemplateListNew().then(() => {
 					this.commit().then(() => {
-						this.getQrcode().then(src => this.qrCodeUrl = src)
+						this.getTemplateList()
 					})
 				})
 			})
 		})
 	}
+	// 发布小程序
 	postMiniApp() {
 		postMiniAppApi({app_id: this.appId})
 	}
