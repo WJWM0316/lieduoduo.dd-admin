@@ -9,8 +9,8 @@
       <div>
         <!-- <el-button @click.stop="last" v-show="active === 1">返回上一步</el-button>
         <el-button @click.stop="next" v-show="active === 0">保存，下一步</el-button>-->
-        <el-button v-if="companyInfo.bindWechat === '是'" @click.stop="generate(companyInfo.id)">查看绑定小程序链接</el-button>
-        <el-button v-else @click.stop="generate(companyInfo.id)">生成绑定小程序链接</el-button>
+        <el-button v-if="companyInfo.bindWechat === '是'" @click.stop="generate(companyInfo.id, companyInfo.appId)">查看绑定小程序链接</el-button>
+        <el-button v-else @click.stop="generate(companyInfo.id, companyInfo.appId)">生成绑定小程序链接</el-button>
         <el-button @click.stop="toEdit">编辑</el-button>
         <el-button @click.stop="bindAdmin" v-if="companyInfo.createdUid === 0">绑定管理员</el-button>
         <el-button @click.stop="delateAdmin" v-else>移除管理员</el-button>
@@ -139,7 +139,7 @@
     title="生成小程序链接"
     :visible.sync="dialogVisible"
     width="30%">
-    <div @click="copytext()" :style="'cursor:pointer'">链接:page/common/pages/homepage/homepage?companyId={{cpid}}</div>
+    <div @click="copytext()" :style="'cursor:pointer'">链接:https://dd.lieduoduo.com/thirdPartyAuth/?cid={{cpid}}&appId={{appId}}</div>
     <span slot="footer" class="dialog-footer">
       <el-button @click="restsucess()">重新生成</el-button>
       <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
@@ -189,6 +189,7 @@ export default class createCompany extends Vue {
     isShow: false
   };
   cpid = ''
+  appId = ''
   /* 公司信息 */
   companyInfo = {
     product: [],
@@ -243,8 +244,9 @@ export default class createCompany extends Vue {
     let query = this.$route.query
     getCompanyProductListsApi({id: query.id, page: 1, count: 50})
   }
-  generate (id) {
+  generate (id, aid) {
     this.cpid = id
+    this.appId = aid
     this.dialogVisible = true
   }
   restsucess () {
@@ -254,7 +256,7 @@ export default class createCompany extends Vue {
     })
   }
   copytext () {
-    this.copyStringToClipboard(`page/common/pages/homepage/homepage?companyId=${this.cpid}`)
+    this.copyStringToClipboard(`https://dd.lieduoduo.com/thirdPartyAuth/?cid=${this.cpid}&appId=${this.appId}`)
     this.$message({
       message: '复制成功',
       type: 'success'
