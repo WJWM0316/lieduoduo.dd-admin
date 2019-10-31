@@ -174,6 +174,19 @@
         <el-form-item class label="公司官网" style="width: 640px;">
           <el-input placeholder="请输入官网" :maxlength="5000" v-model="companyInfo.website"></el-input>
         </el-form-item>
+        <el-form-item class="moban" label="行业模板" style="width: 640px;">
+          <i class="el-icon-question question" @click="hasmoban = !hasmoban"></i>
+          <template>
+            <el-radio-group v-model="companyInfo.industry_type">
+              <el-radio :label="1">互联网行业</el-radio>
+              <el-radio :label="2">金融行业</el-radio>
+              <el-radio :label="3">服务行业</el-radio>
+            </el-radio-group>
+          </template>
+        </el-form-item>
+        <el-form-item class label="" style="width: 640px;" v-if="hasmoban">
+          <div>根据不同的行业模板，展示对应行业的职位类型排序和职位描述参考模板；</div>
+        </el-form-item>
 
         <!-- 邮箱验证 -->
         <el-form-item class="email" label="公司邮箱" prop="icon" v-show="companyInfo.company_name">
@@ -432,6 +445,7 @@ export default class createCompany extends Vue {
   imagesLists = null
   realImgSrc = null
   xhr = null
+  hasmoban = false
   commonList = []
   temProductList = []
   imageUpload = {
@@ -473,6 +487,7 @@ export default class createCompany extends Vue {
     user_email: '',
     user_position: '',
     company_name: '',
+    industry_type: 1,
     company_shortname: '',
     mobile: '',
     admin_uid: '',
@@ -792,6 +807,7 @@ export default class createCompany extends Vue {
 
   /* 填充原公司数据 */
   setCompanyInfo(newCompanyInfo) {
+    console.log(newCompanyInfo)
     let admin_uid = sessionStorage.getItem("admin_uid");
     let productList = newCompanyInfo.product || []
     productList.map(field => {
@@ -809,6 +825,7 @@ export default class createCompany extends Vue {
         ? parseInt(newCompanyInfo.employees)
         : "",
       intro: newCompanyInfo.intro,
+      industry_type: newCompanyInfo.newCompanyInfo || 1,
       business_license: newCompanyInfo.businessLicenseInfo.id || "",
       on_job: newCompanyInfo.onJobInfo.id || "",
       logo: newCompanyInfo.logoInfo.id || "",
@@ -1192,6 +1209,15 @@ export default class createCompany extends Vue {
   .email {
     color: #652791;
     cursor: pointer;
+  }
+  .moban{
+    position: relative;
+    .question{
+      position: absolute;
+      left: -100px;
+      top: 13px;
+      cursor: pointer;
+    }
   }
 }
 .emailBox {
