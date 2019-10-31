@@ -825,7 +825,7 @@ export default class createCompany extends Vue {
         ? parseInt(newCompanyInfo.employees)
         : "",
       intro: newCompanyInfo.intro,
-      industry_type: newCompanyInfo.newCompanyInfo || 1,
+      industry_type: newCompanyInfo.industryType || 1,
       business_license: newCompanyInfo.businessLicenseInfo.id || "",
       on_job: newCompanyInfo.onJobInfo.id || "",
       logo: newCompanyInfo.logoInfo.id || "",
