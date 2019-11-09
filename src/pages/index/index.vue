@@ -273,7 +273,7 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import { getCompanyListApi, getCityApi, setCompanyCustomerLevelApi } from "API/company";
 import { getSalerListApi, getAdvisorUserListApi, generatebindUrlApi } from "API/commont";
-import { getAccessToken, removeAccessToken } from "API/cacheService";
+import { getAccessToken } from "API/cacheService";
 import { API_ROOT } from 'API/index.js'
 import List from "@/components/list";
 Component.registerHooks([
@@ -565,7 +565,7 @@ export default class indexPage extends Vue {
   check(id) {
     this.$route.meta.scrollY = window.scrollY;
     this.$router.push({
-      path: "/index/companyInfo",
+      path: "/companyManage/detail",
       query: { id: id }
     });
   }
@@ -689,77 +689,75 @@ export default class indexPage extends Vue {
 }
 </script>
 
-<style lang="less">
-#index {
-  .el-form-item__label{
-    text-align: center
-  }
-  margin-left: 200px;
-  .container {
-    min-width: 1000px;
-    margin: 22px;
-    .header {
+<style lang="less" scoped>
+.el-form-item__label{
+  text-align: center
+}
+
+.container {
+  min-width: 1000px;
+  margin: 22px;
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .title {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      .title {
-        display: flex;
-        align-items: center;
-        position: relative;
-        font-size: 15px;
-        &::before {
-          background: #ffe266;
-          content: "";
-          display: inline-block;
-          float: left;
-          height: 100%;
-          height: 16px;
-          margin-right: 10px;
-          width: 6px;
-        }
-      }
-      .export{
-        margin-right: 20px;
-        margin-top: 10px;
-      }
-      .creatBtn {
-        font-size: 15px;
-        padding: 12px 20px;
-        background-color: #ffe266;
-        border-radius: 4px;
-      }
-    }
-    .el-form {
-      /*display: flex;*/
-      /*align-items: center;*/
-      /* 筛选 */
-      .inputSelect {
-        line-height: 20px !important;
-        width: 400px !important;
-        background-color: #ffffff;
-        .el-select {
-          width: 120px;
-          margin-top: -2px;
-          border: none;
-          box-sizing: border-box;
-        }
-      }
-      &::after {
+      position: relative;
+      font-size: 15px;
+      &::before {
+        background: #ffe266;
         content: "";
-        display: block;
-        height: 0;
-        clear: both;
+        display: inline-block;
+        float: left;
+        height: 100%;
+        height: 16px;
+        margin-right: 10px;
+        width: 6px;
       }
     }
-    .el-form-item,
-    .searchTab {
-      margin-bottom: 22px;
+    .export{
       margin-right: 20px;
-      float: left;
+      margin-top: 10px;
     }
-    .btn {
-      float: right;
+    .creatBtn {
+      font-size: 15px;
+      padding: 12px 20px;
+      background-color: #ffe266;
+      border-radius: 4px;
     }
+  }
+  .el-form {
+    /*display: flex;*/
+    /*align-items: center;*/
+    /* 筛选 */
+    .inputSelect {
+      line-height: 20px !important;
+      width: 400px !important;
+      background-color: #ffffff;
+      .el-select {
+        width: 120px;
+        margin-top: -2px;
+        border: none;
+        box-sizing: border-box;
+      }
+    }
+    &::after {
+      content: "";
+      display: block;
+      height: 0;
+      clear: both;
+    }
+  }
+  .el-form-item,
+  .searchTab {
+    margin-bottom: 22px;
+    margin-right: 20px;
+    float: left;
+  }
+  .btn {
+    float: right;
   }
 }
 .check {

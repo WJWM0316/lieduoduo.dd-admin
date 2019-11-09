@@ -313,7 +313,7 @@ import {
   editAdminNameApi,
   getRecruitersListApi
 } from "API/company";
-import { getAccessToken, removeAccessToken } from "@/api/cacheService.js";
+import { getAccessToken } from "@/api/cacheService.js";
 // 邮箱
 export const emailReg = /^([a-zA-Z0-9]+[_|\_|\.|\-]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[-_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,8}$/
 export const wechatReg = /^.{2,20}$/

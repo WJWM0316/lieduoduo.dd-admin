@@ -222,7 +222,7 @@ export default class createCompany extends Vue {
 
   /* 去编辑 */
   toEdit() {
-    this.$router.push({ path: `/index/editCompany/${this.$route.query.id}` });
+    this.$router.push({ path: `/companyManage/edit/${this.$route.query.id}` });
   }
 
   /* 获取公司信息 */
@@ -408,8 +408,6 @@ export default class createCompany extends Vue {
   right: 5px;
 }
 .createCompany {
-  margin-left: 200px;
-  padding: 22px;
   .header {
     padding-right: 20px;
     box-sizing: border-box;

@@ -81,7 +81,7 @@ export function getAccessToken() {
 
 export function removeAccessToken() {
   lsCache.delete(KEYS.token)
-  ssCache.delete(KEYS.userInfo)
+  lsCache.delete(KEYS.userInfo)
 }
 
 export function saveUserInfo(userInfos, expiredIn) {

@@ -610,8 +610,6 @@ export default class user extends Vue {
 
 <style lang="less" scoped>
 .recruiter_list {
-  /*padding: 22px;*/
-  margin-left: 200px;
   .el-container{
     margin: 0 !important;
   }

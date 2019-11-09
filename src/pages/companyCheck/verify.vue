@@ -296,7 +296,7 @@ export default class checkPage extends Vue {
   editIdentity(uid) {
     let checkId = this.$route.query.id;
     this.$router.push({
-      path: `/check/companyCheck/editUser/${checkId}?isFromCheck=true`
+      path: `/userManage/editUser/${checkId}?isFromCheck=true`
     });
   }
   /* 去编辑公司信息 */
@@ -382,8 +382,6 @@ img {
   max-height: 90%;
 }
 .checkPage {
-  margin-left: 200px;
-  padding: 22px;
   position: relative;
   .del {
     padding: 10px;

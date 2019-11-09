@@ -252,7 +252,7 @@ import Component from "vue-class-component";
 import List from "@/components/list";
 import { getSalerListApi } from "API/commont";
 import { templistApi, companyTempUserList, setCompanyCompanyLevelApi } from "API/company";
-import { getAccessToken, removeAccessToken } from "API/cacheService";
+import { getAccessToken } from "API/cacheService";
 import { API_ROOT } from 'API/index.js'
 @Component({
   name: "course-list",
@@ -349,7 +349,7 @@ export default class companyCheck extends Vue {
   check(id) {
     this.$route.meta.scrollY = window.scrollY;
     this.$router.push({
-      path: "/check/companyCheck/verify",
+      path: "/verifyManage/verify",
       query: { id: id }
     });
   }
@@ -501,10 +501,8 @@ export default class companyCheck extends Vue {
 
 <style lang="less" scoped="scoped">
 .companyCheck {
-  margin-left: 200px;
   .container {
     min-width: 1000px;
-    margin: 22px;
     .header {
       display: flex;
       align-items: center;

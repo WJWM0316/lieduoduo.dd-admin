@@ -42,7 +42,8 @@
 						<p class="publishDesc"><span class="descTitle">描述</span><span class="descData">{{auditData.comment}}</span></p>
 					</div>
 					<div class="operArea">
-						<el-button type="success">发布版本</el-button>
+						<el-button type="default" disabled>{{auditData.typeDesc}}</el-button>
+						<el-button type="success" v-if="auditData.type === 6">发布</el-button>
 					</div>
 					</div>
 				</template>
@@ -53,7 +54,7 @@
 					<div class="number">
 						<p class="descTitle">版本号</p>
 						<p class="num">{{experientialData.userVersion}}</p>
-						<img class="qrCode" :src="qrCodeUrl1" alt="">
+						<img class="qrCode" :src="qrCodeUrl" alt="">
 					</div>
 					<div class="content">
 						<p class="publisher"><span class="descTitle">发布人</span><span class="descData">{{experientialData.developer}}</span></p>
@@ -71,8 +72,7 @@
 					<div class="number">
 						<p class="descTitle">版本号</p>
 						<p class="num">{{dartData.userVersion}}</p>
-<!-- 						<img class="qrCode" :src="qrCodeUrl" alt="">
- -->					</div>
+					</div>
 					<div class="content">
 						<p class="publisher"><span class="descTitle">开发者</span><span class="descData">{{dartData.developer}}</span></p>
 						<p class="publishTime"><span class="descTitle">提交时间</span><span class="descData">{{dartData.createTime * 1000 | date}}</span></p>
@@ -88,7 +88,6 @@
 </template>
 <style scoped lang="less">
 	.publish {
-		margin-left: 200px;
 		.autoRefresh {
 			margin-bottom: 30px;
 			text-align: right;
@@ -188,14 +187,16 @@ export default class publish extends Vue {
 	dartId = 0 // 最新模板id
 	templateList = [] // 模板列表
 	experientialData  = {} // 体验服数据
-	appId = process.env.VUE_APP_ID
+	appId = ''
 	qrCodeUrl = ''
 	autoRefresh = true // 开启自动刷新
 	qrCodeUrl1 = ''
 	auditData = {}
 	created() {
+		this.appId = this.$route.query.appId
 		this.getDarts()
 		this.getTemplateList()
+		this.getQrcode()
 		this.getcodeManagerVcsLists()
 	}
 	maxIndex = (list, typeId) => {
@@ -211,7 +212,6 @@ export default class publish extends Vue {
 			let list = res.data.data.draftList
 			this.dartData = list[this.maxIndex(list, 'draftId')]
 			this.dartId = this.dartData.draftId
-			// this.getQrcode().then(src => this.qrCodeUrl = src)
 		})
 	}
 	deleteTemplate (templateId) {
@@ -245,9 +245,7 @@ export default class publish extends Vue {
 		let parmas = {app_id: this.appId, page: 1, count: 50}
 		return getTemplateListApi(parmas).then(res => {
 			let list = res.data.data
-			this.templateList = list
-			this.experientialData = list[0]
-			this.getQrcode().then(src => this.qrCodeUrl1 = src)
+			this.templateList = list			
 		})
 	}
 	// 状态列表
@@ -255,8 +253,8 @@ export default class publish extends Vue {
 		let parmas = {app_id: this.appId, page: 1, count: 50}
 		return getcodeManagerVcsListsApi(parmas).then(res => {
 			let list = res.data.data.items
-			// this.experientialData = list.find(item => item.type === 1)
-			this.auditData = list.find(item => item.type === 2)
+			this.auditData = list.find(item => item.type === 2 || item.type === 5 || item.type === 6 || item.type === 8)
+			this.experientialData = list.find(item => item.type === 1)
 			this.templateList = list
 		})
 	}
@@ -272,7 +270,6 @@ export default class publish extends Vue {
 		let parmas = {app_id: this.appId, path: 'page/common/pages/homepage/homepage', format: 'base64'}
 		return getQrcodeApi(parmas).then(res => {
 			this.qrCodeUrl = res.data.data.qrcode
-			return res.data.data.qrcode
 		})
 	}
 	// 提交代码到体验服
@@ -281,7 +278,7 @@ export default class publish extends Vue {
 			this.addTemplate().then(() => {
 				this.getTemplateList().then(() => {
 					this.commit().then(() => {
-						this.getTemplateList()
+						this.getQrcode()
 					})
 				})
 			})

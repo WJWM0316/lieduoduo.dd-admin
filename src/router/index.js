@@ -1,6 +1,21 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import { routes } from './routes.js'
+
+import {login} from '@/router/login'
+import {companyManage} from '@/router/companyManage'
+import {platformManage} from '@/router/platformManage'
+import {recruiterManage} from '@/router/recruiterManage'
+import {userManage} from '@/router/userManage'
+import {verifyManage} from '@/router/verifyManage'
+
+let routes = [
+  ...login,
+  ...platformManage,
+  ...companyManage,
+  ...userManage,
+  ...recruiterManage,
+  ...verifyManage
+]
 
 Vue.use(Router)
 
@@ -18,7 +33,6 @@ const router = new Router({
     } 
   }
 })
-
 router.beforeEach((to, from, next) => {
   if (from.name !== to.name) {
     window.scrollTo(0, 0)

@@ -356,8 +356,6 @@ export default class addUser extends Vue {
 
 <style lang="less" scoped="scoped">
 .createCompany {
-  margin-left: 200px;
-  padding: 22px;
   .header {
     padding-right: 20px;
     box-sizing: border-box;

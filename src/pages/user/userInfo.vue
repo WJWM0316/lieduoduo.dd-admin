@@ -382,11 +382,11 @@ export default class addUser extends Vue {
   }
   /* 去编辑用户信息 */
   toEdit() {
-    this.$router.push({ path: `/user/editUser/${this.$route.params.id}` });
+    this.$router.push({ path: `/userManage/editUser/${this.$route.params.id}` });
   }
   /* 去查看公司审核 */
   toCheckCompany(companyId) {
-    this.$router.push({ path: `/check/companyCheck/verify?id=${companyId}` });
+    this.$router.push({ path: `/verifyManage/verify?id=${companyId}` });
   }
   /* 移出公司 */
   async removeUser() {
@@ -599,8 +599,6 @@ export default class addUser extends Vue {
   border-radius: 4px;
 }
 .createCompany {
-  margin-left: 200px;
-  padding: 22px;
   .header {
     padding-right: 20px;
     box-sizing: border-box;

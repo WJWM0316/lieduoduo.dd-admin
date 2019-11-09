@@ -581,8 +581,6 @@ export default class user extends Vue {
 
 <style lang="less" scoped="scoped">
 .officerManage {
-  /*padding: 22px;*/
-  margin-left: 200px;
   .container {
     min-width: 1000px;
     margin: 22px;
