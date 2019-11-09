@@ -162,7 +162,7 @@
 <script>
 import Vue from "vue";
 import Component from "vue-class-component";
-import { getDartsApi, addTemplateApi, getTemplateListApi, commitApi, getQrcodeApi, deleteTemplateApi, postMiniAppApi, getcodeManagerVcsListsApi } from "API/publish";
+import { getTemplateListNewApi, getDartsApi, addTemplateApi, getTemplateListApi, commitApi, getQrcodeApi, deleteTemplateApi, postMiniAppApi, getcodeManagerVcsListsApi } from "API/publish";
 let timer = null
 @Component({
   name: "publish",
@@ -248,6 +248,16 @@ export default class publish extends Vue {
 			this.templateList = list			
 		})
 	}
+	getTemplateListNew() {
+		let parmas = {app_id: this.appId, page: 1, count: 50}
+		return getTemplateListNewApi(parmas).then(res => {
+			console.log(res)
+			let list = res.data.data.templateList
+			this.templateList = list
+			// console.log(list, 'a')
+			this.getQrcode().then(src => this.qrCodeUrl1 = src)
+		})
+	}
 	// 状态列表
 	getcodeManagerVcsLists() {
 		let parmas = {app_id: this.appId, page: 1, count: 50}
@@ -276,7 +286,7 @@ export default class publish extends Vue {
 	toCommit () {
 		this.getDarts().then(() => {
 			this.addTemplate().then(() => {
-				this.getTemplateList().then(() => {
+				this.getTemplateListNew().then(() => {
 					this.commit().then(() => {
 						this.getQrcode()
 					})

@@ -161,8 +161,8 @@
                 >查看管理员</span>
               </div>
               <div>
-                <span v-if="props.scope.row.bindWechat === '是'" class="check" @click="generate(props.scope.row.id)">查看绑定小程序链接</span>
-                <span v-else class="check" @click="generate(props.scope.row.id)">生成绑定小程序链接</span>
+                <span v-if="props.scope.row.bindWechat === '是'" class="check" @click="generate(props.scope.row.id, props.scope.row.appId)">查看绑定小程序链接</span>
+                <span v-else class="check" @click="generate(props.scope.row.id, props.scope.row.appId)">生成绑定小程序链接</span>
               </div>
             </div>
             <!-- 地址列 -->
@@ -258,7 +258,7 @@
     title="生成小程序链接"
     :visible.sync="dialogVisible"
     width="30%">
-    <div @click="copytext()" :style="'cursor:pointer'">链接:page/common/pages/homepage/homepage?companyId={{cpid}}</div>
+    <div @click="copytext()" :style="'cursor:pointer'">链接:https://dd.lieduoduo.com/thirdPartyAuth/?cid={{cpid}}&appId={{appId}}</div>
     <span slot="footer" class="dialog-footer">
       <el-button @click="restsucess()">重新生成</el-button>
       <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
@@ -292,6 +292,7 @@ export default class indexPage extends Vue {
   canDownloadData = true
   dialogVisible = false
   cpid = ''
+  appId = ''
   total = 0; // 筛查结果数量
   pageCount = 0; // 请求回的数据共几页
   AdminShow = ""; //权限字段，限制搜索
@@ -489,8 +490,9 @@ export default class indexPage extends Vue {
   search() {
     this.onSubmit();
   }
-  generate (id) {
+  generate (id, aid) {
     this.cpid = id
+    this.appId = aid
     this.dialogVisible = true
   }
   restsucess () {
@@ -500,7 +502,7 @@ export default class indexPage extends Vue {
     })
   }
   copytext () {
-    this.copyStringToClipboard(`page/common/pages/homepage/homepage?companyId=${this.cpid}`)
+    this.copyStringToClipboard(`https://dd.lieduoduo.com/thirdPartyAuth/?cid=${this.cpid}&appId=${this.appId}`)
     this.$message({
       message: '复制成功',
       type: 'success'
