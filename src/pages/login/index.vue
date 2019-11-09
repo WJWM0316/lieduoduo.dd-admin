@@ -77,7 +77,7 @@ export default class login extends Vue {
           type: "success"
         });
         this.$router.push({
-          path: "/index"
+          path: "/companyManage/index"
         });
       })
   }
