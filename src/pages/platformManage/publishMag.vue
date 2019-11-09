@@ -34,7 +34,7 @@
 				<el-table-column label="操作" fixed="right">
 					<template slot-scope="scope">
 		        <el-button type="text" size="small" @click="toDetail(scope.row.appId)">查看详情</el-button>
-		        <el-button v-if="scope.row.auditVersion.type === 5" type="text" size="small" @click="auditReason(scope.row.auditVersion.auditReason)">原因</el-button>
+		        <el-button v-if="scope.row.auditVersion && scope.row.auditVersion.type === 5" type="text" size="small" @click="auditReason(scope.row.auditVersion.auditReason)">原因</el-button>
 		      </template>
 				</el-table-column>
 		  </el-table>
@@ -103,37 +103,37 @@ export default {
 				res.data.data.auditTypes = [{type: 0, desc: '全部类型'}, ...res.data.data.auditTypes]
 				this.options = res.data.data.auditTypes
 				let tableData = this.tableData
-				// if (tableData && tableData.length) {
-				// 	tableData.map((item, index) => {
-				// 		item.vcs.map((n, i) => {
-				// 			switch (n.type) {
-				// 				case 1:
-				// 					item.experienceVersion = n
-				// 					break
-				// 				case 2:
-				// 					n.statusDesc = '审核中'
-				// 					item.auditVersion = n
-				// 					break
-				// 				case 3:
-				// 					item.officialVersion = n
-				// 					break
-				// 				case 5:
-				// 					n.statusDesc = '审核失败'
-				// 					item.auditVersion = n
-				// 					break
-				// 				case 6:
-				// 					n.statusDesc = '审核成功'
-				// 					item.auditVersion = n
-				// 					break
-				// 				case 8:
-				// 					n.statusDesc = '审核延期'
-				// 					item.auditVersion = n
-				// 					break
-				// 			}
-				// 		})
-				// 	})
-				// 	this.tableData = tableData
-				// }
+				if (tableData && tableData.length) {
+					tableData.map((item, index) => {
+						item.vcs.map((n, i) => {
+							switch (n.type) {
+								case 1:
+									item.experienceVersion = n
+									break
+								case 2:
+									n.statusDesc = '审核中'
+									item.auditVersion = n
+									break
+								case 3:
+									item.officialVersion = n
+									break
+								case 5:
+									n.statusDesc = '审核失败'
+									item.auditVersion = n
+									break
+								case 6:
+									n.statusDesc = '审核成功'
+									item.auditVersion = n
+									break
+								case 8:
+									n.statusDesc = '审核延期'
+									item.auditVersion = n
+									break
+							}
+						})
+					})
+					this.tableData = tableData
+				}
 			})
 		},
 		toOper (type) {
