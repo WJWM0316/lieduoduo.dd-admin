@@ -404,7 +404,7 @@ export default class user extends Vue {
   addUser() {
     sessionStorage.setItem("up_router", this.$route.path);
     this.$route.meta.scrollY = window.scrollY;
-    this.$router.push({ path: "/user/addUser" });
+    this.$router.push({ path: "/userManage/addUser" });
   }
   changeProvince(e) {}
   toCompany(companyId) {
