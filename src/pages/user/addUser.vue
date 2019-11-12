@@ -10,7 +10,6 @@
     </div>
     <!--身份信息表格-->
     <div class="personalInfo">
-      <div class="point"></div>
       <el-form
         class="edit-form"
         ref="mobile"
@@ -206,10 +205,7 @@ export default class addUser extends Vue {
           });
           if (this.isEdit) {
             /* 常规操作 处于编辑状态回退到user页面 */
-            this.$router.replace({
-              path: `/user`,
-              query: { isNeedLoad: true }
-            });
+            this.$router.go(-1)
           } else {
             // 其余页面 进入创建用户界面 统一通过up_router 缓存上一级页面，进行回退，需要特殊处理的 下方判断
             let userInfo = {
@@ -374,6 +370,7 @@ export default class addUser extends Vue {
         width: 100px;
         height: 100%;
         display: inline-block;
+        text-align: center;
         &.active {
           background-color: #652791;
           border: none;
@@ -389,16 +386,6 @@ export default class addUser extends Vue {
     padding: 0 32px;
     text-align: left;
     border: 1px solid #cccccc;
-    .point {
-      font-size: 14px;
-      color: #ffffff;
-      background-color: #652791;
-      padding: 10px;
-      text-align: center;
-      margin-bottom: 30px;
-      margin-left: -32px;
-      margin-right: -32px;
-    }
   }
   .sales {
     border-radius: 4px;
@@ -416,6 +403,7 @@ export default class addUser extends Vue {
     h3 {
       color: #354048;
       font-size: 20px;
+      padding-top: 16px;
       padding-bottom: 16px;
       padding-left: 10px;
       border-bottom: 1px solid #ebeef5;

@@ -16,7 +16,7 @@
           @filter-change="handleFilterChange"
           @selection-change="handleSelectionChange"
         >
-          <el-table-column type="selection" width="49" align="center" v-if="selectable"></el-table-column>
+          <el-table-column type="selection" align="center" v-if="selectable"></el-table-column>
           <el-table-column
             :key="field.prop"
             :prop="field.prop"
@@ -25,7 +25,7 @@
             :align="field.align || 'center'"
             :width="field.width"
             :min-width="field.minWidth"
-            :fixed="field.fixed"
+            :fixed="field.fixed || false"
             :sortable="field.sortable"
             :filters="field.filters && field.filters.length > 0 ? field.filters : undefined"
             :filter-multiple="field.filterMiltiple || false"
@@ -70,8 +70,7 @@ export default List;
 }
 .m-list {
   position: relative;
-  padding: 20px 20px 80px 20px;
-  /*width: 100%;*/
+  padding: 20px 0 80px;
   max-width: 100%;
   min-height: 100%;
 

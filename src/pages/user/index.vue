@@ -354,41 +354,31 @@ export default class user extends Vue {
   fields = [
     {
       prop: "index",
-      label: "用户ID",
-      width: 80
+      label: "用户ID"
     },
     {
       prop: "name",
-      label: "个人信息",
-      width: 200
+      label: "个人信息"
     },
     {
       prop: "companyTopName",
-      label: "所属公司",
-      align: "left",
-      width: 300
+      label: "所属公司"
     },
     {
       prop: "companyName",
       label: "所属机构",
-      align: "left",
-      width: 200
     },
     {
       prop: "usertype",
-      label: "身份类型",
-      align: "left",
-      width: 200
+      label: "身份类型"
     },
     {
       prop: "createPositionRight",
-      label: "发布职位权益",
-      width: 200
+      label: "发布职位权益"
     },
     {
       prop: "adminName",
-      label: "跟进人",
-      width: 200
+      label: "跟进人"
     },
     {
       prop: "createdAt",
@@ -396,8 +386,6 @@ export default class user extends Vue {
     },
     {
       prop: "id",
-      fixed: "right",
-      width: 150,
       label: "操作"
     }
   ];
@@ -406,7 +394,7 @@ export default class user extends Vue {
   addUser() {
     sessionStorage.setItem("up_router", this.$route.path);
     this.$route.meta.scrollY = window.scrollY;
-    this.$router.push({ path: "/user/addUser" });
+    this.$router.push({ path: "/userManage/addUser" });
   }
   mounted() {
     console.log("1231");
@@ -453,7 +441,7 @@ export default class user extends Vue {
   toEditAdminName(uid) {
     this.$route.meta.scrollY = window.scrollY;
     this.$router.push({
-      path: `/user/userInfo/${uid}`,
+      path: `/userManage/detail/${uid}`,
       query: { isEditAdminName: true }
     });
   }
@@ -514,7 +502,7 @@ export default class user extends Vue {
   check(id) {
     this.$route.meta.scrollY = window.scrollY;
     this.$router.push({
-      path: `/user/userInfo/${id}`,
+      path: `/userManage/detail/${id}`,
       query: {
         isEditAdminName: false
       }

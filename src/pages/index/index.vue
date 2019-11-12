@@ -1,13 +1,13 @@
 <template>
   <div id="index">
-    <el-container class="container" style="border: 1px solid #eee">
-      <el-header class="header" style="text-align: right; font-size: 15px">
-        <div class="title">公司管理({{total}})</div>
+    <div class="container">
+      <header class="header">
+        <span class="title">公司管理({{total}})</span>
         <div class="export">
-        <el-button type="primary" @click="download" :disabled="!canDownloadData" v-if="AdminShow == 0 || AdminShow == 2 || AdminShow == 1 || AdminShow == 4 || AdminShow == 5">导出</el-button>
+          <el-button type="primary" @click="download" :disabled="!canDownloadData" v-if="AdminShow == 0 || AdminShow == 2 || AdminShow == 1 || AdminShow == 4 || AdminShow == 5">导出</el-button>
         </div>
-      </el-header>
-      <el-main width="200px">
+      </header>
+      <div class="main">
         <!--筛选-->
         <div class="selectionBox" @keyup.enter="search">
           <el-form ref="form" :model="form" label-width="80px" validate="validate">
@@ -251,8 +251,8 @@
             </template>
           </template>
         </list>
-      </el-main>
-    </el-container>
+      </div>
+    </div>
     
     <el-dialog
     title="生成小程序链接"
@@ -328,34 +328,26 @@ export default class indexPage extends Vue {
   fields = [
     {
       prop: "id",
-      label: "公司ID",
-      width: 150
+      label: "公司ID"
     },
     {
       prop: "companyName",
-      label: "申请信息",
-      width: 400
-      //    align: 'left'
+      label: "申请信息"
     },
     {
       prop: "bindWechat",
-      label: "是否绑定小程序",
-      width: 250
+      label: "是否绑定小程序"
     },
     {
       prop: "adminName",
-      label: "跟进销售",
-      width: 250
+      label: "跟进销售"
     },
     {
       prop: "statusDesc",
-      label: "状态",
-      width: 250
+      label: "状态"
     },
     {
       prop: "check",
-      fixed: "right",
-      width: 200,
       label: "操作"
     }
   ];
@@ -572,7 +564,7 @@ export default class indexPage extends Vue {
     });
   }
   toUser(uid) {
-    this.$router.push({ path: `/user/userInfo/${uid}` });
+    this.$router.push({ path: `/userManage/detail/${uid}` });
   }
   download() {
     this.$confirm('是否导出该列表数据？', '提示', {
@@ -697,17 +689,13 @@ export default class indexPage extends Vue {
 }
 
 .container {
-  min-width: 1000px;
-  margin: 22px;
+  padding: 20px;
+  border: 1px solid #ccc;
   .header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    overflow: hidden;
     .title {
-      display: flex;
-      align-items: center;
       position: relative;
-      font-size: 15px;
+      font-size: 16px;
       &::before {
         background: #ffe266;
         content: "";
@@ -720,8 +708,7 @@ export default class indexPage extends Vue {
       }
     }
     .export{
-      margin-right: 20px;
-      margin-top: 10px;
+      float: right;
     }
     .creatBtn {
       font-size: 15px;

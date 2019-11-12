@@ -342,7 +342,7 @@ export default class adminBox extends Vue {
         sessionStorage.setItem("up_router", this.$route.path);
         console.log(this.$route.query)
         this.$router.push({
-            path: '/user/addUser',
+            path: '/userManage/addUser',
             query:{
                 id:this.$route.query.id
             }

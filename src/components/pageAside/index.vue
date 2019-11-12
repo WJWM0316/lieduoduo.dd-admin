@@ -94,6 +94,7 @@ export default class PageAside extends Vue {
       });
       this.$router.push({ name: item.children[0].name });
     } else {
+      this.topath('up', pIndex, cIndex, this.itemList[pIndex])
       this.itemList[pIndex].children.map(
         (field, i) => {
           field.isShow = i === cIndex ? true : false

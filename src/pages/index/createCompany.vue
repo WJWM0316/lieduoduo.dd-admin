@@ -14,8 +14,6 @@
     </div>
     <!--公司信息表格-->
     <div class="companyInfo" v-if="active === 0">
-      <div class="point"></div>
-      
       <el-form
         class="edit-form"
         ref="companyInfo"
@@ -647,6 +645,7 @@ export default class createCompany extends Vue {
             let images = this.commonList.map(field => field.id).join(',')
             let params = Object.assign(this.companyInfo, {images})
             await editCompanyApi(id, params);
+            this.$router.go(-1)
             this.$message({
               message: "编辑成功",
               type: "success"
@@ -657,6 +656,7 @@ export default class createCompany extends Vue {
 
             try {
               await editCheckCompanyInfoApi(checkId, this.companyInfo);
+              this.$router.go(-1)
               this.$message({
                 message: "编辑成功",
                 type: "success"
@@ -1122,23 +1122,22 @@ export default class createCompany extends Vue {
   z-index: 100;
 }
 .createCompany {
-  margin-left: 200px;
-  padding: 22px;
   .header {
     padding-right: 20px;
     box-sizing: border-box;
     border-radius: 4px 4px 0 0;
     height: 80px;
-    border: 1px solid #cccccc;
+    border-bottom: 1px solid #cccccc;
     display: flex;
     align-items: center;
     justify-content: space-between;
     .creatTab {
       height: 100%;
+      text-align: center;
       > div {
         cursor: pointer;
         line-height: 80px;
-        border: 1px solid #cccccc;
+        border-right: 1px solid #cccccc;
         width: 100px;
         height: 100%;
         display: inline-block;
@@ -1149,10 +1148,6 @@ export default class createCompany extends Vue {
         }
       }
     }
-    // .el-steps{
-    //   text-align: left;
-    //   width: 500px;
-    // }
   }
   /*公司信息*/
   .companyInfo,
@@ -1160,19 +1155,8 @@ export default class createCompany extends Vue {
   .sales {
     padding: 0 32px;
     text-align: left;
-    .point {
-      font-size: 14px;
-      color: #ffffff;
-      background-color: #652791;
-      padding: 10px;
-      text-align: center;
-      margin-bottom: 30px;
-      margin-left: -32px;
-      margin-right: -32px;
-    }
   }
   .sales {
-    border-radius: 4px;
     padding: 30px 32px;
     h3 {
       font-size: 25px;
@@ -1183,11 +1167,11 @@ export default class createCompany extends Vue {
   }
   .companyInfo,
   .personalInfo {
-    border: 1px solid #cccccc;
     border-radius: 4px;
     h3 {
       color: #354048;
       font-size: 20px;
+      padding-top: 16px;
       padding-bottom: 16px;
       padding-left: 10px;
       border-bottom: 1px solid #ebeef5;

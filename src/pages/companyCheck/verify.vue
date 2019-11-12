@@ -301,8 +301,8 @@ export default class checkPage extends Vue {
   }
   /* 去编辑公司信息 */
   toEdit() {
-    let checkId = this.$route.query.id;
-    this.$router.push({ path: `/check/companyCheck/${checkId}`, query: { from: 'cp'} });
+    let id = this.$route.query.id;
+    this.$router.push({ path: `/verifyManage/editCompanyInfo`, query: { from: 'cp', id } });
   }
 
   mounted() {

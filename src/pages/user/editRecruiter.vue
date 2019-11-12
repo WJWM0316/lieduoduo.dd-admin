@@ -99,7 +99,7 @@ export default class editRecruiter extends Vue {
             message: "编辑成功"
           });
           this.$router.push({
-            path: `/user/userInfo/${this.userInfo.uid}`,
+            path: `/userManage/detail/${this.userInfo.uid}`,
             params: {
               isEditAdminName: false
             }

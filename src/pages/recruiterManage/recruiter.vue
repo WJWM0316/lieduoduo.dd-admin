@@ -531,7 +531,7 @@ export default class user extends Vue {
   check(id) {
     this.$route.meta.scrollY = window.scrollY;
     this.$router.push({
-      path: `/recruiter/recruiterInfo/${id}`,
+      path: `/recruiterManage/detail/${id}`,
       query: {
         isEditAdminName: false
       }

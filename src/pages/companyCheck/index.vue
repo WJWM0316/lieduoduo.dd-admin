@@ -286,34 +286,26 @@ export default class companyCheck extends Vue {
      // },
     {
       prop: "companyName",
-      label: "申请信息",
-      width: 400
+      label: "申请信息"
     },
     {
       prop: "realName",
-      label: "提交人",
-      width: 200,
-      align: "left"
+      label: "提交人"
     },
     {
       prop: "adminName",
-      label: "跟进销售",
-      width: 250,
-      align: "left"
+      label: "跟进销售"
     },
     {
       prop: "status",
-      label: "公司认证状态",
-      width: 250
+      label: "公司认证状态"
     },
     {
       prop: "createdAt",
-      label: "申请时间",
-      width: 250
+      label: "申请时间"
     },
     {
       prop: "id",
-      fixed: "right",
       label: "操作"
     }
   ];

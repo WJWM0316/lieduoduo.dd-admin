@@ -23,6 +23,6 @@ export default {
 </script>
 <style lang="less" scoped>
 	#wrap {
-		padding: 82px 0 0 222px;
+		padding: 82px 22px 22px 222px;
 	}
 </style>

@@ -33,7 +33,7 @@
 				<el-table-column prop="auditVersion.statusDesc" label="审核状态"></el-table-column>
 				<el-table-column label="操作" fixed="right">
 					<template slot-scope="scope">
-		        <el-button type="text" size="small" @click="toDetail(scope.row.appId)">查看详情</el-button>
+		        <el-button type="text" size="small" @click="toDetail(scope.row.appId, scope.row.nickName)">查看详情</el-button>
 		        <el-button v-if="scope.row.auditVersion && scope.row.auditVersion.type === 5" type="text" size="small" @click="auditReason(scope.row.auditVersion.auditReason)">原因</el-button>
 		      </template>
 				</el-table-column>
@@ -208,8 +208,8 @@ export default {
         message: h('i', { style: 'color: teal'}, content)
       });
 		},
-		toDetail (id) {
-			this.$router.push({name: 'publishDetail', query: {appId: id}})
+		toDetail (id, name) {
+			this.$router.push({name: 'publishDetail', query: {appId: id, name}})
 		}
 	}
 	

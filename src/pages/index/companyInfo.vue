@@ -7,8 +7,6 @@
         <div class="userInfo" :class="{'active': active === 1 }" @click.stop="tab(1)">账户设置</div>
       </div>
       <div>
-        <!-- <el-button @click.stop="last" v-show="active === 1">返回上一步</el-button>
-        <el-button @click.stop="next" v-show="active === 0">保存，下一步</el-button>-->
         <el-button v-if="companyInfo.bindWechat === '是'" @click.stop="generate(companyInfo.id, companyInfo.appId)">查看绑定小程序链接</el-button>
         <el-button v-else @click.stop="generate(companyInfo.id, companyInfo.appId)">生成绑定小程序链接</el-button>
         <el-button @click.stop="toEdit">编辑</el-button>
@@ -23,7 +21,6 @@
     </div>
     <!--公司信息表格-->
     <div class="companyInfo" v-if="active === 0">
-      <div class="point"></div>
       <el-form
         class="edit-form"
         ref="companyInfo"
@@ -392,39 +389,25 @@ export default class createCompany extends Vue {
     max-height: 90% !important;
   }
 }
-.seePhoto {
-  position: relative;
-  width: 130px;
-  height: 170px;
-  overflow: hidden;
-}
-.zoomBox {
-  background-color: rgba(0, 0, 0, 0.2);
-  padding: 0 5px;
-  border-radius: 5px;
-  cursor: pointer;
-  color: #ffffff;
-  font-size: 15px;
-  position: absolute;
-  bottom: 5px;
-  right: 5px;
-}
+
 .createCompany {
+  border: 1px solid #cccccc;
   .header {
     padding-right: 20px;
     box-sizing: border-box;
     border-radius: 4px 4px 0 0;
     height: 80px;
-    border: 1px solid #cccccc;
+    border-bottom: 1px solid #cccccc;
     display: flex;
     align-items: center;
     justify-content: space-between;
     .creatTab {
       height: 100%;
+      text-align: center;
       > div {
         cursor: pointer;
         line-height: 80px;
-        border: 1px solid #cccccc;
+        border-right: 1px solid #cccccc;
         width: 100px;
         height: 100%;
         display: inline-block;
@@ -435,30 +418,14 @@ export default class createCompany extends Vue {
         }
       }
     }
-    // .el-steps{
-    //   text-align: left;
-    //   width: 500px;
-    // }
   }
   /*公司信息*/
   .companyInfo,
   .sales {
     padding: 0 32px;
     text-align: left;
-    border: 1px solid #cccccc;
-    .point {
-      font-size: 14px;
-      color: #ffffff;
-      background-color: #652791;
-      padding: 10px;
-      text-align: center;
-      margin-bottom: 30px;
-      margin-left: -32px;
-      margin-right: -32px;
-    }
   }
   .sales {
-    border-radius: 0 0 4px 4px;
     padding: 30px 32px;
     h3 {
       font-size: 25px;
@@ -468,12 +435,11 @@ export default class createCompany extends Vue {
     }
   }
   .companyInfo {
-    border: 1px solid #cccccc;
-    border-radius: 0 0 4px 4px;
     h3 {
       color: #354048;
       font-size: 20px;
       padding-bottom: 16px;
+      padding-top: 16px;
       padding-left: 10px;
       border-bottom: 1px solid #ebeef5;
       margin-bottom: 32px;
@@ -496,16 +462,7 @@ export default class createCompany extends Vue {
     cursor: pointer;
   }
 }
-.emailBox {
-  color: #ffffff;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.7);
-  z-index: 9999;
-}
+
 .bindAdminWindo {
   position: fixed;
   top: 0;
