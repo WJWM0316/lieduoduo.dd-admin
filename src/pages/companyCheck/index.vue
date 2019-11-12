@@ -407,8 +407,8 @@ export default class companyCheck extends Vue {
   toEditSaller(id) {
     this.$route.meta.scrollY = window.scrollY;
     this.$router.push({
-      path: `/check/companyCheck/${id}`,
-      query: { isEditSaller: true }
+      path: `/userManage/detail/${id}`,
+      query: { isEditAdminName: true }
     });
   }
   created() {

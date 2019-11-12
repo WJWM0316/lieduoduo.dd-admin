@@ -462,7 +462,7 @@ export default class createCompany extends Vue {
   active = 0
   adressList = []
   isShowCompany = false
-  isBindAdmin = 0
+  isBindAdmin = false
   isNewCompany = false
   companyName = {
     name: ""
@@ -635,7 +635,9 @@ export default class createCompany extends Vue {
     let companyInfo = {}
     this.companyInfo.address = this.adressList;
     this.$refs["companyInfo"].validate(async valid => {
+      console.log(valid, 111111111111111111)
       if (valid) {
+        console.log(22222222222)
         let { id, checkId } = this.$route.params;
 
         if (this.isEdit) {
@@ -650,10 +652,11 @@ export default class createCompany extends Vue {
               message: "编辑成功",
               type: "success"
             });
+            console.log(33333333333333)
           } else {
             /* 编辑审核库 */
             delete this.companyInfo.admin_uid;
-
+            console.log(111111111111)
             try {
               await editCheckCompanyInfoApi(checkId, this.companyInfo);
               this.$router.go(-1)
@@ -668,7 +671,7 @@ export default class createCompany extends Vue {
           let admin_uid = sessionStorage.getItem("admin_uid");
           this.$set(this.companyInfo, "admin_uid", admin_uid);
           this.showAdminWindow = true;
-          this.isBindAdmin = 0;
+          this.isBindAdmin = false
           this.isNewCompany = true;
         }
       } else {

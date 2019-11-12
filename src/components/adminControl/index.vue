@@ -5,7 +5,7 @@
             <header>绑定管理员</header>
             <el-form ref="form" :model="bindForm" :rules="bindRules" class="bindForm" label-width="120px" label-suffix="：" @keyup.enter="done">
                 <el-form-item label="管理员账号" prop="mobile">
-                    <el-input v-model="bindForm.mobile" @input="bindForm.mobile=bindForm.mobile.replace(/\s*/g,'')" @blur.stop="checkUser"></el-input>
+                    <el-input maxlength="11" v-model="bindForm.mobile" @input="bindForm.mobile=bindForm.mobile.replace(/\s*/g,'')" @blur.stop="checkUser"></el-input>
                 </el-form-item>
                 <p v-if="toCretedUser"><i class="el-icon-warning" style="color: #E6A23C;"></i> 该用户不存在，请先 <span class="addUser" @click.stop="addUser">添加用户</span></p>
                 <div v-if="isNewUser && !toCretedUser">
@@ -292,7 +292,7 @@ export default class adminBox extends Vue {
     }
     // 检测手机号码
     checkUser () {
-        if (this.bindForm.mobile) {
+        if (this.bindForm.mobile && this.bindForm.mobile.length === 11) {
             checkIdentityApi(this.bindForm.mobile).then(res => {
             if (res.data.data.isExisted) {
                 if(res.data.data.companyId!==0||res.data.data.companyName!==""){
@@ -301,8 +301,6 @@ export default class adminBox extends Vue {
                         type: 'warning'
                     })
                 }else if (!res.data.data.isAdmin && !res.data.data.companyId) {
-                    // console.log('输入手机号码',res.data.data)
-                    // console.log(this.bindCompanyForm)
                     this.isNewUser = true
                     this.toCretedUser = false
                     // this.newUserInfo.name=res.data.data.name;

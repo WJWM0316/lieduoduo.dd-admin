@@ -481,9 +481,7 @@ export default class addUser extends Vue {
   }
 
   toEditRecruiter() {
-    this.$router.push({
-      path: `/user/editRecruiter/${this.$route.params.id}`
-    });
+    this.$router.push({ path: `/recruiterManage/edit/${this.$route.params.id}` });
   }
   userList() {
     getSalerListApi().then(res => this.salesList = res.data.data);
