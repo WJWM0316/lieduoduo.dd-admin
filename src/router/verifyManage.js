@@ -25,6 +25,12 @@ export const verifyManage = [
         name: "editCompanyInfo",
         meta: { title: "编辑公司信息" },
         component: resolve => require(["@/pages/companyCheck/editCompanyInfo.vue"], resolve)
+      },
+      {
+        path: "createCompanyInfo",
+        name: "createCompanyInfo",
+        meta: { title: "创建公司" },
+        component: resolve => require(["@/pages/index/createCompany.vue"], resolve)
       }
     ]
   }
