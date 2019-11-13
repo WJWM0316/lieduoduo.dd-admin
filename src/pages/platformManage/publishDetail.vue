@@ -59,7 +59,7 @@
 					<div class="content">
 						<p class="publisher"><span class="descTitle">发布人</span><span class="descData">{{experientialData.developer}}</span></p>
 						<p class="publishTime"><span class="descTitle">提交时间</span><span class="descData">{{experientialData.createdAt}}</span></p>
-						<p class="publishDesc"><span class="descTitle">描述</span><span class="descData">{{experientialData.userDesc}}</span></p>
+						<p class="publishDesc"><span class="descTitle">描述</span><span class="descData">{{experientialData.comment}}</span></p>
 					</div>
 					<div class="operArea">
 						<el-button type="success" @click="postMiniApp">提交审核</el-button>
