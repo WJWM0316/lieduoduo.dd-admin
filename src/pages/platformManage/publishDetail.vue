@@ -10,7 +10,11 @@
 				</el-switch></div>
 			<div class="card">
 				<div class="title">线上版本</div>
-				<div class="status-detail">
+				<template v-if="!formalData.version">
+					<p class="shenhe">暂无线上版本</p>
+				</template>
+				<template v-else>
+					<div class="status-detail">
 					<div class="number">
 						<p class="descTitle">版本号</p>
 						<p class="num">{{formalData.version}}</p>
@@ -21,30 +25,39 @@
 						<p class="publishDesc"><span class="descTitle">描述</span><span class="descData">{{formalData.comment}}</span></p>
 					</div>
 					<div class="operArea">
-						<el-button type="success">版本回退</el-button>
+						<el-button type="success" @click="deleteRelease">版本回退</el-button>
 					</div>
-				</div>
+					</div>
+				</template>
 			</div>
-			<div class="card">
+			<div class="card audit">
 				<div class="title">审核版本</div>
-				<template v-if="!auditData">
+				<template v-if="!auditData.length">
 					<p class="shenhe">你暂无提交审核的版本或者版本已发布上线</p>
 				</template>
 				<template v-else>
-					<div class="status-detail">
-					<div class="number">
-						<p class="descTitle">版本号</p>
-						<p class="num">{{auditData.version}}</p>
-					</div>
-					<div class="content">
-						<p class="publisher"><span class="descTitle">发布人</span><span class="descData">{{auditData.developer}}</span></p>
-						<p class="publishTime"><span class="descTitle">提交时间</span><span class="descData">{{auditData.createdAt}}</span></p>
-						<p class="publishDesc"><span class="descTitle">描述</span><span class="descData">{{auditData.comment}}</span></p>
-					</div>
-					<div class="operArea">
-						<el-button type="default" disabled>{{auditData.typeDesc}}</el-button>
-						<el-button type="success"><i class="icon iconfont icon-bottom"></i></el-button>
-					</div>
+					<div class="audit">
+						<div class="status-detail" v-for="(n, index) in auditData">
+							<div class="number">
+								<p class="descTitle">版本号</p>
+								<p class="num">{{n.version}}</p>
+							</div>
+							<div class="content">
+								<p class="publisher"><span class="descTitle">发布人</span><span class="descData">{{n.developer}}</span></p>
+								<p class="publishTime"><span class="descTitle">提交时间</span><span class="descData">{{n.createdAt}}</span></p>
+								<p class="publishDesc"><span class="descTitle">描述</span><span class="descData">{{n.comment}}</span></p>
+							</div>
+							<div class="operArea">
+								<el-button type="default" disabled>{{n.typeDesc}}</el-button>
+								<el-dropdown>
+									<el-button class="operBtn" type="success"><i class="icon iconfont icon-bottom"></i></el-button>
+									<el-dropdown-menu slot="dropdown">
+								    <el-dropdown-item @click="deleteAudit">撤销审核</el-dropdown-item>
+								    <el-dropdown-item @click="postMiniApp" v-if="n.type === 6">发布</el-dropdown-item>
+								  </el-dropdown-menu>
+								</el-dropdown>
+							</div>
+						</div>
 					</div>
 				</template>
 			</div>
@@ -90,7 +103,7 @@
 <script>
 import Vue from "vue";
 import Component from "vue-class-component";
-import { getTemplateListNewApi, getDartsApi, addTemplateApi, getTemplateListApi, commitApi, getQrcodeApi, deleteTemplateApi, postMiniAppApi, getcodeManagerVcsListsApi } from "API/publish";
+import { getTemplateListNewApi, getDartsApi, addTemplateApi, getTemplateListApi, commitApi, getQrcodeApi, deleteTemplateApi, postMiniAppApi, getcodeManagerVcsListsApi, deleteAuditApi, deleteReleaseApi } from "API/publish";
 let timer = null
 @Component({
   name: "publish",
@@ -121,8 +134,8 @@ export default class publish extends Vue {
 		comment: ''
 	}
 	experientialData = this.versionData // 体验服数据
-	auditData = this.versionData // 审核版
-	formalData = this.versionData // 审核版
+	auditData = [] // 审核版
+	formalData = this.versionData //正式版
 	appId = ''
 	qrCodeUrl = ''
 	autoRefresh = true // 开启自动刷新
@@ -197,7 +210,7 @@ export default class publish extends Vue {
 		let parmas = {app_id: this.appId, page: 1, count: 50}
 		return getcodeManagerVcsListsApi(parmas).then(res => {
 			let list = res.data.data.items
-			this.auditData = list.find(item => item.type === 2 || item.type === 5 || item.type === 6 || item.type === 8)
+			this.auditData = list.filter(item => item.type === 2 || item.type === 5 || item.type === 6 || item.type === 8)
 			this.experientialData = list.find(item => item.type === 1)
 			this.formalData = list.find(item => item.type === 3)
 			if (!this.formalData) this.formalData = this.versionData
@@ -236,6 +249,13 @@ export default class publish extends Vue {
 	postMiniApp() {
 		postMiniAppApi({app_id: this.appId})
 	}
+	// 撤销审核
+	deleteAudit () {
+		deleteAuditApi({app_id: this.appId})
+	}
+	deleteRelease () {
+		deleteReleaseApi({app_id: this.appId})
+	}
 }
 </script>
 
@@ -258,6 +278,18 @@ export default class publish extends Vue {
 		    padding: 20px 30px 30px;
 		    text-align: left;
 		    margin-bottom: 30px;
+		    .audit {
+		    	.status-detail {
+		    		padding-top: 20px;
+		    		margin-top: 20px;
+		    		border-top: 1px solid #eee;
+		    	}
+		    	.status-detail:first-child {
+		    		padding-top: 0;
+		    		margin-top: 0;
+		    		border-top: none
+		    	}
+		    }
 		    .title {
 		    	font-size: 20px;
 		    	color: #353535;
@@ -306,6 +338,10 @@ export default class publish extends Vue {
 		    	.operArea {
 		    		float: right;
 		    		margin-left: 30px;
+		    		.operBtn {
+		    			padding: 12px 0px;
+		    			margin-left: 10px;
+		    		}
 		    		.icon {
 		    			font-size: 14px;
 		    			padding: 0 12px;

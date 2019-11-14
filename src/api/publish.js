@@ -104,3 +104,20 @@ export const getTemplateListNewApi = data => request({
 	data,
 	noGlobalLoading: false
 })
+
+// 撤销审核
+export const deleteAuditApi = data => request({
+	url: `/open/platform/code_manager/submit`,
+	type: 'delete',
+	data,
+	noGlobalLoading: false
+})
+
+// 回滚代码版本[到上一个版本]
+export const deleteReleaseApi = data => request({
+	url: `/open/platform/mini_program/release`,
+	type: 'delete',
+	data,
+	noGlobalLoading: false
+})
+
