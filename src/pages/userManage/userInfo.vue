@@ -3,14 +3,14 @@
   <div class="createCompany">
     <div class="header">
       <div class="creatTab">
-        <div class="userInfo" :class="{'active': isEditAdminName == false }" @click.self="tab">基本信息</div>
-        <div class="editAdminName" :class="{'active': isEditAdminName == true }" @click.self="tab">账户设置</div>
+        <div class="userInfo" :class="{'active': !isEditAdminName }" @click.self="tab">基本信息</div>
+        <div class="editAdminName" :class="{'active': isEditAdminName }" @click.self="tab">账户设置</div>
       </div>
-      <div class="editBox" v-if="isEditAdminName==false">
+      <div class="editBox" v-if="!isEditAdminName">
         <el-button class="inquire" @click.stop="toEdit(personalInfo.uid)">编辑</el-button>
       </div>
-      <div class="editBox" v-if="isEditAdminName==true">
-        <el-button class="saveAdminName" @click.stop="saveAdminName">保存跟进人</el-button>
+      <div class="editBox" v-else>
+        <el-button class="saveAdminName" @click.stop="saveAdminName">保存跟进销售</el-button>
       </div>
     </div>
     <!--大图蒙层-->
@@ -53,16 +53,16 @@
       </div>
     </el-dialog>
     <!-- 账户设置 -->
-    <div class="editAdminNam" v-if="isEditAdminName==true">
+    <div class="editAdminNam" v-if="isEditAdminName">
       <div class="sales">
         <h3>跟进销售</h3>
         <el-form>
-          <el-form-item label="跟进人">
+          <el-form-item label="跟进销售">
             <el-select
               style="width: 400px;"
               ref="salesList"
               v-model="companyInfo.realname"
-              placeholder="请选择跟进人"
+              placeholder="请选择跟进销售"
               @change="ground"
             >
               <el-option label="无" :value="0"/>
@@ -78,8 +78,7 @@
       </div>
     </div>
     <!--身份信息表格-->
-    <div class="personalInfo" v-if="isEditAdminName==false">
-      <div class="point"></div>
+    <div class="personalInfo" v-else>
       <el-form class="edit-form" ref="mobile" :model="phone" label-width="150px" label-suffix="：">
         <h3>账号信息</h3>
         <el-form-item label="手机号码" prop="mobile">
@@ -104,15 +103,16 @@
         </el-form-item>
       </el-form>
     </div>
-    <div class="companyMessage" v-if="isEditAdminName==false&&userInfo.companyInfo!=null">
+    <div class="companyMessage" v-if="!isEditAdminName && userInfo.companyInfo && userInfo.companyInfo.id">
       <div>所属公司</div>
       <div class="companyName" v-show="userInfo.companyTopInfo!=''">
         <span class="label">公司全称</span>
-        <div v-if="userInfo.companyTopInfo.companyTopName">{{userInfo.companyTopInfo.companyTopName}}</div>
+        <div v-if="userInfo.companyTopInfo.companyTopName ">{{userInfo.companyTopInfo.companyTopName}}</div>
         <div v-else>
           无
         </div>
       </div>
+
       <div class="companyName" v-show="companyInfo!=''">
         <span class="label">所属机构</span>
         <div v-if="companyInfo.companyName && !userInfo.isTopAdmin">{{companyInfo.companyName}}</div>
@@ -126,8 +126,9 @@
         <div v-else-if="userInfo.isRecruiter">招聘官</div>
         <div v-else>无</div>
       </div>
+
       <div class="companyName" v-show="companyInfo && userInfo.companyId">
-        <span :style="'margin-right:10px'" class="label">是否可以发布职位</span>
+        <span class="label" :style="'margin-right:10px'">是否可以发布职位</span>
         <el-switch v-model="createPositionRight" @change="changeRight"></el-switch>
       </div>
       <div class="companyName" v-show="companyInfo && companyInfo.applyType">
@@ -139,11 +140,13 @@
       </div>
       <div class="companyName btn" v-show="userInfo.companyId" @click.stop="removeUser">移出公司</div>
     </div>
-    <div class="companyMessage" v-else-if="isEditAdminName==false">
+
+    <div class="companyMessage" v-else-if="!isEditAdminName">
       <div>所属公司</div>
       <div class="companyName btn" @click.stop="bindCompany">绑定公司</div>
     </div>
-    <div class="officerInfo" v-if="userInfo.companyId&&isEditAdminName==false">
+
+    <div class="officerInfo" v-if="userInfo.companyId && !isEditAdminName">
       <div class="title">
         <span>招聘官信息</span>
         <div class="editOfficer" v-if="true" @click.stop="toEditRecruiter">
@@ -226,6 +229,14 @@ import { userInfo } from "os";
   components: {
     ImageUploader,
     adminControl
+  },
+  watch: {
+    $route: {
+      handler(route) {
+       this.isEditAdminName = this.$route.query.isEditAdminName === 'false' ? false : true
+      },
+      immediate: true
+    }
   }
 })
 export default class addUser extends Vue {
@@ -313,6 +324,7 @@ export default class addUser extends Vue {
       });
       this.isEditAdminName = false;
     }
+    this.$router.replace({path: `/userManage/detail/${this.$route.params.id}?isEditAdminName=${this.isEditAdminName}`})
   }
   ground(e) {
     this.$set(this.saveParam, "group_id", this.salesList[e].groupId);
@@ -373,11 +385,11 @@ export default class addUser extends Vue {
   }
   /* 去编辑用户信息 */
   toEdit() {
-    this.$router.push({ path: `/recruiterManage/edit/${this.$route.params.id}` });
+    this.$router.push({ path: `/userManage/editUser/${this.$route.params.id}` });
   }
   /* 去查看公司审核 */
   toCheckCompany(companyId) {
-    this.$router.push({ path: `/check/companyCheck/verify?id=${companyId}` });
+    this.$router.push({ path: `/verifyManage/verify?id=${companyId}` });
   }
   /* 移出公司 */
   async removeUser() {
@@ -413,7 +425,6 @@ export default class addUser extends Vue {
     let res = await getUserInfoApi(this.$route.params.id);
     let userInfo = res.data.data;
     this.userInfo = userInfo;
-
     this.isDetection = !userInfo.needRealNameAuth;
     if (userInfo.companyInfo) {
       this.companyInfo = userInfo.companyInfo;
@@ -475,12 +486,20 @@ export default class addUser extends Vue {
   }
 
   toEditRecruiter() {
-    this.$router.push({ path: `/recruiterManage/edit/${this.$route.params.id}` });
+    this.$router.push({
+      path: `/userManage/editUser/${this.$route.params.id}`,
+      params: {
+        isEditAdminName: false
+      }
+    });
   }
   userList() {
-    getSalerListApi().then(res => this.salesList = res.data.data);
+    getSalerListApi().then(res => {
+      this.salesList = res.data.data;
+    });
   }
   mounted(e) {
+    this.isEditAdminName = this.$route.query.isEditAdminName === 'false' ? false : true
     if (this.isEditAdminName) {
       this.userList();
     } else {
@@ -500,16 +519,6 @@ export default class addUser extends Vue {
   padding: 0 32px;
   text-align: left;
   border: 1px solid #cccccc;
-  .point {
-    font-size: 14px;
-    color: #ffffff;
-    background-color: #652791;
-    padding: 10px;
-    text-align: center;
-    margin-bottom: 30px;
-    margin-left: -32px;
-    margin-right: -32px;
-  }
 }
 .sales {
   border-radius: 4px;
@@ -597,16 +606,6 @@ export default class addUser extends Vue {
     padding: 0 32px;
     text-align: left;
     border: 1px solid #cccccc;
-    .point {
-      font-size: 14px;
-      color: #ffffff;
-      background-color: #652791;
-      padding: 10px;
-      text-align: center;
-      margin-bottom: 30px;
-      margin-left: -32px;
-      margin-right: -32px;
-    }
   }
   .sales {
     border-radius: 4px;
@@ -624,6 +623,7 @@ export default class addUser extends Vue {
     h3 {
       color: #354048;
       font-size: 20px;
+      padding-top: 16px;
       padding-bottom: 16px;
       padding-left: 10px;
       border-bottom: 1px solid #ebeef5;

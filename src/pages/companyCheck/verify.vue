@@ -286,7 +286,7 @@ export default class checkPage extends Vue {
   /* 编辑公司信息 */
   edit(name) {
     this.$router.push({
-      path: `/index/${name}`,
+      path: `/companyManage/${name}`,
       query: { id: this.companyInfo.id }
     });
   }
@@ -302,7 +302,7 @@ export default class checkPage extends Vue {
   /* 去编辑公司信息 */
   toEdit() {
     let id = this.$route.query.id;
-    this.$router.push({ path: `/verifyManage/editCompanyInfo`, query: { from: 'cp', id } });
+    this.$router.push({ path: `/companyManage/edit`, query: { type: 'temp', id} });
   }
 
   mounted() {

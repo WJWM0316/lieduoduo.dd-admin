@@ -12,19 +12,25 @@ export const companyManage = [
         path: "index",
         name: "companyManageIndex",
         meta: { title: "公司库" },
-        component: resolve => require(["@/pages/index/index.vue"], resolve)
+        component: resolve => require(["@/pages/companyManage/index.vue"], resolve)
       },
       {
-        path: "edit/:id",
-        name: "editCheckCompany",
+        path: "edit",
+        name: "editCompanyInfo",
         meta: { title: "编辑公司信息" },
-        component: resolve => require(["@/pages/index/createCompany.vue"], resolve)
+        component: resolve => require(["@/pages/companyManage/editCompany.vue"], resolve)
+      },
+      {
+        path: "create",
+        name: "createCompanyInfo",
+        meta: { title: "新建公司" },
+        component: resolve => require(["@/pages/companyManage/editCompany.vue"], resolve)
       },
       {
         path: "detail",
         name: "companyInfo",
         meta: { title: "公司详情" },
-        component: resolve => require(["@/pages/index/companyInfo.vue"], resolve)
+        component: resolve => require(["@/pages/companyManage/companyInfo.vue"], resolve)
       },
     ]
   }

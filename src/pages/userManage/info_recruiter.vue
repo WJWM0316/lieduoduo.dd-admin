@@ -382,12 +382,8 @@ export default class addUser extends Vue {
   /* 移出公司 */
   async removeUser() {
     this.showAdminWindow = true;
-    // this.is
     this.isBindAdmin = true;
-    // this.isNewCompany=false
     this.companyInfo.realName=this.userInfo.name
-
-    // console.log(this.userInfo);
     if (!!this.companyInfo.isAdmin) {
       let param = {
         page: 1,
@@ -431,7 +427,6 @@ export default class addUser extends Vue {
     this.phone = {
       mobile: userInfo.mobile
     };
-    console.log("userInfo", userInfo);
     /* 身份信息 */
     this.personalInfo = {
       uid: userInfo.uid,

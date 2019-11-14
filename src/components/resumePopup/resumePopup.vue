@@ -348,13 +348,9 @@ export default class resumePopup extends Vue {
   }
   // 查看操作
   async operating(uid, param) {
-    console.log("sdf");
     await addHistory(uid, param);
   }
   created() {
-    // this.AdminShow = +sessionStorage.getItem("AdminShow");
-    // this.testingAdmin(this.AdminShow);
-    console.log("当前查看简历的权限");
   }
   testingAdmin(admin) {
     this.isSales = /(3|4)/.test(admin) ? false : true;
@@ -373,7 +369,6 @@ export default class resumePopup extends Vue {
     formData.append("Authorization", sessionStorage.getItem("adminToken")); //
     formData.append("attach_type", type);
     formData.append("img1", param.file);
-    // console.log("formData", formData);
     uploadApi(formData)
       .then(res => {
         const resumeAttachId = res.data.data[0].id;
@@ -401,13 +396,10 @@ export default class resumePopup extends Vue {
         showPhone: false,
         showWechat: false
       });
-      // console.log(this.itemList);
     });
   }
   delateFile(e) {
-    console.log(e);
     delateResume(e).then(res => {
-      console.log(res);
       this.visible = false;
       this.getResume();
       this.operating(this.nowResumeMsg.uid, {
@@ -417,15 +409,12 @@ export default class resumePopup extends Vue {
     });
   }
   beoforeUpload(e) {
-    console.log(e);
   }
   // 上传简历f
   uploadFile() {
-    console.log("上传简历");
   }
   /* 删除标签 */
   delateLabelBtn(labelId, uid) {
-    console.log(uid, labelId);
     delateLabel(uid, labelId).then(res => {
       this.$message({
         type: "success",
@@ -437,17 +426,11 @@ export default class resumePopup extends Vue {
   }
   // 左边箭头
   LeftArrow() {
-    console.log(this.nowCheck);
-    console.log(this.nowIndex);
-
     if (this.nowIndex < 0) {
       this.nowIndex = 0;
       return;
     } else {
       this.nowIndex = this.nowIndex - 1;
-
-      // this.historyCount=1;
-      console.log(this.nowCheck);
       if (this.nowCheck) {
         this.historyCount = 1;
         this.history(this.itemList[this.nowIndex].uid, {
@@ -484,7 +467,6 @@ export default class resumePopup extends Vue {
       /* 把下一个uid发回到父组件，并再父组件重新调用查看简历的接口 */
       this.$emit("SwitchResume", this.itemList[this.nowIndex].uid);
       this.initResume();
-      console.log(this.nowResumeMsg);
       this.operating(this.itemList[this.nowIndex].uid, {
         action: "查看",
         desc: "简历"
@@ -526,7 +508,6 @@ export default class resumePopup extends Vue {
   seeMobile() {
     let uid = this.nowResumeMsg.uid;
     this.operating(uid, { action: "查看", desc: "手机号码" });
-    console.log(this.nowResumeMsg);
     this.nowResumeMsg.showPhone = true;
   }
   /* 查看微信号 */

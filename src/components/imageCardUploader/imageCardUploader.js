@@ -97,21 +97,18 @@ export default class ImageCardUploader extends Vue {
   handleBeforeUpload (file) {
     // 判断文件类型
     if (!/^image\//.test(file.type)) {
-      console.log(`文件格式不正确：${file.type}`)
       this.$emit('error', { type: 'fileTypeError', message: '图片文件格式不正确' })
       return false
     }
 
     // 判断文件大小
     if (file.size > 1024 * 1024 * this.maxFileSize) {
-      console.log(`文件大小不能超过${this.maxFileSize}M`)
       this.$emit('error', { type: 'fileSizeError', data: { maxFileSize: this.maxFileSize }, message: `图片文件大小不能超过${this.maxFileSize}M` })
       return false
     }
 
     // 判断图片数
     if (this.files.length >= this.maxCount) {
-      console.log(`图片最多只能上传${this.maxCount}张`)
       this.$emit('error', { type: 'fileCountError', data: { maxCount: this.maxCount }, message: `图片最多只能上传${this.maxCount}张` })
       return false
     }

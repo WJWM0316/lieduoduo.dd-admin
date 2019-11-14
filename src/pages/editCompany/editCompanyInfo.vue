@@ -322,7 +322,6 @@ export default class editCompany extends Vue {
           }
         })
       }).catch(err => {
-        console.log(err)
       })
     }).catch(() => {
       this.$message({
@@ -414,10 +413,8 @@ export default class editCompany extends Vue {
   }
   /* 获取编辑的公司信息 */
   getCompanyInfo () {
-    console.log('ressfdsdfs',res)
     const { id } = this.$route.query
     getCompanyInfoApi(id).then(res => {
-      console.log('ressfdsdfs',res)
       this.form = {
         logo: res.data.data.companyInfo.logoInfo.url, 
         icon1: res.data.data.companyInfo.businessLicenseInfo.url, 

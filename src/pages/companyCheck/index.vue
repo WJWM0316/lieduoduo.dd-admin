@@ -331,7 +331,7 @@ export default class companyCheck extends Vue {
   }
   addCompany() {
     this.$router.push({
-      path: "/verifyManage/createCompanyInfo",
+      path: "/companyManage/create",
       query: {
         isCreated: true,
         from: 'cp'

@@ -489,7 +489,6 @@ export default class EditRecruiter extends Vue {
     this.model.list = [].concat(this.labelProfessionalLiteracyList)
   }
   removeLifeItem(index, item) {
-    console.log(index, item)
     if(this.model.selected.length < 2) {
       this.$message({
         message: '至少选择一个标签',

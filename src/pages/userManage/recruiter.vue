@@ -404,7 +404,7 @@ export default class user extends Vue {
   addUser() {
     sessionStorage.setItem("up_router", this.$route.path);
     this.$route.meta.scrollY = window.scrollY;
-    this.$router.push({ path: "/userManage/addUser" });
+    this.$router.push({ path: "/user/addUser" });
   }
   changeProvince(e) {}
   toCompany(companyId) {
@@ -531,7 +531,7 @@ export default class user extends Vue {
   check(id) {
     this.$route.meta.scrollY = window.scrollY;
     this.$router.push({
-      path: `/recruiterManage/detail/${id}`,
+      path: `/recruiter/recruiterInfo/${id}`,
       query: {
         isEditAdminName: false
       }

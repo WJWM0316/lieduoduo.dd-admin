@@ -8,28 +8,9 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 @Component({
-  name: "App",
-  watch: {
-    isAjax: {
-      handler(res) {
-        this.showAside(res);
-      }
-    }
-  }
+  name: "App"
 })
 export default class App extends Vue {
-  loadingInstance = null;
-  showResetPsw = false;
-  isAjax = false;
-  showAside(res) {
-    this.isAjax = res;
-  }
-  changeStatus(e) {
-    console.log(e);
-  }
-  mounted() {
-    // if(sessionStorage.getItem(''))
-  }
 }
 </script>
 

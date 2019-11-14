@@ -13,12 +13,12 @@
 				<div class="status-detail">
 					<div class="number">
 						<p class="descTitle">版本号</p>
-						<p class="num">111</p>
+						<p class="num">{{formalData.version}}</p>
 					</div>
 					<div class="content">
-						<p class="publisher"><span class="descTitle">发布人</span><span class="descData">1111</span></p>
-						<p class="publishTime"><span class="descTitle">发布时间</span><span class="descData">1111</span></p>
-						<p class="publishDesc"><span class="descTitle">描述</span><span class="descData">1111</span></p>
+						<p class="publisher"><span class="descTitle">发布人</span><span class="descData">{{formalData.developer}}</span></p>
+						<p class="publishTime"><span class="descTitle">发布时间</span><span class="descData">{{formalData.createdAt}}</span></p>
+						<p class="publishDesc"><span class="descTitle">描述</span><span class="descData">{{formalData.comment}}</span></p>
 					</div>
 					<div class="operArea">
 						<el-button type="success">版本回退</el-button>
@@ -43,7 +43,7 @@
 					</div>
 					<div class="operArea">
 						<el-button type="default" disabled>{{auditData.typeDesc}}</el-button>
-						<el-button type="success" v-if="auditData.type === 6">发布</el-button>
+						<el-button type="success"><i class="icon iconfont icon-bottom"></i></el-button>
 					</div>
 					</div>
 				</template>
@@ -86,6 +86,159 @@
 		</div>
 	</div>
 </template>
+
+<script>
+import Vue from "vue";
+import Component from "vue-class-component";
+import { getTemplateListNewApi, getDartsApi, addTemplateApi, getTemplateListApi, commitApi, getQrcodeApi, deleteTemplateApi, postMiniAppApi, getcodeManagerVcsListsApi } from "API/publish";
+let timer = null
+@Component({
+  name: "publish",
+  watch: {
+    'autoRefresh': {
+      handler(autoRefresh) {
+      	clearTimeout(timer)
+      	if (autoRefresh) {
+      		timer = setTimeout(() => {
+      			this.getDarts()
+						this.getTemplateList()
+						this.getcodeManagerVcsLists()
+      		}, 60000) 
+      	}
+      },
+      immediate: true
+    }
+  }
+})
+export default class publish extends Vue {
+	dartData = {} // 最新草稿数据
+	dartId = 0 // 最新模板id
+	templateList = [] // 模板列表
+	versionData = {
+		version: '',
+		createdAt: '',
+		developer: '',
+		comment: ''
+	}
+	experientialData = this.versionData // 体验服数据
+	auditData = this.versionData // 审核版
+	formalData = this.versionData // 审核版
+	appId = ''
+	qrCodeUrl = ''
+	autoRefresh = true // 开启自动刷新
+	qrCodeUrl1 = ''
+	
+	created() {
+		this.appId = this.$route.query.appId
+		this.getDarts()
+		this.getTemplateList()
+		this.getQrcode()
+		this.getcodeManagerVcsLists()
+	}
+	maxIndex = (list, typeId) => {
+		let array = []
+		list.forEach((item) => {
+			array.push(item[typeId])
+		})
+		return array.indexOf(Math.max(...array))
+	}
+	getDarts () {
+		let parmas = {app_id: this.appId}
+		return getDartsApi(parmas).then(res => {
+			let list = res.data.data.draftList
+			this.dartData = list[this.maxIndex(list, 'draftId')]
+			this.dartId = this.dartData.draftId
+		})
+	}
+	deleteTemplate (templateId) {
+		let template_id = []
+		for (var i = 1; i <= 5; i++) {
+			template_id.push(this.templateList[this.templateList.length - i].templateId || '')
+		}
+		let formData = {
+			template_id: template_id.join(','),
+			app_id: this.appId
+		}
+		return deleteTemplateApi(formData)
+	}
+	addTemplate () {
+		let parmas = {app_id: this.appId, dart_id: this.dartId}
+	  return new Promise((resolve, reject) => {
+	  	addTemplateApi(parmas).then(res => {
+				// 模板已满删除 删除最后一个
+				if (res.data.httpStatus === 200 && res.data.code === 85065) {
+					this.deleteTemplate().then(() => {
+						this.toCommit()
+					})
+					reject('模板已满')
+				} else {
+					resolve(res)
+				}
+			})
+	  })
+	}
+	getTemplateList () {
+		let parmas = {app_id: this.appId, page: 1, count: 50}
+		return getTemplateListApi(parmas).then(res => {
+			let list = res.data.data
+			this.templateList = list			
+		})
+	}
+	getTemplateListNew() {
+		let parmas = {app_id: this.appId, page: 1, count: 50}
+		return getTemplateListNewApi(parmas).then(res => {
+			let list = res.data.data.templateList
+			this.templateList = list
+			this.getQrcode().then(src => this.qrCodeUrl1 = src)
+		})
+	}
+	// 状态列表
+	getcodeManagerVcsLists() {
+		let parmas = {app_id: this.appId, page: 1, count: 50}
+		return getcodeManagerVcsListsApi(parmas).then(res => {
+			let list = res.data.data.items
+			this.auditData = list.find(item => item.type === 2 || item.type === 5 || item.type === 6 || item.type === 8)
+			this.experientialData = list.find(item => item.type === 1)
+			this.formalData = list.find(item => item.type === 3)
+			if (!this.formalData) this.formalData = this.versionData
+			if (!this.auditData) this.auditData = this.versionData
+			if (!this.experientialData) this.experientialData = this.versionData
+			this.templateList = list
+		})
+	}
+	// 提审
+	commit () {
+		let parmas = {app_id: this.appId, template_id: this.templateList[0].templateId}
+		return commitApi(parmas).then(res => {
+			this.getcodeManagerVcsLists()
+		})
+	}
+	// 生成二维码
+	getQrcode () {
+		let parmas = {app_id: this.appId, path: 'page/common/pages/homepage/homepage', format: 'base64'}
+		return getQrcodeApi(parmas).then(res => {
+			this.qrCodeUrl = res.data.data.qrcode
+		})
+	}
+	// 提交代码到体验服
+	toCommit () {
+		this.getDarts().then(() => {
+			this.addTemplate().then(() => {
+				this.getTemplateListNew().then(() => {
+					this.commit().then(() => {
+						this.getQrcode()
+					})
+				})
+			})
+		})
+	}
+	// 发布小程序
+	postMiniApp() {
+		postMiniAppApi({app_id: this.appId})
+	}
+}
+</script>
+
 <style scoped lang="less">
 	.publish {
 		.autoRefresh {
@@ -153,150 +306,13 @@
 		    	.operArea {
 		    		float: right;
 		    		margin-left: 30px;
+		    		.icon {
+		    			font-size: 14px;
+		    			padding: 0 12px;
+		    		}
 		    	}
 		    }
 			}
 		}
 	}
 </style>
-<script>
-import Vue from "vue";
-import Component from "vue-class-component";
-import { getTemplateListNewApi, getDartsApi, addTemplateApi, getTemplateListApi, commitApi, getQrcodeApi, deleteTemplateApi, postMiniAppApi, getcodeManagerVcsListsApi } from "API/publish";
-let timer = null
-@Component({
-  name: "publish",
-  watch: {
-    'autoRefresh': {
-      handler(autoRefresh) {
-      	clearTimeout(timer)
-      	if (autoRefresh) {
-      		timer = setTimeout(() => {
-      			this.getDarts()
-						this.getTemplateList()
-						this.getcodeManagerVcsLists()
-      		}, 60000) 
-      	}
-      },
-      immediate: true
-    }
-  }
-})
-export default class publish extends Vue {
-	dartData = {} // 最新草稿数据
-	dartId = 0 // 最新模板id
-	templateList = [] // 模板列表
-	experientialData  = {} // 体验服数据
-	appId = ''
-	qrCodeUrl = ''
-	autoRefresh = true // 开启自动刷新
-	qrCodeUrl1 = ''
-	auditData = {}
-	created() {
-		this.appId = this.$route.query.appId
-		this.getDarts()
-		this.getTemplateList()
-		this.getQrcode()
-		this.getcodeManagerVcsLists()
-	}
-	maxIndex = (list, typeId) => {
-		let array = []
-		list.forEach((item) => {
-			array.push(item[typeId])
-		})
-		return array.indexOf(Math.max(...array))
-	}
-	getDarts () {
-		let parmas = {app_id: this.appId}
-		return getDartsApi(parmas).then(res => {
-			let list = res.data.data.draftList
-			this.dartData = list[this.maxIndex(list, 'draftId')]
-			this.dartId = this.dartData.draftId
-		})
-	}
-	deleteTemplate (templateId) {
-		let template_id = []
-		for (var i = 1; i <= 5; i++) {
-			template_id.push(this.templateList[this.templateList.length - i].templateId || '')
-		}
-		let formData = {
-			template_id: template_id.join(','),
-			app_id: this.appId
-		}
-		return deleteTemplateApi(formData)
-	}
-	addTemplate () {
-		let parmas = {app_id: this.appId, dart_id: this.dartId}
-	  return new Promise((resolve, reject) => {
-	  	addTemplateApi(parmas).then(res => {
-				// 模板已满删除 删除最后一个
-				if (res.data.httpStatus === 200 && res.data.code === 85065) {
-					this.deleteTemplate().then(() => {
-						this.toCommit()
-					})
-					reject('模板已满')
-				} else {
-					resolve(res)
-				}
-			})
-	  })
-	}
-	getTemplateList () {
-		let parmas = {app_id: this.appId, page: 1, count: 50}
-		return getTemplateListApi(parmas).then(res => {
-			let list = res.data.data
-			this.templateList = list			
-		})
-	}
-	getTemplateListNew() {
-		let parmas = {app_id: this.appId, page: 1, count: 50}
-		return getTemplateListNewApi(parmas).then(res => {
-			console.log(res)
-			let list = res.data.data.templateList
-			this.templateList = list
-			// console.log(list, 'a')
-			this.getQrcode().then(src => this.qrCodeUrl1 = src)
-		})
-	}
-	// 状态列表
-	getcodeManagerVcsLists() {
-		let parmas = {app_id: this.appId, page: 1, count: 50}
-		return getcodeManagerVcsListsApi(parmas).then(res => {
-			let list = res.data.data.items
-			this.auditData = list.find(item => item.type === 2 || item.type === 5 || item.type === 6 || item.type === 8)
-			this.experientialData = list.find(item => item.type === 1)
-			this.templateList = list
-		})
-	}
-	// 提审
-	commit () {
-		let parmas = {app_id: this.appId, template_id: this.templateList[0].templateId}
-		return commitApi(parmas).then(res => {
-			this.getcodeManagerVcsLists()
-		})
-	}
-	// 生成二维码
-	getQrcode () {
-		let parmas = {app_id: this.appId, path: 'page/common/pages/homepage/homepage', format: 'base64'}
-		return getQrcodeApi(parmas).then(res => {
-			this.qrCodeUrl = res.data.data.qrcode
-		})
-	}
-	// 提交代码到体验服
-	toCommit () {
-		this.getDarts().then(() => {
-			this.addTemplate().then(() => {
-				this.getTemplateListNew().then(() => {
-					this.commit().then(() => {
-						this.getQrcode()
-					})
-				})
-			})
-		})
-	}
-	// 发布小程序
-	postMiniApp() {
-		postMiniAppApi({app_id: this.appId})
-	}
-}
-</script>
