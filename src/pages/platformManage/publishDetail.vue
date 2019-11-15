@@ -49,11 +49,11 @@
 							</div>
 							<div class="operArea">
 								<el-button type="default" disabled>{{n.typeDesc}}</el-button>
-								<el-dropdown>
+								<el-dropdown  @command="handleCommand">
 									<el-button class="operBtn" type="success"><i class="icon iconfont icon-bottom"></i></el-button>
 									<el-dropdown-menu slot="dropdown">
-								    <el-dropdown-item @click="deleteAudit">撤销审核</el-dropdown-item>
-								    <el-dropdown-item @click="postMiniApp" v-if="n.type === 6">发布</el-dropdown-item>
+										<el-dropdown-item command="postrelease" v-if="n.type === 6">发布</el-dropdown-item>
+								    <el-dropdown-item command="deleteAudit">撤销审核</el-dropdown-item>
 								  </el-dropdown-menu>
 								</el-dropdown>
 							</div>
@@ -97,16 +97,21 @@
 				</div>
 			</div>
 		</div>
+		<submitPop ref="submitPop" @callback="callback" type="detail"></submitPop>
 	</div>
 </template>
 
 <script>
 import Vue from "vue";
 import Component from "vue-class-component";
-import { getTemplateListNewApi, getDartsApi, addTemplateApi, getTemplateListApi, commitApi, getQrcodeApi, deleteTemplateApi, postMiniAppApi, getcodeManagerVcsListsApi, deleteAuditApi, deleteReleaseApi } from "API/publish";
+import submitPop from './components/submitPop.vue'
+import { getTemplateListNewApi, getDartsApi, addTemplateApi, getTemplateListApi, commitApi, getQrcodeApi, deleteTemplateApi, postMiniAppApi, getcodeManagerVcsListsApi, deleteAuditApi, deleteReleaseApi, postReleaseApi } from "API/publish";
 let timer = null
 @Component({
   name: "publish",
+  components: {
+  	submitPop
+  },
   watch: {
     'autoRefresh': {
       handler(autoRefresh) {
@@ -202,7 +207,6 @@ export default class publish extends Vue {
 		return getTemplateListNewApi(parmas).then(res => {
 			let list = res.data.data.templateList
 			this.templateList = list
-			this.getQrcode().then(src => this.qrCodeUrl1 = src)
 		})
 	}
 	// 状态列表
@@ -220,8 +224,7 @@ export default class publish extends Vue {
 		})
 	}
 	// 提审
-	commit () {
-		let parmas = {app_id: this.appId, template_id: this.templateList[0].templateId}
+	commit (parmas) {
 		return commitApi(parmas).then(res => {
 			this.getcodeManagerVcsLists()
 		})
@@ -235,24 +238,38 @@ export default class publish extends Vue {
 	}
 	// 提交代码到体验服
 	toCommit () {
+		this.$refs.submitPop.showPop = true
+	}
+	// 执行提交体验服回调
+	callback (e) {
 		this.getDarts().then(() => {
 			this.addTemplate().then(() => {
 				this.getTemplateListNew().then(() => {
-					this.commit().then(() => {
+					let parmas = {app_id: this.appId, template_id: this.templateList[0].templateId, version: e.version, description: e.versionDesc}
+					this.commit(parmas).then(() => {
 						this.getQrcode()
 					})
 				})
 			})
 		})
 	}
-	// 发布小程序
+	// 提交审核申请
 	postMiniApp() {
 		postMiniAppApi({app_id: this.appId})
 	}
-	// 撤销审核
-	deleteAudit () {
-		deleteAuditApi({app_id: this.appId})
+	handleCommand (e) {
+		switch (e) {
+			case 'postrelease':
+				// 发布小程序
+				postReleaseApi({app_id: this.appId})
+				break
+			case 'deleteAudit':
+				// 撤销审核
+				deleteAuditApi({app_id: this.appId})
+				break
+		}
 	}
+	// 版本回滚
 	deleteRelease () {
 		deleteReleaseApi({app_id: this.appId})
 	}

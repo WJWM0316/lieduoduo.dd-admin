@@ -15,20 +15,34 @@
 				<p class="desc">当月剩余发版次数</p>
 			</div>
 		</div>
+		<p class="title">草稿列表</p>
+		<div class="tableList">
+			<el-table :data="dartsList" style="width: 100%">
+		    <el-table-column fixed prop="userVersion" label="版本号"></el-table-column>
+				<el-table-column prop="developer" label="发布人"></el-table-column>
+				<el-table-column label="提交时间"><template  slot-scope="scope">{{scope.row.createTime * 1000 | date}}</template></el-table-column>
+				<el-table-column prop="userDesc" label="模板描述"></el-table-column>
+				<el-table-column label="操作" fixed="right">
+					<template slot-scope="scope">
+		        <el-button type="text" size="small" @click="addTemplate(scope.row.draftId)">添加模板</el-button>
+		      </template>
+				</el-table-column>
+		  </el-table>
+		</div>
 		<p class="title">模板列表</p>
 		<div class="tableList">
-			<el-table :data="tableData" style="width: 100%" height="65vh">
+			<el-table :data="tableData" style="width: 100%" height="60vh">
 		    <el-table-column fixed prop="userVersion" label="版本号"></el-table-column>
 		    <el-table-column prop="id" label="模板Id"></el-table-column>
 				<el-table-column prop="developer" label="发布人"></el-table-column>
-				<el-table-column prop="createdAt" label="发布时间"></el-table-column>
+				<el-table-column prop="createdAt" label="设置时间"></el-table-column>
 				<el-table-column prop="userDesc" label="模板描述"></el-table-column>
 		  </el-table>
 		</div>
 	</div>
 </template>
 <script>
-import { getHomeApi, getTemplateListApi } from "API/publish";
+import { getHomeApi, getDartsApi, addTemplateApi, getTemplateListApi } from "API/publish";
 export default {
 	data () {
 		return {
@@ -37,17 +51,42 @@ export default {
 				limit: 0,
 				rest: 0
 			},
-			tableData: [],
+			tableData: [], // 模板列表
+			dartsList: [], // 草稿列表
 			appId: process.env.VUE_APP_ID
 		}
 	},
 	created () {
-		getHomeApi().then(res => {
-			this.dateDesktop = res.data.data.platformPanel
-		})
-		this.getTemplateList()
+		this.init()
 	},
 	methods: {
+		init () {
+			this.getHome()
+			this.getDartList()
+			this.getTemplateList()
+		},
+		addTemplate (e) {
+			console.log(e, 11)
+			let parmas = {app_id: this.appId, dart_id: e}
+			addTemplateApi(parmas).then(res => {
+				this.getTemplateList()
+				this.$meaages({
+					type: 'success',
+					message: '添加模板成功!'
+				})
+			})
+		},
+		getHome () {
+			getHomeApi().then(res => {
+				this.dateDesktop = res.data.data.platformPanel
+			})
+		},
+		getDartList () {
+			let parmas = {app_id: this.appId, page: 1, count: 3}
+			getDartsApi(parmas).then(res => {
+				this.dartsList = res.data.data.draftList.reverse()
+			})
+		},
 		getTemplateList () {
 			let parmas = {app_id: this.appId, page: 1, count: 50}
 			getTemplateListApi(parmas).then(res => {

@@ -11,7 +11,7 @@ export const userManage = [
       {
         path: "index",
         name: "userManageIndex",
-        meta: { title: "用户管理", haveParent: false, keepAlive: true },
+        meta: { title: "用户管理" },
         component: resolve => require(["@/pages/userManage/index.vue"], resolve)
       },
       {

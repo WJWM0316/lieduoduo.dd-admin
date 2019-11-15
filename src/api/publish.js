@@ -121,3 +121,10 @@ export const deleteReleaseApi = data => request({
 	noGlobalLoading: false
 })
 
+// 发布
+export const postReleaseApi = data => request({
+	url: `/open/platform/mini_program/release`,
+	type: 'post',
+	data,
+	noGlobalLoading: false
+})

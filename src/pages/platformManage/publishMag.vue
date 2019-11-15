@@ -22,7 +22,7 @@
 		</div>
 		
 		<div class="tableList">
-			<el-table :data="tableData" style="width: 100%" height="65vh" @selection-change="handleSelectionChange">
+			<el-table :data="tableData" style="width: 100%" height="73vh" @selection-change="handleSelectionChange">
 				<el-table-column fixed type="selection"></el-table-column>
 		    <el-table-column prop="nickName" label="小程序名"></el-table-column>
 		    <el-table-column prop="companyName" label="公司名"></el-table-column>
@@ -39,23 +39,13 @@
 				</el-table-column>
 		  </el-table>
 		</div>
-
-		<div class="commitsPop" v-show="showPop">
-			<div class="inner">
-				<p class="inner-title">提交体验服</p>
-				<div class="inputBox"><span class="desc">模板Id</span><el-input class="input" v-model="templateId" placeholder="请输入模板Id"></el-input></div>
-				<div class="inputBox"><span class="desc">版本号</span><el-input class="input" v-model="version" placeholder="请输入版本号"></el-input></div>
-				<div class="inputBox"><span class="desc">版本描述</span><el-input class="input textarea" type="textarea" :autosize="{ minRows: 4, maxRows: 8}" v-model="versionDesc" placeholder="请输入版本描述"></el-input></div>
-				<div class="innerBtn">
-					<el-button class="submit" @click="btnPop('cancel')">取消</el-button>
-					<el-button class="submit" @click="btnPop('sureCommits')">确定</el-button>
-				</div>
-			</div>
-		</div>
+		<submitPop ref="submitPop" :appId="multipleSelection"></submitPop>
+		
 	</div>
 </template>
 <script>
 import { Message } from "element-ui";
+import submitPop from './components/submitPop.vue'
 import { getHomeApi, batchCommitsApi, batchSubmitstsApi, batchReleasesApi } from "API/publish";
 export default {
 	data () {
@@ -64,12 +54,11 @@ export default {
 			tableData: [],
 			options: [],
 			filter: 0,
-			multipleSelection: '',
-			templateId: null,
-			version: null,
-			versionDesc: null,
-			showPop: false
+			multipleSelection: '' // appId 字符串数组
 		}
+	},
+	components: {
+		submitPop
 	},
 	watch: {
 		filter () {
@@ -90,8 +79,6 @@ export default {
 					multipleSelection.push(item.appId)
 				})
 				this.multipleSelection = multipleSelection.join()
-			} else {
-				this.multipleSelection = ''
 			}
 		},
 		getList () {
@@ -104,8 +91,8 @@ export default {
 				this.options = res.data.data.auditTypes
 				let tableData = this.tableData
 				if (tableData && tableData.length) {
-					tableData.map((item, index) => {
-						item.vcs.map((n, i) => {
+					tableData.forEach((item, index) => {
+						item.vcs.forEach((n, i) => {
 							switch (n.type) {
 								case 1:
 									item.experienceVersion = n
@@ -132,7 +119,6 @@ export default {
 							}
 						})
 					})
-					this.tableData = tableData
 				}
 			})
 		},
@@ -148,7 +134,7 @@ export default {
 	          confirmButtonText: '确定',
 	          cancelButtonText: '取消'
 	        }).then(() => {
-	        	this.showPop = true
+	        	this.$refs.submitPop.showPop = true
 	        })
 					break
 				case 'submits':
@@ -179,34 +165,13 @@ export default {
 					break
 			}
 		},
-		btnPop (type) {
-			switch (type) {
-				case 'cancel':
-					this.showPop = false
-					break
-				case 'sureCommits':
-					let params = {
-						mini_programs_appid: this.multipleSelection, 
-						version: this.version, 
-						template_id: this.templateId,
-						description: this.versionDesc
-					}
-					batchCommitsApi(params).then(res => {
-						this.showPop = false
-        		this.$message({
-	            type: 'success',
-	            message: '提交体验服成功!'
-	          })
-					})
-					break
-			}
-		},
 		auditReason (content) {
-			const h = this.$createElement;
-      this.$notify({
-        title: '提审失败',
-        message: h('i', { style: 'color: teal'}, content)
-      });
+			console.log(content, 111)
+			// const h = this.$createElement;
+   //    this.$notify({
+   //      title: '提审失败',
+   //      message: h('i', { style: 'color: teal'}, content)
+   //    });
 		},
 		toDetail (id, name) {
 			this.$router.push({name: 'publishDetail', query: {appId: id, name}})
@@ -269,48 +234,7 @@ export default {
 				float: right;
 			}
 		}
-		.commitsPop {
-			width: 100%;
-			height: 100%;
-			position: fixed;
-			top: 0;
-			left: 0;
-			z-index: 1000;
-			background: rgba(0, 0, 0, .5);
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			.inner {
-				width: 400px;
-				padding: 30px 50px;
-				background: #fff;
-				border-radius: 8px;
-				.inner-title {
-					text-align: center;
-					font-size: 16px;
-					color: #333;
-				}
-				.inputBox {
-					font-size: 14px;
-					display: flex;
-					align-items: center;
-					margin-top: 20px;
-					.desc {
-						width: 80px;
-						display: inline-block;
-					}
-					.input {
-						width: 320px;
-					}
-				}
-				.innerBtn {
-					width: 200px;
-					margin: 30px auto 0;
-					display: flex;
-					justify-content: space-between;
-				}
-			}
-		}
+		
 		
 	}
 .el-textarea__inner  {

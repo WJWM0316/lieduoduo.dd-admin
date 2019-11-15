@@ -46,7 +46,6 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import { routes } from "@/router/routes";
 import { admin_menu } from "API/commont";
-import {promiseRouters} from "./route.js"
 import router from '@/router'
 @Component({
   name: "page-asise",
@@ -69,12 +68,77 @@ export default class PageAside extends Vue {
   index = "";
   index1 = "";
   AdminShow = 0;
-  itemList = [];
+  itemList = [
+    {
+      "path": "/platformManage",
+      "name": "platformManage",
+      "meta": { "title": "平台管理" },
+      "children": [
+        {
+          "path": "index",
+          "name": "platformManageIndex",
+          "meta": { "title": "平台信息" }
+        },
+        {
+          "path": "publishMag",
+          "name": "publishMag",
+          "meta": { "title": "发版管理" }
+        },
+      ]
+    },
+    {
+      "path": "/companyManage",
+      "name": "companyManage",
+      "meta": { "title": "公司库" },
+      "children": [
+        {
+          "path": "index",
+          "name": "companyManageIndex",
+          "meta": { "title": "公司库" }
+        }
+      ]
+    },
+    {
+      "path": "/userManage",
+      "name": "userManage",
+      "meta": { "title": "用户管理" },
+      "children": [
+        {
+          "path": "index",
+          "name": "userManageIndex",
+          "meta": { "title": "用户管理" }
+        }
+      ]
+    },
+    {
+      "path": "/recruiterManage",
+      "name": "recruiterManage",
+      "meta": { "title": "招聘官管理" },
+      "children": [
+        {
+          "path": "index",
+          "name": "recruiterManageIndex",
+          "meta": { "title": "招聘官管理" },
+        }
+      ]
+    },
+    {
+      "path": "/verifyManage",
+      "name": "verifyManage",
+      "meta": { "title": "审核管理" },
+      "children": [
+        {
+          "path": "index",
+          "name": "companyCheckIndex",
+          "meta": { "title": "公司审核管理" }
+        }
+      ]
+    }
+  ];
   tabSwitch() {
     this.isCLick = !this.isCLick;
   }
   created() {
-    this.itemList = promiseRouters
     this.AdminShow = sessionStorage.getItem("AdminShow");
     this.init()
   }
@@ -123,9 +187,7 @@ export default class PageAside extends Vue {
         }
       }
     })
-    this.itemList = itemList
   }
-
 }
 </script>
 <style scoped lang="less">
