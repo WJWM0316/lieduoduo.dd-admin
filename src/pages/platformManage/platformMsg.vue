@@ -33,7 +33,7 @@
 		<div class="tableList">
 			<el-table :data="tableData" style="width: 100%" height="60vh">
 		    <el-table-column fixed prop="userVersion" label="版本号"></el-table-column>
-		    <el-table-column prop="id" label="模板Id"></el-table-column>
+		    <el-table-column prop="templateId" label="模板Id"></el-table-column>
 				<el-table-column prop="developer" label="发布人"></el-table-column>
 				<el-table-column prop="createdAt" label="设置时间"></el-table-column>
 				<el-table-column prop="userDesc" label="模板描述"></el-table-column>
