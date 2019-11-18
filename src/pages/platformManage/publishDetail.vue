@@ -142,6 +142,7 @@ export default class publish extends Vue {
 	auditData = [] // 审核版
 	formalData = this.versionData //正式版
 	appId = ''
+	baseAppId = process.env.VUE_APP_ID
 	qrCodeUrl = ''
 	autoRefresh = true // 开启自动刷新
 	qrCodeUrl1 = ''
@@ -149,10 +150,11 @@ export default class publish extends Vue {
 	created() {
 		this.appId = this.$route.query.appId
 		this.getDarts()
-		this.getTemplateList()
+		this.getTemplateListNew()
 		this.getQrcode()
 		this.getcodeManagerVcsLists()
 	}
+
 	maxIndex = (list, typeId) => {
 		let array = []
 		list.forEach((item) => {
@@ -161,7 +163,7 @@ export default class publish extends Vue {
 		return array.indexOf(Math.max(...array))
 	}
 	getDarts () {
-		let parmas = {app_id: this.appId}
+		let parmas = {app_id: this.baseAppId}
 		return getDartsApi(parmas).then(res => {
 			let list = res.data.data.draftList
 			this.dartData = list[this.maxIndex(list, 'draftId')]
@@ -175,12 +177,12 @@ export default class publish extends Vue {
 		}
 		let formData = {
 			template_id: template_id.join(','),
-			app_id: this.appId
+			app_id: this.baseAppId
 		}
 		return deleteTemplateApi(formData)
 	}
 	addTemplate () {
-		let parmas = {app_id: this.appId, dart_id: this.dartId}
+		let parmas = {app_id: this.baseAppId, dart_id: this.dartId}
 	  return new Promise((resolve, reject) => {
 	  	addTemplateApi(parmas).then(res => {
 				// 模板已满删除 删除最后一个
@@ -195,15 +197,8 @@ export default class publish extends Vue {
 			})
 	  })
 	}
-	getTemplateList () {
-		let parmas = {app_id: this.appId, page: 1, count: 50}
-		return getTemplateListApi(parmas).then(res => {
-			let list = res.data.data
-			this.templateList = list			
-		})
-	}
 	getTemplateListNew() {
-		let parmas = {app_id: this.appId, page: 1, count: 50}
+		let parmas = {app_id: this.baseAppId, page: 1, count: 50}
 		return getTemplateListNewApi(parmas).then(res => {
 			let list = res.data.data.templateList
 			this.templateList = list
