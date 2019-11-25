@@ -68,77 +68,14 @@ export default class PageAside extends Vue {
   index = "";
   index1 = "";
   AdminShow = 0;
-  itemList = [
-    {
-      "path": "/platformManage",
-      "name": "platformManage",
-      "meta": { "title": "平台管理" },
-      "children": [
-        {
-          "path": "index",
-          "name": "platformManageIndex",
-          "meta": { "title": "平台信息" }
-        },
-        {
-          "path": "publishMag",
-          "name": "publishMag",
-          "meta": { "title": "发版管理" }
-        },
-      ]
-    },
-    {
-      "path": "/companyManage",
-      "name": "companyManage",
-      "meta": { "title": "公司库" },
-      "children": [
-        {
-          "path": "index",
-          "name": "companyManageIndex",
-          "meta": { "title": "公司库" }
-        }
-      ]
-    },
-    {
-      "path": "/userManage",
-      "name": "userManage",
-      "meta": { "title": "用户管理" },
-      "children": [
-        {
-          "path": "index",
-          "name": "userManageIndex",
-          "meta": { "title": "用户管理" }
-        }
-      ]
-    },
-    {
-      "path": "/recruiterManage",
-      "name": "recruiterManage",
-      "meta": { "title": "招聘官管理" },
-      "children": [
-        {
-          "path": "index",
-          "name": "recruiterManageIndex",
-          "meta": { "title": "招聘官管理" },
-        }
-      ]
-    },
-    {
-      "path": "/verifyManage",
-      "name": "verifyManage",
-      "meta": { "title": "审核管理" },
-      "children": [
-        {
-          "path": "index",
-          "name": "companyCheckIndex",
-          "meta": { "title": "公司审核管理" }
-        }
-      ]
-    }
-  ];
+  itemList = [];
   tabSwitch() {
     this.isCLick = !this.isCLick;
   }
   created() {
+		admin_menu().then(res => {
+			console.log(res, 222)
+		})
     this.AdminShow = sessionStorage.getItem("AdminShow");
     this.init()
   }
@@ -167,25 +104,28 @@ export default class PageAside extends Vue {
       );
       this.$router.push({ name: item.name });
     }
-    
+
   }
   init() {
-    let pathName = this.$route.name,
-        itemList = this.itemList
-    itemList.map((uRoute, uIndex) => {
-      if (this.$route.path.indexOf(uRoute.name) !== -1) {
-        uRoute.isShow = true
-        if (uRoute.children && uRoute.children.length > 1) {
-          uRoute.slideDown = true
-          uRoute.children.map(cRoute => {
-            if (cRoute.name === pathName) {
-              cRoute.isShow = true
-            } else {
-              cRoute.isShow = false;
-            }
-          })
+    admin_menu().then(res => {
+      let pathName = this.$route.name,
+          itemList = res.data.data
+       this.itemList = itemList
+      itemList.map((uRoute, uIndex) => {
+        if (this.$route.path.indexOf(uRoute.name) !== -1) {
+          uRoute.isShow = true
+          if (uRoute.children && uRoute.children.length > 1) {
+            uRoute.slideDown = true
+            uRoute.children.map(cRoute => {
+              if (cRoute.name === pathName) {
+                cRoute.isShow = true
+              } else {
+                cRoute.isShow = false;
+              }
+            })
+          }
         }
-      }
+      })
     })
   }
 }
