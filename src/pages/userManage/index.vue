@@ -215,11 +215,11 @@
             <!-- 跟进人 -->
             <div
               class="btn-container"
-              v-else-if="props.scope.column.property === 'adminName'"
+              v-else-if="props.scope.column.property === 'businessFollowUpAdminName'"
               style="justify-content: flex-start;"
             >
               <span style="text-align: left;">
-                <span v-if="props.scope.row.adminUid">{{props.scope.row.adminName}}</span>
+                <span v-if="props.scope.row.businessFollowUpAdminUid">{{props.scope.row.businessFollowUpAdminName}}</span>
                 <span v-else class="btn" @click.stop="toEditAdminName(props.scope.row.uid)">添加跟进人</span>
               </span>
             </div>
