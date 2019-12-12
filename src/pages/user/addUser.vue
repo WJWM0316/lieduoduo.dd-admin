@@ -60,7 +60,7 @@
         <el-form-item label="性别" prop="gender">
           <el-select class="selectState" v-model="personalInfo.gender" placeholder="请选择性别">
             <el-option label="男" value="1"></el-option>
-            <el-option label="女" value="0"></el-option>
+            <el-option label="女" value="2"></el-option>
           </el-select>
         </el-form-item>
       </el-form>

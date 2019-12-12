@@ -163,7 +163,7 @@
                 <span class="check" @click="check(props.scope.row.id)">查看</span>
               </div>
               <span
-                v-if="AdminShow==5||AdminShow==6||AdminShow==0"
+                v-if="AdminShow === 7 || AdminShow === 6 || AdminShow === 1"
                 class="createOrder"
                 @click="toPath(props.scope.row)"
               >创建推荐单</span>

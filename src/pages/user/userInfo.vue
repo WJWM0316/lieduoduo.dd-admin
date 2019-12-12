@@ -504,25 +504,16 @@ export default class addUser extends Vue {
   userList() {
     getSalerListApi().then(res => {
       this.salesList = res.data.data;
-      console.log(this.salesList, "fffffffffffffffffffffffff");
     });
   }
   mounted(e) {
     this.isEditAdminName = Boolean(this.$route.query.isEditAdminName);
-    console.log(this.isEditAdminName);
     if (this.isEditAdminName) {
-      console.log("进入账户设置");
-      // this.active = 1;
       this.userList();
     } else {
-      console.log("进入基本信息");
-
-      // this.active = 0;
       this.getUserInfo();
     }
-    console.log("isEditAdminName", this.isEditAdminName);
-    this.AdminShow = +sessionStorage.getItem("AdminShow");
-    // console.log("this.AdminShow", this.AdminShow);
+    this.AdminShow = +sessionStorage.getItem("AdminShow")
   }
 }
 </script>

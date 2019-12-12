@@ -4,7 +4,7 @@
       <el-header class="header" style="text-align: right; font-size: 15px">
         <div class="title">公司管理({{total}})</div>
         <div class="export">
-        <el-button type="primary" @click="download" :disabled="!canDownloadData" v-if="AdminShow == 0 || AdminShow == 2 || AdminShow == 1 || AdminShow == 4 || AdminShow == 5">导出</el-button>
+        <el-button type="primary" @click="download" :disabled="!canDownloadData" v-if="AdminShow === 1 || AdminShow === 2 || AdminShow === -2 || AdminShow === 3 || AdminShow === -3 || AdminShow === 4 || AdminShow === 5 || AdminShow === 6">导出</el-button>
         </div>
       </el-header>
       <el-main width="200px">
@@ -81,7 +81,7 @@
             <!-- 跟进人筛选 -->
             <el-form-item class="area" label="跟进销售" prop="adminUid" label-width="70px">
               <el-select v-model="form.adminUid" placeholder="请选择" style="margin-right: 10px;">
-                <el-option label="全部" value="all" v-if="AdminShow==4"></el-option>
+                <el-option label="全部" value="all" v-if="AdminShow === 4 || AdminShow === 5"></el-option>
                 <el-option label="无" :value=0></el-option>
                 <el-option
                   v-for="item in salerLis"
@@ -392,6 +392,7 @@ export default class indexPage extends Vue {
    * @return   {[type]}           [description]
    */
   getCompanyList(newForm) {
+    console.log(this.form)
     this.form[this.form.searchType] = this.form.content
     let params = {
       page: this.form.page,
@@ -406,9 +407,10 @@ export default class indexPage extends Vue {
     if(this.form.advisorUid) {
       params = Object.assign(params, {advisorUid: this.form.advisorUid})
     }
-    if(this.form.adminUid) {
-      params = Object.assign(params, {adminUid: this.form.adminUid})
-    }
+    // if(this.form.adminUid) {
+    //   params = Object.assign(params, {adminUid: this.form.adminUid})
+    // }
+    params = Object.assign(params, {adminUid: this.form.adminUid})
     if(this.form.status) {
       params = Object.assign(params, {status: this.form.status})
     }
@@ -457,6 +459,7 @@ export default class indexPage extends Vue {
         params = Object.assign(params, {firstAreaId: this.form.firstAreaId, area_id: this.form.area_id})
       }
     }
+    console.log(params)
 
     getCompanyListApi(params).then(res => {
       let list = res.data.data

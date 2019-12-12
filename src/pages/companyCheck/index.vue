@@ -5,7 +5,7 @@
       <el-header class="header" style="text-align: right; font-size: 15px">
         <div class="title">审核管理({{total}})</div>
         <div class="export"><el-button @click="addCompany" class="btn-limit-width">+ 新建公司</el-button></div>
-        <el-button type="primary" @click="download" :disabled="!canDownloadData" v-if="AdminShow == 0 || AdminShow == 2 || AdminShow == 1 || AdminShow == 4 || AdminShow == 5">导出</el-button>
+        <el-button type="primary" @click="download" :disabled="!canDownloadData" v-if="AdminShow == 1 || AdminShow == 2 || AdminShow == -2 || AdminShow == 3 || AdminShow == -3">导出</el-button>
       </el-header>
       <el-main>
         <!--筛选-->
@@ -59,7 +59,7 @@
               style="margin-left: 20px;"
             >
               <el-select v-model="form.admin_uid" placeholder="跟进销售">
-                <el-option label="全部" value="all" v-if="AdminShow==4"></el-option>
+                <el-option label="全部" value="all" v-if="AdminShow === 4 || AdminShow === 5"></el-option>
                 <el-option label="无" value="0"></el-option>
                 <el-option
                   v-for="item in userList"

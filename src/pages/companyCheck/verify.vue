@@ -18,7 +18,7 @@
           </span>
         </div>
         <div class="editBox" v-if="!isEdit">
-          <div v-if="AdminShow==0||AdminShow==1||AdminShow==2" style="display:inline-block;">
+          <div v-if="AdminShow === 1 || AdminShow === 2|| AdminShow === -2 || AdminShow === 3 || AdminShow === -3" style="display:inline-block;">
             <el-button
               class="inquire"
               @click.stop="Review(companyInfo.id, 'company')"

@@ -92,31 +92,43 @@ export default class login extends Vue {
     // 3||4销售主管
     if (isAdmin) {
       console.log("超管");
-      AdminShow = 0;
-    } else if (isGroupAdmin && groupId === 2) {
-      console.log("客服组长");
       AdminShow = 1;
-    } else if (!isGroupAdmin && groupId === 2) {
-      console.log("客服组员");
+    } else if (isGroupAdmin && groupId === 2) {
+      console.log("研发组长");
       AdminShow = 2;
-    } else if (!isGroupAdmin && groupId === 3) {
-      console.log("商务组员");
-      AdminShow = 3;
-    } else if (!isGroupAdmin && groupId === 4) {
-      AdminShow = 3;
-      console.log("商务组员");
+    } else if (!isGroupAdmin && groupId === 2) {
+      console.log("研发组员");
+      AdminShow = -2;
     } else if (isGroupAdmin && groupId === 3) {
-      console.log("商务组长");
-      AdminShow = 4;
+      console.log("客服组长");
+      AdminShow = 3;
+    } else if (!isGroupAdmin && groupId === 3) {
+      console.log("客服组员");
+      AdminShow = -3;
     } else if (isGroupAdmin && groupId === 4) {
-      console.log("商务组长");
+      console.log("北京商务组长");
       AdminShow = 4;
+    } else if (!isGroupAdmin && groupId === 4) {
+      console.log("北京商务组员");
+      AdminShow = -4;
     } else if (isGroupAdmin && groupId === 5) {
-      console.log("猎头主管&顾问主管");
+      console.log("广州商务组长");
       AdminShow = 5;
     } else if (!isGroupAdmin && groupId === 5) {
-      console.log("猎头组员");
+      console.log("广州商务组员");
+      AdminShow = -5;
+    } else if (isGroupAdmin && groupId === 6) {
+      console.log("顾问组长");
       AdminShow = 6;
+    } else if (!isGroupAdmin && groupId === 6) {
+      console.log("顾问组员");
+      AdminShow = -6;
+    } else if (isGroupAdmin && groupId === 7) {
+      console.log("运营组长");
+      AdminShow = 7;
+    } else if (!isGroupAdmin && groupId === 7) {
+      console.log("运营组员");
+      AdminShow = -7;
     }
     return AdminShow;
   }
