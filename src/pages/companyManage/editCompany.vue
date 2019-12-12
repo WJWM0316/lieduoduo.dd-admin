@@ -269,7 +269,7 @@
     </div>
     <!-- 跟进销售设置 -->
     <div class="editWindow" v-if="active === 1">
-      <div class="sales" v-if="AdminShow === 1 || AdminShow === 3 || AdminShow === -3">
+      <div class="sales" v-if="AdminShow === 1 || AdminShow === 3 || AdminShow === -3 || AdminShow === 4 || AdminShow === -4 || AdminShow === 5 || AdminShow === -5">
         <h3>跟进销售</h3>
         <el-form>
           <el-form-item label="跟进销售">
@@ -623,10 +623,12 @@ export default class createCompany extends Vue {
   /* 切换tab */
   tab(e) {
     if (e.target.className === "userInfo") {
+      console.log(1)
       this.active = 1
       if (this.salesList.length > 0) return
       getSalerListApi().then(res => this.salesList = res.data.data)
     } else {
+      console.log(2)
       this.active = 0
     }
   }
@@ -676,6 +678,7 @@ export default class createCompany extends Vue {
   }
   mounted() {
     this.AdminShow = +sessionStorage.getItem("AdminShow");
+    console.log(this.AdminShow)
     this.getAdvisorUserList()
     if (this.$route.query.isCreated) {
       this.isCreated = this.$route.query.isCreated;
