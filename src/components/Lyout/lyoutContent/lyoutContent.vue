@@ -68,13 +68,11 @@ export default class lyoutContent extends Vue {
   scrollZero() {
     window.scrollTo(0, 0);
     const el = document.getElementById("lyoutScroll");
-    // console.log(el);
     el.scrollTop = 0;
   }
   /* 监听布局高度，以改变table高度,兼容其他浏览器 */
   clientHeight() {
     let lyoutHeight = document.getElementById("lyoutScroll").offsetHeight;
-    console.log("lyoutHeight", lyoutHeight);
     let isMaxHeight = (lyoutHeight > 800) & (lyoutHeight < 900) ? true : false;
     let centerHeight = (lyoutHeight > 700) & (lyoutHeight < 800) ? true : false;
     let isMixHeight = (lyoutHeight > 600) & (lyoutHeight < 700) ? true : false;
@@ -93,8 +91,6 @@ export default class lyoutContent extends Vue {
       this.tableHeight = 260;
     }
     this.$emit("handertableHeight", this.tableHeight);
-    // }else if()
-    // console.log("table高度", this.tableHeight);
   }
   handlePageChange(nowPage) {
     this.$emit("handlePageChange", nowPage);

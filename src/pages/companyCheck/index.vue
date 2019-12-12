@@ -252,7 +252,7 @@ import Component from "vue-class-component";
 import List from "@/components/list";
 import { getSalerListApi } from "API/commont";
 import { templistApi, companyTempUserList, setCompanyCompanyLevelApi } from "API/company";
-import { getAccessToken, removeAccessToken } from "API/cacheService";
+import { getAccessToken } from "API/cacheService";
 import { API_ROOT } from 'API/index.js'
 @Component({
   name: "course-list",
@@ -286,34 +286,26 @@ export default class companyCheck extends Vue {
      // },
     {
       prop: "companyName",
-      label: "申请信息",
-      width: 400
+      label: "申请信息"
     },
     {
       prop: "realName",
-      label: "提交人",
-      width: 200,
-      align: "left"
+      label: "提交人"
     },
     {
       prop: "adminName",
-      label: "跟进销售",
-      width: 250,
-      align: "left"
+      label: "跟进销售"
     },
     {
       prop: "status",
-      label: "公司认证状态",
-      width: 250
+      label: "公司认证状态"
     },
     {
       prop: "createdAt",
-      label: "申请时间",
-      width: 250
+      label: "申请时间"
     },
     {
       prop: "id",
-      fixed: "right",
       label: "操作"
     }
   ];
@@ -339,7 +331,7 @@ export default class companyCheck extends Vue {
   }
   addCompany() {
     this.$router.push({
-      path: "/index/createCompany",
+      path: "/companyManage/create",
       query: {
         isCreated: true,
         from: 'cp'
@@ -349,7 +341,7 @@ export default class companyCheck extends Vue {
   check(id) {
     this.$route.meta.scrollY = window.scrollY;
     this.$router.push({
-      path: "/check/companyCheck/verify",
+      path: "/verifyManage/verify",
       query: { id: id }
     });
   }
@@ -415,8 +407,8 @@ export default class companyCheck extends Vue {
   toEditSaller(id) {
     this.$route.meta.scrollY = window.scrollY;
     this.$router.push({
-      path: `/check/companyCheck/${id}`,
-      query: { isEditSaller: true }
+      path: `/userManage/detail/${id}`,
+      query: { isEditAdminName: true }
     });
   }
   created() {
@@ -501,10 +493,8 @@ export default class companyCheck extends Vue {
 
 <style lang="less" scoped="scoped">
 .companyCheck {
-  margin-left: 200px;
   .container {
     min-width: 1000px;
-    margin: 22px;
     .header {
       display: flex;
       align-items: center;

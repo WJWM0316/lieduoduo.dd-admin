@@ -10,7 +10,7 @@
         <el-button class="inquire" @click.stop="toEdit(personalInfo.uid)">编辑</el-button>
       </div>
       <div class="editBox" v-if="isEditAdminName==true">
-        <el-button class="saveAdminName" @click.stop="saveAdminName">保存跟进销售</el-button>
+        <el-button class="saveAdminName" @click.stop="saveAdminName">保存跟进人</el-button>
       </div>
     </div>
     <!--大图蒙层-->
@@ -57,12 +57,12 @@
       <div class="sales">
         <h3>跟进销售</h3>
         <el-form>
-          <el-form-item label="跟进销售">
+          <el-form-item label="跟进人">
             <el-select
               style="width: 400px;"
               ref="salesList"
               v-model="companyInfo.realname"
-              placeholder="请选择跟进销售"
+              placeholder="请选择跟进人"
               @change="ground"
             >
               <el-option label="无" :value="0"/>
@@ -104,16 +104,15 @@
         </el-form-item>
       </el-form>
     </div>
-    <div class="companyMessage" v-if="isEditAdminName==false&&userInfo.companyInfo.id !==0">
+    <div class="companyMessage" v-if="isEditAdminName==false&&userInfo.companyInfo!=null">
       <div>所属公司</div>
       <div class="companyName" v-show="userInfo.companyTopInfo!=''">
         <span class="label">公司全称</span>
-        <div v-if="userInfo.companyTopInfo.companyTopName ">{{userInfo.companyTopInfo.companyTopName}}</div>
+        <div v-if="userInfo.companyTopInfo.companyTopName">{{userInfo.companyTopInfo.companyTopName}}</div>
         <div v-else>
           无
         </div>
       </div>
-
       <div class="companyName" v-show="companyInfo!=''">
         <span class="label">所属机构</span>
         <div v-if="companyInfo.companyName && !userInfo.isTopAdmin">{{companyInfo.companyName}}</div>
@@ -127,9 +126,8 @@
         <div v-else-if="userInfo.isRecruiter">招聘官</div>
         <div v-else>无</div>
       </div>
-
       <div class="companyName" v-show="companyInfo && userInfo.companyId">
-        <span class="label" :style="'margin-right:10px'">是否可以发布职位</span>
+        <span :style="'margin-right:10px'" class="label">是否可以发布职位</span>
         <el-switch v-model="createPositionRight" @change="changeRight"></el-switch>
       </div>
       <div class="companyName" v-show="companyInfo && companyInfo.applyType">
@@ -141,12 +139,10 @@
       </div>
       <div class="companyName btn" v-show="userInfo.companyId" @click.stop="removeUser">移出公司</div>
     </div>
-
     <div class="companyMessage" v-else-if="isEditAdminName==false">
       <div>所属公司</div>
       <div class="companyName btn" @click.stop="bindCompany">绑定公司</div>
     </div>
-
     <div class="officerInfo" v-if="userInfo.companyId&&isEditAdminName==false">
       <div class="title">
         <span>招聘官信息</span>
@@ -306,16 +302,12 @@ export default class addUser extends Vue {
   };
   /* 切换tab */
   tab(e) {
-    console.log("e.target.className", e.target.className);
-    console.log("-----");
     if (e.target.className.indexOf("userInfo") == -1) {
-      console.log("基本信息 ");
       this.$nextTick(() => {
         this.userList();
       });
       this.isEditAdminName = true;
     } else if (e.target.className.indexOf("editAdminName") == -1) {
-      console.log("账户设置");
       this.$nextTick(() => {
         this.getUserInfo();
       });
@@ -327,7 +319,6 @@ export default class addUser extends Vue {
     this.$set(this.saveParam, "admin_uid", this.salesList[e].id);
   }
   async saveAdminName() {
-    console.log(this.saveParam);
     if (this.saveParam.group_id === "") {
       this.$message.error("请先选择跟进人");
     } else {
@@ -382,7 +373,7 @@ export default class addUser extends Vue {
   }
   /* 去编辑用户信息 */
   toEdit() {
-    this.$router.push({ path: `/user/editUser/${this.$route.params.id}` });
+    this.$router.push({ path: `/recruiterManage/edit/${this.$route.params.id}` });
   }
   /* 去查看公司审核 */
   toCheckCompany(companyId) {
@@ -391,13 +382,8 @@ export default class addUser extends Vue {
   /* 移出公司 */
   async removeUser() {
     this.showAdminWindow = true;
-    // this.is
     this.isBindAdmin = true;
-    // this.isNewCompany=false
     this.companyInfo.realName=this.userInfo.name
-
-    console.log('this.companyInfo',this.companyInfo)
-    // console.log(this.userInfo);
     if (!!this.companyInfo.isAdmin) {
       let param = {
         page: 1,
@@ -415,8 +401,6 @@ export default class addUser extends Vue {
   bindCompany() {
     this.showAdminWindow = true;
     this.isBindAdmin = false;
-    console.log(this.userInfo);
-    // this.
   }
   /* 关闭弹窗 */
   close(e) {
@@ -426,11 +410,9 @@ export default class addUser extends Vue {
 
   /* 获取用户信息 */
   async getUserInfo() {
-    console.log("routeId", this.$route.params.id);
     let res = await getUserInfoApi(this.$route.params.id);
     let userInfo = res.data.data;
     this.userInfo = userInfo;
-    console.log("this.userInfo", this.userInfo);
 
     this.isDetection = !userInfo.needRealNameAuth;
     if (userInfo.companyInfo) {
@@ -444,7 +426,6 @@ export default class addUser extends Vue {
     this.phone = {
       mobile: userInfo.mobile
     };
-    console.log("userInfo", userInfo);
     /* 身份信息 */
     this.personalInfo = {
       uid: userInfo.uid,
@@ -494,26 +475,18 @@ export default class addUser extends Vue {
   }
 
   toEditRecruiter() {
-    this.$router.push({
-      path: `/user/editRecruiter/${this.$route.params.id}`,
-      params: {
-        isEditAdminName: false
-      }
-    });
+    this.$router.push({ path: `/recruiterManage/edit/${this.$route.params.id}` });
   }
   userList() {
-    getSalerListApi().then(res => {
-      this.salesList = res.data.data;
-    });
+    getSalerListApi().then(res => this.salesList = res.data.data);
   }
   mounted(e) {
-    this.isEditAdminName = Boolean(this.$route.query.isEditAdminName);
     if (this.isEditAdminName) {
       this.userList();
     } else {
       this.getUserInfo();
     }
-    this.AdminShow = +sessionStorage.getItem("AdminShow")
+    this.AdminShow = +sessionStorage.getItem("AdminShow");
   }
 }
 </script>
@@ -590,8 +563,6 @@ export default class addUser extends Vue {
   border-radius: 4px;
 }
 .createCompany {
-  margin-left: 200px;
-  padding: 22px;
   .header {
     padding-right: 20px;
     box-sizing: border-box;
@@ -603,6 +574,7 @@ export default class addUser extends Vue {
     justify-content: space-between;
     .creatTab {
       height: 100%;
+      text-align: center;
       > div {
         cursor: pointer;
         line-height: 80px;

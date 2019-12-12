@@ -1,13 +1,13 @@
 <template>
   <div id="index">
-    <el-container class="container" style="border: 1px solid #eee">
-      <el-header class="header" style="text-align: right; font-size: 15px">
-        <div class="title">公司管理({{total}})</div>
+    <div class="container">
+      <header class="header">
+        <span class="title">公司管理({{total}})</span>
         <div class="export">
-        <el-button type="primary" @click="download" :disabled="!canDownloadData" v-if="AdminShow === 1 || AdminShow === 2 || AdminShow === -2 || AdminShow === 3 || AdminShow === -3 || AdminShow === 4 || AdminShow === 5 || AdminShow === 6">导出</el-button>
+          <el-button type="primary" @click="download" :disabled="!canDownloadData" v-if="AdminShow === 1 || AdminShow === 2 || AdminShow === -2 || AdminShow === 3 || AdminShow === -3 || AdminShow === 4 || AdminShow === 5 || AdminShow === 6">导出</el-button>
         </div>
-      </el-header>
-      <el-main width="200px">
+      </header>
+      <div class="main">
         <!--筛选-->
         <div class="selectionBox" @keyup.enter="search">
           <el-form ref="form" :model="form" label-width="80px" validate="validate">
@@ -251,8 +251,8 @@
             </template>
           </template>
         </list>
-      </el-main>
-    </el-container>
+      </div>
+    </div>
     
     <el-dialog
     title="生成小程序链接"
@@ -273,7 +273,7 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import { getCompanyListApi, getCityApi, setCompanyCustomerLevelApi } from "API/company";
 import { getSalerListApi, getAdvisorUserListApi, generatebindUrlApi } from "API/commont";
-import { getAccessToken, removeAccessToken } from "API/cacheService";
+import { getAccessToken } from "API/cacheService";
 import { API_ROOT } from 'API/index.js'
 import List from "@/components/list";
 Component.registerHooks([
@@ -328,34 +328,26 @@ export default class indexPage extends Vue {
   fields = [
     {
       prop: "id",
-      label: "公司ID",
-      width: 150
+      label: "公司ID"
     },
     {
       prop: "companyName",
-      label: "申请信息",
-      width: 400
-      //    align: 'left'
+      label: "申请信息"
     },
     {
       prop: "bindWechat",
-      label: "是否绑定小程序",
-      width: 250
+      label: "是否绑定小程序"
     },
     {
       prop: "adminName",
-      label: "跟进销售",
-      width: 250
+      label: "跟进销售"
     },
     {
       prop: "statusDesc",
-      label: "状态",
-      width: 250
+      label: "状态"
     },
     {
       prop: "check",
-      fixed: "right",
-      width: 200,
       label: "操作"
     }
   ];
@@ -392,7 +384,6 @@ export default class indexPage extends Vue {
    * @return   {[type]}           [description]
    */
   getCompanyList(newForm) {
-    console.log(this.form)
     this.form[this.form.searchType] = this.form.content
     let params = {
       page: this.form.page,
@@ -407,10 +398,9 @@ export default class indexPage extends Vue {
     if(this.form.advisorUid) {
       params = Object.assign(params, {advisorUid: this.form.advisorUid})
     }
-    // if(this.form.adminUid) {
-    //   params = Object.assign(params, {adminUid: this.form.adminUid})
-    // }
-    params = Object.assign(params, {adminUid: this.form.adminUid})
+    if(this.form.adminUid) {
+      params = Object.assign(params, {adminUid: this.form.adminUid})
+    }
     if(this.form.status) {
       params = Object.assign(params, {status: this.form.status})
     }
@@ -459,7 +449,6 @@ export default class indexPage extends Vue {
         params = Object.assign(params, {firstAreaId: this.form.firstAreaId, area_id: this.form.area_id})
       }
     }
-    console.log(params)
 
     getCompanyListApi(params).then(res => {
       let list = res.data.data
@@ -483,7 +472,7 @@ export default class indexPage extends Vue {
   }
   /* 新建公司 */
   addCompany() {
-    this.$router.push({path: "/index/createCompany"});
+    this.$router.push({path: "/companyManage/createCompany"});
   }
   onSubmit() {
     this.form.page = 1;
@@ -570,12 +559,12 @@ export default class indexPage extends Vue {
   check(id) {
     this.$route.meta.scrollY = window.scrollY;
     this.$router.push({
-      path: "/index/companyInfo",
+      path: "/companyManage/detail",
       query: { id: id }
     });
   }
   toUser(uid) {
-    this.$router.push({ path: `/user/userInfo/${uid}` });
+    this.$router.push({ path: `/userManage/detail/${uid}` });
   }
   download() {
     this.$confirm('是否导出该列表数据？', '提示', {
@@ -694,77 +683,70 @@ export default class indexPage extends Vue {
 }
 </script>
 
-<style lang="less">
-#index {
-  .el-form-item__label{
-    text-align: center
-  }
-  margin-left: 200px;
-  .container {
-    min-width: 1000px;
-    margin: 22px;
-    .header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      .title {
-        display: flex;
-        align-items: center;
-        position: relative;
-        font-size: 15px;
-        &::before {
-          background: #ffe266;
-          content: "";
-          display: inline-block;
-          float: left;
-          height: 100%;
-          height: 16px;
-          margin-right: 10px;
-          width: 6px;
-        }
-      }
-      .export{
-        margin-right: 20px;
-        margin-top: 10px;
-      }
-      .creatBtn {
-        font-size: 15px;
-        padding: 12px 20px;
-        background-color: #ffe266;
-        border-radius: 4px;
-      }
-    }
-    .el-form {
-      /*display: flex;*/
-      /*align-items: center;*/
-      /* 筛选 */
-      .inputSelect {
-        line-height: 20px !important;
-        width: 400px !important;
-        background-color: #ffffff;
-        .el-select {
-          width: 120px;
-          margin-top: -2px;
-          border: none;
-          box-sizing: border-box;
-        }
-      }
-      &::after {
+<style lang="less" scoped>
+.el-form-item__label{
+  text-align: center
+}
+
+.container {
+  padding: 20px;
+  border: 1px solid #ccc;
+  .header {
+    overflow: hidden;
+    .title {
+      position: relative;
+      font-size: 16px;
+      &::before {
+        background: #ffe266;
         content: "";
-        display: block;
-        height: 0;
-        clear: both;
+        display: inline-block;
+        float: left;
+        height: 100%;
+        height: 16px;
+        margin-right: 10px;
+        width: 6px;
       }
     }
-    .el-form-item,
-    .searchTab {
-      margin-bottom: 22px;
-      margin-right: 20px;
-      float: left;
-    }
-    .btn {
+    .export{
       float: right;
     }
+    .creatBtn {
+      font-size: 15px;
+      padding: 12px 20px;
+      background-color: #ffe266;
+      border-radius: 4px;
+    }
+  }
+  .el-form {
+    /*display: flex;*/
+    /*align-items: center;*/
+    /* 筛选 */
+    .inputSelect {
+      line-height: 20px !important;
+      width: 400px !important;
+      background-color: #ffffff;
+      .el-select {
+        width: 120px;
+        margin-top: -2px;
+        border: none;
+        box-sizing: border-box;
+      }
+    }
+    &::after {
+      content: "";
+      display: block;
+      height: 0;
+      clear: both;
+    }
+  }
+  .el-form-item,
+  .searchTab {
+    margin-bottom: 22px;
+    margin-right: 20px;
+    float: left;
+  }
+  .btn {
+    float: right;
   }
 }
 .check {

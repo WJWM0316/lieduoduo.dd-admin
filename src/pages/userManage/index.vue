@@ -1,9 +1,9 @@
 <!--招聘官管理-->
 <template>
-  <div class="recruiter_list" @click.stop="closeTopic">
+  <div class="officerManage" @click.stop="closeTopic">
     <el-container class="container" style="border: 1px solid #eee">
       <el-header class="header" style="text-align: right; font-size: 15px">
-        <div class="title">招聘官管理({{total}})</div>
+        <div class="title">用户管理({{total}})</div>
         <el-button @click.stop="addUser" class="btn-limit-width">+ 添加用户</el-button>
       </el-header>
       <el-main>
@@ -15,21 +15,22 @@
               <el-input
                 type="text"
                 placeholder="请输入内容"
-                v-model="form.keyword1"
+                v-model="searchType.keyword1"
                 class="inputSelect"
               >
                 <el-select
                   class="selectTitle"
-                  v-model="form.searchType1"
+                  v-model="searchType.condition1"
                   slot="prepend"
                   placeholder="请选择"
+                  @change="changeProvince"
                 >
                   <el-option
                     v-for="item in keyword"
                     :key="item.label"
                     :label="item.label"
                     :value="item.value"
-                    v-show="form.searchType2 !== item.value"
+                    v-show="searchType.condition2 !== item.value"
                   ></el-option>
                 </el-select>
               </el-input>
@@ -39,21 +40,22 @@
               <el-input
                 type="text"
                 placeholder="请输入内容"
-                v-model="form.keyword2"
+                v-model="searchType.keyword2"
                 class="inputSelect"
               >
                 <el-select
                   class="selectTitle"
-                  v-model="form.searchType2"
+                  v-model="searchType.condition2"
                   slot="prepend"
                   placeholder="请选择"
+                  @change="changeProvince"
                 >
                   <el-option
                     v-for="item in keyword"
                     :key="item.label"
                     :label="item.label"
                     :value="item.value"
-                    v-show="form.searchType1 !== item.value"
+                    v-show="searchType.condition1 !== item.value"
                   ></el-option>
                 </el-select>
               </el-input>
@@ -88,8 +90,8 @@
                 placeholder="全部状态"
                 @change="changeProvince"
               >
-                <el-option label="全部" value="2,3,4"></el-option>
-                <!-- <el-option label="无身份" value="0"></el-option> -->
+                <el-option label="全部" value="99"></el-option>
+                <el-option label="无身份" value="0"></el-option>
                 <el-option label="招聘官" value="2"></el-option>
                 <el-option label="机构管理员" value="3"></el-option>
                 <el-option label="超级管理员" value="4"></el-option>
@@ -129,7 +131,7 @@
               </el-select>
             </el-form-item>
             <el-form-item class="btn">
-              <el-button @click.stop="onSubmit" style="color: white !important" type="primary">查询</el-button>
+              <el-button type="primary" @click.stop="onSubmit">查询</el-button>
               <el-button @click.stop="resetForm('form')">重置</el-button>
             </el-form-item>
           </el-form>
@@ -139,7 +141,7 @@
           :fields="fields"
           :list="list"
           :total="total"
-          :page="Number(form.page)"
+          :page="form.page"
           :page-count="pageCount"
           @page-change="handlePageChange"
         >
@@ -153,11 +155,15 @@
               <div>
                 <span class="check" @click.stop="check(props.scope.row.uid)">查看</span>
               </div>
+              <!-- <div
+                style="width: 100%; cursor: pointer; color: #652791;"
+                @click.stop="creatLink($event, props.scope.row, props.scope.$index)"
+              >查看招聘官</div> -->
             </div>
             <!-- 序号 -->
             <div class="btn-container" v-else-if="props.scope.column.property === 'index'">
               <div>
-                <span>{{props.scope.$index +1}}</span>
+                <span>{{props.scope.row.uid}}</span>
               </div>
             </div>
             <!-- 所属公司 -->
@@ -171,8 +177,9 @@
               <div v-else>
                 无
               </div>
+              
             </div>
-          <!-- 所属机构 -->
+            <!-- 所属机构 -->
             <div
               class="btn-container companyName"
               v-else-if="props.scope.column.property === 'companyName'"
@@ -182,7 +189,7 @@
               </div>
               <div v-else>无</div>
             </div>
-             <!-- 身份类型 -->
+            <!-- 身份类型 -->
             <div
               class="btn-container companyName"
               v-else-if="props.scope.column.property === 'usertype'"
@@ -192,7 +199,6 @@
             <div v-else-if="props.scope.row.isRecruiter">招聘官</div>
             <div v-else>无</div>
             </div>
-            
             <!-- 发布职位权益 -->
             <div
               class="btn-container"
@@ -308,22 +314,6 @@ import { getSalerListApi } from "API/commont";
   name: "userList",
   components: {
     List
-  },
-  watch: {
-    'form.searchType1': {
-      handler(newV, oldV) {
-        this.form.keyword1 = ''
-        this.form[oldV] = ''
-      },
-      immediate: true
-    },
-    'form.searchType2': {
-      handler(newV, oldV) {
-        this.form.keyword2 = ''
-        this.form[oldV] = ''
-      },
-      immediate: true
-    }
   }
 })
 export default class user extends Vue {
@@ -339,20 +329,20 @@ export default class user extends Vue {
     auth_status: "",
     createTimeStart: "",
     createTimeEnd: "",
-    role: "2,3,4",
+    role: "99",
     createPositionRight: "99", // 发布职位权益
+    idAuth: "99",
     companyName: "",
-    companyTopName: "",
     mobile: "",
     name: "",
     page: 1,
-    count: 20,
-    searchType1: 'companyTopName',
-    searchType2: 'userName',
-    keyword1: '',
-    keyword2: '',
-    createTimeStart: '',
-    createTimeEnd: ''
+    count: 20
+  };
+  searchType = {
+    condition1: "companyTopName",
+    condition2: "mobile",
+    keyword1: "",
+    keyword2: ""
   };
   /* 搜索关键字 */
   keyword = [
@@ -364,41 +354,31 @@ export default class user extends Vue {
   fields = [
     {
       prop: "index",
-      label: "序号",
-      width: 80
+      label: "用户ID"
     },
     {
       prop: "name",
-      label: "个人信息",
-      width: 200
+      label: "个人信息"
     },
     {
       prop: "companyTopName",
-      label: "所属公司",
-      align: "left",
-      width: 300
+      label: "所属公司"
     },
     {
       prop: "companyName",
       label: "所属机构",
-      align: "left",
-      width: 200
     },
     {
       prop: "usertype",
-      label: "身份类型",
-      align: "left",
-      width: 200
+      label: "身份类型"
     },
     {
       prop: "createPositionRight",
-      label: "发布职位权益",
-      width: 150
+      label: "发布职位权益"
     },
     {
       prop: "adminName",
-      label: "跟进人",
-      width: 150
+      label: "跟进人"
     },
     {
       prop: "createdAt",
@@ -406,25 +386,50 @@ export default class user extends Vue {
     },
     {
       prop: "id",
-      fixed: "right",
-      width: 150,
       label: "操作"
     }
   ];
-  list = []
+  list = [];
   /* 添加用户 */
   addUser() {
     sessionStorage.setItem("up_router", this.$route.path);
     this.$route.meta.scrollY = window.scrollY;
-    this.$router.push({ path: "/user/addUser" });
+    this.$router.push({ path: "/userManage/addUser" });
   }
+  mounted() {
+    this.AdminShow = +sessionStorage.getItem("AdminShow");
+    this.getSalerList();
+  }
+  /* 选择变更 */
   changeProvince(e) {}
   toCompany(companyId) {
-    this.$router.push({ path: `/index/companyInfo?id=${companyId}` });
+    this.$router.push({ path: `/companyManage/companyInfo?id=${companyId}` });
   }
   onSubmit(e) {
     this.form.page = 1;
-    this.getRecruiterList();
+    let searchCondition = {};
+    if (this.searchType.condition1 && this.searchType.keyword1)
+      searchCondition[this.searchType.condition1] = this.searchType.keyword1;
+    if (this.searchType.condition2 && this.searchType.keyword2)
+      searchCondition[this.searchType.condition2] = this.searchType.keyword2;
+    let searchForm = Object.assign({}, this.form, searchCondition);
+    if (searchForm.createTimeStart !== "" && searchForm.createTimeEnd === "") {
+      this.$message({
+        message: "创建时间必须选择开始时间和结束时间",
+        type: "warning"
+      });
+      return;
+    } else if (
+      searchForm.createTimeStart === "" &&
+      searchForm.createTimeEnd !== ""
+    ) {
+      this.$message({
+        message: "创建时间必须选择开始时间和结束时间",
+        type: "warning"
+      });
+      return;
+    }
+    this.getRecruiterList(searchForm);
   }
   // 获取销售人员名单
   async getSalerList() {
@@ -435,7 +440,7 @@ export default class user extends Vue {
   toEditAdminName(uid) {
     this.$route.meta.scrollY = window.scrollY;
     this.$router.push({
-      path: `/user/userInfo/${uid}`,
+      path: `/userManage/detail/${uid}`,
       query: { isEditAdminName: true }
     });
   }
@@ -445,105 +450,58 @@ export default class user extends Vue {
   }
   /* 重置筛选 */
   resetForm(name) {
-    this.form = {
-      admin_uid: "", //跟进人
-      keyword: "",
-      status: "",
-      auth_status: "",
-      createTimeStart: "",
-      createTimeEnd: "",
-      role: "2,3,4",
-      createPositionRight: "99", // 发布职位权益
-      companyName: "",
-      mobile: "",
-      name: "",
-      page: 1,
-      count: 20,
-      searchType1: 'companyTopName',
-      searchType2: 'userName',
-      keyword1: '',
-      keyword2: '',
-      createTimeStart: '',
-      createTimeEnd: ''
+    this.searchType = {
+      condition1: "companyTopName",
+      condition2: "mobile",
+      keyword1: "",
+      keyword2: ""
     };
+    this.form.createTimeEnd = "";
     this.$refs[name].resetFields();
-    this.getRecruiterList()
   }
   /* 请求招聘官审核列表 */
   getRecruiterList(newForm) {
-    this.form[this.form.searchType1] = this.form.keyword1
-    this.form[this.form.searchType2] = this.form.keyword2
-    let params = {
-      page: this.form.page,
-      count: this.form.count
-    }
-    if(this.form.admin_uid) {
-      params = Object.assign(params, {admin_uid: this.form.admin_uid})
-    }
-    if(this.form.keyword) {
-      params = Object.assign(params, {keyword: this.form.keyword})
-    }
-    if(this.form.status) {
-      params = Object.assign(params, {status: this.form.status})
-    }
-    if(this.form.auth_status) {
-      params = Object.assign(params, {auth_status: this.form.auth_status})
-    }
-    if(this.form.role) {
-      params = Object.assign(params, {role: this.form.role})
-    }
-    if(this.form.createPositionRight) {
-      params = Object.assign(params, {createPositionRight: this.form.createPositionRight})
-    }
-    if(this.form.companyName) {
-      params = Object.assign(params, {companyName: this.form.companyName})
-    }
-    if(this.form.companyTopName) {
-      params = Object.assign(params, {companyTopName: this.form.companyTopName})
-    }
-    if(this.form.mobile) {
-      params = Object.assign(params, {mobile: this.form.mobile})
-    }
-    if(this.form.name) {
-      params = Object.assign(params, {name: this.form.name})
-    }
-    if(this.form.userName) {
-      params = Object.assign(params, {userName: this.form.userName})
-    }
-    if((this.form.createTimeStart && !this.form.createTimeEnd) || (!this.form.createTimeStart && this.form.createTimeEnd)) {
-      this.$message({message: "必须选择一个时间区间", type: "warning"});
-    } else {
-      if(this.form.createTimeStart && this.form.createTimeEnd) {
-        params = Object.assign(params, {createTimeStart: this.form.createTimeStart, createTimeEnd: this.form.createTimeEnd})
-      }
-    }
-    getUserListApi(params).then(res => {
+    let params = this.$route.name === 'recruiterManageIndex' ? {role: '2,3,4', createPositionRight: 99} : ''
+    getUserListApi({...(newForm || this.form), ...params}).then(res => {
       this.list = res.data.data;
       this.total = res.data.meta.total;
       this.pageCount = res.data.meta.lastPage;
-      if(this.form.searchType1 && this.form[this.form.searchType1]) {
-        params = Object.assign(params, {searchType1: this.form.searchType1, [this.form.searchType1]: this.form[this.form.searchType1]})
-      }
-      if(this.form.searchType2 && this.form[this.form.searchType2]) {
-        params = Object.assign(params, {searchType2: this.form.searchType2, [this.form.searchType2]: this.form[this.form.searchType2]})
-      }
-      // this.$router.push({
-      //   query: {
-      //     ...params
-      //   }
-      // })
     });
   }
   /* 翻页 */
   handlePageChange(nowPage) {
-    this.form.page = nowPage;    
-    this.getRecruiterList();
+    this.$route.meta.scrollY = 0;
+    window.scrollTo(0, 0);
+    this.form.page = nowPage;
+    let searchCondition = {};
+    if (this.searchType.condition1 && this.searchType.keyword1)
+      searchCondition[this.searchType.condition1] = this.searchType.keyword1;
+    if (this.searchType.condition2 && this.searchType.keyword2)
+      searchCondition[this.searchType.condition2] = this.searchType.keyword2;
+    let searchForm = Object.assign({}, this.form, searchCondition);
+    if (searchForm.createTimeStart !== "" && searchForm.createTimeEnd === "") {
+      this.$message({
+        message: "创建时间必须选择开始时间和结束时间",
+        type: "warning"
+      });
+      return;
+    } else if (
+      searchForm.createTimeStart === "" &&
+      searchForm.createTimeEnd !== ""
+    ) {
+      this.$message({
+        message: "创建时间必须选择开始时间和结束时间",
+        type: "warning"
+      });
+      return;
+    }
+    this.getRecruiterList(searchForm);
   }
   /* 查看相应的招聘官审核详情 */
   check(id) {
     this.$route.meta.scrollY = window.scrollY;
     this.$router.push({
-      path: `/recruiter/recruiterInfo/${id}`,
+      path: `/userManage/detail/${id}`,
       query: {
         isEditAdminName: false
       }
@@ -596,28 +554,20 @@ export default class user extends Vue {
   }
 
   created() {
-    this.AdminShow = +sessionStorage.getItem("AdminShow");
-    this.getSalerList();
-    this.form = Object.assign(this.form, this.$route.query)
-    this.form.admin_uid = Number(this.form.admin_uid) > 0 ? Number(this.form.admin_uid) : ''
-    this.form.keyword1 = this.$route.query.companyName
-    console.log(this.$route.query)
-    if(this.form.role == '2,3') this.form.role = '99'
     this.getRecruiterList();
+  }
+  activated() {
+    this.getRecruiterList();
+    let that = this;
+    setTimeout(function() {
+      window.scrollTo(0, that.$route.meta.scrollY);
+    }, 300);
   }
 }
 </script>
 
-<style lang="less" scoped>
-.recruiter_list {
-  /*padding: 22px;*/
-  margin-left: 200px;
-  .el-container{
-    margin: 0 !important;
-  }
-  .el-main{
-    padding: 0;
-  }
+<style lang="less" scoped="scoped">
+.officerManage {
   .container {
     min-width: 1000px;
     margin: 22px;
@@ -648,9 +598,6 @@ export default class user extends Vue {
         border-radius: 4px;
       }
     }
-  }
-  .selectionBox{
-    padding: 20px;
   }
   .el-form {
     .el-input {

@@ -1,4 +1,4 @@
-<!--创建公司-->
+
 <template>
   <div class="createCompany">
     <div class="header">
@@ -14,8 +14,6 @@
     </div>
     <!--公司信息表格-->
     <div class="companyInfo" v-if="active === 0">
-      <div class="point"></div>
-      
       <el-form
         class="edit-form"
         ref="companyInfo"
@@ -143,7 +141,7 @@
           <span class="addlabelbtn" @click="addlabel">添加标签</span>
         </el-form-item>
         
-        <el-form-item label="公司图片" prop="input" v-if="!$route.params.checkId" >
+        <el-form-item label="公司图片" prop="input" v-if="!$route.query.type" >
           <ul class="common-list">
             <li
               v-for="(imageItem, imageIndex) in commonList"
@@ -216,7 +214,7 @@
           <el-form-item
             label="产品名称"
             prop="input"
-            v-if="!$route.params.checkId"
+            v-if="!$route.query.type"
           >
             <el-input v-model="item.productName" placeholder="请输入产品名称" style="width: 400px;" :disabled="!item.isEditing"></el-input>
           </el-form-item>
@@ -224,7 +222,7 @@
           <el-form-item
             label="产品官网"
             prop="input"
-            v-if="!$route.params.checkId"
+            v-if="!$route.query.type"
           >
             <el-input v-model="item.siteUrl" placeholder="请输入产品官网" style="width: 400px;" :disabled="!item.isEditing"></el-input>
           </el-form-item>
@@ -232,7 +230,7 @@
           <el-form-item
             label="产品slogan"
             prop="input"
-            v-if="!$route.params.checkId"
+            v-if="!$route.query.type"
           >
             <el-input
               type="textarea"
@@ -248,7 +246,7 @@
           <el-form-item
             label="产品亮点"
             prop="input"
-            v-if="!$route.params.checkId"
+            v-if="!$route.query.type"
           >
             <el-input
               type="textarea"
@@ -294,7 +292,7 @@
           </el-form-item>
         </el-form>
       </div>
-      <div class="sales" v-if="(AdminShow === 1||AdminShow === 6) && $route.path.includes('/index/editCompany')">
+      <div class="sales" v-if="(AdminShow === 1 || AdminShow === 6) && $route.path.includes('/companyManage/editCompany')">
 
         <h3>跟进顾问</h3>
         <el-form>
@@ -464,7 +462,7 @@ export default class createCompany extends Vue {
   active = 0
   adressList = []
   isShowCompany = false
-  isBindAdmin = 0
+  isBindAdmin = false
   isNewCompany = false
   companyName = {
     name: ""
@@ -638,15 +636,17 @@ export default class createCompany extends Vue {
     this.companyInfo.address = this.adressList;
     this.$refs["companyInfo"].validate(async valid => {
       if (valid) {
-        let { id, checkId } = this.$route.params;
-
-        if (this.isEdit) {
+        let { id, type } = this.$route.query;
+        if (id) {
           // 编辑正式库
-          if (id) {
+          if (type !== 'temp') {
             delete this.companyInfo.adminUid;
             let images = this.commonList.map(field => field.id).join(',')
             let params = Object.assign(this.companyInfo, {images})
+
             await editCompanyApi(id, params);
+
+            this.$router.go(-1)
             this.$message({
               message: "编辑成功",
               type: "success"
@@ -654,21 +654,19 @@ export default class createCompany extends Vue {
           } else {
             /* 编辑审核库 */
             delete this.companyInfo.admin_uid;
-
-            try {
-              await editCheckCompanyInfoApi(checkId, this.companyInfo);
-              this.$message({
-                message: "编辑成功",
-                type: "success"
-              });
-            } catch (err) {
-            }
+            await editCheckCompanyInfoApi(id, this.companyInfo);
+            console.log(22, id, type)
+            this.$router.go(-1)
+            this.$message({
+              message: "编辑成功",
+              type: "success"
+            });
           }
         } else {
           let admin_uid = sessionStorage.getItem("admin_uid");
           this.$set(this.companyInfo, "admin_uid", admin_uid);
           this.showAdminWindow = true;
-          this.isBindAdmin = 0;
+          this.isBindAdmin = false
           this.isNewCompany = true;
         }
       } else {
@@ -687,7 +685,7 @@ export default class createCompany extends Vue {
   }
   /* 保存跟进人 */
   async saveSaller() {
-    let { id, checkId } = this.$route.params;
+    let { id } = this.$route.query;
     if (id) {
       // 数字代表权限的ip
       if([1,3,-3,4,-4,5,-5].includes(Number(this.AdminShow))) {
@@ -720,7 +718,6 @@ export default class createCompany extends Vue {
       message: "编辑成功"
     });
     this.$router.go(-1)
-    // aaa
   }
   handleIconLoaded(e) {
     let formData = new FormData();
@@ -791,23 +788,15 @@ export default class createCompany extends Vue {
 
   /* 获取编辑公司信息 */
   async getCompanyInfo() {
-    let { id } = this.$route.params;
-    let res = await getCompanyInfoApi(id);
+    let { id, type } = this.$route.query
+    let res = type === 'temp' ? await getCheckCompanyInfoApi(id) : await getCompanyInfoApi(id);
     let newCompanyInfo = res.data.data.companyInfo;
     this.setCompanyInfo(newCompanyInfo);
   }
 
-  /* 获取审核公司信息 */
-  async getCheckCompanyInfo() {
-    let { checkId } = this.$route.params;
-    let res = await getCheckCompanyInfoApi(checkId);
-    let newCompanyInfo = res.data.data.companyInfo;
-    this.setCompanyInfo(newCompanyInfo);
-  }
 
   /* 填充原公司数据 */
   setCompanyInfo(newCompanyInfo) {
-    console.log(newCompanyInfo)
     let admin_uid = sessionStorage.getItem("admin_uid");
     let productList = newCompanyInfo.product || []
     productList.map(field => {
@@ -862,17 +851,11 @@ export default class createCompany extends Vue {
   }
 
   init() {
-    let { isEditSaller } = this.$route.query;
-    let { id, checkId } = this.$route.params;
-    if (id || checkId) {
-      // 是否编辑公司信息
+    let { isEditSaller, id } = this.$route.query;
+    if (id) {
       this.isEdit = true;
       this.companyInfoRules.company_name.splice(1, 1);
-      if (id) {
-        this.getCompanyInfo();
-      } else {
-        this.getCheckCompanyInfo();
-      }
+      this.getCompanyInfo()
     }
     this.getlabellist()
     this.getfieldList();
@@ -1011,26 +994,26 @@ export default class createCompany extends Vue {
     this.labelVisible = false
   }
   }
-  		// 确定添加
-		sureaddlabel () {
-      let data = {title: this.follow}
-			if (this.follow === '') {
+	// 确定添加
+	sureaddlabel () {
+    let data = {title: this.follow}
+		if (this.follow === '') {
+			this.$message({
+        message: '标签名字不能为空哦',
+        type: 'warning'
+      })
+		} else {
+			createlabelTeam(data).then((res) => {
 				this.$message({
-          message: '标签名字不能为空哦',
-          type: 'warning'
-        })
-			} else {
-				createlabelTeam(data).then((res) => {
-					this.$message({
-						message: '添加成功',
-						type: 'success'
-					})
-					this.follow = ''
-					this.getlabellist()
-					this.labelshow = false
+					message: '添加成功',
+					type: 'success'
 				})
-			}
+				this.follow = ''
+				this.getlabellist()
+				this.labelshow = false
+			})
 		}
+	}
 
   getlabellist () {
     labelTeamlist().then((res) => {
@@ -1050,7 +1033,6 @@ export default class createCompany extends Vue {
       });
       this.getCompanyInfo();
     })
-    // this.companyInfo.product.splice(index, 1)
   }
   addAction() {
     this.companyInfo.product.push({
@@ -1071,7 +1053,7 @@ export default class createCompany extends Vue {
     this.init()
   }
   editCompanyProduct() {
-    let query = this.$route.params
+    let query = this.$route.query
     let item = this.companyInfo.product.find(field => field.isEditing)
     let params = {
       product_name: item.productName,
@@ -1099,12 +1081,6 @@ export default class createCompany extends Vue {
       })
     });
   }
-  /**
-   * @Author   小书包
-   * @DateTime 2018-11-28
-   * @detail   图片重新排序
-   * @return   {[type]}   [description]
-   */
   created() {
     this.init()
   }
@@ -1122,23 +1098,22 @@ export default class createCompany extends Vue {
   z-index: 100;
 }
 .createCompany {
-  margin-left: 200px;
-  padding: 22px;
   .header {
     padding-right: 20px;
     box-sizing: border-box;
     border-radius: 4px 4px 0 0;
     height: 80px;
-    border: 1px solid #cccccc;
+    border-bottom: 1px solid #cccccc;
     display: flex;
     align-items: center;
     justify-content: space-between;
     .creatTab {
       height: 100%;
+      text-align: center;
       > div {
         cursor: pointer;
         line-height: 80px;
-        border: 1px solid #cccccc;
+        border-right: 1px solid #cccccc;
         width: 100px;
         height: 100%;
         display: inline-block;
@@ -1149,10 +1124,6 @@ export default class createCompany extends Vue {
         }
       }
     }
-    // .el-steps{
-    //   text-align: left;
-    //   width: 500px;
-    // }
   }
   /*公司信息*/
   .companyInfo,
@@ -1160,19 +1131,8 @@ export default class createCompany extends Vue {
   .sales {
     padding: 0 32px;
     text-align: left;
-    .point {
-      font-size: 14px;
-      color: #ffffff;
-      background-color: #652791;
-      padding: 10px;
-      text-align: center;
-      margin-bottom: 30px;
-      margin-left: -32px;
-      margin-right: -32px;
-    }
   }
   .sales {
-    border-radius: 4px;
     padding: 30px 32px;
     h3 {
       font-size: 25px;
@@ -1183,11 +1143,11 @@ export default class createCompany extends Vue {
   }
   .companyInfo,
   .personalInfo {
-    border: 1px solid #cccccc;
     border-radius: 4px;
     h3 {
       color: #354048;
       font-size: 20px;
+      padding-top: 16px;
       padding-bottom: 16px;
       padding-left: 10px;
       border-bottom: 1px solid #ebeef5;

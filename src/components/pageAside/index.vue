@@ -10,7 +10,7 @@
             v-for="(item, index) in itemList"
             :key="index"
             class="item"
-            :class="{'slide-down': item.children.length, 'active': item.isShow }"
+            :class="{'slide-down': item.slideDown, 'active': item.isShow }"
             @click.stop="topath('up', '', index, item)"
           >
             <div class="path" :class="{'pathactive': item.isShow}">
@@ -19,12 +19,11 @@
                 class="icon iconfont icongongneng"
                 :class="oneFlag===item.flag?'iconold':'iconNew'"
               ></i>
-              <span>{{item.title}}</span>
-              <i class="el-icon-arrow-up pathArrow" v-show="item.children.length"></i>
+              <span>{{item.meta.title}}</span>
+              <i class="el-icon-arrow-up pathArrow" v-show="item.children && item.children.length"></i>
             </div>
 
-            <!--  :class="{'pathactive': page.path === onePath }" -->
-            <ul v-if="item.children.length">
+            <ul v-if="item.children && item.children.length > 1">
               <li
                 v-for="(page,index1) in item.children"
                 :key="index1"
@@ -32,7 +31,7 @@
                 @click.stop="topath('down', index, index1, page)"
               >
                 <div class="verify" :class="{'pathactive': page.isShow }">
-                  <span>{{page.title}}</span>
+                  <span>{{page.meta.title}}</span>
                 </div>
               </li>
             </ul>
@@ -47,17 +46,13 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import { routes } from "@/router/routes";
 import { admin_menu } from "API/commont";
-import routelist from "./route.json"
-
+import router from '@/router'
 @Component({
   name: "page-asise",
   watch: {
     $route: {
       handler(route) {
-        this.getMenu();
-        this.init();
-        let arr = route.path.split("/");
-        this.oneFlag = arr[1]
+        // this.init()
       },
       immediate: true
     }
@@ -77,83 +72,61 @@ export default class PageAside extends Vue {
   tabSwitch() {
     this.isCLick = !this.isCLick;
   }
-  mounted() {
+  created() {
+		admin_menu().then(res => {
+			console.log(res, 222)
+		})
     this.AdminShow = sessionStorage.getItem("AdminShow");
-  }
-  getMenu() {
-    if (this.$route.path !== "/login" && this.$route.path !== "/") {
-      let itemList = JSON.parse(sessionStorage.getItem("itemList"))
-      if (itemList !== null) {
-        this.itemList = JSON.parse(sessionStorage.getItem("itemList"))
-      } else {
-        this.itemList = routelist
-        sessionStorage.setItem("itemList", JSON.stringify(routelist))
-      }
-    } else {
-    }
+    this.init()
   }
   topath(type, pIndex, cIndex, item) {
-    let arr = item.flag.split("/");
-    this.oneFlag = arr[0]
     if (type === "up") {
-      this.itemList.map(field => {
-        field.isShow = false;
-        if (field.path === item.path) field.isShow = true;
+      this.itemList.map((field, index) => {
+        if (field.name === item.name) {
+          field.isShow = true
+          if (item.children && item.children.length > 1) {
+            item.slideDown = true
+            item.children.map((n, i) => item.children[i].isShow = i === 0 ? true : false)
+          }
+        } else {
+          field.isShow = false;
+        }
+        this.$set(this.itemList, index, field)
       });
+      this.$router.push({ name: item.children[0].name });
     } else {
+      this.topath('up', pIndex, cIndex, this.itemList[pIndex])
       this.itemList[pIndex].children.map(
-        (field, i) => (field.isShow = i === cIndex ? true : false)
+        (field, i) => {
+          field.isShow = i === cIndex ? true : false
+          this.$set(this.itemList[pIndex].children, i, field)
+        }
       );
-    }
-    if (item.path == "/") {
-      this.itemList.map((field, i) => {
-        field.isShow = i === cIndex ? true : false;
-      });
-    } else {
       this.$router.push({ name: item.name });
     }
+
   }
   init() {
-    let path = this.$route.path;
-    let obj = {};
-    this.itemList.map((uRoute, uIndex, uArray) => {
-      if (Reflect.get(uRoute, "path") === path) {
-        uRoute.isShow = true;
-      } else {
-        uRoute.isShow = false;
-        uRoute.children.map(cRoute => {
-          if (cRoute.path === path) {
-            cRoute.isShow = true;
-            uArray.map(
-              field =>
-                (field.isShow = field.flag === cRoute.flag ? true : false)
-            );
-          } else {
-            cRoute.isShow = false;
+    admin_menu().then(res => {
+      let pathName = this.$route.name,
+          itemList = res.data.data
+       this.itemList = itemList
+      itemList.map((uRoute, uIndex) => {
+        if (this.$route.path.indexOf(uRoute.name) !== -1) {
+          uRoute.isShow = true
+          if (uRoute.children && uRoute.children.length > 1) {
+            uRoute.slideDown = true
+            uRoute.children.map(cRoute => {
+              if (cRoute.name === pathName) {
+                cRoute.isShow = true
+              } else {
+                cRoute.isShow = false;
+              }
+            })
           }
-        });
-      }
-    });
-  }
-  judge(adminGrade) {
-    // console.log("+adminGrade", +adminGrade);
-    if (/(0|1|2)/.test(+adminGrade)) {
-      // console.log("显示简历库");
-      this.$set(this.itemList, 5, {
-        path: "/resumeStore",
-        name: "简历库",
-        isShow: true,
-        children: []
-      });
-    } else {
-      // console.log("不显示简历库");
-      this.$set(this.itemList, 5, {
-        path: "/resumeStore",
-        name: "简历库",
-        isShow: false,
-        children: []
-      });
-    }
+        }
+      })
+    })
   }
 }
 </script>

@@ -313,7 +313,7 @@ import {
   editAdminNameApi,
   getRecruitersListApi
 } from "API/company";
-import { getAccessToken, removeAccessToken } from "@/api/cacheService.js";
+import { getAccessToken } from "@/api/cacheService.js";
 // 邮箱
 export const emailReg = /^([a-zA-Z0-9]+[_|\_|\.|\-]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[-_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,8}$/
 export const wechatReg = /^.{2,20}$/
@@ -489,7 +489,6 @@ export default class EditRecruiter extends Vue {
     this.model.list = [].concat(this.labelProfessionalLiteracyList)
   }
   removeLifeItem(index, item) {
-    console.log(index, item)
     if(this.model.selected.length < 2) {
       this.$message({
         message: '至少选择一个标签',

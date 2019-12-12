@@ -40,8 +40,7 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import { loginApi, admin_menu } from "API/commont";
-import { saveAccessToken } from "API/cacheService";
-// import {permission} from "UTIL/js/permissionRoute.js"
+import { saveAccessToken, saveUserInfo } from "API/cacheService";
 @Component({
   name: "login"
 })
@@ -55,6 +54,7 @@ export default class login extends Vue {
       .then(res => {
         let { groupId, isAdmin, isGroupAdmin } = res.data.data;
         let isShowResumeHandle = res.data.data.groupId === 3 || res.data.data.groupId === 4 || (res.data.data.groupId === 6 && !res.data.data.isGroupAdmin)
+        saveUserInfo(res.data.data)
         sessionStorage.setItem("email", this.loginForm.email);
         sessionStorage.setItem("avar", res.data.data.avatarInfo.smallUrl);
         sessionStorage.setItem("name", res.data.data.realname);
@@ -72,19 +72,14 @@ export default class login extends Vue {
         sessionStorage.setItem("AdminShow", AdminShow);
         let userInfo = Object.assign({}, res.data.data, { AdminShow });
         this.$store.dispatch("update_userinfo",{userInfo});
-        console.log(userInfo);
         this.$message({
           message: "登录成功",
           type: "success"
         });
         this.$router.push({
-          path: "/index"
+          path: "/companyManage/index"
         });
       })
-      .catch(err => {
-        console(err)
-        // this.$message.error(`用户账号或密码错误`);
-      });
   }
   // 等级,身份
   judge(groupId, isAdmin, isGroupAdmin, userinfo) {

@@ -286,7 +286,7 @@ export default class checkPage extends Vue {
   /* 编辑公司信息 */
   edit(name) {
     this.$router.push({
-      path: `/index/${name}`,
+      path: `/companyManage/${name}`,
       query: { id: this.companyInfo.id }
     });
   }
@@ -296,13 +296,13 @@ export default class checkPage extends Vue {
   editIdentity(uid) {
     let checkId = this.$route.query.id;
     this.$router.push({
-      path: `/check/companyCheck/editUser/${checkId}?isFromCheck=true`
+      path: `/userManage/editUser/${checkId}?isFromCheck=true`
     });
   }
   /* 去编辑公司信息 */
   toEdit() {
-    let checkId = this.$route.query.id;
-    this.$router.push({ path: `/check/companyCheck/${checkId}`, query: { from: 'cp'} });
+    let id = this.$route.query.id;
+    this.$router.push({ path: `/companyManage/edit`, query: { type: 'temp', id} });
   }
 
   mounted() {
@@ -382,8 +382,6 @@ img {
   max-height: 90%;
 }
 .checkPage {
-  margin-left: 200px;
-  padding: 22px;
   position: relative;
   .del {
     padding: 10px;
