@@ -377,7 +377,7 @@ export default class user extends Vue {
       label: "发布职位权益"
     },
     {
-      prop: "adminName",
+      prop: "businessFollowUpAdminName",
       label: "跟进人"
     },
     {
